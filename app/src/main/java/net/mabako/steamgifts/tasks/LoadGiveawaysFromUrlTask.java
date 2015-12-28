@@ -3,8 +3,8 @@ package net.mabako.steamgifts.tasks;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import net.mabako.steamgifts.fragments.GiveawaysFragment;
 import net.mabako.steamgifts.data.Giveaway;
+import net.mabako.steamgifts.fragments.GiveawaysFragment;
 import net.mabako.steamgifts.web.WebUserData;
 
 import org.jsoup.Connection;
@@ -54,15 +54,17 @@ public class LoadGiveawaysFromUrlTask extends AsyncTask<Void, Void, List<Giveawa
             Log.d(TAG, "Found inner " + giveaways.size() + " elements");
 
             List<Giveaway> giveawayList = new ArrayList<>();
-            for(Element element : giveaways)
-            {
+            for (Element element : giveaways) {
                 Element link = element.select("h2 a").first();
                 Element icon = element.select("h2 a").last();
 
                 // Base information
                 String title = link.text();
                 String giveawayLink = link.attr("href").substring(10, 15);
-                int gameId = Integer.parseInt(icon.attr("href").split("/")[4]);
+
+                String[] iconSplit = icon.attr("href").split("/");
+                int gameId = Integer.parseInt(iconSplit[4]);
+                Giveaway.Type type = "app".equals(iconSplit[3]) ? Giveaway.Type.APP : Giveaway.Type.SUB;
 
                 // Entries & Comments
                 Elements links = element.select(".giveaway__links a span");
@@ -80,7 +82,7 @@ public class LoadGiveawaysFromUrlTask extends AsyncTask<Void, Void, List<Giveawa
 
                 Log.v(TAG, "GIVEAWAY for " + title + ", " + giveawayLink + ", " + gameId);
 
-                giveawayList.add(new Giveaway(title, giveawayLink, gameId, creator, entries, comments, copies, points));
+                giveawayList.add(new Giveaway(title, giveawayLink, type, gameId, creator, entries, comments, copies, points));
             }
 
             return giveawayList;

@@ -3,6 +3,7 @@ package net.mabako.steamgifts.data;
 public class Giveaway {
     private String title;
     private String giveawayId;
+    private Type type;
     private int gameId;
     private String creator;
     private int entries;
@@ -10,9 +11,10 @@ public class Giveaway {
     private int copies;
     private int points;
 
-    public Giveaway(String title, String giveawayId, int gameId, String creator, int entries, int comments, int copies, int points) {
+    public Giveaway(String title, String giveawayId, Type type, int gameId, String creator, int entries, int comments, int copies, int points) {
         this.title = title;
         this.giveawayId = giveawayId;
+        this.type = type;
         this.gameId = gameId;
         this.creator = creator;
         this.entries = entries;
@@ -45,6 +47,10 @@ public class Giveaway {
         return copies;
     }
 
+    public Type getType() {
+        return type;
+    }
+
     public int getPoints() {
         return points;
     }
@@ -64,5 +70,9 @@ public class Giveaway {
     @Override
     public String toString() {
         return "[GA "+ giveawayId + ", " + gameId + "]";
+    }
+
+    public enum Type {
+        APP, SUB
     }
 }
