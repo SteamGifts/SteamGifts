@@ -19,4 +19,6 @@
     <string name="login">Login</string>
     <string name="logout">Logout</string>
     <string name="logged_out">Goodbye!</string>
+
+    <string name="enter_giveaway">Enter (%dP)</string>
 </resources>

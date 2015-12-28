@@ -1,6 +1,8 @@
 package net.mabako.steamgifts.fragments;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -68,6 +70,10 @@ public class GiveawayDetailFragment extends Fragment {
             });
         }
 
+        if (giveaway != null) {
+            setupGiveawayCard();
+        }
+
         task = new LoadGiveawayDetailsTask(this, giveaway.getGiveawayId());
         task.execute();
 
@@ -78,6 +84,28 @@ public class GiveawayDetailFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         task.cancel(true);
+    }
+
+    private void setupGiveawayCard() {
+        // TODO: Enter, leave, neither?
+        // Format the "Enter (__P)" text to include the points
+        ((TextView) getActivity().findViewById(R.id.enter)).setText(String.format(getString(R.string.enter_giveaway), giveaway.getPoints()));
+
+        // Show the creator
+        ((TextView) getActivity().findViewById(R.id.user)).setText("{faw-user} " + giveaway.getCreator());
+
+        // TODO: Time remaining
+
+        // TODO: Add comment
+
+        // Link to Steam
+        getActivity().findViewById(R.id.steam).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://store.steampowered.com/" + giveaway.getType().name().toLowerCase() + "/" + giveaway.getGameId() + "/"));
+                startActivity(intent);
+            }
+        });
     }
 
     public void setExtras(GiveawayExtras extras) {

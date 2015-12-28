@@ -73,7 +73,7 @@
                         android:layout_marginBottom="8dp"
                         android:paddingLeft="16dp"
                         android:paddingTop="16dp"
-                        android:text="{faw-clock-o} 2 minutes"
+                        android:text="{faw-clock-o} Soon"
                         android:textSize="16dp"
                         android:layout_weight="1"/>
 
@@ -84,7 +84,7 @@
                         android:layout_marginBottom="8dp"
                         android:paddingLeft="16dp"
                         android:paddingTop="16dp"
-                        android:text="{faw-user} kt"
+                        android:text="{faw-user} Creator"
                         android:textSize="16dp"
                         android:layout_weight="1"
                         android:layout_toRightOf="@+id/remaining"/>
@@ -118,7 +118,7 @@
                         android:layout_below="@+id/progressBar"
                         android:layout_marginBottom="4dp"
                         android:layout_marginLeft="4dp"
-                        android:text="Enter (100P)" />
+                        android:text="@string/enter_giveaway" />
 
                     <Button
                         android:id="@+id/comment"
