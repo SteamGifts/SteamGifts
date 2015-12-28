@@ -3,11 +3,17 @@
 
     <string name="navigation_giveaways">Giveaways</string>
     <string name="navigation_giveaways_all">All</string>
+    <string name="navigation_giveaways_group">Group</string>
+    <string name="navigation_giveaways_wishlist">Wishlist</string>
     <string name="navigation_giveaways_new">New</string>
     <string name="navigation_giveaways_all_title">All Giveaways</string>
+    <string name="navigation_giveaways_group_title">Group Giveaways</string>
+    <string name="navigation_giveaways_wishlist_title">Wishlist Giveaways</string>
     <string name="navigation_giveaways_new_title">New Giveaways</string>
     <string name="navigation_discussions">Discussions</string>
 
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
+
+    <string name="title_activity_login">Login</string>
 </resources>

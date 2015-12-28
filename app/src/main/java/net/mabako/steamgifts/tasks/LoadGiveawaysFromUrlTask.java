@@ -1,29 +1,29 @@
 package net.mabako.steamgifts.tasks;
 
-import android.app.Activity;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import net.mabako.steamgifts.activities.MainActivity;
+import net.mabako.steamgifts.activities.GiveawaysActivity;
 import net.mabako.steamgifts.data.Giveaway;
+import net.mabako.steamgifts.web.WebUserData;
 
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class LoadGiveawaysFromUrlTask extends AsyncTask<Void, Void, List<Giveaway>> {
     private static final String TAG = LoadGiveawaysFromUrlTask.class.getSimpleName();
 
-    private MainActivity activity;
+    private GiveawaysActivity activity;
     private int page;
-    private MainActivity.Type type;
+    private GiveawaysActivity.Type type;
 
-    public LoadGiveawaysFromUrlTask(MainActivity activity, int page, MainActivity.Type type) {
+    public LoadGiveawaysFromUrlTask(GiveawaysActivity activity, int page, GiveawaysActivity.Type type) {
         this.activity = activity;
         this.page = page;
         this.type = type;
@@ -40,14 +40,20 @@ public class LoadGiveawaysFromUrlTask extends AsyncTask<Void, Void, List<Giveawa
 
         try {
             // Fetch the Giveaway page
-            String typeStr = type == MainActivity.Type.ALL ? "" : ("&type=" + type.name().toLowerCase());
-            Document document = Jsoup.connect("http://www.steamgifts.com/giveaways/search?page=" + page + typeStr).get();
+            String typeStr = type == GiveawaysActivity.Type.ALL ? "" : ("&type=" + type.name().toLowerCase());
+
+            Connection jsoup = Jsoup.connect("http://www.steamgifts.com/giveaways/search?page=" + page + typeStr);
+            if (WebUserData.getCurrent().isLoggedIn())
+                jsoup = jsoup.cookie("PHPSESSID", WebUserData.getCurrent().getSessionId());
+            Document document = jsoup.get();
+
+            WebUserData.extract(document);
 
             // Parse all rows of giveaways
             Elements giveaways = document.select(".giveaway__row-inner-wrap");
             Log.d(TAG, "Found inner " + giveaways.size() + " elements");
 
-            List<Giveaway> giveawayList = new ArrayList<Giveaway>();
+            List<Giveaway> giveawayList = new ArrayList<>();
             for(Element element : giveaways)
             {
                 Element link = element.select("h2 a").first();
@@ -72,14 +78,14 @@ public class LoadGiveawaysFromUrlTask extends AsyncTask<Void, Void, List<Giveawa
                 int copies = hints.size() == 1 ? 1 : Integer.parseInt(copiesT.replace("(", "").replace(" Copies)", ""));
                 int points = Integer.parseInt(pointsT.replace("(", "").replace("P)", ""));
 
-                Log.d(TAG, "GIVEAWAY for " + title + ", " + giveawayLink + ", " + gameId);
+                Log.v(TAG, "GIVEAWAY for " + title + ", " + giveawayLink + ", " + gameId);
 
                 giveawayList.add(new Giveaway(title, giveawayLink, gameId, creator, entries, comments, copies, points));
             }
 
             return giveawayList;
         } catch (Exception e) {
-            Log.d(TAG, "Error fetching URL", e);
+            Log.e(TAG, "Error fetching URL", e);
             return null;
         }
     }
