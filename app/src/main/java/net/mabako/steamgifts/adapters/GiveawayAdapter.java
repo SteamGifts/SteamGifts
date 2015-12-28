@@ -3,6 +3,7 @@ package net.mabako.steamgifts.adapters;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,12 +48,13 @@ public class GiveawayAdapter extends ArrayAdapter<Giveaway> {
         Giveaway giveaway = getItem(position);
 
 
-        String title = giveaway.getTitle();
-        if(giveaway.getCopies() > 1)
-            title = giveaway.getCopies() + "x " + title;
-        holder.giveawayName.setText(title);
+        holder.giveawayName.setText(giveaway.getTitle());
 
-        holder.giveawayDetails.setText(giveaway.getPoints() + "P | " + giveaway.getEntries() + " entries");
+        String str = giveaway.getPoints() + "P | " + giveaway.getEntries() + " entries";
+        if(giveaway.getCopies() > 1)
+            str = giveaway.getCopies() + " copies | " + str;
+        holder.giveawayDetails.setText(str);
+
         Picasso.with(getContext()).load("http://cdn.akamai.steamstatic.com/steam/apps/" + giveaway.getGameId() + "/capsule_184x69.jpg").into(holder.giveawayImage);
 
         return convertView;
