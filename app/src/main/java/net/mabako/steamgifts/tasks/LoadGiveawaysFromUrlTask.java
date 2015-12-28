@@ -62,9 +62,15 @@ public class LoadGiveawaysFromUrlTask extends AsyncTask<Void, Void, List<Giveawa
 
                 String creator = element.select(".giveaway__username").text();
 
+                Elements hints = element.select(".giveaway__heading__thin");
+                String copiesT = hints.first().text();
+                String pointsT = hints.last().text();
+                int copies = hints.size() == 1 ? 1 : Integer.parseInt(copiesT.replace("(", "").replace(" Copies)", ""));
+                int points = Integer.parseInt(pointsT.replace("(", "").replace("P)", ""));
+
                 Log.d(TAG, "GIVEAWAY for " + title + ", " + giveawayLink + ", " + gameId);
 
-                giveawayList.add(new Giveaway(title, giveawayLink, gameId, creator, entries, comments));
+                giveawayList.add(new Giveaway(title, giveawayLink, gameId, creator, entries, comments, copies, points));
             }
 
             return giveawayList;

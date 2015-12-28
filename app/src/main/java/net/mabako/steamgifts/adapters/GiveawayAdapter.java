@@ -7,7 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.data.Giveaway;
@@ -43,16 +46,27 @@ public class GiveawayAdapter extends ArrayAdapter<Giveaway> {
 
         Giveaway giveaway = getItem(position);
 
-        holder.giveawayName.setText(giveaway.getTitle());
+
+        String title = giveaway.getTitle();
+        if(giveaway.getCopies() > 1)
+            title = giveaway.getCopies() + "x " + title;
+        holder.giveawayName.setText(title);
+
+        holder.giveawayDetails.setText(giveaway.getPoints() + "P | " + giveaway.getEntries() + " entries");
+        Picasso.with(getContext()).load("http://cdn.akamai.steamstatic.com/steam/apps/" + giveaway.getGameId() + "/capsule_184x69.jpg").into(holder.giveawayImage);
 
         return convertView;
     }
 
     private static class ViewHolder {
         private TextView giveawayName;
+        private final TextView giveawayDetails;
+        private ImageView giveawayImage;
 
         public ViewHolder(View v) {
             giveawayName = (TextView) v.findViewById(R.id.giveaway_name);
+            giveawayDetails = (TextView) v.findViewById(R.id.giveaway_details);
+            giveawayImage = (ImageView) v.findViewById(R.id.giveaway_image);
         }
     }
 }

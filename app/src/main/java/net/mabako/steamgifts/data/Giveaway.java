@@ -7,18 +7,46 @@ public class Giveaway {
     private String creator;
     private int entries;
     private int comments;
+    private int copies;
+    private int points;
 
-    public Giveaway(String title, String giveawayId, int gameId, String creator, int entries, int comments) {
+    public Giveaway(String title, String giveawayId, int gameId, String creator, int entries, int comments, int copies, int points) {
         this.title = title;
         this.giveawayId = giveawayId;
         this.gameId = gameId;
         this.creator = creator;
         this.entries = entries;
         this.comments = comments;
+        this.copies = copies;
+        this.points = points;
     }
 
     public String getTitle() {
         return title;
+    }
+
+    public int getGameId() {
+        return gameId;
+    }
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public int getComments() {
+        return comments;
+    }
+
+    public int getEntries() {
+        return entries;
+    }
+
+    public int getCopies() {
+        return copies;
+    }
+
+    public int getPoints() {
+        return points;
     }
 
     @Override
