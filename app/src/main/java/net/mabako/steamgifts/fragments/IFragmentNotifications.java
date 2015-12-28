@@ -1,0 +1,17 @@
+package net.mabako.steamgifts.fragments;
+
+/**
+ * Notifications from the {@link net.mabako.steamgifts.activities.MainActivity} to individual fragments.
+ */
+public interface IFragmentNotifications {
+    /**
+     * User either logged in or logged out.
+     */
+    void onAccountChange();
+
+    /**
+     * Resource for the Toolbar title
+     * @return resource id
+     */
+    int getTitleResource();
+}

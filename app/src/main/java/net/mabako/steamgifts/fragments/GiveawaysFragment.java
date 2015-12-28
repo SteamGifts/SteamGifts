@@ -1,13 +1,16 @@
-package net.mabako.steamgifts.activities;
+package net.mabako.steamgifts.fragments;
 
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.adapters.GiveawayAdapter;
@@ -17,43 +20,51 @@ import net.mabako.steamgifts.tasks.LoadGiveawaysFromUrlTask;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GiveawaysActivity extends BaseActivity {
-    private static final String TAG = net.mabako.steamgifts.activities.GiveawaysActivity.class.getSimpleName();
+public class GiveawaysFragment extends Fragment implements IFragmentNotifications {
+    private static final String TAG = GiveawaysFragment.class.getSimpleName();
 
     private SwipeRefreshLayout swipeContainer;
+    private ProgressBar progressBar;
     private ListView listView;
 
     private GiveawayAdapter adapter;
     private ArrayList<Giveaway> giveaways;
     private Type type = Type.ALL;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_giveaways);
+    public static GiveawaysFragment newInstance(Type type)
+    {
+        GiveawaysFragment g = new GiveawaysFragment();
+        g.type = type;
+        return g;
+    }
 
-        type = (Type) getIntent().getSerializableExtra("type");
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // Inflate the layout
+        RelativeLayout layout = (RelativeLayout) inflater.inflate(R.layout.fragment_giveaways_list, container, false);
+
+        listView = (ListView) layout.findViewById(R.id.list);
+        swipeContainer = (SwipeRefreshLayout) layout.findViewById(R.id.swipeContainer);
+        progressBar = (ProgressBar) layout.findViewById(R.id.progressBar);
 
         setupListViewAdapter();
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-        setupNavBar();
         setupSwipeContainer();
 
         fetchItems(1);
+
+        return layout;
     }
 
     private void setupListViewAdapter() {
-        listView = (ListView) findViewById(R.id.list);
-
         giveaways = new ArrayList<>();
-        adapter = new GiveawayAdapter(this, R.layout.item_listview, R.id.giveaway_name, giveaways);
+        adapter = new GiveawayAdapter(getActivity(), R.layout.item_listview, R.id.giveaway_name, giveaways);
 
         listView.setAdapter(adapter);
     }
 
     private void setupSwipeContainer() {
         // Swipe to Refresh
-        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
+
         // Setup refresh listener which triggers new data loading
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -68,21 +79,10 @@ public class GiveawaysActivity extends BaseActivity {
     }
 
     @Override
-    protected void setupNavBar() {
-        super.setupNavBar();
-
-        ActionBar actionbar = getSupportActionBar();
-        if (actionbar != null)
-            actionbar.setTitle(type.getTitleResource());
+    public int getTitleResource() {
+        return type.getTitleResource();
     }
 
-    @Override
-    public void onAccountChange() {
-        super.onAccountChange();
-        fetchItems(1);
-    }
-
-    @Override
     public void fetchItems(int page) {
         Log.d(TAG, "Fetching giveaways on page " + page);
         new LoadGiveawaysFromUrlTask(this, page, type).execute();
@@ -98,13 +98,18 @@ public class GiveawaysActivity extends BaseActivity {
             giveaways.addAll(giveaways1);
             adapter.notifyDataSetChanged();
         } else {
-            Snackbar.make(findViewById(R.id.swipeContainer), "Failed to fetch giveaways", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(swipeContainer, "Failed to fetch giveaways", Snackbar.LENGTH_LONG).show();
         }
 
 
-        findViewById(R.id.progressBar).setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
         swipeContainer.setVisibility(View.VISIBLE);
         swipeContainer.setRefreshing(false);
+    }
+
+    @Override
+    public void onAccountChange() {
+        fetchItems(1);
     }
 
     public enum Type {

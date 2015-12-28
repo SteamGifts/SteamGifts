@@ -3,7 +3,7 @@ package net.mabako.steamgifts.tasks;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import net.mabako.steamgifts.activities.GiveawaysActivity;
+import net.mabako.steamgifts.fragments.GiveawaysFragment;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.web.WebUserData;
 
@@ -19,11 +19,11 @@ import java.util.List;
 public class LoadGiveawaysFromUrlTask extends AsyncTask<Void, Void, List<Giveaway>> {
     private static final String TAG = LoadGiveawaysFromUrlTask.class.getSimpleName();
 
-    private GiveawaysActivity activity;
+    private GiveawaysFragment activity;
     private int page;
-    private GiveawaysActivity.Type type;
+    private GiveawaysFragment.Type type;
 
-    public LoadGiveawaysFromUrlTask(GiveawaysActivity activity, int page, GiveawaysActivity.Type type) {
+    public LoadGiveawaysFromUrlTask(GiveawaysFragment activity, int page, GiveawaysFragment.Type type) {
         this.activity = activity;
         this.page = page;
         this.type = type;
@@ -40,7 +40,7 @@ public class LoadGiveawaysFromUrlTask extends AsyncTask<Void, Void, List<Giveawa
 
         try {
             // Fetch the Giveaway page
-            String typeStr = type == GiveawaysActivity.Type.ALL ? "" : ("&type=" + type.name().toLowerCase());
+            String typeStr = type == GiveawaysFragment.Type.ALL ? "" : ("&type=" + type.name().toLowerCase());
 
             Connection jsoup = Jsoup.connect("http://www.steamgifts.com/giveaways/search?page=" + page + typeStr);
             if (WebUserData.getCurrent().isLoggedIn())
