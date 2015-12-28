@@ -2,6 +2,10 @@
     <string name="app_name">SteamGifts</string>
 
     <string name="navigation_giveaways">Giveaways</string>
+    <string name="navigation_giveaways_all">All</string>
+    <string name="navigation_giveaways_new">New</string>
+    <string name="navigation_giveaways_all_title">All Giveaways</string>
+    <string name="navigation_giveaways_new_title">New Giveaways</string>
     <string name="navigation_discussions">Discussions</string>
 
     <string name="drawer_open">Open navigation drawer</string>

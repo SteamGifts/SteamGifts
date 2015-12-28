@@ -16,18 +16,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by mabako on 28.12.2015.
- */
 public class LoadGiveawaysFromUrlTask extends AsyncTask<Void, Void, List<Giveaway>> {
     private static final String TAG = LoadGiveawaysFromUrlTask.class.getSimpleName();
 
     private MainActivity activity;
     private int page;
+    private MainActivity.Type type;
 
-    public LoadGiveawaysFromUrlTask(MainActivity activity, int page) {
+    public LoadGiveawaysFromUrlTask(MainActivity activity, int page, MainActivity.Type type) {
         this.activity = activity;
         this.page = page;
+        this.type = type;
     }
 
     @Override
@@ -40,9 +39,11 @@ public class LoadGiveawaysFromUrlTask extends AsyncTask<Void, Void, List<Giveawa
         Log.d(TAG, "Fetching giveaways for page " + page);
 
         try {
-            Document document = Jsoup.connect("http://www.steamgifts.com/giveaways/search?page=" + page).get();
-            Log.d(TAG, document.title());
+            // Fetch the Giveaway page
+            String typeStr = type == MainActivity.Type.ALL ? "" : ("&type=" + type.name().toLowerCase());
+            Document document = Jsoup.connect("http://www.steamgifts.com/giveaways/search?page=" + page + typeStr).get();
 
+            // Parse all rows of giveaways
             Elements giveaways = document.select(".giveaway__row-inner-wrap");
             Log.d(TAG, "Found inner " + giveaways.size() + " elements");
 
@@ -52,16 +53,19 @@ public class LoadGiveawaysFromUrlTask extends AsyncTask<Void, Void, List<Giveawa
                 Element link = element.select("h2 a").first();
                 Element icon = element.select("h2 a").last();
 
+                // Base information
                 String title = link.text();
                 String giveawayLink = link.attr("href").substring(10, 15);
                 int gameId = Integer.parseInt(icon.attr("href").split("/")[4]);
 
+                // Entries & Comments
                 Elements links = element.select(".giveaway__links a span");
                 int entries = Integer.parseInt(links.first().text().split(" ")[0].replace(",", ""));
                 int comments = Integer.parseInt(links.last().text().split(" ")[0].replace(",", ""));
 
                 String creator = element.select(".giveaway__username").text();
 
+                // Copies & Points. They do not have separate markup classes, it's basically "if one thin markup element exists, it's one copy only"
                 Elements hints = element.select(".giveaway__heading__thin");
                 String copiesT = hints.first().text();
                 String pointsT = hints.last().text();
