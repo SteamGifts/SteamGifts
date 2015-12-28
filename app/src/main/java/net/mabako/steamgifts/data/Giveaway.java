@@ -1,6 +1,8 @@
 package net.mabako.steamgifts.data;
 
-public class Giveaway {
+import java.io.Serializable;
+
+public class Giveaway implements Serializable {
     private String title;
     private String giveawayId;
     private Type type;
@@ -29,6 +31,10 @@ public class Giveaway {
 
     public int getGameId() {
         return gameId;
+    }
+
+    public String getGiveawayId() {
+        return giveawayId;
     }
 
     public String getCreator() {

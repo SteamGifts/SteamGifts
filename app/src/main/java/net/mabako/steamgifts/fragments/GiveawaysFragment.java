@@ -1,5 +1,6 @@
 package net.mabako.steamgifts.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -8,14 +9,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import net.mabako.steamgifts.R;
+import net.mabako.steamgifts.activities.DetailActivity;
 import net.mabako.steamgifts.adapters.GiveawayAdapter;
 import net.mabako.steamgifts.data.Giveaway;
-import net.mabako.steamgifts.tasks.LoadGiveawaysFromUrlTask;
+import net.mabako.steamgifts.tasks.LoadAllGiveawaysTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +63,18 @@ public class GiveawaysFragment extends Fragment implements IFragmentNotification
         adapter = new GiveawayAdapter(getActivity(), R.layout.item_listview, R.id.giveaway_name, giveaways);
 
         listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Giveaway giveaway = (Giveaway) listView.getItemAtPosition(position);
+
+
+                Intent intent = new Intent(getContext(), DetailActivity.class);
+                intent.putExtra(GiveawayDetailFragment.ARG_GIVEAWAY, giveaway);
+
+                startActivity(intent);
+            }
+        });
     }
 
     private void setupSwipeContainer() {
@@ -85,7 +100,7 @@ public class GiveawaysFragment extends Fragment implements IFragmentNotification
 
     public void fetchItems(int page) {
         Log.d(TAG, "Fetching giveaways on page " + page);
-        new LoadGiveawaysFromUrlTask(this, page, type).execute();
+        new LoadAllGiveawaysTask(this, page, type).execute();
     }
 
     public void addGiveaways(List<Giveaway> giveaways1, boolean clearExistingItems) {

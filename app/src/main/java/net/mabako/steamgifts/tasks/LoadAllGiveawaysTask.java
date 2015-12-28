@@ -16,22 +16,17 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LoadGiveawaysFromUrlTask extends AsyncTask<Void, Void, List<Giveaway>> {
-    private static final String TAG = LoadGiveawaysFromUrlTask.class.getSimpleName();
+public class LoadAllGiveawaysTask extends AsyncTask<Void, Void, List<Giveaway>> {
+    private static final String TAG = LoadAllGiveawaysTask.class.getSimpleName();
 
-    private GiveawaysFragment activity;
+    private GiveawaysFragment fragment;
     private int page;
     private GiveawaysFragment.Type type;
 
-    public LoadGiveawaysFromUrlTask(GiveawaysFragment activity, int page, GiveawaysFragment.Type type) {
-        this.activity = activity;
+    public LoadAllGiveawaysTask(GiveawaysFragment activity, int page, GiveawaysFragment.Type type) {
+        this.fragment = activity;
         this.page = page;
         this.type = type;
-    }
-
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
     }
 
     @Override
@@ -95,6 +90,6 @@ public class LoadGiveawaysFromUrlTask extends AsyncTask<Void, Void, List<Giveawa
     @Override
     protected void onPostExecute(List<Giveaway> result) {
         super.onPostExecute(result);
-        activity.addGiveaways(result, page == 1);
+        fragment.addGiveaways(result, page == 1);
     }
 }

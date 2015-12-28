@@ -64,8 +64,14 @@ public class MainActivity extends AppCompatActivity {
             WebUserData.clear();
         }
 
-        // Load a default fragment to show all giveaways
-        loadFragment(GiveawaysFragment.newInstance(GiveawaysFragment.Type.ALL));
+        // Need to have this prior to loading a fragment, otherwise no title is shown.
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+
+        // savedInstanceState is non-null if a fragment state is saved from a previous configuration.
+        if(savedInstanceState == null) {
+            // Load a default fragment to show all giveaways
+            loadFragment(GiveawaysFragment.newInstance(GiveawaysFragment.Type.ALL));
+        }
 
         setupNavBar();
     }
@@ -125,8 +131,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     protected void setupNavBar() {
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-
         DrawerImageLoader.init(new AbstractDrawerImageLoader() {
             @Override
             public void set(ImageView imageView, Uri uri, Drawable placeholder) {
