@@ -14,7 +14,7 @@
         android:elevation="4dp"
         android:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:title="@string/title_activity_login" />
+        app:title="@string/login" />
 
     <WebView
         android:id="@+id/webview"
