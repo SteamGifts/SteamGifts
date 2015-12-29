@@ -71,23 +71,23 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
+                        android:layout_weight="1"
                         android:paddingLeft="16dp"
                         android:paddingTop="16dp"
                         android:text="{faw-clock-o} Soon"
-                        android:textSize="16dp"
-                        android:layout_weight="1"/>
+                        android:textSize="16dp" />
 
                     <TextView
                         android:id="@+id/user"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
+                        android:layout_toRightOf="@+id/remaining"
+                        android:layout_weight="1"
                         android:paddingLeft="16dp"
                         android:paddingTop="16dp"
                         android:text="{faw-user} Creator"
-                        android:textSize="16dp"
-                        android:layout_weight="1"
-                        android:layout_toRightOf="@+id/remaining"/>
+                        android:textSize="16dp" />
 
                     <TextView
                         android:id="@+id/description"
@@ -105,10 +105,10 @@
                         style="?android:attr/progressBarStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_below="@+id/description"
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
-                        android:layout_below="@+id/description"
-                        android:indeterminate="true"/>
+                        android:indeterminate="true" />
 
                     <Button
                         android:id="@+id/enter"
@@ -118,7 +118,20 @@
                         android:layout_below="@+id/progressBar"
                         android:layout_marginBottom="4dp"
                         android:layout_marginLeft="4dp"
-                        android:text="@string/enter_giveaway" />
+                        android:text="@string/enter_giveaway"
+                        android:visibility="gone" />
+
+                    <Button
+                        android:id="@+id/leave"
+                        style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/progressBar"
+                        android:layout_marginBottom="4dp"
+                        android:layout_marginLeft="4dp"
+                        android:layout_toRightOf="@id/enter"
+                        android:text="@string/leave_giveaway"
+                        android:visibility="gone" />
 
                     <Button
                         android:id="@+id/comment"
@@ -126,9 +139,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/progressBar"
-                        android:layout_toRightOf="@id/enter"
+                        android:layout_toRightOf="@id/leave"
                         android:text="{faw-comment}"
-                        />
+                        android:visibility="gone" />
 
                     <Button
                         android:id="@+id/steam"

@@ -12,8 +12,10 @@ public class Giveaway implements Serializable {
     private int comments;
     private int copies;
     private int points;
+    private String timeRemaining;
+    private String timeRemainingLong;
 
-    public Giveaway(String title, String giveawayId, Type type, int gameId, String creator, int entries, int comments, int copies, int points) {
+    public Giveaway(String title, String giveawayId, Type type, int gameId, String creator, int entries, int comments, int copies, int points, String timeRemaining, String timeRemainingLong) {
         this.title = title;
         this.giveawayId = giveawayId;
         this.type = type;
@@ -23,6 +25,8 @@ public class Giveaway implements Serializable {
         this.comments = comments;
         this.copies = copies;
         this.points = points;
+        this.timeRemaining = timeRemaining.replace(" remaining", "");
+        this.timeRemainingLong = timeRemainingLong;
     }
 
     public String getTitle() {
@@ -59,6 +63,14 @@ public class Giveaway implements Serializable {
 
     public int getPoints() {
         return points;
+    }
+
+    public String getTimeRemaining() {
+        return timeRemaining;
+    }
+
+    public String getTimeRemainingLong() {
+        return timeRemainingLong;
     }
 
     @Override

@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,8 @@ import net.mabako.steamgifts.tasks.LoadGiveawayDetailsTask;
 import org.w3c.dom.Text;
 
 public class GiveawayDetailFragment extends Fragment {
+    private static final String TAG = GiveawayDetailFragment.class.getSimpleName();
+
     public static final String ARG_GIVEAWAY = "giveaway";
 
     /**
@@ -36,6 +39,9 @@ public class GiveawayDetailFragment extends Fragment {
     private Giveaway giveaway;
 
     private LoadGiveawayDetailsTask task;
+    private TextView enterGiveaway;
+    private TextView leaveGiveaway;
+    private TextView timeRemaining;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,6 +76,10 @@ public class GiveawayDetailFragment extends Fragment {
             });
         }
 
+        enterGiveaway = (TextView) getActivity().findViewById(R.id.enter);
+        leaveGiveaway = (TextView) getActivity().findViewById(R.id.leave);
+        timeRemaining = (TextView) getActivity().findViewById(R.id.remaining);
+
         if (giveaway != null) {
             setupGiveawayCard();
         }
@@ -87,14 +97,22 @@ public class GiveawayDetailFragment extends Fragment {
     }
 
     private void setupGiveawayCard() {
-        // TODO: Enter, leave, neither?
         // Format the "Enter (__P)" text to include the points
-        ((TextView) getActivity().findViewById(R.id.enter)).setText(String.format(getString(R.string.enter_giveaway), giveaway.getPoints()));
+        enterGiveaway.setText(String.format(getString(R.string.enter_giveaway), giveaway.getPoints()));
+        leaveGiveaway.setText(String.format(getString(R.string.leave_giveaway), giveaway.getPoints()));
 
         // Show the creator
         ((TextView) getActivity().findViewById(R.id.user)).setText("{faw-user} " + giveaway.getCreator());
 
-        // TODO: Time remaining
+        // Time remaining
+        toggleRemainingTime();
+        timeRemaining.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleRemainingTime();
+            }
+        });
+
 
         // TODO: Add comment
 
@@ -108,6 +126,14 @@ public class GiveawayDetailFragment extends Fragment {
         });
     }
 
+    private void toggleRemainingTime() {
+        String shortVariant = giveaway.getTimeRemaining();
+        String longVariant = giveaway.getTimeRemainingLong();
+
+        Log.d(TAG, "Current time text: " + timeRemaining.getText());
+        timeRemaining.setText("{faw-clock-o} " + (timeRemaining.getText().toString().contains(shortVariant) ? longVariant : shortVariant));
+    }
+
     public void setExtras(GiveawayExtras extras) {
         getActivity().findViewById(R.id.progressBar).setVisibility(View.GONE);
         if (extras.getDescription() != null) {
@@ -119,6 +145,18 @@ public class GiveawayDetailFragment extends Fragment {
             description.setText(desc);
             description.setVisibility(View.VISIBLE);
             description.setMovementMethod(LinkMovementMethod.getInstance());
+        }
+
+        // We have a token to send with an ajax request now, so we can possibly enter or leave this giveaway.
+        if(extras.getXsrfToken() != null) {
+            getActivity().findViewById(R.id.comment).setVisibility(View.VISIBLE);
+
+            if(extras.isEntered())
+                leaveGiveaway.setVisibility(View.VISIBLE);
+            else
+                enterGiveaway.setVisibility(View.VISIBLE);
+        } else {
+            Log.d(TAG, "No XSRF Token for Giveaway...");
         }
     }
 }

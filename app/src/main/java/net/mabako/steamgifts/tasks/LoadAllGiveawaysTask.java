@@ -44,6 +44,9 @@ public class LoadAllGiveawaysTask extends AsyncTask<Void, Void, List<Giveaway>> 
 
             WebUserData.extract(document);
 
+            // Do away with pinned giveaways.
+            document.select(".pinned-giveaways__outer-wrap").first().html("");
+
             // Parse all rows of giveaways
             Elements giveaways = document.select(".giveaway__row-inner-wrap");
             Log.d(TAG, "Found inner " + giveaways.size() + " elements");
@@ -75,9 +78,12 @@ public class LoadAllGiveawaysTask extends AsyncTask<Void, Void, List<Giveaway>> 
                 int copies = hints.size() == 1 ? 1 : Integer.parseInt(copiesT.replace("(", "").replace(" Copies)", ""));
                 int points = Integer.parseInt(pointsT.replace("(", "").replace("P)", ""));
 
+                // Time remaining
+                Element timeRemaining = element.select(".giveaway__columns > div span").first();
+
                 Log.v(TAG, "GIVEAWAY for " + title + ", " + giveawayLink + ", " + gameId);
 
-                giveawayList.add(new Giveaway(title, giveawayLink, type, gameId, creator, entries, comments, copies, points));
+                giveawayList.add(new Giveaway(title, giveawayLink, type, gameId, creator, entries, comments, copies, points, timeRemaining.text(), timeRemaining.attr("title")));
             }
 
             return giveawayList;
