@@ -38,7 +38,7 @@ public class WebUserData {
             // fetch the image
             String style = userContainer.select("div").first().attr("style");
             style = style.replace("background-image:url(", "").replace(");", "").replace("_medium", "_full");
-            Log.d(TAG, "Style: " + style);
+            Log.v(TAG, "User Avatar: " + style);
             current.setImageUrl(style);
         }
     }

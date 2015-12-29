@@ -24,6 +24,7 @@ import com.squareup.picasso.Picasso;
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.data.GiveawayExtras;
+import net.mabako.steamgifts.tasks.EnterLeaveGiveawayTask;
 import net.mabako.steamgifts.tasks.LoadGiveawayDetailsTask;
 
 import org.w3c.dom.Text;
@@ -32,16 +33,20 @@ public class GiveawayDetailFragment extends Fragment {
     private static final String TAG = GiveawayDetailFragment.class.getSimpleName();
 
     public static final String ARG_GIVEAWAY = "giveaway";
+    public static final String ENTRY_INSERT = "entry_insert";
+    public static final String ENTRY_DELETE = "entry_delete";
 
     /**
      * Content to show for the giveaway details.
      */
     private Giveaway giveaway;
+    private GiveawayExtras extras;
 
     private LoadGiveawayDetailsTask task;
     private TextView enterGiveaway;
     private TextView leaveGiveaway;
     private TextView timeRemaining;
+    private EnterLeaveGiveawayTask enterLeaveTask;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -94,12 +99,40 @@ public class GiveawayDetailFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         task.cancel(true);
+
+        if(enterLeaveTask != null)
+            enterLeaveTask.cancel(true);
     }
 
     private void setupGiveawayCard() {
         // Format the "Enter (__P)" text to include the points
         enterGiveaway.setText(String.format(getString(R.string.enter_giveaway), giveaway.getPoints()));
+        enterGiveaway.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                enterGiveaway.setEnabled(false);
+
+                if (enterLeaveTask != null)
+                    enterLeaveTask.cancel(true);
+
+                enterLeaveTask = new EnterLeaveGiveawayTask(GiveawayDetailFragment.this, giveaway.getGiveawayId(), extras.getXsrfToken(), ENTRY_INSERT);
+                enterLeaveTask.execute();
+            }
+        });
+
         leaveGiveaway.setText(String.format(getString(R.string.leave_giveaway), giveaway.getPoints()));
+        leaveGiveaway.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                leaveGiveaway.setEnabled(false);
+
+                if (enterLeaveTask != null)
+                    enterLeaveTask.cancel(true);
+
+                enterLeaveTask = new EnterLeaveGiveawayTask(GiveawayDetailFragment.this, giveaway.getGiveawayId(), extras.getXsrfToken(), ENTRY_DELETE);
+                enterLeaveTask.execute();
+            }
+        });
 
         // Show the creator
         ((TextView) getActivity().findViewById(R.id.user)).setText("{faw-user} " + giveaway.getCreator());
@@ -135,6 +168,8 @@ public class GiveawayDetailFragment extends Fragment {
     }
 
     public void setExtras(GiveawayExtras extras) {
+        this.extras = extras;
+
         getActivity().findViewById(R.id.progressBar).setVisibility(View.GONE);
         if (extras.getDescription() != null) {
             TextView description = (TextView) getActivity().findViewById(R.id.description);
@@ -148,15 +183,35 @@ public class GiveawayDetailFragment extends Fragment {
         }
 
         // We have a token to send with an ajax request now, so we can possibly enter or leave this giveaway.
-        if(extras.getXsrfToken() != null) {
+        if (extras.getXsrfToken() != null) {
             getActivity().findViewById(R.id.comment).setVisibility(View.VISIBLE);
 
-            if(extras.isEntered())
+            if (extras.isEntered())
                 leaveGiveaway.setVisibility(View.VISIBLE);
             else
                 enterGiveaway.setVisibility(View.VISIBLE);
         } else {
             Log.d(TAG, "No XSRF Token for Giveaway...");
         }
+    }
+
+    public void onEnterLeaveResult(String what, Boolean success) {
+        if (success == Boolean.TRUE) {
+            if (ENTRY_INSERT.equals(what)) {
+                // We've just managed to enter the giveaway.
+                enterGiveaway.setVisibility(View.GONE);
+                leaveGiveaway.setVisibility(View.VISIBLE);
+            } else {
+                enterGiveaway.setVisibility(View.VISIBLE);
+                leaveGiveaway.setVisibility(View.GONE);
+            }
+        } else if (success == Boolean.FALSE) {
+            Log.e(TAG, "Definitively an error.");
+        } else {
+            Log.e(TAG, "Probably an error catching the result...");
+        }
+
+        enterGiveaway.setEnabled(true);
+        leaveGiveaway.setEnabled(true);
     }
 }
