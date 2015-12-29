@@ -48,7 +48,7 @@ public class LogoutTask extends AsyncTask<Void, Void, Boolean> {
             Log.i(TAG, "Successfully logged out");
             return true;
         }
-        catch(IOException |InterruptedException e) {
+        catch(IOException e) {
             Log.e(TAG, "Failed to log out", e);
             return false;
         }
