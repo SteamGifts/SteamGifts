@@ -1,0 +1,61 @@
+package net.mabako.steamgifts.tasks;
+
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
+import android.util.Log;
+
+import net.mabako.steamgifts.activities.MainActivity;
+
+import org.jsoup.Jsoup;
+
+import java.io.IOException;
+
+/**
+ * Created by mabako on 29.12.2015.
+ */
+public class LogoutTask extends AsyncTask<Void, Void, Boolean> {
+    private static final String TAG = LogoutTask.class.getSimpleName();
+
+    private Activity activity;
+    private ProgressDialog progressDialog;
+    private String sessionId;
+
+    public LogoutTask(MainActivity activity, String sessionId) {
+        this.activity = activity;
+        this.sessionId = sessionId;
+    }
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+
+        progressDialog = new ProgressDialog(activity);
+        progressDialog.setMessage("Logging out...");
+        progressDialog.setIndeterminate(true);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+    }
+
+    @Override
+    protected Boolean doInBackground(Void... params) {
+        // Mostly irrelevant since we clear the stored session id...
+        try {
+            Jsoup.connect("http://www.steamgifts.com/?logout")
+                    .cookie("PHPSESSID", sessionId)
+                    .get();
+
+            Log.i(TAG, "Successfully logged out");
+            return true;
+        }
+        catch(IOException |InterruptedException e) {
+            Log.e(TAG, "Failed to log out", e);
+            return false;
+        }
+    }
+
+    @Override
+    protected void onPostExecute(Boolean aBoolean) {
+        progressDialog.dismiss();
+    }
+}

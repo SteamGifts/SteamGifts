@@ -34,6 +34,7 @@ import com.squareup.picasso.Picasso;
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.fragments.GiveawaysFragment;
 import net.mabako.steamgifts.fragments.IFragmentNotifications;
+import net.mabako.steamgifts.tasks.LogoutTask;
 import net.mabako.steamgifts.web.WebUserData;
 
 public class MainActivity extends AppCompatActivity {
@@ -165,10 +166,10 @@ public class MainActivity extends AppCompatActivity {
                                 break;
 
                             case R.string.logout:
+                                new LogoutTask(MainActivity.this, WebUserData.getCurrent().getSessionId()).execute();
+
                                 WebUserData.clear();
                                 onAccountChange();
-
-                                Snackbar.make(findViewById(R.id.swipeContainer), R.string.logged_out, Snackbar.LENGTH_SHORT).show();
                                 break;
 
                             case R.string.navigation_giveaways_all:
