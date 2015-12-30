@@ -39,13 +39,7 @@ import net.mabako.steamgifts.fragments.IFragmentNotifications;
 import net.mabako.steamgifts.tasks.LogoutTask;
 import net.mabako.steamgifts.web.WebUserData;
 
-public class MainActivity extends AppCompatActivity {
-    private static final int REQUEST_LOGIN = 3;
-    public static final String PREF_KEY_SESSION_ID = "session-id";
-    public static final String PREF_ACCOUNT = "account";
-    public static final String PREF_KEY_USERNAME = "username";
-    public static final String PREF_KEY_IMAGE = "image-url";
-
+public class MainActivity extends BaseActivity {
     public static final String FRAGMENT_TAG = "Main Fragment Thing";
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -57,16 +51,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        // Load session & username if possible
-        SharedPreferences sp = getSharedPreferences(PREF_ACCOUNT, MODE_PRIVATE);
-        if (sp.contains(PREF_KEY_SESSION_ID) && sp.contains(PREF_KEY_USERNAME)) {
-            WebUserData.getCurrent().setSessionId(sp.getString(PREF_KEY_SESSION_ID, null));
-            WebUserData.getCurrent().setName(sp.getString(PREF_KEY_USERNAME, null));
-            WebUserData.getCurrent().setImageUrl(sp.getString(PREF_KEY_IMAGE, null));
-        } else {
-            WebUserData.clear();
-        }
 
         // Need to have this prior to loading a fragment, otherwise no title is shown.
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
@@ -115,20 +99,7 @@ public class MainActivity extends AppCompatActivity {
         // Reconfigure our navigation bar items.
         reconfigureNavBarItems();
 
-        // Persist all relevant data.
-        SharedPreferences.Editor spEditor = getSharedPreferences(PREF_ACCOUNT, MODE_PRIVATE).edit();
-
-        WebUserData account = WebUserData.getCurrent();
-        if (account.isLoggedIn()) {
-            spEditor.putString(PREF_KEY_SESSION_ID, account.getSessionId());
-            spEditor.putString(PREF_KEY_USERNAME, account.getName());
-            spEditor.putString(PREF_KEY_IMAGE, account.getImageUrl());
-        } else {
-            spEditor.remove(PREF_KEY_SESSION_ID);
-            spEditor.remove(PREF_KEY_USERNAME);
-            spEditor.remove(PREF_KEY_IMAGE);
-        }
-        spEditor.apply();
+        super.onAccountChange();
 
         loadFragment(GiveawaysFragment.newInstance(GiveawaysFragment.Type.ALL));
         drawer.setSelection(R.string.navigation_giveaways_all, false);
@@ -165,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
                         switch (drawerItem.getIdentifier()) {
                             case R.string.login:
-                                startActivityForResult(new Intent(MainActivity.this, LoginActivity.class), REQUEST_LOGIN);
+                                requestLogin();
                                 break;
 
                             case R.string.logout:
@@ -282,7 +253,7 @@ public class MainActivity extends AppCompatActivity {
         Log.v(TAG, "Activity result for " + requestCode + " => " + resultCode);
         switch (requestCode) {
             case REQUEST_LOGIN:
-                if (resultCode == 1 && WebUserData.getCurrent().isLoggedIn()) {
+                if (resultCode == 1) {
                     onAccountChange();
                     Snackbar.make(findViewById(R.id.swipeContainer), "Welcome, " + WebUserData.getCurrent().getName() + "!", Snackbar.LENGTH_LONG).show();
                 } else

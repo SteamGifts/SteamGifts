@@ -1,11 +1,13 @@
 package net.mabako.steamgifts.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.mikepenz.iconics.context.IconicsContextWrapper;
@@ -13,7 +15,10 @@ import com.mikepenz.iconics.context.IconicsContextWrapper;
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
 
-public class DetailActivity extends AppCompatActivity {
+public class DetailActivity extends BaseActivity {
+    private static final String TAG = DetailActivity.class.getSimpleName();
+    private GiveawayDetailFragment fragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,7 +35,7 @@ public class DetailActivity extends AppCompatActivity {
             Bundle arguments = new Bundle();
             arguments.putSerializable(GiveawayDetailFragment.ARG_GIVEAWAY, getIntent().getSerializableExtra(GiveawayDetailFragment.ARG_GIVEAWAY));
 
-            GiveawayDetailFragment fragment = new GiveawayDetailFragment();
+            fragment = new GiveawayDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager()
                     .beginTransaction()
@@ -64,5 +69,11 @@ public class DetailActivity extends AppCompatActivity {
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(IconicsContextWrapper.wrap(newBase));
+    }
+
+    @Override
+    protected void onAccountChange() {
+        super.onAccountChange();
+        fragment.reload();
     }
 }

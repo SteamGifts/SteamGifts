@@ -1,5 +1,6 @@
 package net.mabako.steamgifts.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +14,7 @@ import com.squareup.picasso.Picasso;
 
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.activities.DetailActivity;
+import net.mabako.steamgifts.activities.MainActivity;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
 
@@ -21,9 +23,9 @@ import java.util.List;
 
 public class GiveawayAdapter extends RecyclerView.Adapter<GiveawayAdapter.ViewHolder> {
     private List<Giveaway> giveaways;
-    private Context context;
+    private Activity context;
 
-    public GiveawayAdapter(Context context) {
+    public GiveawayAdapter(Activity context) {
         this.context = context;
         this.giveaways = new ArrayList<>();
     }
@@ -83,7 +85,7 @@ public class GiveawayAdapter extends RecyclerView.Adapter<GiveawayAdapter.ViewHo
             Intent intent = new Intent(context, DetailActivity.class);
             intent.putExtra(GiveawayDetailFragment.ARG_GIVEAWAY, giveaway);
 
-            context.startActivity(intent);
+            context.startActivityForResult(intent, MainActivity.REQUEST_LOGIN_PASSIVE);
         }
     }
 }

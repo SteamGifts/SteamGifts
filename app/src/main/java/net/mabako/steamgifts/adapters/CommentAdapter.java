@@ -71,6 +71,11 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         this.notifyItemRangeInserted(this.comments.size() - comments.size(), comments.size());
     }
 
+    public void clear() {
+        comments.clear();
+        notifyDataSetChanged();
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private TextView commentAuthor;
         private TextView commentTime;

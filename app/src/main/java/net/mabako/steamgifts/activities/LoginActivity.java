@@ -95,7 +95,7 @@ public class LoginActivity extends AppCompatActivity {
             Log.v(TAG, "Parsing HTML for post-login");
             WebUserData.extract(Jsoup.parse(html));
 
-            LoginActivity.this.setResult(1);
+            LoginActivity.this.setResult(BaseActivity.RESPONSE_LOGIN_SUCCESSFUL);
             LoginActivity.this.finish();
         }
     }

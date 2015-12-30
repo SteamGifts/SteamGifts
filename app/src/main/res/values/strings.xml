@@ -22,6 +22,7 @@
     <string name="logged_out">Goodbye!</string>
 
     <string name="enter_giveaway">Enter (%dP)</string>
+    <string name="login_to_enter_giveaway">Login to Enter</string>
     <string name="leave_giveaway">Remove (%dP)</string>
     <string name="add_comment">Comment</string>
 

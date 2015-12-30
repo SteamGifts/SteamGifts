@@ -60,7 +60,7 @@ public class GiveawaysFragment extends Fragment implements IFragmentNotification
     }
 
     private void setupListViewAdapter() {
-        adapter = new GiveawayAdapter(getContext());
+        adapter = new GiveawayAdapter(getActivity());
         listView.setLayoutManager(new LinearLayoutManager(getContext()));
         listView.setAdapter(adapter);
     }

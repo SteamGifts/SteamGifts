@@ -18,6 +18,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,6 +26,9 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import net.mabako.steamgifts.R;
+import net.mabako.steamgifts.activities.DetailActivity;
+import net.mabako.steamgifts.activities.LoginActivity;
+import net.mabako.steamgifts.activities.MainActivity;
 import net.mabako.steamgifts.adapters.CommentAdapter;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.data.GiveawayExtras;
@@ -53,6 +57,7 @@ public class GiveawayDetailFragment extends Fragment {
 
     private RecyclerView listView;
     private CommentAdapter adapter;
+    private Button loginButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,7 +73,7 @@ public class GiveawayDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         CoordinatorLayout layout = (CoordinatorLayout) super.onCreateView(inflater, container, savedInstanceState);
 
-        Activity activity = getActivity();
+        final Activity activity = getActivity();
         final CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
         appBarLayout.setTitle(giveaway.getTitle());
 
@@ -91,6 +96,15 @@ public class GiveawayDetailFragment extends Fragment {
         leaveGiveaway = (TextView) activity.findViewById(R.id.leave);
         timeRemaining = (TextView) activity.findViewById(R.id.remaining);
 
+        loginButton = (Button) activity.findViewById(R.id.login);
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((DetailActivity) getActivity()).requestLogin();
+            }
+        });
+        loginButton.setVisibility(View.GONE);
+
         adapter = new CommentAdapter(getContext());
         listView = (RecyclerView) activity.findViewById(R.id.list);
         listView.setAdapter(adapter);
@@ -107,6 +121,25 @@ public class GiveawayDetailFragment extends Fragment {
         setHasOptionsMenu(true);
 
         return layout;
+    }
+
+    public void reload() {
+        Log.d(TAG, "Reloading giveaway details");
+
+        loginButton.setVisibility(View.GONE);
+        enterGiveaway.setVisibility(View.GONE);
+        leaveGiveaway.setVisibility(View.GONE);
+
+        // remove all comments
+        adapter.clear();
+
+        // show the progress bar instead of the description again
+        getActivity().findViewById(R.id.description).setVisibility(View.GONE);
+        getActivity().findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+
+        task.cancel(true);
+        task = new LoadGiveawayDetailsTask(this, giveaway.getGiveawayId());
+        task.execute();
     }
 
     @Override
@@ -191,12 +224,17 @@ public class GiveawayDetailFragment extends Fragment {
         if (extras.getXsrfToken() != null) {
             getActivity().findViewById(R.id.comment).setVisibility(View.VISIBLE);
 
+            loginButton.setVisibility(View.GONE);
             if (extras.isEntered())
                 leaveGiveaway.setVisibility(View.VISIBLE);
             else
                 enterGiveaway.setVisibility(View.VISIBLE);
         } else {
             Log.w(TAG, "No XSRF Token for Giveaway...");
+            
+            enterGiveaway.setVisibility(View.GONE);
+            leaveGiveaway.setVisibility(View.GONE);
+            loginButton.setVisibility(View.VISIBLE);
         }
 
         Log.d(TAG, "Adding " + extras.getComments().size() + " comments");
