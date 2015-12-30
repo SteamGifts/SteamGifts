@@ -67,8 +67,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
     public void addAll(List<Comment> comments) {
         this.comments.addAll(comments);
-        //this.notifyItemRangeInserted(this.comments.size(), comments.size());
-        notifyDataSetChanged();
+        this.notifyItemRangeInserted(this.comments.size() - comments.size(), comments.size());
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

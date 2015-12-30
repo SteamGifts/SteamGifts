@@ -1,0 +1,53 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="0dp"
+    android:paddingRight="0dp"
+    android:orientation="vertical"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="?android:attr/selectableItemBackground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/giveaway_image"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:padding="0dp"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingLeft="5dp">
+
+            <TextView
+                android:id="@+id/giveaway_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:textAlignment="viewStart"
+                android:textAppearance="?android:textAppearanceListItemSmall" />
+
+            <TextView
+                android:id="@+id/giveaway_details"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:textAlignment="viewStart"
+                android:textAppearance="?android:textAppearanceListItemSmall"
+                android:textColor="#909090" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/content"
+        android:background="?android:attr/listDivider" />
+</LinearLayout>

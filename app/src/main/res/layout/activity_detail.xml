@@ -110,7 +110,8 @@
                         android:layout_below="@+id/description"
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
-                        android:indeterminate="true" />
+                        android:indeterminate="true"
+                        android:paddingBottom="8dp"/>
 
                     <Button
                         android:id="@+id/enter"

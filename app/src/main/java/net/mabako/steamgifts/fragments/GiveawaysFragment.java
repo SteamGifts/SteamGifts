@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,10 +30,9 @@ public class GiveawaysFragment extends Fragment implements IFragmentNotification
 
     private SwipeRefreshLayout swipeContainer;
     private ProgressBar progressBar;
-    private ListView listView;
+    private RecyclerView listView;
 
     private GiveawayAdapter adapter;
-    private ArrayList<Giveaway> giveaways;
     private Type type = Type.ALL;
 
     public static GiveawaysFragment newInstance(Type type)
@@ -46,7 +47,7 @@ public class GiveawaysFragment extends Fragment implements IFragmentNotification
         // Inflate the layout
         RelativeLayout layout = (RelativeLayout) inflater.inflate(R.layout.fragment_giveaways_list, container, false);
 
-        listView = (ListView) layout.findViewById(R.id.list);
+        listView = (RecyclerView) layout.findViewById(R.id.list);
         swipeContainer = (SwipeRefreshLayout) layout.findViewById(R.id.swipeContainer);
         progressBar = (ProgressBar) layout.findViewById(R.id.progressBar);
 
@@ -59,22 +60,9 @@ public class GiveawaysFragment extends Fragment implements IFragmentNotification
     }
 
     private void setupListViewAdapter() {
-        giveaways = new ArrayList<>();
-        adapter = new GiveawayAdapter(getActivity(), R.layout.item_listview, R.id.giveaway_name, giveaways);
-
+        adapter = new GiveawayAdapter(getContext());
+        listView.setLayoutManager(new LinearLayoutManager(getContext()));
         listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Giveaway giveaway = (Giveaway) listView.getItemAtPosition(position);
-
-
-                Intent intent = new Intent(getContext(), DetailActivity.class);
-                intent.putExtra(GiveawayDetailFragment.ARG_GIVEAWAY, giveaway);
-
-                startActivity(intent);
-            }
-        });
     }
 
     private void setupSwipeContainer() {
@@ -108,10 +96,9 @@ public class GiveawaysFragment extends Fragment implements IFragmentNotification
             Log.d(TAG, "Adding " + giveaways1.size() + " giveaways, " + clearExistingItems);
 
             if (clearExistingItems)
-                giveaways.clear();
+                adapter.clear();
 
-            giveaways.addAll(giveaways1);
-            adapter.notifyDataSetChanged();
+            adapter.addAll(giveaways1);
         } else {
             Snackbar.make(swipeContainer, "Failed to fetch giveaways", Snackbar.LENGTH_LONG).show();
         }
