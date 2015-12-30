@@ -1,58 +1,50 @@
 package net.mabako.steamgifts.tasks;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
 import net.mabako.steamgifts.web.WebUserData;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-
-import java.io.IOException;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.jsoup.Connection;
 
 /**
  * Task to enter or leave giveaways.
  */
-public class EnterLeaveGiveawayTask extends AsyncTask<Void, Void, Boolean> {
-    private static final String TAG = EnterLeaveGiveawayTask.class.getSimpleName();
-
+public class EnterLeaveGiveawayTask extends AjaxTask<GiveawayDetailFragment> {
+    private final static String TAG = EnterLeaveGiveawayTask.class.getSimpleName();
     private String giveawayId;
-    private String xsrfToken;
-    private String what;
-
-    private GiveawayDetailFragment fragment;
 
     public EnterLeaveGiveawayTask(GiveawayDetailFragment fragment, String giveawayId, String xsrfToken, String what) {
-        this.fragment = fragment;
+        super(fragment, giveawayId, xsrfToken, what);
         this.giveawayId = giveawayId;
-        this.xsrfToken = xsrfToken;
-        this.what = what;
     }
 
     @Override
-    protected Boolean doInBackground(Void... params) {
-        Log.i(TAG, what + " -> " + giveawayId);
-        try {
-            Document document = Jsoup
-                    .connect("http://www.steamgifts.com/ajax.php")
-                    .data("xsrf_token", xsrfToken)
-                    .data("do", what)
-                    .data("code", giveawayId)
-                    .cookie("PHPSESSID", WebUserData.getCurrent().getSessionId())
-                    .post();
+    public void addExtraParameters(Connection connection) {
+        connection.data("code", giveawayId);
+    }
 
-            Log.d(TAG, "POST result: " + document.text());
-            return true;
-        } catch (IOException e) {
-            Log.e(TAG, "Error fetching URL", e);
-            return null;
+    @Override
+    protected void onPostExecute(Connection.Response response) {
+        if(response != null && response.statusCode() == 200) {
+            try {
+                JSONObject root = new JSONObject(response.body());
+
+                boolean success = "success".equals(root.getString("type"));
+                int points = root.getInt("points");
+
+                getFragment().onEnterLeaveResult(getWhat(), success);
+
+                // Update the points we have.
+                WebUserData.getCurrent().setPoints(points);
+                return;
+            } catch(JSONException e) {
+                Log.e(TAG, "Failed to parse JSON object", e);
+            }
         }
-    }
 
-    @Override
-    protected void onPostExecute(Boolean aBoolean) {
-        super.onPostExecute(aBoolean);
-        fragment.onEnterLeaveResult(what, aBoolean);
+        getFragment().onEnterLeaveResult(getWhat(), null);
     }
 }

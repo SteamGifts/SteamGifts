@@ -64,7 +64,7 @@ public class WebUserData {
     }
 
     public void setName(String name) {
-        Log.v(TAG, "Setting current user name to " + current.name);
+        Log.v(TAG, "Setting current user name to " + name);
         this.name = name;
     }
 
@@ -74,5 +74,14 @@ public class WebUserData {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        Log.v(TAG, "Setting current user points to " + points);
+        this.points = points;
     }
 }
