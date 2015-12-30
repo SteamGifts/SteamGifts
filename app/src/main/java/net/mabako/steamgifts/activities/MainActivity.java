@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
     private AccountHeader accountHeader;
     private Drawer drawer;
+    private ProfileDrawerItem profile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -189,6 +190,32 @@ public class MainActivity extends AppCompatActivity {
                         return true;
                     }
                 })
+                .withOnDrawerListener(new Drawer.OnDrawerListener() {
+                    @Override
+                    public void onDrawerOpened(View drawerView) {
+
+                    }
+
+                    @Override
+                    public void onDrawerClosed(View drawerView) {
+
+                    }
+
+                    @Override
+                    public void onDrawerSlide(View drawerView, float slideOffset) {
+                        // Are we even logged in?
+                        if (WebUserData.getCurrent().isLoggedIn()) {
+                            // Format the string
+                            String newInfo = String.format(getString(R.string.drawer_profile_info), WebUserData.getCurrent().getLevel(), WebUserData.getCurrent().getPoints());
+
+                            // Is this still up-to-date?
+                            if (!newInfo.equals(profile.getEmail().toString())) {
+                                profile.withEmail(newInfo);
+                                accountHeader.updateProfile(profile);
+                            }
+                        }
+                    }
+                })
                 .build();
 
         reconfigureNavBarItems();
@@ -207,14 +234,16 @@ public class MainActivity extends AppCompatActivity {
 
         WebUserData account = WebUserData.getCurrent();
         if (account.isLoggedIn()) {
-            ProfileDrawerItem profile = new ProfileDrawerItem().withName(account.getName()).withEmail(account.getSessionId());
+            profile = new ProfileDrawerItem().withName(account.getName()).withEmail(account.getSessionId()).withIdentifier(1);
 
             if (account.getImageUrl() != null && !account.getImageUrl().isEmpty())
                 profile.withIcon(account.getImageUrl());
 
             accountHeader.addProfile(profile, 0);
-        } else
-            accountHeader.addProfile(new ProfileDrawerItem().withName(getString(R.string.guest)).withEmail("Not logged in").withIcon(R.drawable.guy), 0);
+        } else {
+            profile = new ProfileDrawerItem().withName(getString(R.string.guest)).withEmail("Not logged in").withIcon(R.drawable.guy).withIdentifier(1);
+            accountHeader.addProfile(profile, 0);
+        }
 
 
         // Rebuild all items

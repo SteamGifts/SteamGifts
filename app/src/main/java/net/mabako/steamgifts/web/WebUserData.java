@@ -40,6 +40,14 @@ public class WebUserData {
             style = style.replace("background-image:url(", "").replace(");", "").replace("_medium", "_full");
             Log.v(TAG, "User Avatar: " + style);
             current.setImageUrl(style);
+
+            // points
+            Element accountContainer = navbar.select("a[href=/account]").first();
+            current.setPoints(Integer.parseInt(accountContainer.select(".nav__points").text()));
+
+            // Level
+            float level = Float.parseFloat(accountContainer.select("span").last().attr("title"));
+            current.setLevel((int) level);
         }
     }
 
@@ -83,5 +91,13 @@ public class WebUserData {
     public void setPoints(int points) {
         Log.v(TAG, "Setting current user points to " + points);
         this.points = points;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
     }
 }

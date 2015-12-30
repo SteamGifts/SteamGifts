@@ -14,6 +14,7 @@
 
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
+    <string name="drawer_profile_info">Level %1$d - %2$dP</string>
 
     <string name="guest">Guest</string>
     <string name="login">Login</string>
