@@ -22,4 +22,7 @@
 
     <string name="enter_giveaway">Enter (%dP)</string>
     <string name="leave_giveaway">Remove (%dP)</string>
+    <string name="add_comment">Comment</string>
+
+    <string name="open_steam_store">Open on Steam Store</string>
 </resources>
