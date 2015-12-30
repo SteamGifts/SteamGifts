@@ -1,7 +1,6 @@
 package net.mabako.steamgifts.data;
 
 import java.io.Serializable;
-import java.util.List;
 
 public class Giveaway implements Serializable {
     private String title;
@@ -27,6 +26,7 @@ public class Giveaway implements Serializable {
         this.copies = copies;
         this.points = points;
         this.timeRemaining = timeRemaining.replace(" remaining", "");
+        this.timeRemainingLong = timeRemainingLong;
     }
 
     public String getTitle() {
