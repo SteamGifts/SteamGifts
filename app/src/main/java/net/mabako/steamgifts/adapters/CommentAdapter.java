@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,6 +85,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
             commentContent = (TextView) v.findViewById(R.id.content);
             commentMarker = v.findViewById(R.id.comment_marker);
             commentIndent = v.findViewById(R.id.comment_indent);
+
+            commentContent.setMovementMethod(LinkMovementMethod.getInstance());
 
             // OnClickListener...
         }
