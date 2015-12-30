@@ -19,8 +19,8 @@ public class GiveawayAdapter extends ArrayAdapter<Giveaway> {
     private Activity activity;
 
     public GiveawayAdapter(Activity activity, int resource, int textViewResourceId,
-                          List<Giveaway> countries) {
-        super(activity, resource, textViewResourceId, countries);
+                           List<Giveaway> giveaways) {
+        super(activity, resource, textViewResourceId, giveaways);
         this.activity = activity;
 
     }
@@ -39,7 +39,7 @@ public class GiveawayAdapter extends ArrayAdapter<Giveaway> {
             holder = new ViewHolder(convertView);
             // set tag for holder
             convertView.setTag(holder);
-        }  else {
+        } else {
             // if holder created, get tag from view
             holder = (ViewHolder) convertView.getTag();
         }
@@ -50,7 +50,7 @@ public class GiveawayAdapter extends ArrayAdapter<Giveaway> {
         holder.giveawayName.setText(giveaway.getTitle());
 
         String str = giveaway.getPoints() + "P | " + giveaway.getEntries() + " entries";
-        if(giveaway.getCopies() > 1)
+        if (giveaway.getCopies() > 1)
             str = giveaway.getCopies() + " copies | " + str;
         holder.giveawayDetails.setText(str);
 

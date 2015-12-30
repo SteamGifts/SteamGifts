@@ -1,6 +1,7 @@
 package net.mabako.steamgifts.data;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class Giveaway implements Serializable {
     private String title;
@@ -9,24 +10,23 @@ public class Giveaway implements Serializable {
     private int gameId;
     private String creator;
     private int entries;
-    private int comments;
+    private int commentCount;
     private int copies;
     private int points;
     private String timeRemaining;
     private String timeRemainingLong;
 
-    public Giveaway(String title, String giveawayId, Type type, int gameId, String creator, int entries, int comments, int copies, int points, String timeRemaining, String timeRemainingLong) {
+    public Giveaway(String title, String giveawayId, Type type, int gameId, String creator, int entries, int commentCount, int copies, int points, String timeRemaining, String timeRemainingLong) {
         this.title = title;
         this.giveawayId = giveawayId;
         this.type = type;
         this.gameId = gameId;
         this.creator = creator;
         this.entries = entries;
-        this.comments = comments;
+        this.commentCount = commentCount;
         this.copies = copies;
         this.points = points;
         this.timeRemaining = timeRemaining.replace(" remaining", "");
-        this.timeRemainingLong = timeRemainingLong;
     }
 
     public String getTitle() {
@@ -45,8 +45,8 @@ public class Giveaway implements Serializable {
         return creator;
     }
 
-    public int getComments() {
-        return comments;
+    public int getCommentCount() {
+        return commentCount;
     }
 
     public int getEntries() {

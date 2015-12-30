@@ -8,8 +8,8 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
 import android.text.Html;
-import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,12 +22,12 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import net.mabako.steamgifts.R;
+import net.mabako.steamgifts.adapters.CommentAdapter;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.data.GiveawayExtras;
+import net.mabako.steamgifts.fragments.util.WrappingLinearLayoutManager;
 import net.mabako.steamgifts.tasks.EnterLeaveGiveawayTask;
 import net.mabako.steamgifts.tasks.LoadGiveawayDetailsTask;
-
-import org.w3c.dom.Text;
 
 public class GiveawayDetailFragment extends Fragment {
     private static final String TAG = GiveawayDetailFragment.class.getSimpleName();
@@ -47,6 +47,9 @@ public class GiveawayDetailFragment extends Fragment {
     private TextView leaveGiveaway;
     private TextView timeRemaining;
     private EnterLeaveGiveawayTask enterLeaveTask;
+
+    private RecyclerView listView;
+    private CommentAdapter adapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -81,9 +84,15 @@ public class GiveawayDetailFragment extends Fragment {
             });
         }
 
-        enterGiveaway = (TextView) getActivity().findViewById(R.id.enter);
-        leaveGiveaway = (TextView) getActivity().findViewById(R.id.leave);
-        timeRemaining = (TextView) getActivity().findViewById(R.id.remaining);
+        enterGiveaway = (TextView) activity.findViewById(R.id.enter);
+        leaveGiveaway = (TextView) activity.findViewById(R.id.leave);
+        timeRemaining = (TextView) activity.findViewById(R.id.remaining);
+
+        adapter = new CommentAdapter(getContext());
+        listView = (RecyclerView) activity.findViewById(R.id.list);
+        listView.setAdapter(adapter);
+        listView.setNestedScrollingEnabled(false);
+        listView.setLayoutManager(new WrappingLinearLayoutManager(getActivity()));
 
         if (giveaway != null) {
             setupGiveawayCard();
@@ -191,8 +200,13 @@ public class GiveawayDetailFragment extends Fragment {
             else
                 enterGiveaway.setVisibility(View.VISIBLE);
         } else {
-            Log.d(TAG, "No XSRF Token for Giveaway...");
+            Log.w(TAG, "No XSRF Token for Giveaway...");
         }
+
+        Log.d(TAG, "Adding " + extras.getComments().size() + " comments");
+
+        adapter.addAll(extras.getComments());
+        adapter.notifyDataSetChanged();
     }
 
     public void onEnterLeaveResult(String what, Boolean success) {

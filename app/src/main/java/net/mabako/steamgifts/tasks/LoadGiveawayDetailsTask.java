@@ -54,6 +54,11 @@ public class LoadGiveawayDetailsTask extends AsyncTask<Void, Void, GiveawayExtra
                 extras.setXsrfToken(enterLeaveForm.select("input[name=xsrf_token]").attr("value"));
             }
 
+            // Load comments
+            Element rootCommentNode = document.select(".comments").first();
+            if(rootCommentNode != null)
+                Utils.loadComments(rootCommentNode, extras);
+
             return extras;
         } catch (IOException e) {
             Log.e(TAG, "Error fetching URL", e);
