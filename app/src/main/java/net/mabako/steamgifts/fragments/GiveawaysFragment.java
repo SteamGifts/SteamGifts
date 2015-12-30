@@ -109,11 +109,6 @@ public class GiveawaysFragment extends Fragment implements IFragmentNotification
         swipeContainer.setRefreshing(false);
     }
 
-    @Override
-    public void onAccountChange() {
-        fetchItems(1);
-    }
-
     public enum Type {
         ALL(R.string.navigation_giveaways_all, R.string.navigation_giveaways_all_title),
         GROUP(R.string.navigation_giveaways_group, R.string.navigation_giveaways_group_title),

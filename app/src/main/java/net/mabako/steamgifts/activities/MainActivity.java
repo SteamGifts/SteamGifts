@@ -2,13 +2,16 @@ package net.mabako.steamgifts.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -67,13 +70,14 @@ public class MainActivity extends AppCompatActivity {
         // Need to have this prior to loading a fragment, otherwise no title is shown.
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
+        setupNavBar();
+
         // savedInstanceState is non-null if a fragment state is saved from a previous configuration.
         if(savedInstanceState == null) {
             // Load a default fragment to show all giveaways
             loadFragment(GiveawaysFragment.newInstance(GiveawaysFragment.Type.ALL));
+            drawer.setSelection(R.string.navigation_giveaways_all, false);
         }
-
-        setupNavBar();
     }
 
     private void loadFragment(Fragment fragment) {
@@ -82,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
 
         ft.replace(R.id.fragment_container, fragment, FRAGMENT_TAG);
 
-        ft.commit();
+        ft.commitAllowingStateLoss();
 
         // Update the title.
         ActionBar actionBar = getSupportActionBar();
@@ -125,9 +129,8 @@ public class MainActivity extends AppCompatActivity {
         }
         spEditor.apply();
 
-        Fragment currentFragment = getCurrentFragment();
-        if(currentFragment instanceof IFragmentNotifications)
-            ((IFragmentNotifications) currentFragment).onAccountChange();
+        loadFragment(GiveawaysFragment.newInstance(GiveawaysFragment.Type.ALL));
+        drawer.setSelection(R.string.navigation_giveaways_all, false);
     }
 
     protected void setupNavBar() {
@@ -146,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
         // Account?
         accountHeader = new AccountHeaderBuilder()
                 .withActivity(this)
-                .withHeaderBackground(R.drawable.header)
+                .withHeaderBackground(new ColorDrawable(ContextCompat.getColor(this, R.color.colorPrimary)))
                 .withSelectionListEnabledForSingleProfile(false)
                 .build();
 
