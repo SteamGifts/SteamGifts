@@ -35,11 +35,14 @@ public class LoadAllGiveawaysTask extends AsyncTask<Void, Void, List<Giveaway>> 
 
         try {
             // Fetch the Giveaway page
-            String typeStr = type == GiveawaysFragment.Type.ALL ? "" : ("&type=" + type.name().toLowerCase());
 
-            Connection jsoup = Jsoup.connect("http://www.steamgifts.com/giveaways/search?page=" + page + typeStr);
+            Connection jsoup = Jsoup.connect("http://www.steamgifts.com/giveaways/search");
+            jsoup.data("page", Integer.toString(page));
+            if(type != GiveawaysFragment.Type.ALL)
+                jsoup.data("type", type.name().toLowerCase());
+
             if (WebUserData.getCurrent().isLoggedIn())
-                jsoup = jsoup.cookie("PHPSESSID", WebUserData.getCurrent().getSessionId());
+                jsoup.cookie("PHPSESSID", WebUserData.getCurrent().getSessionId());
             Document document = jsoup.get();
 
             WebUserData.extract(document);
