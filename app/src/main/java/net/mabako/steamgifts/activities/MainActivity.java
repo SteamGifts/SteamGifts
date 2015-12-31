@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -30,6 +31,7 @@ import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader;
 import com.mikepenz.materialdrawer.util.DrawerImageLoader;
 import com.squareup.picasso.Picasso;
 
+import net.mabako.steamgifts.BuildConfig;
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.fragments.GiveawaysFragment;
 import net.mabako.steamgifts.fragments.IFragmentNotifications;
@@ -55,7 +57,7 @@ public class MainActivity extends BaseActivity {
         setupNavBar();
 
         // savedInstanceState is non-null if a fragment state is saved from a previous configuration.
-        if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
             // Load a default fragment to show all giveaways
             loadFragment(GiveawaysFragment.newInstance(GiveawaysFragment.Type.ALL));
             drawer.setSelection(R.string.navigation_giveaways_all, false);
@@ -72,15 +74,14 @@ public class MainActivity extends BaseActivity {
 
         // Update the title.
         ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null) {
+        if (actionBar != null) {
             Log.v(TAG, "Current Fragment is a " + fragment.getClass().getName());
-            if(fragment instanceof IFragmentNotifications) {
+            if (fragment instanceof IFragmentNotifications) {
                 int resource = ((IFragmentNotifications) fragment).getTitleResource();
                 actionBar.setTitle(resource);
 
                 Log.v(TAG, "Setting Toolbar title to " + getString(resource));
-            }
-            else
+            } else
                 actionBar.setTitle(R.string.app_name);
         }
     }
@@ -141,6 +142,22 @@ public class MainActivity extends BaseActivity {
 
                                 WebUserData.clear();
                                 onAccountChange();
+                                break;
+
+                            case R.string.feedback:
+                                String email = "lizacarvelli+steamgifts+" + BuildConfig.VERSION_NAME + "+" + BuildConfig.VERSION_CODE + "@gmail.com";
+                                Log.v(TAG, "Email to " + email);
+
+                                Intent intent = new Intent(Intent.ACTION_SENDTO);
+                                intent.setType("text/plain");
+                                intent.setData(Uri.parse("mailto:"));
+                                intent.putExtra(Intent.EXTRA_EMAIL, new String[]{email});
+                                intent.putExtra(Intent.EXTRA_SUBJECT, "SteamGifts for Android Feedback");
+                                try {
+                                    startActivity(intent);
+                                } catch (android.content.ActivityNotFoundException ex) {
+                                    Snackbar.make(findViewById(R.id.swipeContainer), "No mail clients installed", Snackbar.LENGTH_LONG);
+                                }
                                 break;
 
                             case R.string.navigation_giveaways_all:
@@ -237,12 +254,16 @@ public class MainActivity extends BaseActivity {
         // Discussions, some time
         // drawer.addItem(new SectionDrawerItem().withName(R.string.navigation_discussions));
 
+
+        drawer.addItems(new DividerDrawerItem());
+
         // Provide a way to log out.
         if (account.isLoggedIn()) {
-            drawer.addItems(
-                    new DividerDrawerItem(),
-                    new PrimaryDrawerItem().withName(R.string.logout).withIdentifier(R.string.logout).withSelectable(false).withIcon(FontAwesome.Icon.faw_sign_out));
+            drawer.addItem(new PrimaryDrawerItem().withName(R.string.logout).withIdentifier(R.string.logout).withSelectable(false).withIcon(FontAwesome.Icon.faw_sign_out));
         }
+
+        // Feedback
+        drawer.addItem(new PrimaryDrawerItem().withName(R.string.feedback).withIdentifier(R.string.feedback).withSelectable(false).withIcon(FontAwesome.Icon.faw_comment));
     }
 
     @Override

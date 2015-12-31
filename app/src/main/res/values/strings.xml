@@ -20,6 +20,7 @@
     <string name="login">Login</string>
     <string name="logout">Logout</string>
     <string name="logged_out">Goodbye!</string>
+    <string name="feedback">Send Feedback</string>
 
     <string name="enter_giveaway">Enter (%dP)</string>
     <string name="login_to_enter_giveaway">Login to Enter</string>
