@@ -109,7 +109,7 @@ public class MainActivity extends BaseActivity {
 
         super.onAccountChange();
 
-        loadFragment(GiveawaysFragment.newInstance(GiveawaysFragment.Type.ALL, getIntent().getExtras().getString(ARGS_QUERY, null)));
+        loadFragment(GiveawaysFragment.newInstance(GiveawaysFragment.Type.ALL, getIntent().getExtras() != null ? getIntent().getExtras().getString(ARGS_QUERY, null) : null));
         drawer.setSelection(R.string.navigation_giveaways_all, false);
     }
 
@@ -174,7 +174,7 @@ public class MainActivity extends BaseActivity {
                             case R.string.navigation_giveaways_group:
                             case R.string.navigation_giveaways_wishlist:
                             case R.string.navigation_giveaways_new:
-                                loadFragment(GiveawaysFragment.newInstance(GiveawaysFragment.Type.find(drawerItem.getIdentifier()), getIntent().getExtras().getString(ARGS_QUERY, null)));
+                                loadFragment(GiveawaysFragment.newInstance(GiveawaysFragment.Type.find(drawerItem.getIdentifier()), getIntent().getExtras() != null ? getIntent().getExtras().getString(ARGS_QUERY, null) : null));
                                 break;
 
                             default:
