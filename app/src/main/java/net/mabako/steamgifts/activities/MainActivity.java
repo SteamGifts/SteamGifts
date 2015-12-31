@@ -256,14 +256,13 @@ public class MainActivity extends BaseActivity {
 
 
         drawer.addItems(new DividerDrawerItem());
+        // Feedback
+        drawer.addItem(new PrimaryDrawerItem().withName(R.string.feedback).withIdentifier(R.string.feedback).withSelectable(false).withIcon(FontAwesome.Icon.faw_comment));
 
         // Provide a way to log out.
         if (account.isLoggedIn()) {
             drawer.addItem(new PrimaryDrawerItem().withName(R.string.logout).withIdentifier(R.string.logout).withSelectable(false).withIcon(FontAwesome.Icon.faw_sign_out));
         }
-
-        // Feedback
-        drawer.addItem(new PrimaryDrawerItem().withName(R.string.feedback).withIdentifier(R.string.feedback).withSelectable(false).withIcon(FontAwesome.Icon.faw_comment));
     }
 
     @Override
