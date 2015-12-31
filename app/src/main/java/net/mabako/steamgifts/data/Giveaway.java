@@ -13,7 +13,7 @@ public class Giveaway implements Serializable {
     private final int commentCount;
     private final int copies;
     private final int points;
-    private final String timeRemaining;
+    private String timeRemaining;
     private final String timeRemainingLong;
     private boolean entered = false;
 
@@ -28,7 +28,7 @@ public class Giveaway implements Serializable {
         this.commentCount = commentCount;
         this.copies = copies;
         this.points = points;
-        this.timeRemaining = timeRemaining.replace(" remaining", "");
+        setTimeRemaining(timeRemaining);
         this.timeRemainingLong = timeRemainingLong;
     }
 
@@ -103,6 +103,10 @@ public class Giveaway implements Serializable {
     @Override
     public String toString() {
         return "[GA "+ giveawayId + ", " + gameId + "]";
+    }
+
+    public void setTimeRemaining(String timeRemaining) {
+        this.timeRemaining = timeRemaining.replace(" remaining", "");;
     }
 
     public enum Type {

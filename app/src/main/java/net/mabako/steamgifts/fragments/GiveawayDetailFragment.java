@@ -36,6 +36,7 @@ import net.mabako.steamgifts.data.GiveawayExtras;
 import net.mabako.steamgifts.fragments.util.WrappingLinearLayoutManager;
 import net.mabako.steamgifts.tasks.EnterLeaveGiveawayTask;
 import net.mabako.steamgifts.tasks.LoadGiveawayDetailsTask;
+import net.mabako.steamgifts.web.WebUserData;
 
 public class GiveawayDetailFragment extends Fragment {
     private static final String TAG = GiveawayDetailFragment.class.getSimpleName();
@@ -238,6 +239,11 @@ public class GiveawayDetailFragment extends Fragment {
     public void addDetails(GiveawayExtras extras, int page) {
         this.extras = extras;
 
+        if(extras.getTimeRemaining() != null) {
+            giveaway.setTimeRemaining(extras.getTimeRemaining());
+            timeRemaining.setText("{faw-clock-o} " + giveaway.getTimeRemaining());
+        }
+
         getActivity().findViewById(R.id.progressBar).setVisibility(View.GONE);
         if (extras.getDescription() != null) {
             TextView description = (TextView) getActivity().findViewById(R.id.description);
@@ -272,8 +278,8 @@ public class GiveawayDetailFragment extends Fragment {
 
             enterGiveaway.setVisibility(View.GONE);
             leaveGiveaway.setVisibility(View.GONE);
-            loginButton.setVisibility(View.VISIBLE);
             errorMessage.setVisibility(View.GONE);
+            loginButton.setVisibility(WebUserData.getCurrent().isLoggedIn() ? View.GONE : View.VISIBLE);
         }
 
 
