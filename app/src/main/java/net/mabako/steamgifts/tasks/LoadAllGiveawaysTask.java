@@ -22,11 +22,13 @@ public class LoadAllGiveawaysTask extends AsyncTask<Void, Void, List<Giveaway>> 
     private final GiveawaysFragment fragment;
     private final int page;
     private final GiveawaysFragment.Type type;
+    private final String searchQuery;
 
-    public LoadAllGiveawaysTask(GiveawaysFragment activity, int page, GiveawaysFragment.Type type) {
+    public LoadAllGiveawaysTask(GiveawaysFragment activity, int page, GiveawaysFragment.Type type, String searchQuery) {
         this.fragment = activity;
         this.page = page;
         this.type = type;
+        this.searchQuery = searchQuery;
     }
 
     @Override
@@ -38,6 +40,10 @@ public class LoadAllGiveawaysTask extends AsyncTask<Void, Void, List<Giveaway>> 
 
             Connection jsoup = Jsoup.connect("http://www.steamgifts.com/giveaways/search");
             jsoup.data("page", Integer.toString(page));
+
+            if(searchQuery != null)
+                jsoup.data("q", searchQuery);
+
             if(type != GiveawaysFragment.Type.ALL)
                 jsoup.data("type", type.name().toLowerCase());
 

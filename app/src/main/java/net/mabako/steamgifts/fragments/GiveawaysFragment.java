@@ -1,13 +1,17 @@
 package net.mabako.steamgifts.fragments;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,6 +23,8 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import net.mabako.steamgifts.R;
+import net.mabako.steamgifts.activities.BaseActivity;
+import net.mabako.steamgifts.activities.MainActivity;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.adapters.GiveawayAdapter;
 import net.mabako.steamgifts.data.Giveaway;
@@ -35,11 +41,12 @@ public class GiveawaysFragment extends Fragment implements IFragmentNotification
 
     private GiveawayAdapter adapter;
     private Type type = Type.ALL;
+    private String searchQuery = null;
 
-    public static GiveawaysFragment newInstance(Type type)
-    {
+    public static GiveawaysFragment newInstance(Type type, String query) {
         GiveawaysFragment g = new GiveawaysFragment();
         g.type = type;
+        g.searchQuery = query;
         return g;
     }
 
@@ -93,9 +100,14 @@ public class GiveawaysFragment extends Fragment implements IFragmentNotification
         return type.getTitleResource();
     }
 
+    @Override
+    public String getExtraTitle() {
+        return searchQuery;
+    }
+
     private void fetchItems(int page) {
         Log.d(TAG, "Fetching giveaways on page " + page);
-        new LoadAllGiveawaysTask(this, page, type).execute();
+        new LoadAllGiveawaysTask(this, page, type, searchQuery).execute();
     }
 
     public void addGiveaways(List<Giveaway> giveaways, boolean clearExistingItems) {
@@ -119,7 +131,7 @@ public class GiveawaysFragment extends Fragment implements IFragmentNotification
     public void onUpdateGiveawayStatus(String giveawayId, boolean entered) {
         Giveaway giveaway = adapter.findItem(giveawayId);
         Log.v(TAG, "GA " + giveawayId + " => " + giveaway + ", " + entered);
-        if(giveaway != null) {
+        if (giveaway != null) {
             giveaway.setEntered(entered);
             adapter.notifyItemChanged(giveaway);
         }
@@ -129,6 +141,36 @@ public class GiveawaysFragment extends Fragment implements IFragmentNotification
     public void onCreateOptionsMenu(
             Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main_menu, menu);
+
+        final MenuItem searchMenu = menu.findItem(R.id.search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchMenu);
+        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                query = query.trim();
+                Log.v(TAG, "Submit -> " + query);
+                searchView.setQuery("", false);
+                searchMenu.collapseActionView();
+
+                Intent intent = new Intent(getActivity(), MainActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString(MainActivity.ARGS_QUERY, query);
+                intent.putExtras(bundle);
+
+                getActivity().startActivityForResult(intent, BaseActivity.REQUEST_LOGIN_PASSIVE);
+                if (searchQuery != null && !searchQuery.isEmpty())
+                    getActivity().finish();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                Log.v(TAG, "Text Change -> " + newText);
+                return true;
+            }
+        });
     }
 
     @Override

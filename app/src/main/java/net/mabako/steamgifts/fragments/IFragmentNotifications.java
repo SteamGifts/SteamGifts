@@ -9,4 +9,6 @@ public interface IFragmentNotifications {
      * @return resource id
      */
     int getTitleResource();
+
+    String getExtraTitle();
 }

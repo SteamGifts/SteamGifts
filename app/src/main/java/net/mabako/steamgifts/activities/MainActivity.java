@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -40,6 +39,8 @@ import net.mabako.steamgifts.tasks.LogoutTask;
 import net.mabako.steamgifts.web.WebUserData;
 
 public class MainActivity extends BaseActivity {
+    public static final String ARGS_QUERY = "query";
+
     private static final String FRAGMENT_TAG = "Main Fragment Thing";
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -59,8 +60,11 @@ public class MainActivity extends BaseActivity {
 
         // savedInstanceState is non-null if a fragment state is saved from a previous configuration.
         if (savedInstanceState == null) {
+            Bundle extras = getIntent().getExtras();
+            String queryString = extras == null ? null : extras.getString(ARGS_QUERY, null);
+
             // Load a default fragment to show all giveaways
-            loadFragment(GiveawaysFragment.newInstance(GiveawaysFragment.Type.ALL));
+            loadFragment(GiveawaysFragment.newInstance(GiveawaysFragment.Type.ALL, queryString));
             drawer.setSelection(R.string.navigation_giveaways_all, false);
         }
     }
@@ -79,9 +83,14 @@ public class MainActivity extends BaseActivity {
             Log.v(TAG, "Current Fragment is a " + fragment.getClass().getName());
             if (fragment instanceof IFragmentNotifications) {
                 int resource = ((IFragmentNotifications) fragment).getTitleResource();
-                actionBar.setTitle(resource);
+                String title = getString(resource);
 
-                Log.v(TAG, "Setting Toolbar title to " + getString(resource));
+                String extra = ((IFragmentNotifications) fragment).getExtraTitle();
+                if(extra != null && !extra.isEmpty())
+                    title = String.format("%s: %s", extra, title);
+
+                actionBar.setTitle(title);
+                Log.v(TAG, "Setting Toolbar title to " + title);
             } else
                 actionBar.setTitle(R.string.app_name);
         }
@@ -100,7 +109,7 @@ public class MainActivity extends BaseActivity {
 
         super.onAccountChange();
 
-        loadFragment(GiveawaysFragment.newInstance(GiveawaysFragment.Type.ALL));
+        loadFragment(GiveawaysFragment.newInstance(GiveawaysFragment.Type.ALL, getIntent().getExtras().getString(ARGS_QUERY, null)));
         drawer.setSelection(R.string.navigation_giveaways_all, false);
     }
 
@@ -165,7 +174,7 @@ public class MainActivity extends BaseActivity {
                             case R.string.navigation_giveaways_group:
                             case R.string.navigation_giveaways_wishlist:
                             case R.string.navigation_giveaways_new:
-                                loadFragment(GiveawaysFragment.newInstance(GiveawaysFragment.Type.find(drawerItem.getIdentifier())));
+                                loadFragment(GiveawaysFragment.newInstance(GiveawaysFragment.Type.find(drawerItem.getIdentifier()), getIntent().getExtras().getString(ARGS_QUERY, null)));
                                 break;
 
                             default:
