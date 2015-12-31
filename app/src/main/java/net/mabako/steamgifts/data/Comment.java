@@ -43,4 +43,12 @@ public class Comment implements Serializable {
     public int getDepth() {
         return depth;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if(o == null || !(o instanceof Comment))
+            return false;
+
+        return ((Comment) o).id == id;
+    }
 }

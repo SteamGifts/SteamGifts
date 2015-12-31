@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GiveawayAdapter extends EndlessAdapter<Giveaway, GiveawayAdapter.ViewHolder> {
+    private static final int ITEMS_PER_PAGE = 50;
     private Activity context;
     public GiveawayAdapter(Activity context, RecyclerView view, OnLoadListener listener) {
         super(view, listener);
@@ -44,6 +45,11 @@ public class GiveawayAdapter extends EndlessAdapter<Giveaway, GiveawayAdapter.Vi
         if (giveaway.getCopies() > 1)
             str = giveaway.getCopies() + " copies | " + str;
         holder.giveawayDetails.setText(str);
+    }
+
+    @Override
+    protected boolean hasEnoughItems(List<Giveaway> items) {
+        return items.size() == ITEMS_PER_PAGE;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

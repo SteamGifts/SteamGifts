@@ -20,6 +20,7 @@ import java.util.List;
  * Adapter to hold comments for a giveaway/discussion.
  */
 public class CommentAdapter extends EndlessAdapter<Comment, CommentAdapter.ViewHolder> {
+    private static final int ITEMS_PER_PAGE = 25;
     private int[] colors = {android.R.color.holo_blue_dark, android.R.color.holo_green_dark, android.R.color.holo_orange_dark, android.R.color.holo_red_dark};
 
     private float displayDensity;
@@ -55,6 +56,19 @@ public class CommentAdapter extends EndlessAdapter<Comment, CommentAdapter.ViewH
         // Marker
         holder.commentMarker.setBackgroundColor(colors[comment.getDepth() % colors.length]);
         holder.commentMarker.invalidate();
+    }
+
+    @Override
+    protected boolean hasEnoughItems(List<Comment> items) {
+        if(items.size() < ITEMS_PER_PAGE)
+            return false;
+
+        int rootLevelComments = 0;
+        for(Comment comment : items)
+            if(comment.getDepth() == 0)
+                ++ rootLevelComments;
+
+        return rootLevelComments == ITEMS_PER_PAGE;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

@@ -1,5 +1,6 @@
 package net.mabako.steamgifts.adapters;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
@@ -26,25 +27,31 @@ public abstract class EndlessAdapter<ItemType, HolderType extends RecyclerView.V
     private boolean reachedTheEnd;
     private int page = 1;
 
-    public EndlessAdapter(RecyclerView view, OnLoadListener listener) {
-        final LinearLayoutManager layout = (LinearLayoutManager) view.getLayoutManager();
+    public EndlessAdapter(@NonNull RecyclerView view, @NonNull OnLoadListener listener) {
+        if(listener == null)
+            throw new IllegalStateException("No load listener");
 
-        if (listener != null) {
-            loadListener = listener;
+        final LinearLayoutManager layoutManager = (LinearLayoutManager) view.getLayoutManager();
+        if(layoutManager == null)
+            throw new IllegalStateException("No layout manager");
 
-            view.addOnScrollListener(new OnScrollListener() {
-                @Override
-                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                    int lastVisibleItem = layout.findLastVisibleItemPosition();
+        loadListener = listener;
 
-                    if (!loading && layout.getItemCount() <= (lastVisibleItem + 5)) {
-                        startLoading();
-                    }
+        view.addOnScrollListener(new OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                int lastVisibleItem = layoutManager.findLastVisibleItemPosition();
+
+                if (!loading && layoutManager.getItemCount() <= (lastVisibleItem + 5)) {
+                    startLoading();
                 }
-            });
-        }
+            }
+        });
     }
 
+    /**
+     * Start loading by insert a progress bar item.
+     */
     private void startLoading() {
         if (reachedTheEnd)
             return;
@@ -96,9 +103,15 @@ public abstract class EndlessAdapter<ItemType, HolderType extends RecyclerView.V
 
     private void addAll(List<ItemType> items) {
         if (items.size() > 0) {
+            boolean enoughItems = hasEnoughItems(items);
+            // remove all things we already have
             items.removeAll(this.items);
+
             this.items.addAll(items);
             this.notifyItemRangeInserted(this.items.size() - items.size(), items.size());
+
+            if(!enoughItems && !reachedTheEnd)
+                reachedTheEnd();
         } else {
             reachedTheEnd();
         }
@@ -142,6 +155,8 @@ public abstract class EndlessAdapter<ItemType, HolderType extends RecyclerView.V
     protected abstract HolderType onCreateActualViewHolder(ViewGroup parent);
 
     protected abstract void onBindActualViewHolder(HolderType holder, int position);
+
+    protected abstract boolean hasEnoughItems(List<ItemType> items);
 
     public static class EmptyViewHolder extends RecyclerView.ViewHolder {
         public EmptyViewHolder(View v) {

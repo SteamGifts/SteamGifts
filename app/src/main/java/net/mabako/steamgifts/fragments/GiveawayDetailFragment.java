@@ -31,11 +31,15 @@ import net.mabako.steamgifts.activities.LoginActivity;
 import net.mabako.steamgifts.activities.MainActivity;
 import net.mabako.steamgifts.adapters.CommentAdapter;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
+import net.mabako.steamgifts.data.Comment;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.data.GiveawayExtras;
 import net.mabako.steamgifts.fragments.util.WrappingLinearLayoutManager;
 import net.mabako.steamgifts.tasks.EnterLeaveGiveawayTask;
+import net.mabako.steamgifts.tasks.LoadAllGiveawaysTask;
 import net.mabako.steamgifts.tasks.LoadGiveawayDetailsTask;
+
+import java.util.ArrayList;
 
 public class GiveawayDetailFragment extends Fragment {
     private static final String TAG = GiveawayDetailFragment.class.getSimpleName();
@@ -107,23 +111,22 @@ public class GiveawayDetailFragment extends Fragment {
         loginButton.setVisibility(View.GONE);
 
         listView = (RecyclerView) activity.findViewById(R.id.list);
+        listView.setLayoutManager(new WrappingLinearLayoutManager(getActivity()));
+        listView.setNestedScrollingEnabled(false);
         adapter = new CommentAdapter(getContext(), listView, new EndlessAdapter.OnLoadListener() {
             @Override
             public void onLoad(int page) {
                 Log.v(TAG, "Load more items...");
-                adapter.reachedTheEnd();
+                fetchItems(2);
             }
         });
         listView.setAdapter(adapter);
-        listView.setNestedScrollingEnabled(false);
-        listView.setLayoutManager(new WrappingLinearLayoutManager(getActivity()));
 
         if (giveaway != null) {
             setupGiveawayCard();
         }
 
-        task = new LoadGiveawayDetailsTask(this, giveaway.getGiveawayId());
-        task.execute();
+        fetchItems(1);
 
         setHasOptionsMenu(true);
 
@@ -144,9 +147,7 @@ public class GiveawayDetailFragment extends Fragment {
         getActivity().findViewById(R.id.description).setVisibility(View.GONE);
         getActivity().findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
 
-        task.cancel(true);
-        task = new LoadGiveawayDetailsTask(this, giveaway.getGiveawayId());
-        task.execute();
+        fetchItems(1);
     }
 
     @Override
@@ -212,7 +213,17 @@ public class GiveawayDetailFragment extends Fragment {
         timeRemaining.setText("{faw-clock-o} " + (timeRemaining.getText().toString().contains(shortVariant) ? longVariant : shortVariant));
     }
 
-    public void setExtras(GiveawayExtras extras) {
+    public void fetchItems(int page) {
+        Log.d(TAG, "Fetching giveaways on page " + page + " for giveaway " + giveaway.getGiveawayId());
+
+        if (task != null)
+            task.cancel(true);
+
+        task = new LoadGiveawayDetailsTask(this, giveaway.getGiveawayId(), page);
+        task.execute();
+    }
+
+    public void addDetails(GiveawayExtras extras, int page) {
         this.extras = extras;
 
         getActivity().findViewById(R.id.progressBar).setVisibility(View.GONE);
@@ -238,14 +249,17 @@ public class GiveawayDetailFragment extends Fragment {
                 enterGiveaway.setVisibility(View.VISIBLE);
         } else {
             Log.w(TAG, "No XSRF Token for Giveaway...");
-            
+
             enterGiveaway.setVisibility(View.GONE);
             leaveGiveaway.setVisibility(View.GONE);
             loginButton.setVisibility(View.VISIBLE);
         }
 
+
         Log.d(TAG, "Adding " + extras.getComments().size() + " comments");
 
+        if (page == 1)
+            adapter.clear();
         adapter.finishLoading(extras.getComments());
     }
 

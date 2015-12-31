@@ -19,20 +19,22 @@ public class LoadGiveawayDetailsTask extends AsyncTask<Void, Void, GiveawayExtra
 
     private GiveawayDetailFragment fragment;
     private String giveawayId;
+    private int page;
 
-    public LoadGiveawayDetailsTask(GiveawayDetailFragment fragment, String giveawayId) {
+    public LoadGiveawayDetailsTask(GiveawayDetailFragment fragment, String giveawayId, int page) {
         this.fragment = fragment;
         this.giveawayId = giveawayId;
+        this.page = page;
     }
 
 
     @Override
     protected GiveawayExtras doInBackground(Void... params) {
-        Log.d(TAG, "Fetching giveaway details for " + giveawayId);
+        String url = "http://www.steamgifts.com/giveaway/" + giveawayId + "/search?page=" + page;
+        Log.d(TAG, "Fetching giveaway details for " + url);
 
         try {
-            // Fetch the giveaway page
-            Connection jsoup = Jsoup.connect("http://www.steamgifts.com/giveaway/" + giveawayId + "/");
+            Connection jsoup = Jsoup.connect(url);
             if (WebUserData.getCurrent().isLoggedIn())
                 jsoup = jsoup.cookie("PHPSESSID", WebUserData.getCurrent().getSessionId());
             Document document = jsoup.get();
@@ -69,6 +71,6 @@ public class LoadGiveawayDetailsTask extends AsyncTask<Void, Void, GiveawayExtra
     @Override
     protected void onPostExecute(GiveawayExtras giveawayDetails) {
         super.onPostExecute(giveawayDetails);
-        fragment.setExtras(giveawayDetails);
+        fragment.addDetails(giveawayDetails, page);
     }
 }
