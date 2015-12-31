@@ -9,7 +9,7 @@ public class GiveawayExtras implements Serializable, ICommentHolder {
     private String xsrfToken;
     private boolean entered;
     private String timeRemaining;
-    private List<Comment> loadedComments;
+    private final List<Comment> loadedComments;
 
     public GiveawayExtras() {
         loadedComments = new ArrayList<>();

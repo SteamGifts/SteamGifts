@@ -11,15 +11,12 @@ import org.jsoup.Jsoup;
 
 import java.io.IOException;
 
-/**
- * Created by mabako on 29.12.2015.
- */
 public class LogoutTask extends AsyncTask<Void, Void, Boolean> {
     private static final String TAG = LogoutTask.class.getSimpleName();
 
-    private Activity activity;
+    private final Activity activity;
     private ProgressDialog progressDialog;
-    private String sessionId;
+    private final String sessionId;
 
     public LogoutTask(MainActivity activity, String sessionId) {
         this.activity = activity;

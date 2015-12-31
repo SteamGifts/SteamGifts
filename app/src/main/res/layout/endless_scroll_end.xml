@@ -11,6 +11,6 @@
         android:indeterminate="true"
         android:padding="8dp"
         android:enabled="false"
-        android:text="You've reached the end."/>
+        android:text="@string/end_of_endless_list"/>
 
 </LinearLayout>

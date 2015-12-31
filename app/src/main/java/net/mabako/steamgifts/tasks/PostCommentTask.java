@@ -3,15 +3,12 @@ package net.mabako.steamgifts.tasks;
 import android.app.Activity;
 import android.util.Log;
 
-import net.mabako.steamgifts.fragments.WriteCommentFragment;
-
 import org.jsoup.Connection;
-import org.jsoup.Jsoup;
 
 import java.util.Map;
 
 public class PostCommentTask extends AjaxTask<Activity> {
-    private String description;
+    private final String description;
 
     public PostCommentTask(Activity fragment, String giveawayId, String xsrfToken, String description) {
         super(fragment, xsrfToken, "comment_new");

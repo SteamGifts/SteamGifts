@@ -44,7 +44,7 @@ public class LoginActivity extends AppCompatActivity {
         webView.loadUrl(LOGIN_URL);
     }
 
-    public class LoginWebViewClient extends WebViewClient {
+    private class LoginWebViewClient extends WebViewClient {
 
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {

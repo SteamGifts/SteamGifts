@@ -14,7 +14,7 @@ import org.jsoup.Connection;
  */
 public class EnterLeaveGiveawayTask extends AjaxTask<GiveawayDetailFragment> {
     private final static String TAG = EnterLeaveGiveawayTask.class.getSimpleName();
-    private String giveawayId;
+    private final String giveawayId;
 
     public EnterLeaveGiveawayTask(GiveawayDetailFragment fragment, String giveawayId, String xsrfToken, String what) {
         super(fragment, xsrfToken, what);

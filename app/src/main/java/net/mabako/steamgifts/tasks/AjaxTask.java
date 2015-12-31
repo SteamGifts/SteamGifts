@@ -7,21 +7,20 @@ import net.mabako.steamgifts.web.WebUserData;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 
 import java.io.IOException;
 
-public abstract class AjaxTask<FragmentType> extends AsyncTask<Void, Void, Connection.Response> {
+abstract class AjaxTask<FragmentType> extends AsyncTask<Void, Void, Connection.Response> {
     private static final String TAG = AjaxTask.class.getSimpleName();
 
     private String url = "http://www.steamgifts.com/ajax.php";
 
-    private String xsrfToken;
-    private String what;
+    private final String xsrfToken;
+    private final String what;
 
-    private FragmentType fragment;
+    private final FragmentType fragment;
 
-    public AjaxTask(FragmentType fragment, String xsrfToken, String what) {
+    AjaxTask(FragmentType fragment, String xsrfToken, String what) {
         this.fragment = fragment;
         this.xsrfToken = xsrfToken;
         this.what = what;
@@ -50,17 +49,17 @@ public abstract class AjaxTask<FragmentType> extends AsyncTask<Void, Void, Conne
         }
     }
 
-    public abstract void addExtraParameters(Connection connection);
+    protected abstract void addExtraParameters(Connection connection);
 
-    public FragmentType getFragment() {
+    FragmentType getFragment() {
         return fragment;
     }
 
-    public String getWhat() {
+    String getWhat() {
         return what;
     }
 
-    protected void setUrl(String url) {
+    void setUrl(String url) {
         this.url = url;
     }
 }

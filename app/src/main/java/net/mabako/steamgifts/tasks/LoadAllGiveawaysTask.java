@@ -19,9 +19,9 @@ import java.util.List;
 public class LoadAllGiveawaysTask extends AsyncTask<Void, Void, List<Giveaway>> {
     private static final String TAG = LoadAllGiveawaysTask.class.getSimpleName();
 
-    private GiveawaysFragment fragment;
-    private int page;
-    private GiveawaysFragment.Type type;
+    private final GiveawaysFragment fragment;
+    private final int page;
+    private final GiveawaysFragment.Type type;
 
     public LoadAllGiveawaysTask(GiveawaysFragment activity, int page, GiveawaysFragment.Type type) {
         this.fragment = activity;
@@ -61,9 +61,9 @@ public class LoadAllGiveawaysTask extends AsyncTask<Void, Void, List<Giveaway>> 
                 String giveawayLink = link.attr("href").substring(10, 15);
                 String giveawayName = link.attr("href").substring(16);
 
-                String[] iconSplit = icon.attr("href").split("/");
-                int gameId = icon == null ? -1 : Integer.parseInt(iconSplit[4]);
-                Giveaway.Type type = "app".equals(iconSplit[3]) ? Giveaway.Type.APP : Giveaway.Type.SUB;
+                String iconSplit = icon.attr("href");
+                int gameId = icon == null ? -1 : Integer.parseInt(iconSplit.split("/")[4]);
+                Giveaway.Type type = "app".equals(iconSplit.split("/")[3]) ? Giveaway.Type.APP : Giveaway.Type.SUB;
 
                 // Entries & Comments
                 Elements links = element.select(".giveaway__links a span");

@@ -21,16 +21,13 @@ public abstract class EndlessAdapter<ItemType, HolderType extends RecyclerView.V
     private static final int PROGRESS_VIEW = 2;
     private static final int END_VIEW = 3;
 
-    private List<ItemType> items = new ArrayList<>();
+    private final List<ItemType> items = new ArrayList<>();
     private boolean loading = false;
     private OnLoadListener loadListener;
     private boolean reachedTheEnd;
     private int page = 1;
 
     public EndlessAdapter(@NonNull RecyclerView view, @NonNull OnLoadListener listener) {
-        if(listener == null)
-            throw new IllegalStateException("No load listener");
-
         final LinearLayoutManager layoutManager = (LinearLayoutManager) view.getLayoutManager();
         if(layoutManager == null)
             throw new IllegalStateException("No layout manager");

@@ -1,6 +1,5 @@
 package net.mabako.steamgifts.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -11,19 +10,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import net.mabako.steamgifts.R;
-import net.mabako.steamgifts.activities.DetailActivity;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.adapters.GiveawayAdapter;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.tasks.LoadAllGiveawaysTask;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class GiveawaysFragment extends Fragment implements IFragmentNotifications {
@@ -92,7 +87,7 @@ public class GiveawaysFragment extends Fragment implements IFragmentNotification
         return type.getTitleResource();
     }
 
-    public void fetchItems(int page) {
+    private void fetchItems(int page) {
         Log.d(TAG, "Fetching giveaways on page " + page);
         new LoadAllGiveawaysTask(this, page, type).execute();
     }
@@ -121,8 +116,8 @@ public class GiveawaysFragment extends Fragment implements IFragmentNotification
         WISHLIST(R.string.navigation_giveaways_wishlist, R.string.navigation_giveaways_wishlist_title),
         NEW(R.string.navigation_giveaways_new, R.string.navigation_giveaways_new_title);
 
-        private int titleResource;
-        private int navbarResource;
+        private final int titleResource;
+        private final int navbarResource;
 
         Type(int navbarResource, int titleResource) {
             this.navbarResource = navbarResource;

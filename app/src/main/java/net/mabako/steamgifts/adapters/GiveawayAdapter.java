@@ -17,12 +17,11 @@ import net.mabako.steamgifts.activities.MainActivity;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class GiveawayAdapter extends EndlessAdapter<Giveaway, GiveawayAdapter.ViewHolder> {
     private static final int ITEMS_PER_PAGE = 50;
-    private Activity context;
+    private final Activity context;
     public GiveawayAdapter(Activity context, RecyclerView view, OnLoadListener listener) {
         super(view, listener);
         this.context = context;
@@ -54,8 +53,8 @@ public class GiveawayAdapter extends EndlessAdapter<Giveaway, GiveawayAdapter.Vi
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final TextView giveawayDetails;
-        private TextView giveawayName;
-        private ImageView giveawayImage;
+        private final TextView giveawayName;
+        private final ImageView giveawayImage;
 
         public ViewHolder(View v) {
             super(v);

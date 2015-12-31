@@ -17,9 +17,9 @@ import java.io.IOException;
 public class LoadGiveawayDetailsTask extends AsyncTask<Void, Void, GiveawayExtras> {
     private static final String TAG = LoadGiveawayDetailsTask.class.getSimpleName();
 
-    private GiveawayDetailFragment fragment;
-    private String giveawayId;
-    private int page;
+    private final GiveawayDetailFragment fragment;
+    private final String giveawayId;
+    private final int page;
 
     public LoadGiveawayDetailsTask(GiveawayDetailFragment fragment, String giveawayId, int page) {
         this.fragment = fragment;

@@ -28,26 +28,20 @@ import com.squareup.picasso.Picasso;
 
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.activities.DetailActivity;
-import net.mabako.steamgifts.activities.LoginActivity;
-import net.mabako.steamgifts.activities.MainActivity;
 import net.mabako.steamgifts.adapters.CommentAdapter;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
-import net.mabako.steamgifts.data.Comment;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.data.GiveawayExtras;
 import net.mabako.steamgifts.fragments.util.WrappingLinearLayoutManager;
 import net.mabako.steamgifts.tasks.EnterLeaveGiveawayTask;
-import net.mabako.steamgifts.tasks.LoadAllGiveawaysTask;
 import net.mabako.steamgifts.tasks.LoadGiveawayDetailsTask;
-
-import java.util.ArrayList;
 
 public class GiveawayDetailFragment extends Fragment {
     private static final String TAG = GiveawayDetailFragment.class.getSimpleName();
 
     public static final String ARG_GIVEAWAY = "giveaway";
-    public static final String ENTRY_INSERT = "entry_insert";
-    public static final String ENTRY_DELETE = "entry_delete";
+    private static final String ENTRY_INSERT = "entry_insert";
+    private static final String ENTRY_DELETE = "entry_delete";
 
     /**
      * Content to show for the giveaway details.
@@ -226,7 +220,7 @@ public class GiveawayDetailFragment extends Fragment {
         timeRemaining.setText("{faw-clock-o} " + (timeRemaining.getText().toString().contains(shortVariant) ? longVariant : shortVariant));
     }
 
-    public void fetchItems(int page) {
+    private void fetchItems(int page) {
         Log.d(TAG, "Fetching giveaways on page " + page + " for giveaway " + giveaway.getGiveawayId());
 
         if (task != null)
@@ -286,8 +280,6 @@ public class GiveawayDetailFragment extends Fragment {
                 enterGiveaway.setVisibility(View.VISIBLE);
                 leaveGiveaway.setVisibility(View.GONE);
             }
-        } else if (success == Boolean.FALSE) {
-            Log.e(TAG, "Definitively an error.");
         } else {
             Log.e(TAG, "Probably an error catching the result...");
         }

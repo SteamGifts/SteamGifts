@@ -1,13 +1,10 @@
 package net.mabako.steamgifts.web;
 
-import android.content.SharedPreferences;
 import android.util.Log;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
-import java.io.Serializable;
 
 public class WebUserData {
     private static final String TAG = WebUserData.class.getSimpleName();

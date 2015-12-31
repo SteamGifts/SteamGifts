@@ -15,7 +15,7 @@ public class WrappingLinearLayoutManager extends LinearLayoutManager {
         super(context);
     }
 
-    private int[] mMeasuredDimension = new int[2];
+    private final int[] mMeasuredDimension = new int[2];
 
     @Override
     public boolean canScrollVertically() {

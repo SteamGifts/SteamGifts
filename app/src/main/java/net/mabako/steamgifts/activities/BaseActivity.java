@@ -4,23 +4,19 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 import net.mabako.steamgifts.web.WebUserData;
 
-/**
- * Created by mabako on 30.12.2015.
- */
 public class BaseActivity extends AppCompatActivity {
     public static final int REQUEST_LOGIN = 3;
     public static final int REQUEST_LOGIN_PASSIVE = 4;
 
     public static final int RESPONSE_LOGIN_SUCCESSFUL = 5;
 
-    public static final String PREF_KEY_SESSION_ID = "session-id";
-    public static final String PREF_ACCOUNT = "account";
-    public static final String PREF_KEY_USERNAME = "username";
-    public static final String PREF_KEY_IMAGE = "image-url";
+    private static final String PREF_KEY_SESSION_ID = "session-id";
+    private static final String PREF_ACCOUNT = "account";
+    private static final String PREF_KEY_USERNAME = "username";
+    private static final String PREF_KEY_IMAGE = "image-url";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

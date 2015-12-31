@@ -3,18 +3,18 @@ package net.mabako.steamgifts.data;
 import java.io.Serializable;
 
 public class Giveaway implements Serializable {
-    private String title;
-    private String giveawayId;
-    private String name;
-    private Type type;
-    private int gameId;
-    private String creator;
-    private int entries;
-    private int commentCount;
-    private int copies;
-    private int points;
-    private String timeRemaining;
-    private String timeRemainingLong;
+    private final String title;
+    private final String giveawayId;
+    private final String name;
+    private final Type type;
+    private final int gameId;
+    private final String creator;
+    private final int entries;
+    private final int commentCount;
+    private final int copies;
+    private final int points;
+    private final String timeRemaining;
+    private final String timeRemainingLong;
 
     public Giveaway(String title, String giveawayId, String name, Type type, int gameId, String creator, int entries, int commentCount, int copies, int points, String timeRemaining, String timeRemainingLong) {
         this.title = title;
@@ -88,7 +88,7 @@ public class Giveaway implements Serializable {
     public boolean equals(Object o) {
         if(o == null || !(o instanceof Giveaway))
             return false;
-        return ((Giveaway) o).giveawayId == giveawayId;
+        return giveawayId.equals(((Giveaway) o).giveawayId);
     }
 
     @Override

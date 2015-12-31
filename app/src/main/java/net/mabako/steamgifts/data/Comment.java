@@ -1,19 +1,17 @@
 package net.mabako.steamgifts.data;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Comment on a giveaway or discussion.
  */
 public class Comment implements Serializable {
-    private int id;
-    private String author;
-    private String timeAgo;
-    private String timeAgoLong;
-    private String content;
-    private int depth;
+    private final int id;
+    private final String author;
+    private final String timeAgo;
+    private final String timeAgoLong;
+    private final String content;
+    private final int depth;
 
     public Comment(int id, String author, String timeAgo, String timeAgoLong, String content, int depth) {
         this.id = id;

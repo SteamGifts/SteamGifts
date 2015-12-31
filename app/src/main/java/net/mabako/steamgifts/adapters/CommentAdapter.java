@@ -13,7 +13,6 @@ import android.widget.TextView;
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.data.Comment;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,7 +20,7 @@ import java.util.List;
  */
 public class CommentAdapter extends EndlessAdapter<Comment, CommentAdapter.ViewHolder> {
     private static final int ITEMS_PER_PAGE = 25;
-    private int[] colors = {android.R.color.holo_blue_dark, android.R.color.holo_green_dark, android.R.color.holo_orange_dark, android.R.color.holo_red_dark};
+    private final int[] colors = {android.R.color.holo_blue_dark, android.R.color.holo_green_dark, android.R.color.holo_orange_dark, android.R.color.holo_red_dark};
 
     private float displayDensity;
 
@@ -72,11 +71,11 @@ public class CommentAdapter extends EndlessAdapter<Comment, CommentAdapter.ViewH
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView commentAuthor;
-        private TextView commentTime;
-        private TextView commentContent;
-        private View commentIndent;
-        private View commentMarker;
+        private final TextView commentAuthor;
+        private final TextView commentTime;
+        private final TextView commentContent;
+        private final View commentIndent;
+        private final View commentMarker;
 
         public ViewHolder(View v) {
             super(v);

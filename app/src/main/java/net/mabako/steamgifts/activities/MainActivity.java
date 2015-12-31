@@ -1,19 +1,16 @@
 package net.mabako.steamgifts.activities;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -40,7 +37,7 @@ import net.mabako.steamgifts.tasks.LogoutTask;
 import net.mabako.steamgifts.web.WebUserData;
 
 public class MainActivity extends BaseActivity {
-    public static final String FRAGMENT_TAG = "Main Fragment Thing";
+    private static final String FRAGMENT_TAG = "Main Fragment Thing";
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private AccountHeader accountHeader;
@@ -105,7 +102,7 @@ public class MainActivity extends BaseActivity {
         drawer.setSelection(R.string.navigation_giveaways_all, false);
     }
 
-    protected void setupNavBar() {
+    private void setupNavBar() {
         DrawerImageLoader.init(new AbstractDrawerImageLoader() {
             @Override
             public void set(ImageView imageView, Uri uri, Drawable placeholder) {
@@ -199,7 +196,7 @@ public class MainActivity extends BaseActivity {
      * <li>list of accessible giveaway filters (new, group, wishlist, all)</li>
      * </ol>
      */
-    protected void reconfigureNavBarItems() {
+    private void reconfigureNavBarItems() {
         // Rebuild the header.
         accountHeader.clear();
 
@@ -253,7 +250,7 @@ public class MainActivity extends BaseActivity {
         Log.v(TAG, "Activity result for " + requestCode + " => " + resultCode);
         switch (requestCode) {
             case REQUEST_LOGIN:
-                if (resultCode == 1) {
+                if (resultCode == BaseActivity.RESPONSE_LOGIN_SUCCESSFUL) {
                     onAccountChange();
                     Snackbar.make(findViewById(R.id.swipeContainer), "Welcome, " + WebUserData.getCurrent().getName() + "!", Snackbar.LENGTH_LONG).show();
                 } else

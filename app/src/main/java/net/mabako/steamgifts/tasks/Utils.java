@@ -1,14 +1,11 @@
 package net.mabako.steamgifts.tasks;
 
-import android.util.Log;
-
 import net.mabako.steamgifts.data.Comment;
-import net.mabako.steamgifts.data.GiveawayExtras;
 import net.mabako.steamgifts.data.ICommentHolder;
 
 import org.jsoup.nodes.Element;
 
-public final class Utils {
+final class Utils {
     /**
      * Extract comments recursively.
      *

@@ -74,22 +74,20 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
                         android:layout_toRightOf="@+id/user"
-                        android:layout_weight="1"
                         android:paddingLeft="16dp"
                         android:paddingTop="8dp"
                         android:text="{faw-clock-o} Soon"
-                        android:textSize="16dp" />
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/user"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
-                        android:layout_weight="1"
                         android:paddingLeft="16dp"
                         android:paddingTop="8dp"
                         android:text="{faw-user} Creator"
-                        android:textSize="16dp" />
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/description"
