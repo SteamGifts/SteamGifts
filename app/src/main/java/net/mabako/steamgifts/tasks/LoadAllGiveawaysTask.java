@@ -61,7 +61,7 @@ public class LoadAllGiveawaysTask extends AsyncTask<Void, Void, List<Giveaway>> 
                 String giveawayLink = link.attr("href").substring(10, 15);
 
                 String[] iconSplit = icon.attr("href").split("/");
-                int gameId = Integer.parseInt(iconSplit[4]);
+                int gameId = icon == null ? -1 : Integer.parseInt(iconSplit[4]);
                 Giveaway.Type type = "app".equals(iconSplit[3]) ? Giveaway.Type.APP : Giveaway.Type.SUB;
 
                 // Entries & Comments

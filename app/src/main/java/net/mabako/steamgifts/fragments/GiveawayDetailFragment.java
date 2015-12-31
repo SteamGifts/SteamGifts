@@ -30,6 +30,7 @@ import net.mabako.steamgifts.activities.DetailActivity;
 import net.mabako.steamgifts.activities.LoginActivity;
 import net.mabako.steamgifts.activities.MainActivity;
 import net.mabako.steamgifts.adapters.CommentAdapter;
+import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.data.GiveawayExtras;
 import net.mabako.steamgifts.fragments.util.WrappingLinearLayoutManager;
@@ -105,8 +106,14 @@ public class GiveawayDetailFragment extends Fragment {
         });
         loginButton.setVisibility(View.GONE);
 
-        adapter = new CommentAdapter(getContext());
         listView = (RecyclerView) activity.findViewById(R.id.list);
+        adapter = new CommentAdapter(getContext(), listView, new EndlessAdapter.OnLoadListener() {
+            @Override
+            public void onLoad(int page) {
+                Log.v(TAG, "Load more items...");
+                adapter.reachedTheEnd();
+            }
+        });
         listView.setAdapter(adapter);
         listView.setNestedScrollingEnabled(false);
         listView.setLayoutManager(new WrappingLinearLayoutManager(getActivity()));
@@ -239,8 +246,7 @@ public class GiveawayDetailFragment extends Fragment {
 
         Log.d(TAG, "Adding " + extras.getComments().size() + " comments");
 
-        adapter.addAll(extras.getComments());
-        adapter.notifyDataSetChanged();
+        adapter.finishLoading(extras.getComments());
     }
 
     public void onEnterLeaveResult(String what, Boolean success) {

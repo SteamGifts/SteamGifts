@@ -8,7 +8,6 @@ import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import net.mabako.steamgifts.R;
@@ -20,29 +19,26 @@ import java.util.List;
 /**
  * Adapter to hold comments for a giveaway/discussion.
  */
-public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHolder> {
+public class CommentAdapter extends EndlessAdapter<Comment, CommentAdapter.ViewHolder> {
     private int[] colors = {android.R.color.holo_blue_dark, android.R.color.holo_green_dark, android.R.color.holo_orange_dark, android.R.color.holo_red_dark};
 
-    private List<Comment> comments;
     private float displayDensity;
 
-    public CommentAdapter(Context context) {
-        this.comments = new ArrayList<>();
-        this.displayDensity = context.getResources().getDisplayMetrics().density;
-
+    public CommentAdapter(Context context, RecyclerView view, EndlessAdapter.OnLoadListener loadListener) {
+        super(view, loadListener);
         for(int i = 0; i < colors.length; ++ i)
             colors[i] = ContextCompat.getColor(context, colors[i]);
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateActualViewHolder(ViewGroup parent) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.comment, null);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        Comment comment = comments.get(position);
+    public void onBindActualViewHolder(ViewHolder holder, int position) {
+        Comment comment = getItem(position);
 
         holder.commentAuthor.setText(comment.getAuthor());
         holder.commentTime.setText(comment.getTimeAgo());
@@ -59,21 +55,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         // Marker
         holder.commentMarker.setBackgroundColor(colors[comment.getDepth() % colors.length]);
         holder.commentMarker.invalidate();
-    }
-
-    @Override
-    public int getItemCount() {
-        return comments.size();
-    }
-
-    public void addAll(List<Comment> comments) {
-        this.comments.addAll(comments);
-        this.notifyItemRangeInserted(this.comments.size() - comments.size(), comments.size());
-    }
-
-    public void clear() {
-        comments.clear();
-        notifyDataSetChanged();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

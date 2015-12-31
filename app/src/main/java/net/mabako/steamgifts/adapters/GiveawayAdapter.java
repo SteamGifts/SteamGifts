@@ -1,7 +1,6 @@
 package net.mabako.steamgifts.adapters;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -21,24 +20,22 @@ import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GiveawayAdapter extends RecyclerView.Adapter<GiveawayAdapter.ViewHolder> {
-    private List<Giveaway> giveaways;
+public class GiveawayAdapter extends EndlessAdapter<Giveaway, GiveawayAdapter.ViewHolder> {
     private Activity context;
-
-    public GiveawayAdapter(Activity context) {
+    public GiveawayAdapter(Activity context, RecyclerView view, OnLoadListener listener) {
+        super(view, listener);
         this.context = context;
-        this.giveaways = new ArrayList<>();
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    protected ViewHolder onCreateActualViewHolder(ViewGroup parent) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.giveaway_item, null);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        Giveaway giveaway = giveaways.get(position);
+    public void onBindActualViewHolder(ViewHolder holder, int position) {
+        Giveaway giveaway = getItem(position);
 
         holder.giveawayName.setText(giveaway.getTitle());
         Picasso.with(context).load("http://cdn.akamai.steamstatic.com/steam/" + giveaway.getType().name().toLowerCase() + "s/" + giveaway.getGameId() + "/capsule_184x69.jpg").into(holder.giveawayImage);
@@ -47,21 +44,6 @@ public class GiveawayAdapter extends RecyclerView.Adapter<GiveawayAdapter.ViewHo
         if (giveaway.getCopies() > 1)
             str = giveaway.getCopies() + " copies | " + str;
         holder.giveawayDetails.setText(str);
-    }
-
-    @Override
-    public int getItemCount() {
-        return giveaways.size();
-    }
-
-    public void addAll(List<Giveaway> giveaways1) {
-        giveaways.addAll(giveaways1);
-        notifyItemRangeInserted(this.giveaways.size() - giveaways1.size(), giveaways1.size());
-    }
-
-    public void clear() {
-        giveaways.clear();
-        notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -80,7 +62,7 @@ public class GiveawayAdapter extends RecyclerView.Adapter<GiveawayAdapter.ViewHo
 
         @Override
         public void onClick(View v) {
-            Giveaway giveaway = (Giveaway) giveaways.get(getAdapterPosition());
+            Giveaway giveaway = getItem(getAdapterPosition());
 
             Intent intent = new Intent(context, DetailActivity.class);
             intent.putExtra(GiveawayDetailFragment.ARG_GIVEAWAY, giveaway);

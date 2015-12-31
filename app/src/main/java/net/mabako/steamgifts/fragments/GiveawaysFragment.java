@@ -18,6 +18,7 @@ import android.widget.RelativeLayout;
 
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.activities.DetailActivity;
+import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.adapters.GiveawayAdapter;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.tasks.LoadAllGiveawaysTask;
@@ -60,8 +61,13 @@ public class GiveawaysFragment extends Fragment implements IFragmentNotification
     }
 
     private void setupListViewAdapter() {
-        adapter = new GiveawayAdapter(getActivity());
         listView.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new GiveawayAdapter(getActivity(), listView, new EndlessAdapter.OnLoadListener() {
+            @Override
+            public void onLoad(int page) {
+                fetchItems(page);
+            }
+        });
         listView.setAdapter(adapter);
     }
 
@@ -91,14 +97,14 @@ public class GiveawaysFragment extends Fragment implements IFragmentNotification
         new LoadAllGiveawaysTask(this, page, type).execute();
     }
 
-    public void addGiveaways(List<Giveaway> giveaways1, boolean clearExistingItems) {
-        if (giveaways1 != null) {
-            Log.d(TAG, "Adding " + giveaways1.size() + " giveaways, " + clearExistingItems);
+    public void addGiveaways(List<Giveaway> giveaways, boolean clearExistingItems) {
+        if (giveaways != null) {
+            Log.d(TAG, "Adding " + giveaways.size() + " giveaways, " + clearExistingItems);
 
             if (clearExistingItems)
                 adapter.clear();
 
-            adapter.addAll(giveaways1);
+            adapter.finishLoading(giveaways);
         } else {
             Snackbar.make(swipeContainer, "Failed to fetch giveaways", Snackbar.LENGTH_LONG).show();
         }
