@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -279,6 +280,13 @@ public class MainActivity extends BaseActivity {
 
             default:
                 super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    public void onUpdateGiveawayStatus(@NonNull String giveawayId, boolean entered) {
+        Fragment fragment = getCurrentFragment();
+        if (fragment instanceof GiveawaysFragment) {
+            ((GiveawaysFragment) fragment).onUpdateGiveawayStatus(giveawayId, entered);
         }
     }
 }

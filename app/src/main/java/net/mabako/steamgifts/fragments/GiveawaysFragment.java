@@ -110,6 +110,15 @@ public class GiveawaysFragment extends Fragment implements IFragmentNotification
         swipeContainer.setRefreshing(false);
     }
 
+    public void onUpdateGiveawayStatus(String giveawayId, boolean entered) {
+        Giveaway giveaway = adapter.findItem(giveawayId);
+        Log.v(TAG, "GA " + giveawayId + " => " + giveaway + ", " + entered);
+        if(giveaway != null) {
+            giveaway.setEntered(entered);
+            adapter.notifyItemChanged(giveaway);
+        }
+    }
+
     public enum Type {
         ALL(R.string.navigation_giveaways_all, R.string.navigation_giveaways_all_title),
         GROUP(R.string.navigation_giveaways_group, R.string.navigation_giveaways_group_title),

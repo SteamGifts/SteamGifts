@@ -28,6 +28,7 @@ import com.squareup.picasso.Picasso;
 
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.activities.DetailActivity;
+import net.mabako.steamgifts.activities.MainActivity;
 import net.mabako.steamgifts.adapters.CommentAdapter;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.data.Giveaway;
@@ -59,6 +60,8 @@ public class GiveawayDetailFragment extends Fragment {
     private RecyclerView listView;
     private CommentAdapter adapter;
     private Button loginButton;
+
+    private static Activity parent;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -271,14 +274,26 @@ public class GiveawayDetailFragment extends Fragment {
     }
 
     public void onEnterLeaveResult(String what, Boolean success) {
+        Log.v(TAG, "Enter Leave Result -> " + what + ", " + success);
         if (success == Boolean.TRUE) {
             if (ENTRY_INSERT.equals(what)) {
                 // We've just managed to enter the giveaway.
                 enterGiveaway.setVisibility(View.GONE);
                 leaveGiveaway.setVisibility(View.VISIBLE);
+
+                giveaway.setEntered(true);
             } else {
                 enterGiveaway.setVisibility(View.VISIBLE);
                 leaveGiveaway.setVisibility(View.GONE);
+
+                giveaway.setEntered(false);
+            }
+            extras.setEntered(giveaway.isEntered());
+
+            if(parent instanceof MainActivity) {
+                ((MainActivity) parent).onUpdateGiveawayStatus(giveaway.getGiveawayId(), extras.isEntered());
+            } else {
+                Log.d(TAG, "No parent giveaway to update status");
             }
         } else {
             Log.e(TAG, "Probably an error catching the result...");
@@ -309,5 +324,9 @@ public class GiveawayDetailFragment extends Fragment {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public static void setParent(Activity parent) {
+        GiveawayDetailFragment.parent = parent;
     }
 }

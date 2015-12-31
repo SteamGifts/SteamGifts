@@ -15,6 +15,7 @@ public class Giveaway implements Serializable {
     private final int points;
     private final String timeRemaining;
     private final String timeRemainingLong;
+    private boolean entered = false;
 
     public Giveaway(String title, String giveawayId, String name, Type type, int gameId, String creator, int entries, int commentCount, int copies, int points, String timeRemaining, String timeRemainingLong) {
         this.title = title;
@@ -82,6 +83,14 @@ public class Giveaway implements Serializable {
     @Override
     public int hashCode() {
         return giveawayId.hashCode();
+    }
+
+    public boolean isEntered() {
+        return entered;
+    }
+
+    public void setEntered(boolean entered) {
+        this.entered = entered;
     }
 
     @Override

@@ -45,7 +45,7 @@ public class LoadAllGiveawaysTask extends AsyncTask<Void, Void, List<Giveaway>> 
             WebUserData.extract(document);
 
             // Do away with pinned giveaways.
-            document.select(".pinned-giveaways__outer-wrap").first().html("");
+            document.select(".pinned-giveaways__outer-wrap").html("");
 
             // Parse all rows of giveaways
             Elements giveaways = document.select(".giveaway__row-inner-wrap");
@@ -84,7 +84,9 @@ public class LoadAllGiveawaysTask extends AsyncTask<Void, Void, List<Giveaway>> 
 
                 Log.v(TAG, "GIVEAWAY for " + title + ", " + giveawayLink + "/" + giveawayName + " is " + gameId);
 
-                giveawayList.add(new Giveaway(title, giveawayLink, giveawayName, type, gameId, creator, entries, comments, copies, points, timeRemaining.text(), timeRemaining.attr("title")));
+                Giveaway giveaway = new Giveaway(title, giveawayLink, giveawayName, type, gameId, creator, entries, comments, copies, points, timeRemaining.text(), timeRemaining.attr("title"));
+                giveaway.setEntered(element.hasClass("is-faded"));
+                giveawayList.add(giveaway);
             }
 
             return giveawayList;

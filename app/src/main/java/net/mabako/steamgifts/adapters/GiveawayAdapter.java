@@ -2,6 +2,7 @@ package net.mabako.steamgifts.adapters;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,7 @@ import java.util.List;
 public class GiveawayAdapter extends EndlessAdapter<Giveaway, GiveawayAdapter.ViewHolder> {
     private static final int ITEMS_PER_PAGE = 50;
     private final Activity context;
+
     public GiveawayAdapter(Activity context, RecyclerView view, OnLoadListener listener) {
         super(view, listener);
         this.context = context;
@@ -44,6 +46,8 @@ public class GiveawayAdapter extends EndlessAdapter<Giveaway, GiveawayAdapter.Vi
         if (giveaway.getCopies() > 1)
             str = giveaway.getCopies() + " copies | " + str;
         holder.giveawayDetails.setText(str);
+
+        holder.itemContainer.setBackgroundResource(giveaway.isEntered() ? R.color.md_blue_50 : android.R.color.background_light);
     }
 
     @Override
@@ -51,13 +55,29 @@ public class GiveawayAdapter extends EndlessAdapter<Giveaway, GiveawayAdapter.Vi
         return items.size() == ITEMS_PER_PAGE;
     }
 
+    public Giveaway findItem(@NonNull String giveawayId) {
+        for (Giveaway giveaway : getItems()) {
+            if (giveaway != null && giveawayId.equals(giveaway.getGiveawayId()))
+                return giveaway;
+        }
+        return null;
+    }
+
+    public void notifyItemChanged(Giveaway item) {
+        int index = getItems().indexOf(item);
+        if(index >= 0)
+            notifyItemChanged(index);
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        private final View itemContainer;
         private final TextView giveawayDetails;
         private final TextView giveawayName;
         private final ImageView giveawayImage;
 
         public ViewHolder(View v) {
             super(v);
+            itemContainer = v.findViewById(R.id.list_item);
             giveawayName = (TextView) v.findViewById(R.id.giveaway_name);
             giveawayDetails = (TextView) v.findViewById(R.id.giveaway_details);
             giveawayImage = (ImageView) v.findViewById(R.id.giveaway_image);
@@ -69,6 +89,7 @@ public class GiveawayAdapter extends EndlessAdapter<Giveaway, GiveawayAdapter.Vi
         public void onClick(View v) {
             Giveaway giveaway = getItem(getAdapterPosition());
 
+            GiveawayDetailFragment.setParent(context);
             Intent intent = new Intent(context, DetailActivity.class);
             intent.putExtra(GiveawayDetailFragment.ARG_GIVEAWAY, giveaway);
 

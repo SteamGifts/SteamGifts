@@ -93,6 +93,10 @@ public abstract class EndlessAdapter<ItemType, HolderType extends RecyclerView.V
         notifyItemInserted(items.size() - 1);
     }
 
+    protected List<ItemType> getItems() {
+        return items;
+    }
+
     @Override
     public int getItemCount() {
         return items.size();
