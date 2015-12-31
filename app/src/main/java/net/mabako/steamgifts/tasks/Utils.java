@@ -23,6 +23,9 @@ public final class Utils {
         for(Element c : commentNode.children()) {
             Element thisComment = c.child(0);
 
+            // Remove "Save Changes" & "Cancel"
+            thisComment.select(".comment__edit-state").html("");
+
             Element authorNode = thisComment.select(".comment__username").first();
             String author = authorNode.text();
 

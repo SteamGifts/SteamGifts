@@ -59,6 +59,7 @@ public class LoadAllGiveawaysTask extends AsyncTask<Void, Void, List<Giveaway>> 
                 // Base information
                 String title = link.text();
                 String giveawayLink = link.attr("href").substring(10, 15);
+                String giveawayName = link.attr("href").substring(16);
 
                 String[] iconSplit = icon.attr("href").split("/");
                 int gameId = icon == null ? -1 : Integer.parseInt(iconSplit[4]);
@@ -81,9 +82,9 @@ public class LoadAllGiveawaysTask extends AsyncTask<Void, Void, List<Giveaway>> 
                 // Time remaining
                 Element timeRemaining = element.select(".giveaway__columns > div span").first();
 
-                Log.v(TAG, "GIVEAWAY for " + title + ", " + giveawayLink + ", " + gameId);
+                Log.v(TAG, "GIVEAWAY for " + title + ", " + giveawayLink + "/" + giveawayName + " is " + gameId);
 
-                giveawayList.add(new Giveaway(title, giveawayLink, type, gameId, creator, entries, comments, copies, points, timeRemaining.text(), timeRemaining.attr("title")));
+                giveawayList.add(new Giveaway(title, giveawayLink, giveawayName, type, gameId, creator, entries, comments, copies, points, timeRemaining.text(), timeRemaining.attr("title")));
             }
 
             return giveawayList;

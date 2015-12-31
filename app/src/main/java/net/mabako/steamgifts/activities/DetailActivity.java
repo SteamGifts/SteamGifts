@@ -14,8 +14,10 @@ import com.mikepenz.iconics.context.IconicsContextWrapper;
 
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
+import net.mabako.steamgifts.fragments.util.WriteCommentListener;
+import net.mabako.steamgifts.tasks.PostCommentTask;
 
-public class DetailActivity extends BaseActivity {
+public class DetailActivity extends BaseActivity implements WriteCommentListener {
     private static final String TAG = DetailActivity.class.getSimpleName();
     private GiveawayDetailFragment fragment;
 
@@ -75,5 +77,10 @@ public class DetailActivity extends BaseActivity {
     protected void onAccountChange() {
         super.onAccountChange();
         fragment.reload();
+    }
+
+    @Override
+    public void submit(String giveawayId, String xsrfToken, String message) {
+        new PostCommentTask(this, giveawayId, xsrfToken, message).execute();
     }
 }

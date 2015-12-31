@@ -17,7 +17,7 @@ public class EnterLeaveGiveawayTask extends AjaxTask<GiveawayDetailFragment> {
     private String giveawayId;
 
     public EnterLeaveGiveawayTask(GiveawayDetailFragment fragment, String giveawayId, String xsrfToken, String what) {
-        super(fragment, giveawayId, xsrfToken, what);
+        super(fragment, xsrfToken, what);
         this.giveawayId = giveawayId;
     }
 

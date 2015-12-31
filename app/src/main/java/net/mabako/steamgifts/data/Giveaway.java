@@ -5,6 +5,7 @@ import java.io.Serializable;
 public class Giveaway implements Serializable {
     private String title;
     private String giveawayId;
+    private String name;
     private Type type;
     private int gameId;
     private String creator;
@@ -15,9 +16,10 @@ public class Giveaway implements Serializable {
     private String timeRemaining;
     private String timeRemainingLong;
 
-    public Giveaway(String title, String giveawayId, Type type, int gameId, String creator, int entries, int commentCount, int copies, int points, String timeRemaining, String timeRemainingLong) {
+    public Giveaway(String title, String giveawayId, String name, Type type, int gameId, String creator, int entries, int commentCount, int copies, int points, String timeRemaining, String timeRemainingLong) {
         this.title = title;
         this.giveawayId = giveawayId;
+        this.name = name;
         this.type = type;
         this.gameId = gameId;
         this.creator = creator;
@@ -39,6 +41,10 @@ public class Giveaway implements Serializable {
 
     public String getGiveawayId() {
         return giveawayId;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public String getCreator() {

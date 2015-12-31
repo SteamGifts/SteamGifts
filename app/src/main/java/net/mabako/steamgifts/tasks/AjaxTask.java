@@ -21,7 +21,7 @@ public abstract class AjaxTask<FragmentType> extends AsyncTask<Void, Void, Conne
 
     private FragmentType fragment;
 
-    public AjaxTask(FragmentType fragment, String giveawayId, String xsrfToken, String what) {
+    public AjaxTask(FragmentType fragment, String xsrfToken, String what) {
         this.fragment = fragment;
         this.xsrfToken = xsrfToken;
         this.what = what;
