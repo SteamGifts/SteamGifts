@@ -10,6 +10,7 @@ public class GiveawayExtras implements Serializable, ICommentHolder {
     private boolean entered;
     private String timeRemaining;
     private final List<Comment> loadedComments;
+    private String errorMessage;
 
     public GiveawayExtras() {
         loadedComments = new ArrayList<>();
@@ -60,5 +61,13 @@ public class GiveawayExtras implements Serializable, ICommentHolder {
     @Override
     public void addComment(Comment comment) {
         loadedComments.add(comment);
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
     }
 }

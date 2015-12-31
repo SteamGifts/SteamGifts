@@ -55,6 +55,7 @@ public class GiveawayDetailFragment extends Fragment {
     private TextView leaveGiveaway;
     private TextView timeRemaining;
     private TextView commentGiveaway;
+    private TextView errorMessage;
     private EnterLeaveGiveawayTask enterLeaveTask;
 
     private RecyclerView listView;
@@ -135,6 +136,7 @@ public class GiveawayDetailFragment extends Fragment {
         });
 
         timeRemaining = (TextView) activity.findViewById(R.id.remaining);
+        errorMessage = (TextView) activity.findViewById(R.id.error);
 
         loginButton = (Button) activity.findViewById(R.id.login);
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -253,16 +255,25 @@ public class GiveawayDetailFragment extends Fragment {
             getActivity().findViewById(R.id.comment).setVisibility(View.VISIBLE);
 
             loginButton.setVisibility(View.GONE);
+            errorMessage.setVisibility(View.GONE);
             if (extras.isEntered())
                 leaveGiveaway.setVisibility(View.VISIBLE);
             else
                 enterGiveaway.setVisibility(View.VISIBLE);
+        } else if(extras.getErrorMessage() != null) {
+            enterGiveaway.setVisibility(View.GONE);
+            leaveGiveaway.setVisibility(View.GONE);
+            loginButton.setVisibility(View.GONE);
+
+            errorMessage.setText(extras.getErrorMessage());
+            errorMessage.setVisibility(View.VISIBLE);
         } else {
             Log.w(TAG, "No XSRF Token for Giveaway...");
 
             enterGiveaway.setVisibility(View.GONE);
             leaveGiveaway.setVisibility(View.GONE);
             loginButton.setVisibility(View.VISIBLE);
+            errorMessage.setVisibility(View.GONE);
         }
 
 

@@ -54,6 +54,10 @@ public class LoadGiveawayDetailsTask extends AsyncTask<Void, Void, GiveawayExtra
             if(enterLeaveForm != null) {
                 extras.setEntered(enterLeaveForm.select(".sidebar__entry-insert").hasClass("is-hidden"));
                 extras.setXsrfToken(enterLeaveForm.select("input[name=xsrf_token]").attr("value"));
+            } else {
+                Element error = document.select(".sidebar .sidebar__error").first();
+                if(error != null)
+                    extras.setErrorMessage(error.text().trim());
             }
 
             // Load comments
