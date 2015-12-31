@@ -320,7 +320,6 @@ public class GiveawayDetailFragment extends Fragment {
         leaveGiveaway.setEnabled(true);
     }
 
-
     @Override
     public void onCreateOptionsMenu(
             Menu menu, MenuInflater inflater) {

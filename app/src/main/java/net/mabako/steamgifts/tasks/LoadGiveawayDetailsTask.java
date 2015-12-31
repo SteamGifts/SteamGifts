@@ -36,7 +36,7 @@ public class LoadGiveawayDetailsTask extends AsyncTask<Void, Void, GiveawayExtra
         try {
             Connection jsoup = Jsoup.connect(url);
             if (WebUserData.getCurrent().isLoggedIn())
-                jsoup = jsoup.cookie("PHPSESSID", WebUserData.getCurrent().getSessionId());
+                jsoup.cookie("PHPSESSID", WebUserData.getCurrent().getSessionId());
             Document document = jsoup.get();
 
             // Update user details

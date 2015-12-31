@@ -22,11 +22,13 @@ public class LoadAllGiveawaysTask extends AsyncTask<Void, Void, List<Giveaway>> 
     private final GiveawaysFragment fragment;
     private final int page;
     private final GiveawaysFragment.Type type;
+    private final String searchQuery;
 
-    public LoadAllGiveawaysTask(GiveawaysFragment activity, int page, GiveawaysFragment.Type type) {
+    public LoadAllGiveawaysTask(GiveawaysFragment activity, int page, GiveawaysFragment.Type type, String searchQuery) {
         this.fragment = activity;
         this.page = page;
         this.type = type;
+        this.searchQuery = searchQuery;
     }
 
     @Override
@@ -35,11 +37,18 @@ public class LoadAllGiveawaysTask extends AsyncTask<Void, Void, List<Giveaway>> 
 
         try {
             // Fetch the Giveaway page
-            String typeStr = type == GiveawaysFragment.Type.ALL ? "" : ("&type=" + type.name().toLowerCase());
 
-            Connection jsoup = Jsoup.connect("http://www.steamgifts.com/giveaways/search?page=" + page + typeStr);
+            Connection jsoup = Jsoup.connect("http://www.steamgifts.com/giveaways/search");
+            jsoup.data("page", Integer.toString(page));
+
+            if(searchQuery != null)
+                jsoup.data("q", searchQuery);
+
+            if(type != GiveawaysFragment.Type.ALL)
+                jsoup.data("type", type.name().toLowerCase());
+
             if (WebUserData.getCurrent().isLoggedIn())
-                jsoup = jsoup.cookie("PHPSESSID", WebUserData.getCurrent().getSessionId());
+                jsoup.cookie("PHPSESSID", WebUserData.getCurrent().getSessionId());
             Document document = jsoup.get();
 
             WebUserData.extract(document);
@@ -62,8 +71,8 @@ public class LoadAllGiveawaysTask extends AsyncTask<Void, Void, List<Giveaway>> 
                 String giveawayName = link.attr("href").substring(16);
 
                 String iconSplit = icon.attr("href");
-                int gameId = icon == null ? -1 : Integer.parseInt(iconSplit.split("/")[4]);
-                Giveaway.Type type = "app".equals(iconSplit.split("/")[3]) ? Giveaway.Type.APP : Giveaway.Type.SUB;
+                int gameId = iconSplit == null || iconSplit.length() < 5 ? -1 : Integer.parseInt(iconSplit.split("/")[4]);
+                Giveaway.Type type = "app".equals(iconSplit != null && iconSplit.length() >= 4 ? iconSplit.split("/")[3] : "") ? Giveaway.Type.APP : Giveaway.Type.SUB;
 
                 // Entries & Comments
                 Elements links = element.select(".giveaway__links a span");
