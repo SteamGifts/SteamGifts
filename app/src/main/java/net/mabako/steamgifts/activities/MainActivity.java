@@ -8,10 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -34,14 +31,12 @@ import com.squareup.picasso.Picasso;
 import net.mabako.steamgifts.BuildConfig;
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.fragments.GiveawayListFragment;
-import net.mabako.steamgifts.fragments.IFragmentNotifications;
 import net.mabako.steamgifts.tasks.LogoutTask;
 import net.mabako.steamgifts.web.WebUserData;
 
 public class MainActivity extends BaseActivity {
     public static final String ARGS_QUERY = "query";
 
-    private static final String FRAGMENT_TAG = "Main Fragment Thing";
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private AccountHeader accountHeader;
@@ -67,37 +62,6 @@ public class MainActivity extends BaseActivity {
             loadFragment(GiveawayListFragment.newInstance(GiveawayListFragment.Type.ALL, queryString));
             drawer.setSelection(R.string.navigation_giveaways_all, false);
         }
-    }
-
-    private void loadFragment(Fragment fragment) {
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-
-        ft.replace(R.id.fragment_container, fragment, FRAGMENT_TAG);
-
-        ft.commitAllowingStateLoss();
-
-        // Update the title.
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            Log.v(TAG, "Current Fragment is a " + fragment.getClass().getName());
-            if (fragment instanceof IFragmentNotifications) {
-                int resource = ((IFragmentNotifications) fragment).getTitleResource();
-                String title = getString(resource);
-
-                String extra = ((IFragmentNotifications) fragment).getExtraTitle();
-                if(extra != null && !extra.isEmpty())
-                    title = String.format("%s: %s", extra, title);
-
-                actionBar.setTitle(title);
-                Log.v(TAG, "Setting Toolbar title to " + title);
-            } else
-                actionBar.setTitle(R.string.app_name);
-        }
-    }
-
-    public Fragment getCurrentFragment() {
-        return getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
     }
 
     /**
