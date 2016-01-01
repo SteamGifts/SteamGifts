@@ -6,9 +6,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
@@ -31,12 +31,15 @@ import net.mabako.steamgifts.activities.DetailActivity;
 import net.mabako.steamgifts.activities.MainActivity;
 import net.mabako.steamgifts.adapters.CommentAdapter;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
+import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.data.GiveawayExtras;
-import net.mabako.steamgifts.fragments.util.WrappingLinearLayoutManager;
+import net.mabako.steamgifts.fragments.util.GiveawayDetailsCard;
 import net.mabako.steamgifts.tasks.EnterLeaveGiveawayTask;
 import net.mabako.steamgifts.tasks.LoadGiveawayDetailsTask;
 import net.mabako.steamgifts.web.WebUserData;
+
+import java.util.ArrayList;
 
 public class GiveawayDetailFragment extends Fragment {
     private static final String TAG = GiveawayDetailFragment.class.getSimpleName();
@@ -49,35 +52,26 @@ public class GiveawayDetailFragment extends Fragment {
      * Content to show for the giveaway details.
      */
     private Giveaway giveaway;
-    private GiveawayExtras extras;
+    private GiveawayDetailsCard giveawayCard;
 
     private LoadGiveawayDetailsTask task;
-    private TextView enterGiveaway;
-    private TextView leaveGiveaway;
-    private TextView timeRemaining;
-    private TextView commentGiveaway;
-    private TextView errorMessage;
     private EnterLeaveGiveawayTask enterLeaveTask;
 
     private RecyclerView listView;
     private CommentAdapter adapter;
-    private Button loginButton;
 
     private static Activity parent;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        if (getArguments().containsKey(ARG_GIVEAWAY)) {
-            giveaway = (Giveaway) getArguments().getSerializable(ARG_GIVEAWAY);
-        }
+    public static Fragment newInstance(Giveaway giveaway) {
+        GiveawayDetailFragment fragment = new GiveawayDetailFragment();
+        fragment.giveaway = giveaway;
+        return fragment;
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        CoordinatorLayout layout = (CoordinatorLayout) super.onCreateView(inflater, container, savedInstanceState);
+        View layout = inflater.inflate(R.layout.fragment_giveaway_detail, container, false);
 
         final Activity activity = getActivity();
         final CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
@@ -98,59 +92,8 @@ public class GiveawayDetailFragment extends Fragment {
             });
         }
 
-        enterGiveaway = (TextView) activity.findViewById(R.id.enter);
-        enterGiveaway.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                enterGiveaway.setEnabled(false);
-
-                if (enterLeaveTask != null)
-                    enterLeaveTask.cancel(true);
-
-                enterLeaveTask = new EnterLeaveGiveawayTask(GiveawayDetailFragment.this, giveaway.getGiveawayId(), extras.getXsrfToken(), ENTRY_INSERT);
-                enterLeaveTask.execute();
-            }
-        });
-
-        leaveGiveaway = (TextView) activity.findViewById(R.id.leave);
-        leaveGiveaway.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                leaveGiveaway.setEnabled(false);
-
-                if (enterLeaveTask != null)
-                    enterLeaveTask.cancel(true);
-
-                enterLeaveTask = new EnterLeaveGiveawayTask(GiveawayDetailFragment.this, giveaway.getGiveawayId(), extras.getXsrfToken(), ENTRY_DELETE);
-                enterLeaveTask.execute();
-            }
-        });
-
-        commentGiveaway = (TextView) activity.findViewById(R.id.comment);
-        commentGiveaway.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentManager fm = getActivity().getSupportFragmentManager();
-                WriteCommentFragment wcf = WriteCommentFragment.newInstance(giveaway.getGiveawayId(), giveaway.getName(), extras.getXsrfToken());
-                wcf.show(fm, "writecomment");
-            }
-        });
-
-        timeRemaining = (TextView) activity.findViewById(R.id.remaining);
-        errorMessage = (TextView) activity.findViewById(R.id.error);
-
-        loginButton = (Button) activity.findViewById(R.id.login);
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((DetailActivity) getActivity()).requestLogin();
-            }
-        });
-        loginButton.setVisibility(View.GONE);
-
-        listView = (RecyclerView) activity.findViewById(R.id.list);
-        listView.setLayoutManager(new WrappingLinearLayoutManager(getActivity()));
-        listView.setNestedScrollingEnabled(false);
+        listView = (RecyclerView) layout.findViewById(R.id.list);
+        listView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new CommentAdapter(getContext(), listView, new EndlessAdapter.OnLoadListener() {
             @Override
             public void onLoad(int page) {
@@ -160,31 +103,17 @@ public class GiveawayDetailFragment extends Fragment {
         });
         listView.setAdapter(adapter);
 
-        if (giveaway != null) {
-            setupGiveawayCard();
-        }
+        // Add the cardview for the Giveaway details
+        giveawayCard = new GiveawayDetailsCard(giveaway);
+        adapter.setStickyItem(giveawayCard);
 
         fetchItems(1);
-
         setHasOptionsMenu(true);
 
         return layout;
     }
 
     public void reload() {
-        Log.d(TAG, "Reloading giveaway details");
-
-        loginButton.setVisibility(View.GONE);
-        enterGiveaway.setVisibility(View.GONE);
-        leaveGiveaway.setVisibility(View.GONE);
-
-        // remove all comments
-        adapter.clear();
-
-        // show the progress bar instead of the description again
-        getActivity().findViewById(R.id.description).setVisibility(View.GONE);
-        getActivity().findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
-
         fetchItems(1);
     }
 
@@ -197,127 +126,47 @@ public class GiveawayDetailFragment extends Fragment {
             enterLeaveTask.cancel(true);
     }
 
-    private void setupGiveawayCard() {
-        // Format the "Enter (__P)" text to include the points
-        enterGiveaway.setText(String.format(getString(R.string.enter_giveaway), giveaway.getPoints()));
-        leaveGiveaway.setText(String.format(getString(R.string.leave_giveaway), giveaway.getPoints()));
-
-        // Show the creator
-        ((TextView) getActivity().findViewById(R.id.user)).setText("{faw-user} " + giveaway.getCreator());
-
-        // Time remaining
-        toggleRemainingTime();
-        timeRemaining.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toggleRemainingTime();
-            }
-        });
-
-
-        // TODO: Add comment
-    }
-
-    private void toggleRemainingTime() {
-        String shortVariant = giveaway.getTimeRemaining();
-        String longVariant = giveaway.getTimeRemainingLong();
-
-        Log.d(TAG, "Current time text: " + timeRemaining.getText());
-        timeRemaining.setText("{faw-clock-o} " + (timeRemaining.getText().toString().contains(shortVariant) ? longVariant : shortVariant));
-    }
-
     private void fetchItems(int page) {
         Log.d(TAG, "Fetching giveaways on page " + page + " for giveaway " + giveaway.getGiveawayId());
 
         if (task != null)
             task.cancel(true);
 
-        task = new LoadGiveawayDetailsTask(this, giveaway.getGiveawayId(), page);
+        task = new LoadGiveawayDetailsTask(this, giveaway.getGiveawayId() + "/" + giveaway.getName(), page);
         task.execute();
     }
 
     public void addDetails(GiveawayExtras extras, int page) {
-        this.extras = extras;
-
-        if(extras.getTimeRemaining() != null) {
-            giveaway.setTimeRemaining(extras.getTimeRemaining());
-            timeRemaining.setText("{faw-clock-o} " + giveaway.getTimeRemaining());
-        }
-
-        getActivity().findViewById(R.id.progressBar).setVisibility(View.GONE);
-        if (extras.getDescription() != null) {
-            TextView description = (TextView) getActivity().findViewById(R.id.description);
-
-            CharSequence desc = Html.fromHtml(extras.getDescription());
-            desc = desc.subSequence(0, desc.length() - 2);
-
-            description.setText(desc);
-            description.setVisibility(View.VISIBLE);
-            description.setMovementMethod(LinkMovementMethod.getInstance());
-        }
-
-        // We have a token to send with an ajax request now, so we can possibly enter or leave this giveaway.
-        if (extras.getXsrfToken() != null) {
-            getActivity().findViewById(R.id.comment).setVisibility(View.VISIBLE);
-
-            loginButton.setVisibility(View.GONE);
-            errorMessage.setVisibility(View.GONE);
-            if (extras.isEntered())
-                leaveGiveaway.setVisibility(View.VISIBLE);
-            else
-                enterGiveaway.setVisibility(View.VISIBLE);
-        } else if(extras.getErrorMessage() != null) {
-            enterGiveaway.setVisibility(View.GONE);
-            leaveGiveaway.setVisibility(View.GONE);
-            loginButton.setVisibility(View.GONE);
-
-            errorMessage.setText(extras.getErrorMessage());
-            errorMessage.setVisibility(View.VISIBLE);
-        } else {
-            Log.w(TAG, "No XSRF Token for Giveaway...");
-
-            enterGiveaway.setVisibility(View.GONE);
-            leaveGiveaway.setVisibility(View.GONE);
-            errorMessage.setVisibility(View.GONE);
-            loginButton.setVisibility(WebUserData.getCurrent().isLoggedIn() ? View.GONE : View.VISIBLE);
-        }
-
-
-        Log.d(TAG, "Adding " + extras.getComments().size() + " comments");
+        giveaway.setTimeRemaining(extras.getTimeRemaining());
+        giveawayCard.setExtras(extras);
+        adapter.setStickyItem(giveawayCard);
 
         if (page == 1)
             adapter.clear();
-        adapter.finishLoading(extras.getComments());
+        adapter.finishLoading(new ArrayList<IEndlessAdaptable>(extras.getComments()));
     }
 
     public void onEnterLeaveResult(String what, Boolean success) {
         Log.v(TAG, "Enter Leave Result -> " + what + ", " + success);
         if (success == Boolean.TRUE) {
-            if (ENTRY_INSERT.equals(what)) {
-                // We've just managed to enter the giveaway.
-                enterGiveaway.setVisibility(View.GONE);
-                leaveGiveaway.setVisibility(View.VISIBLE);
 
-                giveaway.setEntered(true);
-            } else {
-                enterGiveaway.setVisibility(View.VISIBLE);
-                leaveGiveaway.setVisibility(View.GONE);
-
-                giveaway.setEntered(false);
-            }
+            GiveawayExtras extras = giveawayCard.getExtras();
+                giveaway.setEntered(ENTRY_INSERT.equals(what));
             extras.setEntered(giveaway.isEntered());
 
-            if(parent instanceof MainActivity) {
+            giveawayCard.setExtras(extras);
+            adapter.setStickyItem(giveawayCard);
+            /*
+            if (
+                    parent instanceof MainActivity) {
                 ((MainActivity) parent).onUpdateGiveawayStatus(giveaway.getGiveawayId(), extras.isEntered());
             } else {
                 Log.d(TAG, "No parent giveaway to update status");
             }
+            */
         } else {
             Log.e(TAG, "Probably an error catching the result...");
         }
-
-        enterGiveaway.setEnabled(true);
-        leaveGiveaway.setEnabled(true);
     }
 
     @Override
@@ -343,6 +192,7 @@ public class GiveawayDetailFragment extends Fragment {
     }
 
     public static void setParent(Activity parent) {
+        // TODO better way of using this?
         GiveawayDetailFragment.parent = parent;
     }
 }

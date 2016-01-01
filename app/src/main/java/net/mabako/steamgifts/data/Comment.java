@@ -1,11 +1,16 @@
 package net.mabako.steamgifts.data;
 
+import net.mabako.steamgifts.R;
+import net.mabako.steamgifts.adapters.IEndlessAdaptable;
+
 import java.io.Serializable;
 
 /**
  * Comment on a giveaway or discussion.
  */
-public class Comment implements Serializable {
+public class Comment implements Serializable, IEndlessAdaptable {
+    public static final int VIEW_LAYOUT = R.layout.comment;
+
     private final int id;
     private final String author;
     private final String timeAgo;
@@ -44,9 +49,14 @@ public class Comment implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if(o == null || !(o instanceof Comment))
+        if (o == null || !(o instanceof Comment))
             return false;
 
         return ((Comment) o).id == id;
+    }
+
+    @Override
+    public int getLayout() {
+        return VIEW_LAYOUT;
     }
 }

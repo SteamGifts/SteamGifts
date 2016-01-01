@@ -16,15 +16,15 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LoadAllGiveawaysTask extends AsyncTask<Void, Void, List<Giveaway>> {
-    private static final String TAG = LoadAllGiveawaysTask.class.getSimpleName();
+public class LoadGiveawayListTask extends AsyncTask<Void, Void, List<Giveaway>> {
+    private static final String TAG = LoadGiveawayListTask.class.getSimpleName();
 
     private final GiveawayListFragment fragment;
     private final int page;
     private final GiveawayListFragment.Type type;
     private final String searchQuery;
 
-    public LoadAllGiveawaysTask(GiveawayListFragment activity, int page, GiveawayListFragment.Type type, String searchQuery) {
+    public LoadGiveawayListTask(GiveawayListFragment activity, int page, GiveawayListFragment.Type type, String searchQuery) {
         this.fragment = activity;
         this.page = page;
         this.type = type;

@@ -15,7 +15,8 @@ import net.mabako.steamgifts.fragments.IFragmentNotifications;
 import net.mabako.steamgifts.web.WebUserData;
 
 public class BaseActivity extends AppCompatActivity {
-    private static  final String TAG = BaseActivity.class.getSimpleName();
+    private static final String TAG = BaseActivity.class.getSimpleName();
+    private static final String FRAGMENT_TAG = "Fragment Root";
 
     public static final int REQUEST_LOGIN = 3;
     public static final int REQUEST_LOGIN_PASSIVE = 4;
@@ -26,7 +27,6 @@ public class BaseActivity extends AppCompatActivity {
     private static final String PREF_ACCOUNT = "account";
     private static final String PREF_KEY_USERNAME = "username";
     private static final String PREF_KEY_IMAGE = "image-url";
-    private static final String FRAGMENT_TAG = "Main Fragment Thing";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

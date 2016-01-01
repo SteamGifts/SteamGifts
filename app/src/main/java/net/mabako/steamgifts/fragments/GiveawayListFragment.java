@@ -26,9 +26,11 @@ import net.mabako.steamgifts.activities.BaseActivity;
 import net.mabako.steamgifts.activities.MainActivity;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.adapters.GiveawayAdapter;
+import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.data.Giveaway;
-import net.mabako.steamgifts.tasks.LoadAllGiveawaysTask;
+import net.mabako.steamgifts.tasks.LoadGiveawayListTask;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GiveawayListFragment extends Fragment implements IFragmentNotifications {
@@ -51,7 +53,6 @@ public class GiveawayListFragment extends Fragment implements IFragmentNotificat
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout
         RelativeLayout layout = (RelativeLayout) inflater.inflate(R.layout.fragment_giveaway_list, container, false);
 
         listView = (RecyclerView) layout.findViewById(R.id.list);
@@ -106,7 +107,7 @@ public class GiveawayListFragment extends Fragment implements IFragmentNotificat
 
     private void fetchItems(int page) {
         Log.d(TAG, "Fetching giveaways on page " + page);
-        new LoadAllGiveawaysTask(this, page, type, searchQuery).execute();
+        new LoadGiveawayListTask(this, page, type, searchQuery).execute();
     }
 
     public void addGiveaways(List<Giveaway> giveaways, boolean clearExistingItems) {
@@ -116,7 +117,7 @@ public class GiveawayListFragment extends Fragment implements IFragmentNotificat
             if (clearExistingItems)
                 adapter.clear();
 
-            adapter.finishLoading(giveaways);
+            adapter.finishLoading(new ArrayList<IEndlessAdaptable>(giveaways));
         } else {
             Snackbar.make(swipeContainer, "Failed to fetch giveaways", Snackbar.LENGTH_LONG).show();
         }
