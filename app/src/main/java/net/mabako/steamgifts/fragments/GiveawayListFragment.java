@@ -3,7 +3,6 @@ package net.mabako.steamgifts.fragments;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -32,8 +31,8 @@ import net.mabako.steamgifts.tasks.LoadAllGiveawaysTask;
 
 import java.util.List;
 
-public class GiveawaysFragment extends Fragment implements IFragmentNotifications {
-    private static final String TAG = GiveawaysFragment.class.getSimpleName();
+public class GiveawayListFragment extends Fragment implements IFragmentNotifications {
+    private static final String TAG = GiveawayListFragment.class.getSimpleName();
 
     private SwipeRefreshLayout swipeContainer;
     private ProgressBar progressBar;
@@ -43,8 +42,8 @@ public class GiveawaysFragment extends Fragment implements IFragmentNotification
     private Type type = Type.ALL;
     private String searchQuery = null;
 
-    public static GiveawaysFragment newInstance(Type type, String query) {
-        GiveawaysFragment g = new GiveawaysFragment();
+    public static GiveawayListFragment newInstance(Type type, String query) {
+        GiveawayListFragment g = new GiveawayListFragment();
         g.type = type;
         g.searchQuery = query;
         return g;
@@ -53,7 +52,7 @@ public class GiveawaysFragment extends Fragment implements IFragmentNotification
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout
-        RelativeLayout layout = (RelativeLayout) inflater.inflate(R.layout.fragment_giveaways_list, container, false);
+        RelativeLayout layout = (RelativeLayout) inflater.inflate(R.layout.fragment_giveaway_list, container, false);
 
         listView = (RecyclerView) layout.findViewById(R.id.list);
         swipeContainer = (SwipeRefreshLayout) layout.findViewById(R.id.swipeContainer);

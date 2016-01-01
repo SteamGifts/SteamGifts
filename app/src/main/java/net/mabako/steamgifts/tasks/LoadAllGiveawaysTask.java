@@ -4,7 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import net.mabako.steamgifts.data.Giveaway;
-import net.mabako.steamgifts.fragments.GiveawaysFragment;
+import net.mabako.steamgifts.fragments.GiveawayListFragment;
 import net.mabako.steamgifts.web.WebUserData;
 
 import org.jsoup.Connection;
@@ -19,12 +19,12 @@ import java.util.List;
 public class LoadAllGiveawaysTask extends AsyncTask<Void, Void, List<Giveaway>> {
     private static final String TAG = LoadAllGiveawaysTask.class.getSimpleName();
 
-    private final GiveawaysFragment fragment;
+    private final GiveawayListFragment fragment;
     private final int page;
-    private final GiveawaysFragment.Type type;
+    private final GiveawayListFragment.Type type;
     private final String searchQuery;
 
-    public LoadAllGiveawaysTask(GiveawaysFragment activity, int page, GiveawaysFragment.Type type, String searchQuery) {
+    public LoadAllGiveawaysTask(GiveawayListFragment activity, int page, GiveawayListFragment.Type type, String searchQuery) {
         this.fragment = activity;
         this.page = page;
         this.type = type;
@@ -44,7 +44,7 @@ public class LoadAllGiveawaysTask extends AsyncTask<Void, Void, List<Giveaway>> 
             if(searchQuery != null)
                 jsoup.data("q", searchQuery);
 
-            if(type != GiveawaysFragment.Type.ALL)
+            if(type != GiveawayListFragment.Type.ALL)
                 jsoup.data("type", type.name().toLowerCase());
 
             if (WebUserData.getCurrent().isLoggedIn())

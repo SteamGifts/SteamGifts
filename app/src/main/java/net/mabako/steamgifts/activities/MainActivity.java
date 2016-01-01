@@ -33,7 +33,7 @@ import com.squareup.picasso.Picasso;
 
 import net.mabako.steamgifts.BuildConfig;
 import net.mabako.steamgifts.R;
-import net.mabako.steamgifts.fragments.GiveawaysFragment;
+import net.mabako.steamgifts.fragments.GiveawayListFragment;
 import net.mabako.steamgifts.fragments.IFragmentNotifications;
 import net.mabako.steamgifts.tasks.LogoutTask;
 import net.mabako.steamgifts.web.WebUserData;
@@ -64,7 +64,7 @@ public class MainActivity extends BaseActivity {
             String queryString = extras == null ? null : extras.getString(ARGS_QUERY, null);
 
             // Load a default fragment to show all giveaways
-            loadFragment(GiveawaysFragment.newInstance(GiveawaysFragment.Type.ALL, queryString));
+            loadFragment(GiveawayListFragment.newInstance(GiveawayListFragment.Type.ALL, queryString));
             drawer.setSelection(R.string.navigation_giveaways_all, false);
         }
     }
@@ -109,7 +109,7 @@ public class MainActivity extends BaseActivity {
 
         super.onAccountChange();
 
-        loadFragment(GiveawaysFragment.newInstance(GiveawaysFragment.Type.ALL, getIntent().getExtras() != null ? getIntent().getExtras().getString(ARGS_QUERY, null) : null));
+        loadFragment(GiveawayListFragment.newInstance(GiveawayListFragment.Type.ALL, getIntent().getExtras() != null ? getIntent().getExtras().getString(ARGS_QUERY, null) : null));
         drawer.setSelection(R.string.navigation_giveaways_all, false);
     }
 
@@ -174,7 +174,7 @@ public class MainActivity extends BaseActivity {
                             case R.string.navigation_giveaways_group:
                             case R.string.navigation_giveaways_wishlist:
                             case R.string.navigation_giveaways_new:
-                                loadFragment(GiveawaysFragment.newInstance(GiveawaysFragment.Type.find(drawerItem.getIdentifier()), getIntent().getExtras() != null ? getIntent().getExtras().getString(ARGS_QUERY, null) : null));
+                                loadFragment(GiveawayListFragment.newInstance(GiveawayListFragment.Type.find(drawerItem.getIdentifier()), getIntent().getExtras() != null ? getIntent().getExtras().getString(ARGS_QUERY, null) : null));
                                 break;
 
                             default:
@@ -294,8 +294,8 @@ public class MainActivity extends BaseActivity {
 
     public void onUpdateGiveawayStatus(@NonNull String giveawayId, boolean entered) {
         Fragment fragment = getCurrentFragment();
-        if (fragment instanceof GiveawaysFragment) {
-            ((GiveawaysFragment) fragment).onUpdateGiveawayStatus(giveawayId, entered);
+        if (fragment instanceof GiveawayListFragment) {
+            ((GiveawayListFragment) fragment).onUpdateGiveawayStatus(giveawayId, entered);
         }
     }
 }
