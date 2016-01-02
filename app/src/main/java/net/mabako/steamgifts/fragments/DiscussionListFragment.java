@@ -39,7 +39,7 @@ public class DiscussionListFragment extends ListFragment<DiscussionAdapter> {
 
     @Override
     protected DiscussionAdapter createAdapter(RecyclerView listView) {
-        return new DiscussionAdapter(listView, new EndlessAdapter.OnLoadListener() {
+        return new DiscussionAdapter(getActivity(), listView, new EndlessAdapter.OnLoadListener() {
             @Override
             public void onLoad(int page) {
                 fetchItems(page);

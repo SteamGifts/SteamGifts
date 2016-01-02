@@ -1,5 +1,6 @@
 package net.mabako.steamgifts.adapters;
 
+import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -15,13 +16,19 @@ public class DiscussionAdapter extends EndlessAdapter {
      */
     private static final int ITEMS_PER_PAGE = 100;
 
-    public DiscussionAdapter(@NonNull RecyclerView view, @NonNull OnLoadListener listener) {
+    /**
+     * Context of this adapter.
+     */
+    private final Activity context;
+
+    public DiscussionAdapter(Activity context, @NonNull RecyclerView view, @NonNull OnLoadListener listener) {
         super(view, listener);
+        this.context = context;
     }
 
     @Override
     protected RecyclerView.ViewHolder onCreateActualViewHolder(View view, int viewType) {
-        return new DiscussionListItemViewHolder(view);
+        return new DiscussionListItemViewHolder(view, context);
     }
 
     @Override

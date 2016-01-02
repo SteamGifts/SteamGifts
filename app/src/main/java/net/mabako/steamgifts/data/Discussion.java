@@ -10,10 +10,18 @@ public class Discussion implements Serializable, IEndlessAdaptable {
 
     private final String discussionId;
     private final String name;
+    private final String creator;
+    private final String timeCreated;
+    private final String creatorAvatar;
 
-    public Discussion(String discussionId, String name) {
+    private boolean locked;
+
+    public Discussion(String discussionId, String name, String creator, String timeCreated, String avatar) {
         this.discussionId = discussionId;
         this.name = name;
+        this.creator = creator;
+        this.timeCreated = timeCreated;
+        this.creatorAvatar = avatar;
     }
 
     public String getDiscussionId() {
@@ -22,6 +30,26 @@ public class Discussion implements Serializable, IEndlessAdaptable {
 
     public String getName() {
         return name;
+    }
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public String getCreatorAvatar() {
+        return creatorAvatar;
+    }
+
+    public String getTimeCreated() {
+        return timeCreated;
+    }
+
+    public boolean isLocked() {
+        return locked;
+    }
+
+    public void setLocked(boolean locked) {
+        this.locked = locked;
     }
 
     @Override
