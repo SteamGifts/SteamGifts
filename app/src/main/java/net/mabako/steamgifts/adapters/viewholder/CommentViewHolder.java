@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import net.mabako.steamgifts.R;
-import net.mabako.steamgifts.adapters.CommentAdapter;
 import net.mabako.steamgifts.data.Comment;
 
 public class CommentViewHolder extends RecyclerView.ViewHolder {

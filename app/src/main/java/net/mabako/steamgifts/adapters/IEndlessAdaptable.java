@@ -1,7 +1,7 @@
 package net.mabako.steamgifts.adapters;
 
 /**
- * Created by mabako on 01.01.2016.
+ * Entry in an endless adapter.
  */
 public interface IEndlessAdaptable {
     int getLayout();

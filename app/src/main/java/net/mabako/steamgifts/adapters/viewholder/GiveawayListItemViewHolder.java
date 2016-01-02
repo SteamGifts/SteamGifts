@@ -1,10 +1,8 @@
 package net.mabako.steamgifts.adapters.viewholder;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -31,6 +29,8 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
 
     private final EndlessAdapter adapter;
     private final Activity activity;
+
+    private static int measuredHeight = 0;
 
     public GiveawayListItemViewHolder(View v, Activity activity, EndlessAdapter adapter) {
         super(v);
@@ -72,8 +72,11 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
              */
             @Override
             public void onSuccess() {
+                if (measuredHeight <= 0)
+                    measuredHeight = itemContainer.getMeasuredHeight();
+
                 ViewGroup.LayoutParams params = giveawayImage.getLayoutParams();
-                params.height = itemContainer.getMeasuredHeight();
+                params.height = measuredHeight;
             }
 
             @Override
