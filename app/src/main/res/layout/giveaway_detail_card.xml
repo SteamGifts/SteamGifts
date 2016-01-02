@@ -22,7 +22,7 @@
 
             <TextView
                 android:id="@+id/remaining"
-                style="@style/SmallText"
+                style="@style/MediumText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/user"
@@ -31,7 +31,7 @@
 
             <TextView
                 android:id="@+id/user"
-                style="@style/SmallText"
+                style="@style/MediumText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/card_margin_small"
@@ -68,7 +68,7 @@
 
             <Button
                 android:id="@+id/login"
-                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                style="@style/MediumButton.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/login_to_enter_giveaway"
@@ -76,7 +76,7 @@
 
             <Button
                 android:id="@+id/error"
-                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                style="@style/MediumButton.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:enabled="false"
@@ -85,7 +85,7 @@
 
             <Button
                 android:id="@+id/enter"
-                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                style="@style/MediumButton.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/enter_giveaway"
@@ -93,7 +93,7 @@
 
             <Button
                 android:id="@+id/leave"
-                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                style="@style/MediumButton.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/leave_giveaway"
@@ -101,7 +101,7 @@
 
             <Button
                 android:id="@+id/comment"
-                style="@style/Widget.AppCompat.Button.Borderless"
+                style="@style/MediumButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/add_comment"

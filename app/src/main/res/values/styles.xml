@@ -11,6 +11,10 @@
         <item name="android:textColor">#00000000</item>
     </style>
 
+    <style name="NormalText" parent="@android:style/TextAppearance.Small">
+        <item name="android:textSize">14sp</item>
+    </style>
+
     <style name="SmallText" parent="@android:style/TextAppearance.Small">
         <item name="android:textSize">10sp</item>
     </style>
@@ -21,6 +25,14 @@
 
     <style name="TimeText" parent="@style/SmallText">
         <item name="android:textColor">#60000000</item>
+    </style>
+
+    <style name="MediumButton" parent="@style/Widget.AppCompat.Button.Borderless">
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="MediumButton.Colored" parent="@style/Widget.AppCompat.Button.Borderless.Colored">
+        <item name="android:textSize">12sp</item>
     </style>
 
     <!-- Use rather rectangular image. -->
