@@ -73,7 +73,7 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
     }
 
 
-    public void addGiveaways(List<? extends IEndlessAdaptable> items, boolean clearExistingItems) {
+    public void addItems(List<? extends IEndlessAdaptable> items, boolean clearExistingItems) {
         if (items != null) {
             if (clearExistingItems)
                 adapter.clear();

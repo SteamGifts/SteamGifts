@@ -8,6 +8,10 @@ import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.adapters.DiscussionAdapter;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
+import net.mabako.steamgifts.data.Discussion;
+import net.mabako.steamgifts.tasks.LoadDiscussionListTask;
+
+import java.util.List;
 
 /**
  * List of all discussions.
@@ -45,7 +49,7 @@ public class DiscussionListFragment extends ListFragment<DiscussionAdapter> {
 
     @Override
     protected void fetchItems(int page) {
-        // TODO
+        new LoadDiscussionListTask(this, page, type, searchQuery).execute();
     }
 
     @Override

@@ -65,7 +65,7 @@ public class LoadGiveawayListTask extends AsyncTask<Void, Void, List<Giveaway>> 
                 Element link = element.select("h2 a").first();
                 Element icon = element.select("h2 a").last();
 
-                // Base information
+                // Basic information
                 String title = link.text();
                 String giveawayLink = link.attr("href").substring(10, 15);
                 String giveawayName = link.attr("href").substring(16);
@@ -108,6 +108,6 @@ public class LoadGiveawayListTask extends AsyncTask<Void, Void, List<Giveaway>> 
     @Override
     protected void onPostExecute(List<Giveaway> result) {
         super.onPostExecute(result);
-        fragment.addGiveaways(result, page == 1);
+        fragment.addItems(result, page == 1);
     }
 }

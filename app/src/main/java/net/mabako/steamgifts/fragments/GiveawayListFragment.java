@@ -55,7 +55,6 @@ public class GiveawayListFragment extends ListFragment<GiveawayAdapter> implemen
 
     @Override
     protected void fetchItems(int page) {
-        Log.d(TAG, "Fetching giveaways on page " + page);
         new LoadGiveawayListTask(this, page, type, searchQuery).execute();
     }
 
