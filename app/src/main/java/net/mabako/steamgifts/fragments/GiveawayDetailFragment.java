@@ -159,7 +159,7 @@ public class GiveawayDetailFragment extends Fragment {
         if (success == Boolean.TRUE) {
 
             GiveawayExtras extras = giveawayCard.getExtras();
-                giveaway.setEntered(ENTRY_INSERT.equals(what));
+            giveaway.setEntered(ENTRY_INSERT.equals(what));
             extras.setEntered(giveaway.isEntered());
 
             giveawayCard.setExtras(extras);
@@ -175,6 +175,12 @@ public class GiveawayDetailFragment extends Fragment {
         } else {
             Log.e(TAG, "Probably an error catching the result...");
         }
+    }
+
+    public void requestComment(String xsrfToken, Integer parentComment) {
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        WriteCommentFragment wcf = WriteCommentFragment.newInstance(giveaway.getGiveawayId(), giveaway.getName(), xsrfToken);
+        wcf.show(fm, "writecomment");
     }
 
     @Override

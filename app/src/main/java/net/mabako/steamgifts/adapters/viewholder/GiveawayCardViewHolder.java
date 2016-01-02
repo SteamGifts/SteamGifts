@@ -1,6 +1,5 @@
 package net.mabako.steamgifts.adapters.viewholder;
 
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
@@ -13,7 +12,6 @@ import net.mabako.steamgifts.activities.BaseActivity;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.data.GiveawayExtras;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
-import net.mabako.steamgifts.fragments.WriteCommentFragment;
 import net.mabako.steamgifts.fragments.util.GiveawayDetailsCard;
 import net.mabako.steamgifts.web.WebUserData;
 
@@ -120,9 +118,7 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
         commentGiveaway.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManager fm = fragment.getActivity().getSupportFragmentManager();
-                WriteCommentFragment wcf = WriteCommentFragment.newInstance(card.getGiveaway().getGiveawayId(), card.getGiveaway().getName(), card.getExtras().getXsrfToken());
-                wcf.show(fm, "writecomment");
+                fragment.requestComment(card.getExtras().getXsrfToken(), null);
             }
         });
     }
