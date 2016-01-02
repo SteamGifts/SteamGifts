@@ -22,23 +22,25 @@
 
             <TextView
                 android:id="@+id/remaining"
+                style="@style/SmallText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/user"
                 android:padding="@dimen/card_margin_small"
-                android:text="{faw-clock-o} Soon"
-                android:textSize="16sp" />
+                android:text="{faw-clock-o} Soon" />
 
             <TextView
                 android:id="@+id/user"
+                style="@style/SmallText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/card_margin_small"
                 android:text="{faw-user} Creator"
-                android:textSize="16sp" />
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/description"
+                style="@style/MediumText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/progressBar"

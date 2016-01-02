@@ -5,7 +5,7 @@ import net.mabako.steamgifts.data.ICommentHolder;
 
 import org.jsoup.nodes.Element;
 
-final class Utils {
+public final class Utils {
     /**
      * Extract comments recursively.
      *
@@ -26,12 +26,17 @@ final class Utils {
             Element authorNode = thisComment.select(".comment__username").first();
             String author = authorNode.text();
 
+            String avatar = null;
+            Element avatarNode = thisComment.select(".global__image-inner-wrap").first();
+            if(avatarNode != null)
+                avatar = extractAvatar(avatarNode.attr("style"));
+
             String content = thisComment.select(".comment__description").first().html();
 
             Element timeRemaining = thisComment.select(".comment__actions > div span").first();
 
             // public Comment(int id, String author, String timeAgo, String timeAgoLong, String content) {
-            Comment comment = new Comment(Integer.parseInt(c.attr("data-comment-id")), author, timeRemaining.text(), timeRemaining.attr("title"), content, depth);
+            Comment comment = new Comment(Integer.parseInt(c.attr("data-comment-id")), author, timeRemaining.text(), timeRemaining.attr("title"), content, depth, avatar);
 
             // add this
             parent.addComment(comment);
@@ -39,5 +44,9 @@ final class Utils {
             // Add all children
             loadComments(c.select(".comment__children").first(), parent, depth + 1);
         }
+    }
+
+    public static String extractAvatar(String style) {
+        return style.replace("background-image:url(", "").replace(");", "").replace("_medium", "_full");
     }
 }

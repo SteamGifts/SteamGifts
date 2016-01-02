@@ -16,15 +16,17 @@ public class Comment implements Serializable, IEndlessAdaptable {
     private final String timeAgo;
     private final String timeAgoLong;
     private final String content;
+    private final String avatar;
     private final int depth;
 
-    public Comment(int id, String author, String timeAgo, String timeAgoLong, String content, int depth) {
+    public Comment(int id, String author, String timeAgo, String timeAgoLong, String content, int depth, String avatar) {
         this.id = id;
         this.author = author;
         this.timeAgo = timeAgo;
         this.timeAgoLong = timeAgoLong;
         this.content = content;
         this.depth = depth;
+        this.avatar = avatar;
     }
 
     public String getAuthor() {
@@ -45,6 +47,10 @@ public class Comment implements Serializable, IEndlessAdaptable {
 
     public int getDepth() {
         return depth;
+    }
+
+    public String getAvatar() {
+        return avatar;
     }
 
     @Override

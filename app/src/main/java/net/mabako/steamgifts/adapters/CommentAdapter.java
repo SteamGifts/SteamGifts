@@ -45,7 +45,7 @@ public class CommentAdapter extends EndlessAdapter {
     public RecyclerView.ViewHolder onCreateActualViewHolder(View view, int viewType) {
         switch (viewType) {
             case Comment.VIEW_LAYOUT:
-                return new CommentViewHolder(view);
+                return new CommentViewHolder(view, fragment.getActivity());
 
             case GiveawayDetailsCard.VIEW_LAYOUT:
                 return new GiveawayCardViewHolder(view, fragment);
@@ -59,7 +59,7 @@ public class CommentAdapter extends EndlessAdapter {
             CommentViewHolder holder = (CommentViewHolder) h;
             Comment comment = (Comment) getItem(position);
 
-            holder.setFrom(comment, colors);
+            holder.setFrom(comment);
         } else if (h instanceof GiveawayCardViewHolder) {
             GiveawayCardViewHolder holder = (GiveawayCardViewHolder) h;
             GiveawayDetailsCard card = (GiveawayDetailsCard) getItem(position);

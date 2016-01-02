@@ -1,6 +1,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:paddingBottom="4dp"
+    android:paddingTop="4dp">
 
     <!-- show depth of the parent -->
     <View
@@ -11,9 +14,18 @@
     <!-- colored marker -->
     <View
         android:id="@+id/comment_marker"
-        android:layout_width="5dp"
+        android:layout_width="16dp"
         android:layout_height="match_parent"
-        android:background="@color/colorPrimary" />
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginBottom="6dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="6dp"
+        android:elevation="2dp" />
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -22,6 +34,7 @@
 
         <TextView
             android:id="@+id/user"
+            style="@style/SmallText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="4dp"
@@ -30,6 +43,7 @@
 
         <TextView
             android:id="@+id/time"
+            style="@style/TimeText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/user"
@@ -38,6 +52,7 @@
 
         <TextView
             android:id="@+id/content"
+            style="@style/MediumText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/user"
@@ -45,11 +60,5 @@
             android:paddingLeft="4dp"
             android:paddingRight="4dp"
             android:text="Text..." />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_below="@id/content"
-            android:background="?android:attr/listDivider" />
     </RelativeLayout>
 </LinearLayout>

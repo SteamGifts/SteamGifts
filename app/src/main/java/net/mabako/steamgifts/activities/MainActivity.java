@@ -79,7 +79,7 @@ public class MainActivity extends BaseActivity implements IGiveawayUpdateNotific
         DrawerImageLoader.init(new AbstractDrawerImageLoader() {
             @Override
             public void set(ImageView imageView, Uri uri, Drawable placeholder) {
-                Picasso.with(imageView.getContext()).load(uri).placeholder(R.drawable.guy).into(imageView);
+                Picasso.with(imageView.getContext()).load(uri).placeholder(R.drawable.default_avatar).into(imageView);
             }
 
             @Override
@@ -206,7 +206,7 @@ public class MainActivity extends BaseActivity implements IGiveawayUpdateNotific
 
             accountHeader.addProfile(profile, 0);
         } else {
-            profile = new ProfileDrawerItem().withName(getString(R.string.guest)).withEmail("Not logged in").withIcon(R.drawable.guy).withIdentifier(1);
+            profile = new ProfileDrawerItem().withName(getString(R.string.guest)).withEmail("Not logged in").withIcon(R.drawable.default_avatar).withIdentifier(1);
             accountHeader.addProfile(profile, 0);
         }
 
