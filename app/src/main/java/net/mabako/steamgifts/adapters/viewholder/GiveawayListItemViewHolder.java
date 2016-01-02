@@ -4,10 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import net.mabako.steamgifts.R;
@@ -56,12 +59,28 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
     public void setFrom(Giveaway giveaway) {
 
         giveawayName.setText(giveaway.getTitle());
-        Picasso.with(activity).load("http://cdn.akamai.steamstatic.com/steam/" + giveaway.getType().name().toLowerCase() + "s/" + giveaway.getGameId() + "/capsule_184x69.jpg").into(giveawayImage);
 
         String str = giveaway.getPoints() + "P | " + giveaway.getEntries() + " entries";
         if (giveaway.getCopies() > 1)
             str = giveaway.getCopies() + " copies | " + str;
         giveawayDetails.setText(str);
+
+        // giveaway_image
+        Picasso.with(activity).load("http://cdn.akamai.steamstatic.com/steam/" + giveaway.getType().name().toLowerCase() + "s/" + giveaway.getGameId() + "/capsule_184x69.jpg").into(giveawayImage, new Callback() {
+            /**
+             * We manually set the height of this image to fit the container.
+             */
+            @Override
+            public void onSuccess() {
+                ViewGroup.LayoutParams params = giveawayImage.getLayoutParams();
+                params.height = itemContainer.getMeasuredHeight();
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
 
         itemContainer.setBackgroundResource(giveaway.isEntered() ? R.color.md_blue_50 : android.R.color.background_light);
     }
