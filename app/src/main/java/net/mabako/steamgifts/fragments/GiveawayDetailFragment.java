@@ -10,8 +10,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
-import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,16 +17,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import net.mabako.steamgifts.R;
-import net.mabako.steamgifts.activities.DetailActivity;
-import net.mabako.steamgifts.activities.MainActivity;
 import net.mabako.steamgifts.adapters.CommentAdapter;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
@@ -37,35 +31,34 @@ import net.mabako.steamgifts.data.GiveawayExtras;
 import net.mabako.steamgifts.fragments.util.GiveawayDetailsCard;
 import net.mabako.steamgifts.tasks.EnterLeaveGiveawayTask;
 import net.mabako.steamgifts.tasks.LoadGiveawayDetailsTask;
-import net.mabako.steamgifts.web.WebUserData;
 
 import java.util.ArrayList;
 
 public class GiveawayDetailFragment extends Fragment {
-    private static final String TAG = GiveawayDetailFragment.class.getSimpleName();
-
     public static final String ARG_GIVEAWAY = "giveaway";
     public static final String ENTRY_INSERT = "entry_insert";
     public static final String ENTRY_DELETE = "entry_delete";
-
+    private static final String TAG = GiveawayDetailFragment.class.getSimpleName();
+    private static Activity parent;
     /**
      * Content to show for the giveaway details.
      */
     private Giveaway giveaway;
     private GiveawayDetailsCard giveawayCard;
-
     private LoadGiveawayDetailsTask task;
     private EnterLeaveGiveawayTask enterLeaveTask;
-
     private RecyclerView listView;
     private CommentAdapter adapter;
-
-    private static Activity parent;
 
     public static Fragment newInstance(Giveaway giveaway) {
         GiveawayDetailFragment fragment = new GiveawayDetailFragment();
         fragment.giveaway = giveaway;
         return fragment;
+    }
+
+    public static void setParent(Activity parent) {
+        // TODO better way of using this?
+        GiveawayDetailFragment.parent = parent;
     }
 
     @Nullable
@@ -165,8 +158,8 @@ public class GiveawayDetailFragment extends Fragment {
             giveawayCard.setExtras(extras);
             adapter.setStickyItem(giveawayCard);
 
-            if (parent instanceof MainActivity) {
-                ((MainActivity) parent).onUpdateGiveawayStatus(giveaway.getGiveawayId(), extras.isEntered());
+            if (parent instanceof IGiveawayUpdateNotification) {
+                ((IGiveawayUpdateNotification) parent).onUpdateGiveawayStatus(giveaway.getGiveawayId(), extras.isEntered());
             } else {
                 Log.d(TAG, "No parent giveaway to update status");
             }
@@ -201,10 +194,5 @@ public class GiveawayDetailFragment extends Fragment {
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    public static void setParent(Activity parent) {
-        // TODO better way of using this?
-        GiveawayDetailFragment.parent = parent;
     }
 }

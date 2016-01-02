@@ -31,10 +31,11 @@ import com.squareup.picasso.Picasso;
 import net.mabako.steamgifts.BuildConfig;
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.fragments.GiveawayListFragment;
+import net.mabako.steamgifts.fragments.IGiveawayUpdateNotification;
 import net.mabako.steamgifts.tasks.LogoutTask;
 import net.mabako.steamgifts.web.WebUserData;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements IGiveawayUpdateNotification {
     public static final String ARGS_QUERY = "query";
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -252,10 +253,11 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    @Override
     public void onUpdateGiveawayStatus(@NonNull String giveawayId, boolean entered) {
         Fragment fragment = getCurrentFragment();
-        if (fragment instanceof GiveawayListFragment) {
-            ((GiveawayListFragment) fragment).onUpdateGiveawayStatus(giveawayId, entered);
+        if (fragment instanceof IGiveawayUpdateNotification) {
+            ((IGiveawayUpdateNotification) fragment).onUpdateGiveawayStatus(giveawayId, entered);
         }
     }
 }
