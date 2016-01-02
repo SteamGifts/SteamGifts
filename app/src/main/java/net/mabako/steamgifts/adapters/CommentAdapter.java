@@ -1,93 +1,83 @@
 package net.mabako.steamgifts.adapters;
 
-import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
-import android.text.method.LinkMovementMethod;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
-import net.mabako.steamgifts.R;
+import net.mabako.steamgifts.adapters.viewholder.CommentViewHolder;
+import net.mabako.steamgifts.adapters.viewholder.GiveawayCardViewHolder;
 import net.mabako.steamgifts.data.Comment;
+import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
+import net.mabako.steamgifts.fragments.util.GiveawayDetailsCard;
 
 import java.util.List;
 
 /**
  * Adapter to hold comments for a giveaway/discussion.
  */
-public class CommentAdapter extends EndlessAdapter<Comment, CommentAdapter.ViewHolder> {
+public class CommentAdapter extends EndlessAdapter {
+    /**
+     * Amount of top-level items on a full comments page.
+     */
     private static final int ITEMS_PER_PAGE = 25;
-    private final int[] colors = {android.R.color.holo_blue_dark, android.R.color.holo_green_dark, android.R.color.holo_orange_dark, android.R.color.holo_red_dark};
 
-    private float displayDensity;
+    /**
+     * Colors, reinitialized in {@link #setColors()}.
+     */
+    private int[] colors = {android.R.color.holo_blue_dark, android.R.color.holo_green_dark, android.R.color.holo_orange_dark, android.R.color.holo_red_dark};
 
-    public CommentAdapter(Context context, RecyclerView view, EndlessAdapter.OnLoadListener loadListener) {
+    private final GiveawayDetailFragment fragment;
+
+    public CommentAdapter(GiveawayDetailFragment fragment, RecyclerView view, EndlessAdapter.OnLoadListener loadListener) {
         super(view, loadListener);
-        for(int i = 0; i < colors.length; ++ i)
-            colors[i] = ContextCompat.getColor(context, colors[i]);
+
+        this.fragment = fragment;
+
+        setColors();
+    }
+
+    private void setColors() {
+        for (int i = 0; i < colors.length; ++i)
+            colors[i] = ContextCompat.getColor(fragment.getContext(), colors[i]);
     }
 
     @Override
-    public ViewHolder onCreateActualViewHolder(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.comment, null);
-        return new ViewHolder(view);
+    public RecyclerView.ViewHolder onCreateActualViewHolder(View view, int viewType) {
+        switch (viewType) {
+            case Comment.VIEW_LAYOUT:
+                return new CommentViewHolder(view);
+
+            case GiveawayDetailsCard.VIEW_LAYOUT:
+                return new GiveawayCardViewHolder(view, fragment);
+        }
+        return null;
     }
 
     @Override
-    public void onBindActualViewHolder(ViewHolder holder, int position) {
-        Comment comment = getItem(position);
+    public void onBindActualViewHolder(RecyclerView.ViewHolder h, int position) {
+        if (h instanceof CommentViewHolder) {
+            CommentViewHolder holder = (CommentViewHolder) h;
+            Comment comment = (Comment) getItem(position);
 
-        holder.commentAuthor.setText(comment.getAuthor());
-        holder.commentTime.setText(comment.getTimeAgo());
+            holder.setFrom(comment, colors);
+        } else if (h instanceof GiveawayCardViewHolder) {
+            GiveawayCardViewHolder holder = (GiveawayCardViewHolder) h;
+            GiveawayDetailsCard card = (GiveawayDetailsCard) getItem(position);
 
-        CharSequence desc = Html.fromHtml(comment.getContent());
-        desc = desc.subSequence(0, desc.length() - 2);
-        holder.commentContent.setText(desc);
-
-        // Space before the marker
-        ViewGroup.LayoutParams params = holder.commentIndent.getLayoutParams();
-        params.width = holder.commentMarker.getLayoutParams().width * comment.getDepth();
-        holder.commentIndent.setLayoutParams(params);
-
-        // Marker
-        holder.commentMarker.setBackgroundColor(colors[comment.getDepth() % colors.length]);
-        holder.commentMarker.invalidate();
+            holder.setFrom(card);
+        }
     }
 
     @Override
-    protected boolean hasEnoughItems(List<Comment> items) {
-        if(items.size() < ITEMS_PER_PAGE)
+    protected boolean hasEnoughItems(List<IEndlessAdaptable> items) {
+        if (items.size() < ITEMS_PER_PAGE)
             return false;
 
         int rootLevelComments = 0;
-        for(Comment comment : items)
-            if(comment.getDepth() == 0)
-                ++ rootLevelComments;
+        for (IEndlessAdaptable adaptable : items)
+            if (adaptable instanceof Comment && ((Comment) adaptable).getDepth() == 0)
+                ++rootLevelComments;
 
         return rootLevelComments == ITEMS_PER_PAGE;
-    }
-
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final TextView commentAuthor;
-        private final TextView commentTime;
-        private final TextView commentContent;
-        private final View commentIndent;
-        private final View commentMarker;
-
-        public ViewHolder(View v) {
-            super(v);
-            commentAuthor = (TextView) v.findViewById(R.id.user);
-            commentTime = (TextView) v.findViewById(R.id.time);
-            commentContent = (TextView) v.findViewById(R.id.content);
-            commentMarker = v.findViewById(R.id.comment_marker);
-            commentIndent = v.findViewById(R.id.comment_indent);
-
-            commentContent.setMovementMethod(LinkMovementMethod.getInstance());
-
-            // OnClickListener...
-        }
     }
 }

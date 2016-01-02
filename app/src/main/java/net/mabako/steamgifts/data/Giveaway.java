@@ -1,8 +1,13 @@
 package net.mabako.steamgifts.data;
 
+import net.mabako.steamgifts.R;
+import net.mabako.steamgifts.adapters.IEndlessAdaptable;
+
 import java.io.Serializable;
 
-public class Giveaway implements Serializable {
+public class Giveaway implements Serializable, IEndlessAdaptable {
+    public static final int VIEW_LAYOUT = R.layout.giveaway_item;
+
     private final String title;
     private final String giveawayId;
     private final String name;
@@ -107,6 +112,11 @@ public class Giveaway implements Serializable {
 
     public void setTimeRemaining(String timeRemaining) {
         this.timeRemaining = timeRemaining.replace(" remaining", "");;
+    }
+
+    @Override
+    public int getLayout() {
+        return VIEW_LAYOUT;
     }
 
     public enum Type {

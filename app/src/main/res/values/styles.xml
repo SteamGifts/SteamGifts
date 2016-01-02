@@ -10,4 +10,11 @@
     <style name="TransparentText" parent="@android:style/TextAppearance">
         <item name="android:textColor">#00000000</item>
     </style>
+
+    <!-- Use rather rectangular image. -->
+    <style name="BezelImageView">
+        <item name="biv_maskDrawable">@drawable/material_drawer_square_mask</item>
+        <item name="biv_drawCircularShadow">false</item>
+        <item name="biv_selectorOnPress">@color/material_drawer_primary</item>
+    </style>
 </resources>

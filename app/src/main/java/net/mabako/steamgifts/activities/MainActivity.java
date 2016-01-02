@@ -48,18 +48,14 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Need to have this prior to loading a fragment, otherwise no title is shown.
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
         setupNavBar();
 
         // savedInstanceState is non-null if a fragment state is saved from a previous configuration.
         if (savedInstanceState == null) {
-            Bundle extras = getIntent().getExtras();
-            String queryString = extras == null ? null : extras.getString(ARGS_QUERY, null);
-
             // Load a default fragment to show all giveaways
-            loadFragment(GiveawayListFragment.newInstance(GiveawayListFragment.Type.ALL, queryString));
+            loadFragment(GiveawayListFragment.newInstance(GiveawayListFragment.Type.ALL, getIntent().getStringExtra(ARGS_QUERY)));
             drawer.setSelection(R.string.navigation_giveaways_all, false);
         }
     }

@@ -17,14 +17,12 @@
             android:id="@+id/giveaway_image"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:padding="0dp"
             android:scaleType="fitCenter"
-            android:adjustViewBounds="true"
-            android:maxHeight="24dp"/>
+            android:adjustViewBounds="true"/>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingLeft="5dp">
 
@@ -35,7 +33,8 @@
                 android:singleLine="true"
                 android:textAlignment="viewStart"
                 android:layout_gravity="start"
-                android:textAppearance="?android:textAppearanceListItemSmall" />
+                android:textAppearance="?android:textAppearanceListItemSmall"
+                android:text="Giveaway Name"/>
 
             <TextView
                 android:id="@+id/giveaway_details"
@@ -45,6 +44,7 @@
                 android:textAlignment="viewStart"
                 android:layout_gravity="start"
                 android:textAppearance="?android:textAppearanceListItemSmall"
+                android:text="Giveaway Details"
                 android:textColor="#909090" />
         </LinearLayout>
     </LinearLayout>
