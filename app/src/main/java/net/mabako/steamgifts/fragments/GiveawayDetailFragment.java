@@ -150,7 +150,7 @@ public class GiveawayDetailFragment extends Fragment {
         if (enterLeaveTask != null)
             enterLeaveTask.cancel(true);
 
-        enterLeaveTask = new EnterLeaveGiveawayTask(this, giveaway.getGiveawayId(), giveawayCard.getExtras().getXsrfToken(), ENTRY_INSERT);
+        enterLeaveTask = new EnterLeaveGiveawayTask(this, giveaway.getGiveawayId(), giveawayCard.getExtras().getXsrfToken(), enterOrDelete);
         enterLeaveTask.execute();
     }
 
@@ -164,14 +164,12 @@ public class GiveawayDetailFragment extends Fragment {
 
             giveawayCard.setExtras(extras);
             adapter.setStickyItem(giveawayCard);
-            /*
-            if (
-                    parent instanceof MainActivity) {
+
+            if (parent instanceof MainActivity) {
                 ((MainActivity) parent).onUpdateGiveawayStatus(giveaway.getGiveawayId(), extras.isEntered());
             } else {
                 Log.d(TAG, "No parent giveaway to update status");
             }
-            */
         } else {
             Log.e(TAG, "Probably an error catching the result...");
         }
