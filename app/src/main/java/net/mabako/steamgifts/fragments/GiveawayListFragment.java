@@ -20,10 +20,20 @@ import net.mabako.steamgifts.adapters.GiveawayAdapter;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.tasks.LoadGiveawayListTask;
 
+/**
+ * List of all giveaways.
+ */
 public class GiveawayListFragment extends ListFragment<GiveawayAdapter> implements IGiveawayUpdateNotification {
     private static final String TAG = GiveawayListFragment.class.getSimpleName();
 
+    /**
+     * Type of items to show.
+     */
     private Type type = Type.ALL;
+
+    /**
+     * What are we searching for?
+     */
     private String searchQuery = null;
 
     public static GiveawayListFragment newInstance(Type type, String query) {
