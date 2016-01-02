@@ -11,7 +11,14 @@ import net.mabako.steamgifts.data.Giveaway;
 import java.util.List;
 
 public class GiveawayAdapter extends EndlessAdapter {
+    /**
+     * Giveaways that are shown per page.
+     */
     private static final int ITEMS_PER_PAGE = 50;
+
+    /**
+     * Context of this adapter.
+     */
     private final Activity context;
 
     public GiveawayAdapter(Activity context, RecyclerView view, OnLoadListener listener) {

@@ -92,7 +92,7 @@ public class GiveawayListFragment extends ListFragment<GiveawayAdapter> implemen
 
                 Intent intent = new Intent(getActivity(), MainActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putString(MainActivity.ARGS_QUERY, query);
+                bundle.putString(MainActivity.ARGS_GIVEAWAY_QUERY, query);
                 intent.putExtras(bundle);
 
                 getActivity().startActivityForResult(intent, BaseActivity.REQUEST_LOGIN_PASSIVE);

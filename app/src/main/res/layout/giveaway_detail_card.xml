@@ -15,10 +15,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingTop="@dimen/card_margin_outer"
+            android:paddingBottom="0dp"
             android:paddingLeft="@dimen/card_margin_outer"
             android:paddingRight="@dimen/card_margin_outer"
-            android:paddingBottom="0dp">
+            android:paddingTop="@dimen/card_margin_outer">
 
             <TextView
                 android:id="@+id/remaining"
@@ -55,9 +55,9 @@
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:indeterminate="true"
-                android:paddingTop="@dimen/card_margin_outer"
                 android:paddingBottom="@dimen/card_margin_outer"
-                android:visibility="gone"/>
+                android:paddingTop="@dimen/card_margin_outer"
+                android:visibility="gone" />
         </RelativeLayout>
 
         <LinearLayout

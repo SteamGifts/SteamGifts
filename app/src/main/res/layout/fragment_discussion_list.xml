@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".fragments.GiveawayListFragment">
+    tools:context=".activities.MainActivity">
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipeContainer"

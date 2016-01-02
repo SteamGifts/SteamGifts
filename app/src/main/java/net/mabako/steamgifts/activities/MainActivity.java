@@ -30,13 +30,14 @@ import com.squareup.picasso.Picasso;
 
 import net.mabako.steamgifts.BuildConfig;
 import net.mabako.steamgifts.R;
+import net.mabako.steamgifts.fragments.DiscussionListFragment;
 import net.mabako.steamgifts.fragments.GiveawayListFragment;
 import net.mabako.steamgifts.fragments.IGiveawayUpdateNotification;
 import net.mabako.steamgifts.tasks.LogoutTask;
 import net.mabako.steamgifts.web.WebUserData;
 
 public class MainActivity extends BaseActivity implements IGiveawayUpdateNotification {
-    public static final String ARGS_QUERY = "query";
+    public static final String ARGS_GIVEAWAY_QUERY = "giveaway-query";
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -56,7 +57,7 @@ public class MainActivity extends BaseActivity implements IGiveawayUpdateNotific
         // savedInstanceState is non-null if a fragment state is saved from a previous configuration.
         if (savedInstanceState == null) {
             // Load a default fragment to show all giveaways
-            loadFragment(GiveawayListFragment.newInstance(GiveawayListFragment.Type.ALL, getIntent().getStringExtra(ARGS_QUERY)));
+            loadFragment(GiveawayListFragment.newInstance(GiveawayListFragment.Type.ALL, getIntent().getStringExtra(ARGS_GIVEAWAY_QUERY)));
             drawer.setSelection(R.string.navigation_giveaways_all, false);
         }
     }
@@ -70,7 +71,7 @@ public class MainActivity extends BaseActivity implements IGiveawayUpdateNotific
 
         super.onAccountChange();
 
-        loadFragment(GiveawayListFragment.newInstance(GiveawayListFragment.Type.ALL, getIntent().getExtras() != null ? getIntent().getExtras().getString(ARGS_QUERY, null) : null));
+        loadFragment(GiveawayListFragment.newInstance(GiveawayListFragment.Type.ALL, getIntent().getExtras() != null ? getIntent().getExtras().getString(ARGS_GIVEAWAY_QUERY, null) : null));
         drawer.setSelection(R.string.navigation_giveaways_all, false);
     }
 
@@ -131,14 +132,22 @@ public class MainActivity extends BaseActivity implements IGiveawayUpdateNotific
                                 }
                                 break;
 
-                            case R.string.navigation_giveaways_all:
-                            case R.string.navigation_giveaways_group:
-                            case R.string.navigation_giveaways_wishlist:
-                            case R.string.navigation_giveaways_new:
-                                loadFragment(GiveawayListFragment.newInstance(GiveawayListFragment.Type.find(drawerItem.getIdentifier()), getIntent().getExtras() != null ? getIntent().getExtras().getString(ARGS_QUERY, null) : null));
-                                break;
-
                             default:
+                                for (GiveawayListFragment.Type type : GiveawayListFragment.Type.values()) {
+                                    if (type.getNavbarResource() == drawerItem.getIdentifier()) {
+                                        loadFragment(GiveawayListFragment.newInstance(type, getIntent().getStringExtra(ARGS_GIVEAWAY_QUERY)));
+                                        break;
+                                    }
+                                }
+
+                                for (DiscussionListFragment.Type type : DiscussionListFragment.Type.values()) {
+                                    if (type.getNavbarResource() == drawerItem.getIdentifier()) {
+                                        loadFragment(DiscussionListFragment.newInstance(type, null));
+                                        break;
+                                    }
+                                }
+
+
                                 return false;
                         }
 
@@ -223,8 +232,10 @@ public class MainActivity extends BaseActivity implements IGiveawayUpdateNotific
         drawer.addItems(new PrimaryDrawerItem().withName(R.string.navigation_giveaways_new).withIdentifier(R.string.navigation_giveaways_new).withIcon(FontAwesome.Icon.faw_refresh));
 
         // Discussions, some time
-        // drawer.addItem(new SectionDrawerItem().withName(R.string.navigation_discussions));
-
+        drawer.addItem(new SectionDrawerItem().withName(R.string.navigation_discussions).withDivider(true));
+        for (DiscussionListFragment.Type type : DiscussionListFragment.Type.values()) {
+            drawer.addItem(new PrimaryDrawerItem().withName(type.getNavbarResource()).withIdentifier(type.getNavbarResource()).withIcon(type.getIcon()));
+        }
 
         drawer.addItems(new DividerDrawerItem());
         // Feedback

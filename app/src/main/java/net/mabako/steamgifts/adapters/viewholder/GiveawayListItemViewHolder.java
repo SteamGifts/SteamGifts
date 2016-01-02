@@ -18,9 +18,6 @@ import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
 
-/**
- * Created by mabako on 01.01.2016.
- */
 public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     private final View itemContainer;
     private final TextView giveawayDetails;
