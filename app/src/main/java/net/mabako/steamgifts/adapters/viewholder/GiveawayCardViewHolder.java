@@ -1,5 +1,6 @@
 package net.mabako.steamgifts.adapters.viewholder;
 
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
@@ -8,12 +9,17 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import net.mabako.steamgifts.R;
+import net.mabako.steamgifts.activities.BaseActivity;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.data.GiveawayExtras;
+import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
+import net.mabako.steamgifts.fragments.WriteCommentFragment;
 import net.mabako.steamgifts.fragments.util.GiveawayDetailsCard;
 import net.mabako.steamgifts.web.WebUserData;
 
 public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
+    private GiveawayDetailFragment fragment;
+
     private final View progressBar;
     private final TextView user;
     private final TextView timeRemaining;
@@ -25,8 +31,9 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
     private final Button loginButton;
     private final Button errorMessage;
 
-    public GiveawayCardViewHolder(View v) {
+    public GiveawayCardViewHolder(View v, final GiveawayDetailFragment fragment) {
         super(v);
+        this.fragment = fragment;
 
         progressBar = v.findViewById(R.id.progressBar);
         user = (TextView) v.findViewById(R.id.user);
@@ -38,9 +45,15 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
         commentGiveaway = (Button) v.findViewById(R.id.comment);
         errorMessage = (Button) v.findViewById(R.id.error);
         loginButton = (Button) v.findViewById(R.id.login);
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((BaseActivity) fragment.getActivity()).requestLogin();
+            }
+        });
     }
 
-    public void setFrom(GiveawayDetailsCard card) {
+    public void setFrom(final GiveawayDetailsCard card) {
         Giveaway giveaway = card.getGiveaway();
         GiveawayExtras extras = card.getExtras();
 
@@ -83,6 +96,34 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
             } else if (!WebUserData.getCurrent().isLoggedIn()) {
                 loginButton.setVisibility(View.VISIBLE);
             }
+
+            enterGiveaway.setEnabled(true);
+            leaveGiveaway.setEnabled(true);
         }
+
+        enterGiveaway.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                enterGiveaway.setEnabled(false);
+                fragment.requestEnterLeave(GiveawayDetailFragment.ENTRY_INSERT);
+            }
+        });
+
+        leaveGiveaway.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                leaveGiveaway.setEnabled(false);
+                fragment.requestEnterLeave(GiveawayDetailFragment.ENTRY_DELETE);
+            }
+        });
+
+        commentGiveaway.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fm = fragment.getActivity().getSupportFragmentManager();
+                WriteCommentFragment wcf = WriteCommentFragment.newInstance(card.getGiveaway().getGiveawayId(), card.getGiveaway().getName(), card.getExtras().getXsrfToken());
+                wcf.show(fm, "writecomment");
+            }
+        });
     }
 }

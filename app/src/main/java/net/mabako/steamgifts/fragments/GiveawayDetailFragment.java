@@ -45,8 +45,8 @@ public class GiveawayDetailFragment extends Fragment {
     private static final String TAG = GiveawayDetailFragment.class.getSimpleName();
 
     public static final String ARG_GIVEAWAY = "giveaway";
-    private static final String ENTRY_INSERT = "entry_insert";
-    private static final String ENTRY_DELETE = "entry_delete";
+    public static final String ENTRY_INSERT = "entry_insert";
+    public static final String ENTRY_DELETE = "entry_delete";
 
     /**
      * Content to show for the giveaway details.
@@ -94,7 +94,7 @@ public class GiveawayDetailFragment extends Fragment {
 
         listView = (RecyclerView) layout.findViewById(R.id.list);
         listView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new CommentAdapter(getContext(), listView, new EndlessAdapter.OnLoadListener() {
+        adapter = new CommentAdapter(this, listView, new EndlessAdapter.OnLoadListener() {
             @Override
             public void onLoad(int page) {
                 Log.v(TAG, "Load more items...");
@@ -144,6 +144,14 @@ public class GiveawayDetailFragment extends Fragment {
         if (page == 1)
             adapter.clear();
         adapter.finishLoading(new ArrayList<IEndlessAdaptable>(extras.getComments()));
+    }
+
+    public void requestEnterLeave(String enterOrDelete) {
+        if (enterLeaveTask != null)
+            enterLeaveTask.cancel(true);
+
+        enterLeaveTask = new EnterLeaveGiveawayTask(this, giveaway.getGiveawayId(), giveawayCard.getExtras().getXsrfToken(), ENTRY_INSERT);
+        enterLeaveTask.execute();
     }
 
     public void onEnterLeaveResult(String what, Boolean success) {

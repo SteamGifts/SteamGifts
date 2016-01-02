@@ -8,6 +8,7 @@ import android.view.View;
 import net.mabako.steamgifts.adapters.viewholder.CommentViewHolder;
 import net.mabako.steamgifts.adapters.viewholder.GiveawayCardViewHolder;
 import net.mabako.steamgifts.data.Comment;
+import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
 import net.mabako.steamgifts.fragments.util.GiveawayDetailsCard;
 
 import java.util.List;
@@ -22,18 +23,23 @@ public class CommentAdapter extends EndlessAdapter {
     private static final int ITEMS_PER_PAGE = 25;
 
     /**
-     * Colors, reinitialized in {@link #setColors(Context)}.
+     * Colors, reinitialized in {@link #setColors()}.
      */
     private int[] colors = {android.R.color.holo_blue_dark, android.R.color.holo_green_dark, android.R.color.holo_orange_dark, android.R.color.holo_red_dark};
 
-    public CommentAdapter(Context context, RecyclerView view, EndlessAdapter.OnLoadListener loadListener) {
+    private final GiveawayDetailFragment fragment;
+
+    public CommentAdapter(GiveawayDetailFragment fragment, RecyclerView view, EndlessAdapter.OnLoadListener loadListener) {
         super(view, loadListener);
-        setColors(context);
+
+        this.fragment = fragment;
+
+        setColors();
     }
 
-    private void setColors(Context context) {
+    private void setColors() {
         for (int i = 0; i < colors.length; ++i)
-            colors[i] = ContextCompat.getColor(context, colors[i]);
+            colors[i] = ContextCompat.getColor(fragment.getContext(), colors[i]);
     }
 
     @Override
@@ -43,7 +49,7 @@ public class CommentAdapter extends EndlessAdapter {
                 return new CommentViewHolder(view);
 
             case GiveawayDetailsCard.VIEW_LAYOUT:
-                return new GiveawayCardViewHolder(view);
+                return new GiveawayCardViewHolder(view, fragment);
         }
         return null;
     }
