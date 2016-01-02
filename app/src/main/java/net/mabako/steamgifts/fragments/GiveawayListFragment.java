@@ -173,19 +173,6 @@ public class GiveawayListFragment extends Fragment implements IFragmentNotificat
         });
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.search:
-                Log.i(TAG, "Opening Search Panel");
-
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
     public enum Type {
         ALL(R.string.navigation_giveaways_all, R.string.navigation_giveaways_all_title),
         GROUP(R.string.navigation_giveaways_group, R.string.navigation_giveaways_group_title),
