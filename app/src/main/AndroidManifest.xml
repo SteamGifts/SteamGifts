@@ -70,5 +70,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MainActivity" />
         </activity>
+        <activity
+            android:name=".activities.WriteCommentActivity"
+            android:windowSoftInputMode="adjustResize|stateAlwaysVisible" />
     </application>
 </manifest>

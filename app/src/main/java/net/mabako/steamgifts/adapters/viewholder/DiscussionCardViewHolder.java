@@ -11,10 +11,11 @@ import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.data.Discussion;
 import net.mabako.steamgifts.data.DiscussionExtras;
 import net.mabako.steamgifts.fragments.DiscussionDetailFragment;
+import net.mabako.steamgifts.fragments.ICommentableFragment;
 import net.mabako.steamgifts.fragments.util.DiscussionDetailsCard;
 
 public class DiscussionCardViewHolder extends RecyclerView.ViewHolder {
-    private final DiscussionDetailFragment fragment;
+    private final ICommentableFragment fragment;
 
     private final View progressBar;
     private final TextView discussionTime;
@@ -59,6 +60,16 @@ public class DiscussionCardViewHolder extends RecyclerView.ViewHolder {
                 description.setText(desc);
                 description.setVisibility(View.VISIBLE);
             }
+
+            if(extras.getXsrfToken() != null)
+                commentDiscussion.setVisibility(View.VISIBLE);
         }
+
+        commentDiscussion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fragment.requestComment(null);
+            }
+        });
     }
 }

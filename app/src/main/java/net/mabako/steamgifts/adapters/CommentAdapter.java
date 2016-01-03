@@ -11,6 +11,7 @@ import net.mabako.steamgifts.adapters.viewholder.GiveawayCardViewHolder;
 import net.mabako.steamgifts.data.Comment;
 import net.mabako.steamgifts.fragments.DiscussionDetailFragment;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
+import net.mabako.steamgifts.fragments.ICommentableFragment;
 import net.mabako.steamgifts.fragments.util.DiscussionDetailsCard;
 import net.mabako.steamgifts.fragments.util.GiveawayDetailsCard;
 
@@ -49,7 +50,7 @@ public class CommentAdapter<FragmentType extends Fragment> extends EndlessAdapte
     public RecyclerView.ViewHolder onCreateActualViewHolder(View view, int viewType) {
         switch (viewType) {
             case Comment.VIEW_LAYOUT:
-                return new CommentViewHolder(view, fragment.getActivity());
+                return new CommentViewHolder(view, fragment.getActivity(), (ICommentableFragment) fragment);
 
             case GiveawayDetailsCard.VIEW_LAYOUT:
                 return new GiveawayCardViewHolder(view, (GiveawayDetailFragment) fragment);

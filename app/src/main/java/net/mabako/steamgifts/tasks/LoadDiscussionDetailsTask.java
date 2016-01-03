@@ -51,6 +51,12 @@ public class LoadDiscussionDetailsTask extends AsyncTask<Void, Void, DiscussionE
             if (description != null) // This will be null if no description is given.
                 extras.setDescription(description.html());
 
+            // Can we send a comment?
+            Element xsrf = document.select(".comment--submit form input[name=xsrf_token]").first();
+            if (xsrf != null)
+                extras.setXsrfToken(xsrf.attr("value"));
+
+
             // Load comments
             Elements commentsNode = document.select(".comments");
             if (commentsNode.size() > 1) {

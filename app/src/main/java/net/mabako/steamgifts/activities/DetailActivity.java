@@ -14,14 +14,10 @@ import net.mabako.steamgifts.data.Discussion;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.fragments.DiscussionDetailFragment;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
-import net.mabako.steamgifts.fragments.util.WriteCommentListener;
-import net.mabako.steamgifts.tasks.PostCommentTask;
 
 import java.io.Serializable;
 
-public class DetailActivity extends BaseActivity implements WriteCommentListener {
-    private static final String TAG = DetailActivity.class.getSimpleName();
-
+public class DetailActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,10 +81,5 @@ public class DetailActivity extends BaseActivity implements WriteCommentListener
     protected void onAccountChange() {
         super.onAccountChange();
         ((GiveawayDetailFragment) getCurrentFragment()).reload();
-    }
-
-    @Override
-    public void submit(String giveawayId, String xsrfToken, String message) {
-        new PostCommentTask(this, giveawayId, xsrfToken, message).execute();
     }
 }

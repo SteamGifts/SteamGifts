@@ -12,6 +12,7 @@ import net.mabako.steamgifts.activities.BaseActivity;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.data.GiveawayExtras;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
+import net.mabako.steamgifts.fragments.ICommentableFragment;
 import net.mabako.steamgifts.fragments.util.GiveawayDetailsCard;
 import net.mabako.steamgifts.web.WebUserData;
 
@@ -116,7 +117,7 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
         commentGiveaway.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fragment.requestComment(card.getExtras().getXsrfToken(), null);
+                fragment.requestComment(null);
             }
         });
     }

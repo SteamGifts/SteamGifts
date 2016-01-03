@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -23,9 +22,11 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import net.mabako.steamgifts.R;
+import net.mabako.steamgifts.activities.WriteCommentActivity;
 import net.mabako.steamgifts.adapters.CommentAdapter;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
+import net.mabako.steamgifts.data.Comment;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.data.GiveawayExtras;
 import net.mabako.steamgifts.fragments.util.GiveawayDetailsCard;
@@ -34,7 +35,7 @@ import net.mabako.steamgifts.tasks.LoadGiveawayDetailsTask;
 
 import java.util.ArrayList;
 
-public class GiveawayDetailFragment extends Fragment {
+public class GiveawayDetailFragment extends Fragment implements ICommentableFragment {
     public static final String ARG_GIVEAWAY = "giveaway";
     public static final String ENTRY_INSERT = "entry_insert";
     public static final String ENTRY_DELETE = "entry_delete";
@@ -129,7 +130,7 @@ public class GiveawayDetailFragment extends Fragment {
     }
 
     public void addDetails(GiveawayExtras extras, int page) {
-        if(extras == null)
+        if (extras == null)
             return;
 
         giveaway.setTimeRemaining(extras.getTimeRemaining());
@@ -170,10 +171,14 @@ public class GiveawayDetailFragment extends Fragment {
         }
     }
 
-    public void requestComment(String xsrfToken, Integer parentComment) {
-        FragmentManager fm = getActivity().getSupportFragmentManager();
-        WriteCommentFragment wcf = WriteCommentFragment.newInstance(giveaway.getGiveawayId(), giveaway.getName(), xsrfToken);
-        wcf.show(fm, "writecomment");
+    @Override
+    public void requestComment(Comment parentComment) {
+        Intent intent = new Intent(getActivity(), WriteCommentActivity.class);
+        intent.putExtra(WriteCommentActivity.XSRF_TOKEN, giveawayCard.getExtras().getXsrfToken());
+        intent.putExtra(WriteCommentActivity.PATH, "giveaway/" + giveaway.getGiveawayId() + "/" + giveaway.getName());
+        intent.putExtra(WriteCommentActivity.PARENT, parentComment);
+        intent.putExtra(WriteCommentActivity.TITLE, giveaway.getTitle());
+        getActivity().startActivityForResult(intent, WriteCommentActivity.REQUEST_COMMENT);
     }
 
     @Override

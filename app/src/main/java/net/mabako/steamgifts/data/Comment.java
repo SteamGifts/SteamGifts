@@ -29,6 +29,10 @@ public class Comment implements Serializable, IEndlessAdaptable {
         this.avatar = avatar;
     }
 
+    public int getId() {
+        return id;
+    }
+
     public String getAuthor() {
         return author;
     }

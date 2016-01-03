@@ -1,5 +1,6 @@
 package net.mabako.steamgifts.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,9 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import net.mabako.steamgifts.R;
+import net.mabako.steamgifts.activities.WriteCommentActivity;
 import net.mabako.steamgifts.adapters.CommentAdapter;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
+import net.mabako.steamgifts.data.Comment;
 import net.mabako.steamgifts.data.Discussion;
 import net.mabako.steamgifts.data.DiscussionExtras;
 import net.mabako.steamgifts.fragments.util.DiscussionDetailsCard;
@@ -22,7 +25,7 @@ import net.mabako.steamgifts.tasks.LoadDiscussionDetailsTask;
 
 import java.util.ArrayList;
 
-public class DiscussionDetailFragment extends Fragment {
+public class DiscussionDetailFragment extends Fragment implements ICommentableFragment {
     public static final String ARG_DISCUSSION = "discussion";
     private static final String TAG = DiscussionDetailFragment.class.getSimpleName();
     /**
@@ -84,7 +87,7 @@ public class DiscussionDetailFragment extends Fragment {
     }
 
     public void addDetails(DiscussionExtras extras, int page) {
-        if(extras == null)
+        if (extras == null)
             return;
 
         discussionCard.setExtras(extras);
@@ -93,5 +96,15 @@ public class DiscussionDetailFragment extends Fragment {
         if (page == 1)
             adapter.clear();
         adapter.finishLoading(new ArrayList<IEndlessAdaptable>(extras.getComments()));
+    }
+
+    @Override
+    public void requestComment(Comment parentComment) {
+        Intent intent = new Intent(getActivity(), WriteCommentActivity.class);
+        intent.putExtra(WriteCommentActivity.XSRF_TOKEN, discussionCard.getExtras().getXsrfToken());
+        intent.putExtra(WriteCommentActivity.PATH, "discussion/" + discussion.getDiscussionId() + "/" + discussion.getName());
+        intent.putExtra(WriteCommentActivity.PARENT, parentComment);
+        intent.putExtra(WriteCommentActivity.TITLE, discussion.getTitle());
+        getActivity().startActivityForResult(intent, WriteCommentActivity.REQUEST_COMMENT);
     }
 }

@@ -45,7 +45,13 @@
     <string name="enter_giveaway">Enter (%dP)</string>
     <string name="login_to_enter_giveaway">Login to Enter</string>
     <string name="leave_giveaway">Remove (%dP)</string>
+
+    <string name="actions">Actions</string>
     <string name="add_comment">Comment</string>
+    <string name="send_comment">Send</string>
+
+    <string name="comment_sent">Comment sent</string>
+    <string name="comment_not_sent">Comment could not be sent</string>
 
     <string name="open_steam_store">Open on Steam Store</string>
     <string name="search">Search</string>
