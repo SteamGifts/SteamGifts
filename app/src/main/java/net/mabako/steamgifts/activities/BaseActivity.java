@@ -17,6 +17,8 @@ public class BaseActivity extends AppCompatActivity {
     private static final String PREF_KEY_USERNAME = "username";
     private static final String PREF_KEY_IMAGE = "image-url";
 
+    private boolean nightMode = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme();
@@ -35,8 +37,11 @@ public class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        setTheme();
         super.onResume();
+        if (setTheme()) {
+            finish();
+            startActivity(getIntent());
+        }
     }
 
     protected void loadFragment(int id, Fragment fragment, String tag) {
@@ -65,10 +70,15 @@ public class BaseActivity extends AppCompatActivity {
         spEditor.apply();
     }
 
-    private void setTheme() {
+    private boolean setTheme() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         boolean nightMode = prefs.getBoolean("preference_theme_nightmode", false);
-
-        setTheme(nightMode ? R.style.AppTheme_Dark : R.style.AppTheme_Light);
+        if (nightMode != this.nightMode) {
+            this.nightMode = nightMode;
+            setTheme(nightMode ? R.style.AppTheme_Dark : R.style.AppTheme_Light);
+            return true;
+        } else {
+            return false;
+        }
     }
 }
