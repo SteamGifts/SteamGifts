@@ -6,7 +6,7 @@
     android:focusable="true"
     android:orientation="vertical"
     android:paddingLeft="0dp"
-    android:paddingRight="0dp">
+    android:paddingRight="4dp">
 
     <LinearLayout
         android:id="@+id/list_item"
@@ -38,15 +38,32 @@
                 android:text="Giveaway Name"
                 android:textAlignment="viewStart" />
 
-            <TextView
-                android:id="@+id/giveaway_details"
-                style="@style/SmallText"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:singleLine="true"
-                android:text="Giveaway Details"
-                android:textAlignment="viewStart" />
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/giveaway_details"
+                    style="@style/SmallText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_weight="2"
+                    android:singleLine="true"
+                    android:text="Giveaway Details"
+                    android:textAlignment="viewStart" />
+
+                <TextView
+                    android:id="@+id/time"
+                    style="@style/SmallText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_weight="1"
+                    android:singleLine="true"
+                    android:text="Time"
+                    android:textAlignment="viewEnd" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 

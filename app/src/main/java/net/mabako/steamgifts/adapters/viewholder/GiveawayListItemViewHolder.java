@@ -25,6 +25,7 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
     private final View itemContainer;
     private final TextView giveawayDetails;
     private final TextView giveawayName;
+    private final TextView giveawayTime;
     private final ImageView giveawayImage;
 
     private final EndlessAdapter adapter;
@@ -37,6 +38,7 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
         itemContainer = v.findViewById(R.id.list_item);
         giveawayName = (TextView) v.findViewById(R.id.giveaway_name);
         giveawayDetails = (TextView) v.findViewById(R.id.giveaway_details);
+        giveawayTime = (TextView) v.findViewById(R.id.time);
         giveawayImage = (ImageView) v.findViewById(R.id.giveaway_image);
 
         this.activity = activity;
@@ -47,6 +49,7 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
 
     public void setFrom(Giveaway giveaway) {
         giveawayName.setText(giveaway.getTitle());
+        giveawayTime.setText(giveaway.getTimeRemaining());
 
         String str = giveaway.getPoints() + "P | " + giveaway.getEntries() + " entries";
         if (giveaway.getCopies() > 1)
