@@ -2,7 +2,6 @@ package net.mabako.steamgifts.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
@@ -26,6 +25,11 @@ public class WriteCommentActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getIntent().getStringExtra(XSRF_TOKEN) == null) {
+            finish();
+            return;
+        }
+
         setContentView(R.layout.activity_write_comment);
 
 
