@@ -14,7 +14,7 @@
     <!-- colored marker -->
     <View
         android:id="@+id/comment_marker"
-        android:layout_width="16dp"
+        android:layout_width="12dp"
         android:layout_height="match_parent"
         android:visibility="gone" />
 
