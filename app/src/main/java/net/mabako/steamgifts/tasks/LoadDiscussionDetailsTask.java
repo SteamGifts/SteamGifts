@@ -12,6 +12,7 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.IOException;
 
@@ -51,9 +52,12 @@ public class LoadDiscussionDetailsTask extends AsyncTask<Void, Void, DiscussionE
                 extras.setDescription(description.html());
 
             // Load comments
-            Element rootCommentNode = document.select(".comments").last();
-            if (rootCommentNode != null)
-                Utils.loadComments(rootCommentNode, extras);
+            Elements commentsNode = document.select(".comments");
+            if (commentsNode.size() > 1) {
+                Element rootCommentNode = commentsNode.last();
+                if (rootCommentNode != null)
+                    Utils.loadComments(rootCommentNode, extras);
+            }
 
             return extras;
         } catch (IOException e) {
