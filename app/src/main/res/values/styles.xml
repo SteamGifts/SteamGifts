@@ -5,7 +5,8 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
 
-        <item name="colorDefaultBackground">@color/colorTransparent</item>
+        <item name="colorDefaultBackground">@color/colorPrimary</item>
+        <item name="colorCardBackground">@color/colorTransparent</item>
         <item name="colorAccountHeader">@color/colorPrimary</item>
         <item name="colorHighlightBackground">@color/md_blue_100</item>
     </style>
@@ -16,6 +17,7 @@
         <item name="colorAccent">@color/colorAccent</item>
 
         <item name="colorDefaultBackground">#222222</item>
+        <item name="colorCardBackground">#222222</item>
         <item name="colorAccountHeader">#000000</item>
         <item name="colorHighlightBackground">@color/md_blue_grey_700</item>
     </style>
