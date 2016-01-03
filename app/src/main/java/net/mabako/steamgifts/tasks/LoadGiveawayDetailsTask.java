@@ -27,7 +27,6 @@ public class LoadGiveawayDetailsTask extends AsyncTask<Void, Void, GiveawayExtra
         this.page = page;
     }
 
-
     @Override
     protected GiveawayExtras doInBackground(Void... params) {
         String url = "http://www.steamgifts.com/giveaway/" + giveawayId + "/search?page=" + page;
@@ -45,29 +44,29 @@ public class LoadGiveawayDetailsTask extends AsyncTask<Void, Void, GiveawayExtra
             GiveawayExtras extras = new GiveawayExtras();
 
             // Load the description
-            Element description = document.select(".page__description__display-state").first();
-            if(description != null) // This will be null if no description is given.
+            Element description = document.select(".page__description__display-state .markdown").first();
+            if (description != null) // This will be null if no description is given.
                 extras.setDescription(description.html());
 
             // Enter/Leave giveaway
             Element enterLeaveForm = document.select(".sidebar form").first();
-            if(enterLeaveForm != null) {
+            if (enterLeaveForm != null) {
                 extras.setEntered(enterLeaveForm.select(".sidebar__entry-insert").hasClass("is-hidden"));
                 extras.setXsrfToken(enterLeaveForm.select("input[name=xsrf_token]").attr("value"));
             } else {
                 Element error = document.select(".sidebar .sidebar__error").first();
-                if(error != null)
+                if (error != null)
                     extras.setErrorMessage(error.text().trim());
             }
 
             // Time left
             Element time = document.select("div.featured__columns div.featured__column > span").first();
-            if(time != null)
+            if (time != null)
                 extras.setTimeRemaining(time.text().trim());
 
             // Load comments
             Element rootCommentNode = document.select(".comments").first();
-            if(rootCommentNode != null)
+            if (rootCommentNode != null)
                 Utils.loadComments(rootCommentNode, extras);
 
             return extras;

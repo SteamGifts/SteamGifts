@@ -1,13 +1,17 @@
 package net.mabako.steamgifts.adapters;
 
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import net.mabako.steamgifts.adapters.viewholder.CommentViewHolder;
+import net.mabako.steamgifts.adapters.viewholder.DiscussionCardViewHolder;
 import net.mabako.steamgifts.adapters.viewholder.GiveawayCardViewHolder;
 import net.mabako.steamgifts.data.Comment;
+import net.mabako.steamgifts.fragments.DiscussionDetailFragment;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
+import net.mabako.steamgifts.fragments.util.DiscussionDetailsCard;
 import net.mabako.steamgifts.fragments.util.GiveawayDetailsCard;
 
 import java.util.List;
@@ -15,7 +19,7 @@ import java.util.List;
 /**
  * Adapter to hold comments for a giveaway/discussion.
  */
-public class CommentAdapter extends EndlessAdapter {
+public class CommentAdapter<FragmentType extends Fragment> extends EndlessAdapter {
     /**
      * Amount of top-level items on a full comments page.
      */
@@ -26,9 +30,9 @@ public class CommentAdapter extends EndlessAdapter {
      */
     private int[] colors = {android.R.color.holo_blue_dark, android.R.color.holo_green_dark, android.R.color.holo_orange_dark, android.R.color.holo_red_dark};
 
-    private final GiveawayDetailFragment fragment;
+    private final FragmentType fragment;
 
-    public CommentAdapter(GiveawayDetailFragment fragment, RecyclerView view, EndlessAdapter.OnLoadListener loadListener) {
+    public CommentAdapter(FragmentType fragment, RecyclerView view, EndlessAdapter.OnLoadListener loadListener) {
         super(view, loadListener);
 
         this.fragment = fragment;
@@ -48,7 +52,10 @@ public class CommentAdapter extends EndlessAdapter {
                 return new CommentViewHolder(view, fragment.getActivity());
 
             case GiveawayDetailsCard.VIEW_LAYOUT:
-                return new GiveawayCardViewHolder(view, fragment);
+                return new GiveawayCardViewHolder(view, (GiveawayDetailFragment) fragment);
+
+            case DiscussionDetailsCard.VIEW_LAYOUT:
+                return new DiscussionCardViewHolder(view, (DiscussionDetailFragment) fragment);
         }
         return null;
     }
@@ -63,6 +70,11 @@ public class CommentAdapter extends EndlessAdapter {
         } else if (h instanceof GiveawayCardViewHolder) {
             GiveawayCardViewHolder holder = (GiveawayCardViewHolder) h;
             GiveawayDetailsCard card = (GiveawayDetailsCard) getItem(position);
+
+            holder.setFrom(card);
+        } else if (h instanceof DiscussionCardViewHolder) {
+            DiscussionCardViewHolder holder = (DiscussionCardViewHolder) h;
+            DiscussionDetailsCard card = (DiscussionDetailsCard) getItem(position);
 
             holder.setFrom(card);
         }

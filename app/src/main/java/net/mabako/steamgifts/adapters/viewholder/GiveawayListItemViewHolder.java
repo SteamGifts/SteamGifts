@@ -42,17 +42,6 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
         v.setOnClickListener(this);
     }
 
-    @Override
-    public void onClick(View v) {
-        Giveaway giveaway = (Giveaway) adapter.getItem(getAdapterPosition());
-
-        GiveawayDetailFragment.setParent(activity);
-        Intent intent = new Intent(activity, DetailActivity.class);
-        intent.putExtra(GiveawayDetailFragment.ARG_GIVEAWAY, giveaway);
-
-        activity.startActivityForResult(intent, MainActivity.REQUEST_LOGIN_PASSIVE);
-    }
-
     public void setFrom(Giveaway giveaway) {
 
         giveawayName.setText(giveaway.getTitle());
@@ -83,5 +72,16 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
         });
 
         itemContainer.setBackgroundResource(giveaway.isEntered() ? R.color.md_blue_50 : android.R.color.background_light);
+    }
+
+    @Override
+    public void onClick(View v) {
+        Giveaway giveaway = (Giveaway) adapter.getItem(getAdapterPosition());
+
+        GiveawayDetailFragment.setParent(activity);
+        Intent intent = new Intent(activity, DetailActivity.class);
+        intent.putExtra(GiveawayDetailFragment.ARG_GIVEAWAY, giveaway);
+
+        activity.startActivityForResult(intent, MainActivity.REQUEST_LOGIN_PASSIVE);
     }
 }

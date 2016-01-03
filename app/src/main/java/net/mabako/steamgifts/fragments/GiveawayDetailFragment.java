@@ -48,7 +48,7 @@ public class GiveawayDetailFragment extends Fragment {
     private LoadGiveawayDetailsTask task;
     private EnterLeaveGiveawayTask enterLeaveTask;
     private RecyclerView listView;
-    private CommentAdapter adapter;
+    private CommentAdapter<GiveawayDetailFragment> adapter;
 
     public static Fragment newInstance(Giveaway giveaway) {
         GiveawayDetailFragment fragment = new GiveawayDetailFragment();
@@ -87,10 +87,9 @@ public class GiveawayDetailFragment extends Fragment {
 
         listView = (RecyclerView) layout.findViewById(R.id.list);
         listView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new CommentAdapter(this, listView, new EndlessAdapter.OnLoadListener() {
+        adapter = new CommentAdapter<>(this, listView, new EndlessAdapter.OnLoadListener() {
             @Override
             public void onLoad(int page) {
-                Log.v(TAG, "Load more items...");
                 fetchItems(page);
             }
         });
@@ -130,6 +129,9 @@ public class GiveawayDetailFragment extends Fragment {
     }
 
     public void addDetails(GiveawayExtras extras, int page) {
+        if(extras == null)
+            return;
+
         giveaway.setTimeRemaining(extras.getTimeRemaining());
         giveawayCard.setExtras(extras);
         adapter.setStickyItem(giveawayCard);

@@ -4,14 +4,6 @@ import java.util.List;
 
 public interface ICommentHolder {
     /**
-     * Returns a single comment.
-     *
-     * @param position
-     * @return
-     */
-    Comment getComment(int position);
-
-    /**
      * Returns a list of all child comments.
      *
      * @return List of child comments

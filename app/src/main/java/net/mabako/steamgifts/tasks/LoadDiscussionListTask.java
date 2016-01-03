@@ -79,11 +79,11 @@ public class LoadDiscussionListTask extends AsyncTask<Void, Void, List<Discussio
                 // The creator's avatar
                 String avatar = null;
                 Element avatarNode = element.select(".global__image-inner-wrap").first();
-                if(avatarNode != null)
+                if (avatarNode != null)
                     avatar = Utils.extractAvatar(avatarNode.attr("style"));
 
 
-                Discussion discussion = new Discussion(discussionId, title, creator, timeAgo, avatar);
+                Discussion discussion = new Discussion(discussionId, title, discussionName, creator, timeAgo, avatar);
                 discussion.setLocked(element.hasClass("is-faded"));
                 discussionList.add(discussion);
             }

@@ -9,6 +9,7 @@ public class Discussion implements Serializable, IEndlessAdaptable {
     public static final int VIEW_LAYOUT = R.layout.discussion_item;
 
     private final String discussionId;
+    private final String title;
     private final String name;
     private final String creator;
     private final String timeCreated;
@@ -16,8 +17,9 @@ public class Discussion implements Serializable, IEndlessAdaptable {
 
     private boolean locked;
 
-    public Discussion(String discussionId, String name, String creator, String timeCreated, String avatar) {
+    public Discussion(String discussionId, String title, String name, String creator, String timeCreated, String avatar) {
         this.discussionId = discussionId;
+        this.title = title;
         this.name = name;
         this.creator = creator;
         this.timeCreated = timeCreated;
@@ -30,6 +32,10 @@ public class Discussion implements Serializable, IEndlessAdaptable {
 
     public String getName() {
         return name;
+    }
+
+    public String getTitle() {
+        return title;
     }
 
     public String getCreator() {

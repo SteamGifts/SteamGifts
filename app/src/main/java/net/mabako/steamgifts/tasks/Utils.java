@@ -1,5 +1,7 @@
 package net.mabako.steamgifts.tasks;
 
+import android.util.Log;
+
 import net.mabako.steamgifts.data.Comment;
 import net.mabako.steamgifts.data.ICommentHolder;
 

@@ -28,7 +28,7 @@ public class DiscussionAdapter extends EndlessAdapter {
 
     @Override
     protected RecyclerView.ViewHolder onCreateActualViewHolder(View view, int viewType) {
-        return new DiscussionListItemViewHolder(view, context);
+        return new DiscussionListItemViewHolder(view, context, this);
     }
 
     @Override
