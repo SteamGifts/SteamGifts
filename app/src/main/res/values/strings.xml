@@ -10,7 +10,27 @@
     <string name="navigation_giveaways_group_title">Group Giveaways</string>
     <string name="navigation_giveaways_wishlist_title">Wishlist Giveaways</string>
     <string name="navigation_giveaways_new_title">New Giveaways</string>
+
     <string name="navigation_discussions">Discussions</string>
+    <string name="navigation_discussions_all">All</string>
+    <string name="navigation_discussions_all_title">All Discussions</string>
+    <string name="navigation_discussions_announcements">Announcements</string>
+    <string name="navigation_discussions_announcements_title">Announcements</string>
+    <string name="navigation_discussions_bugs_suggestions">Bugs / Suggestions</string>
+    <string name="navigation_discussions_bugs_suggestions_title">Bugs / Suggestions</string>
+    <string name="navigation_discussions_deals">Deals</string>
+    <string name="navigation_discussions_deals_title">Deals</string>
+    <string name="navigation_discussions_general">General</string>
+    <string name="navigation_discussions_general_title">General Discussions</string>
+    <string name="navigation_discussions_group_recruitment">Group Recruitment</string>
+    <string name="navigation_discussions_group_recruitment_title">Group Recruitment</string>
+    <string name="navigation_discussions_lets_play_together">"Let's Play Together"</string>
+    <string name="navigation_discussions_lets_play_together_title">"Let's Play Together"</string>
+    <string name="navigation_discussions_off_topic">Off-Topic</string>
+    <string name="navigation_discussions_off_topic_title">Off-Topic</string>
+    <string name="navigation_discussions_puzzles">Puzzles</string>
+    <string name="navigation_discussions_puzzles_title">Puzzles</string>
+
 
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>

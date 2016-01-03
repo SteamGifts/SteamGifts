@@ -4,15 +4,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GiveawayExtras implements Serializable, ICommentHolder {
+public class DiscussionExtras implements Serializable, ICommentHolder {
     private String description;
     private String xsrfToken;
-    private boolean entered;
-    private String timeRemaining;
     private final List<Comment> loadedComments;
-    private String errorMessage;
 
-    public GiveawayExtras() {
+    public DiscussionExtras() {
         loadedComments = new ArrayList<>();
     }
 
@@ -32,22 +29,6 @@ public class GiveawayExtras implements Serializable, ICommentHolder {
         this.xsrfToken = xsrfToken;
     }
 
-    public boolean isEntered() {
-        return entered;
-    }
-
-    public void setEntered(boolean entered) {
-        this.entered = entered;
-    }
-
-    public String getTimeRemaining() {
-        return timeRemaining;
-    }
-
-    public void setTimeRemaining(String timeRemaining) {
-        this.timeRemaining = timeRemaining;
-    }
-
     @Override
     public List<Comment> getComments() {
         return loadedComments;
@@ -56,13 +37,5 @@ public class GiveawayExtras implements Serializable, ICommentHolder {
     @Override
     public void addComment(Comment comment) {
         loadedComments.add(comment);
-    }
-
-    public String getErrorMessage() {
-        return errorMessage;
-    }
-
-    public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
     }
 }

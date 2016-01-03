@@ -5,12 +5,13 @@
 
     <TextView
         android:id="@+id/text"
+        style="@style/MediumText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:enabled="false"
         android:indeterminate="true"
         android:padding="8dp"
-        android:enabled="false"
-        android:text="@string/end_of_endless_list"/>
+        android:text="@string/end_of_endless_list" />
 
 </LinearLayout>

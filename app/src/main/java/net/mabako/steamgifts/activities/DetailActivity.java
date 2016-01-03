@@ -10,10 +10,14 @@ import android.view.MenuItem;
 import com.mikepenz.iconics.context.IconicsContextWrapper;
 
 import net.mabako.steamgifts.R;
+import net.mabako.steamgifts.data.Discussion;
 import net.mabako.steamgifts.data.Giveaway;
+import net.mabako.steamgifts.fragments.DiscussionDetailFragment;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
 import net.mabako.steamgifts.fragments.util.WriteCommentListener;
 import net.mabako.steamgifts.tasks.PostCommentTask;
+
+import java.io.Serializable;
 
 public class DetailActivity extends BaseActivity implements WriteCommentListener {
     private static final String TAG = DetailActivity.class.getSimpleName();
@@ -21,17 +25,32 @@ public class DetailActivity extends BaseActivity implements WriteCommentListener
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail);
+
+        initLayout(savedInstanceState);
 
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+    }
 
+    private void initLayout(Bundle savedInstanceState) {
         // savedInstanceState is non-null if a fragment state is saved from a previous configuration.
         if (savedInstanceState == null) {
-            loadFragment(GiveawayDetailFragment.newInstance((Giveaway) getIntent().getSerializableExtra(GiveawayDetailFragment.ARG_GIVEAWAY)));
+            Serializable serializable = getIntent().getSerializableExtra(GiveawayDetailFragment.ARG_GIVEAWAY);
+            if (serializable != null) {
+                setContentView(R.layout.activity_giveaway_detail);
+                loadFragment(GiveawayDetailFragment.newInstance((Giveaway) serializable));
+                return;
+            }
+
+            serializable = getIntent().getSerializableExtra(DiscussionDetailFragment.ARG_DISCUSSION);
+            if (serializable != null) {
+                setContentView(R.layout.activity_discussion_detail);
+                loadFragment(DiscussionDetailFragment.newInstance((Discussion) serializable));
+                return;
+            }
         }
     }
 

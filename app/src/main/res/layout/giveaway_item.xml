@@ -1,12 +1,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingLeft="0dp"
-    android:paddingRight="0dp"
-    android:orientation="vertical"
+    android:background="?android:attr/selectableItemBackground"
     android:clickable="true"
     android:focusable="true"
-    android:background="?android:attr/selectableItemBackground">
+    android:orientation="vertical"
+    android:paddingLeft="0dp"
+    android:paddingRight="0dp">
 
     <LinearLayout
         android:id="@+id/list_item"
@@ -17,35 +17,36 @@
             android:id="@+id/giveaway_image"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:scaleType="fitCenter"
-            android:adjustViewBounds="true"/>
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingLeft="5dp">
+            android:paddingBottom="4dp"
+            android:paddingLeft="4dp"
+            android:paddingTop="4dp">
 
             <TextView
                 android:id="@+id/giveaway_name"
+                style="@style/NormalText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:textAlignment="viewStart"
                 android:layout_gravity="start"
-                android:textAppearance="?android:textAppearanceListItemSmall"
-                android:text="Giveaway Name"/>
+                android:singleLine="true"
+                android:text="Giveaway Name"
+                android:textAlignment="viewStart" />
 
             <TextView
                 android:id="@+id/giveaway_details"
+                style="@style/SmallText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:textAlignment="viewStart"
                 android:layout_gravity="start"
-                android:textAppearance="?android:textAppearanceListItemSmall"
+                android:singleLine="true"
                 android:text="Giveaway Details"
-                android:textColor="#909090" />
+                android:textAlignment="viewStart" />
         </LinearLayout>
     </LinearLayout>
 

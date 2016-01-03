@@ -18,9 +18,6 @@ import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
 
-/**
- * Created by mabako on 01.01.2016.
- */
 public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     private final View itemContainer;
     private final TextView giveawayDetails;
@@ -43,17 +40,6 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
         this.adapter = adapter;
 
         v.setOnClickListener(this);
-    }
-
-    @Override
-    public void onClick(View v) {
-        Giveaway giveaway = (Giveaway) adapter.getItem(getAdapterPosition());
-
-        GiveawayDetailFragment.setParent(activity);
-        Intent intent = new Intent(activity, DetailActivity.class);
-        intent.putExtra(GiveawayDetailFragment.ARG_GIVEAWAY, giveaway);
-
-        activity.startActivityForResult(intent, MainActivity.REQUEST_LOGIN_PASSIVE);
     }
 
     public void setFrom(Giveaway giveaway) {
@@ -86,5 +72,16 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
         });
 
         itemContainer.setBackgroundResource(giveaway.isEntered() ? R.color.md_blue_50 : android.R.color.background_light);
+    }
+
+    @Override
+    public void onClick(View v) {
+        Giveaway giveaway = (Giveaway) adapter.getItem(getAdapterPosition());
+
+        GiveawayDetailFragment.setParent(activity);
+        Intent intent = new Intent(activity, DetailActivity.class);
+        intent.putExtra(GiveawayDetailFragment.ARG_GIVEAWAY, giveaway);
+
+        activity.startActivityForResult(intent, MainActivity.REQUEST_LOGIN_PASSIVE);
     }
 }

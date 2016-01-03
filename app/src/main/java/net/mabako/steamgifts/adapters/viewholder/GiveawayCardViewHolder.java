@@ -77,8 +77,6 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
                 description.setText(desc);
                 description.setVisibility(View.VISIBLE);
                 description.setMovementMethod(LinkMovementMethod.getInstance());
-
-                description.setVisibility(View.VISIBLE);
             }
 
             if (extras.getXsrfToken() != null) {

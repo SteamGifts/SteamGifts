@@ -2,6 +2,8 @@ package net.mabako.steamgifts.web;
 
 import android.util.Log;
 
+import net.mabako.steamgifts.tasks.Utils;
+
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -34,7 +36,7 @@ public class WebUserData {
 
             // fetch the image
             String style = userContainer.select("div").first().attr("style");
-            style = style.replace("background-image:url(", "").replace(");", "").replace("_medium", "_full");
+            style = Utils.extractAvatar(style);
             Log.v(TAG, "User Avatar: " + style);
             current.setImageUrl(style);
 
