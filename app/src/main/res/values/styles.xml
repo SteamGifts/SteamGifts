@@ -1,10 +1,23 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="MaterialDrawerTheme.Light.DarkToolbar">
-        <!-- Customize your theme here. -->
+    <style name="AppTheme.Light" parent="MaterialDrawerTheme.Light.DarkToolbar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="colorDefaultBackground">@color/colorTransparent</item>
+        <item name="colorAccountHeader">@color/colorPrimary</item>
+        <item name="colorHighlightBackground">@color/md_blue_100</item>
+    </style>
+
+    <style name="AppTheme.Dark" parent="MaterialDrawerTheme">
+        <item name="colorPrimary">#222222</item>
+        <item name="colorPrimaryDark">#000000</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="colorDefaultBackground">#222222</item>
+        <item name="colorAccountHeader">#000000</item>
+        <item name="colorHighlightBackground">@color/md_blue_grey_700</item>
     </style>
 
     <style name="TransparentText" parent="@android:style/TextAppearance">
@@ -21,10 +34,6 @@
 
     <style name="MediumText" parent="@android:style/TextAppearance.Small">
         <item name="android:textSize">12sp</item>
-    </style>
-
-    <style name="TimeText" parent="@style/SmallText">
-        <item name="android:textColor">#60000000</item>
     </style>
 
     <style name="MediumButton" parent="@style/Widget.AppCompat.Button.Borderless">

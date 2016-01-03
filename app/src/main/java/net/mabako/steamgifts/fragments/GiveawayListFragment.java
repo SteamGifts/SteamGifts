@@ -7,13 +7,12 @@ import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import net.mabako.steamgifts.R;
-import net.mabako.steamgifts.activities.BaseActivity;
+import net.mabako.steamgifts.activities.CommonActivity;
 import net.mabako.steamgifts.activities.MainActivity;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.adapters.GiveawayAdapter;
@@ -94,7 +93,7 @@ public class GiveawayListFragment extends ListFragment<GiveawayAdapter> implemen
                 bundle.putString(MainActivity.ARGS_GIVEAWAY_QUERY, query);
                 intent.putExtras(bundle);
 
-                getActivity().startActivityForResult(intent, BaseActivity.REQUEST_LOGIN_PASSIVE);
+                getActivity().startActivityForResult(intent, CommonActivity.REQUEST_LOGIN_PASSIVE);
                 if (searchQuery != null && !searchQuery.isEmpty())
                     getActivity().finish();
                 return true;

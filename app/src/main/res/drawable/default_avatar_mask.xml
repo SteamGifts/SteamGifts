@@ -17,7 +17,7 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="#000" />
+            <solid android:color="#222222" />
             <corners android:radius="@dimen/card_margin_outer" />
         </shape>
     </item>

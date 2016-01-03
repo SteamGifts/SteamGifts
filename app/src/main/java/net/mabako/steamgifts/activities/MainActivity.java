@@ -1,6 +1,7 @@
 package net.mabako.steamgifts.activities;
 
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -36,7 +37,7 @@ import net.mabako.steamgifts.fragments.IGiveawayUpdateNotification;
 import net.mabako.steamgifts.tasks.LogoutTask;
 import net.mabako.steamgifts.web.WebUserData;
 
-public class MainActivity extends BaseActivity implements IGiveawayUpdateNotification {
+public class MainActivity extends CommonActivity implements IGiveawayUpdateNotification {
     public static final String ARGS_GIVEAWAY_QUERY = "giveaway-query";
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -88,10 +89,13 @@ public class MainActivity extends BaseActivity implements IGiveawayUpdateNotific
             }
         });
 
+        int attrs[] = new int[]{R.attr.colorAccountHeader};
+        TypedArray ta = getTheme().obtainStyledAttributes(attrs);
+
         // Account?
         accountHeader = new AccountHeaderBuilder()
                 .withActivity(this)
-                .withHeaderBackground(new ColorDrawable(ContextCompat.getColor(this, R.color.colorPrimary)))
+                .withHeaderBackground(ta.getDrawable(0))
                 .withSelectionListEnabledForSingleProfile(false)
                 .build();
 
@@ -130,6 +134,10 @@ public class MainActivity extends BaseActivity implements IGiveawayUpdateNotific
                                 } catch (android.content.ActivityNotFoundException ex) {
                                     Snackbar.make(findViewById(R.id.swipeContainer), "No mail clients installed", Snackbar.LENGTH_LONG);
                                 }
+                                break;
+
+                            case R.string.preferences:
+                                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                                 break;
 
                             default:
@@ -240,6 +248,7 @@ public class MainActivity extends BaseActivity implements IGiveawayUpdateNotific
         drawer.addItems(new DividerDrawerItem());
         // Feedback
         drawer.addItem(new PrimaryDrawerItem().withName(R.string.feedback).withIdentifier(R.string.feedback).withSelectable(false).withIcon(FontAwesome.Icon.faw_comment));
+        drawer.addItem(new PrimaryDrawerItem().withName(R.string.preferences).withIdentifier(R.string.preferences).withSelectable(false).withIcon(FontAwesome.Icon.faw_cog));
 
         // Provide a way to log out.
         if (account.isLoggedIn()) {
@@ -252,7 +261,7 @@ public class MainActivity extends BaseActivity implements IGiveawayUpdateNotific
         Log.v(TAG, "Activity result for " + requestCode + " => " + resultCode);
         switch (requestCode) {
             case REQUEST_LOGIN:
-                if (resultCode == BaseActivity.RESPONSE_LOGIN_SUCCESSFUL) {
+                if (resultCode == CommonActivity.RESPONSE_LOGIN_SUCCESSFUL) {
                     onAccountChange();
                     Snackbar.make(findViewById(R.id.swipeContainer), "Welcome, " + WebUserData.getCurrent().getName() + "!", Snackbar.LENGTH_LONG).show();
                 } else

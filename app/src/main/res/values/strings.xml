@@ -56,4 +56,8 @@
     <string name="open_steam_store">Open on Steam Store</string>
     <string name="search">Search</string>
     <string name="end_of_endless_list">You\'ve reached the end.</string>
+
+    <string name="preferences">Settings</string>
+    <string name="preference_theme_header">Theme</string>
+    <string name="preference_theme_nightmode">Night Mode</string>
 </resources>

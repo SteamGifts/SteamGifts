@@ -2,6 +2,9 @@ package net.mabako.steamgifts.adapters.viewholder;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,7 +46,6 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
     }
 
     public void setFrom(Giveaway giveaway) {
-
         giveawayName.setText(giveaway.getTitle());
 
         String str = giveaway.getPoints() + "P | " + giveaway.getEntries() + " entries";
@@ -71,7 +73,18 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
             }
         });
 
-        itemContainer.setBackgroundResource(giveaway.isEntered() ? R.color.md_blue_50 : android.R.color.background_light);
+        if (giveaway.isEntered()) {
+            int attrs[] = new int[]{R.attr.colorHighlightBackground};
+            TypedArray ta = activity.getTheme().obtainStyledAttributes(attrs);
+
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                itemContainer.setBackgroundDrawable(ta.getDrawable(0));
+            } else {
+                itemContainer.setBackground(ta.getDrawable(0));
+            }
+        } else {
+            itemContainer.setBackgroundResource(R.color.colorTransparent);
+        }
     }
 
     @Override

@@ -1,0 +1,5 @@
+<resources>
+    <attr name="colorAccountHeader" format="color" />
+    <attr name="colorDefaultBackground" format="color" />
+    <attr name="colorHighlightBackground" format="color" />
+</resources>

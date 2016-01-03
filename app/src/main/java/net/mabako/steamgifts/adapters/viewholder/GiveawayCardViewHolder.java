@@ -8,11 +8,10 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import net.mabako.steamgifts.R;
-import net.mabako.steamgifts.activities.BaseActivity;
+import net.mabako.steamgifts.activities.CommonActivity;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.data.GiveawayExtras;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
-import net.mabako.steamgifts.fragments.ICommentableFragment;
 import net.mabako.steamgifts.fragments.util.GiveawayDetailsCard;
 import net.mabako.steamgifts.web.WebUserData;
 
@@ -48,7 +47,7 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((BaseActivity) fragment.getActivity()).requestLogin();
+                ((CommonActivity) fragment.getActivity()).requestLogin();
             }
         });
     }

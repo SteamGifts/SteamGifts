@@ -1,12 +1,10 @@
 package net.mabako.steamgifts.activities;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.data.Comment;
@@ -14,7 +12,7 @@ import net.mabako.steamgifts.fragments.SingleCommentFragment;
 import net.mabako.steamgifts.fragments.WriteCommentFragment;
 import net.mabako.steamgifts.tasks.PostCommentTask;
 
-public class WriteCommentActivity extends AppCompatActivity {
+public class WriteCommentActivity extends BaseActivity {
     public static final int REQUEST_COMMENT = 7;
     public static final int COMMENT_SENT = 8;
     public static final int COMMENT_NOT_SENT = 8;
@@ -53,15 +51,6 @@ public class WriteCommentActivity extends AppCompatActivity {
             task.cancel(true);
     }
 
-    private void loadFragment(int id, Fragment fragment, String tag) {
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-
-        ft.replace(id, fragment, tag);
-
-        ft.commitAllowingStateLoss();
-    }
-
     public void submit(String text) {
         Comment comment = (Comment) getIntent().getSerializableExtra(PARENT);
         int parentId = 0;
@@ -70,5 +59,16 @@ public class WriteCommentActivity extends AppCompatActivity {
 
         task = new PostCommentTask(this, getIntent().getStringExtra(PATH), getIntent().getStringExtra(XSRF_TOKEN), text, parentId);
         task.execute();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return false;
+        }
     }
 }

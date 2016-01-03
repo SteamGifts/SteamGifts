@@ -17,7 +17,7 @@ import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
 
 import java.io.Serializable;
 
-public class DetailActivity extends BaseActivity {
+public class DetailActivity extends CommonActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

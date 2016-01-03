@@ -2,6 +2,8 @@ package net.mabako.steamgifts.adapters.viewholder;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.TypedArray;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -10,7 +12,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import net.mabako.steamgifts.R;
-import net.mabako.steamgifts.activities.BaseActivity;
+import net.mabako.steamgifts.activities.CommonActivity;
 import net.mabako.steamgifts.activities.DetailActivity;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.data.Discussion;
@@ -47,8 +49,20 @@ public class DiscussionListItemViewHolder extends RecyclerView.ViewHolder implem
         discussionAuthor.setText(discussion.getCreator());
         discussionTime.setText(discussion.getTimeCreated());
 
-        itemContainer.setBackgroundResource(discussion.isLocked() ? R.color.md_blue_grey_100 : android.R.color.background_light);
 
+        if (discussion.isLocked()) {
+            int attrs[] = new int[]{R.attr.colorHighlightBackground};
+            TypedArray ta = activity.getTheme().obtainStyledAttributes(attrs);
+
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                itemContainer.setBackgroundDrawable(ta.getDrawable(0));
+            } else {
+                itemContainer.setBackground(ta.getDrawable(0));
+            }
+        } else {
+            itemContainer.setBackgroundResource(R.color.colorTransparent);
+        }
+        
         Picasso.with(activity).load(discussion.getCreatorAvatar()).placeholder(R.drawable.default_avatar_mask).transform(new RoundedCornersTransformation(20, 0)).into(discussionAuthorAvatar);
     }
 
@@ -59,6 +73,6 @@ public class DiscussionListItemViewHolder extends RecyclerView.ViewHolder implem
         Intent intent = new Intent(activity, DetailActivity.class);
         intent.putExtra(DiscussionDetailFragment.ARG_DISCUSSION, discussion);
 
-        activity.startActivityForResult(intent, BaseActivity.REQUEST_LOGIN_PASSIVE);
+        activity.startActivityForResult(intent, CommonActivity.REQUEST_LOGIN_PASSIVE);
     }
 }
