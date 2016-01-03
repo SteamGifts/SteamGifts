@@ -26,9 +26,11 @@
                 style="@style/MediumText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/user"
+                android:layout_alignParentRight="true"
+                android:layout_toRightOf="@+id/created"
+                android:gravity="right"
                 android:padding="@dimen/card_margin_small"
-                android:text="{faw-clock-o} Soon" />
+                android:text="Soon" />
 
             <TextView
                 android:id="@+id/user"
@@ -36,8 +38,25 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/card_margin_small"
-                android:text="{faw-user} Creator"
+                android:text="Creator"
                 android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/created"
+                style="@style/MediumText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/user"
+                android:padding="@dimen/card_margin_small"
+                android:text="Started" />
+
+            <View
+                android:id="@+id/separator"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/user"
+                android:layout_margin="4dp"
+                android:background="@android:color/darker_gray" />
 
             <TextView
                 android:id="@+id/description"
@@ -54,7 +73,7 @@
                 style="?android:attr/progressBarStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/user"
+                android:layout_below="@+id/separator"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:indeterminate="true"

@@ -20,9 +20,10 @@ public class Giveaway implements Serializable, IEndlessAdaptable {
     private final int points;
     private String timeRemaining;
     private final String timeRemainingLong;
+    private final String timeCreated;
     private boolean entered = false;
 
-    public Giveaway(String title, String giveawayId, String name, Type type, int gameId, String creator, int entries, int commentCount, int copies, int points, String timeRemaining, String timeRemainingLong) {
+    public Giveaway(String title, String giveawayId, String name, Type type, int gameId, String creator, int entries, int commentCount, int copies, int points, String timeRemaining, String timeRemainingLong, String timeCreated) {
         this.title = title;
         this.giveawayId = giveawayId;
         this.name = name;
@@ -35,6 +36,7 @@ public class Giveaway implements Serializable, IEndlessAdaptable {
         this.points = points;
         setTimeRemaining(timeRemaining);
         this.timeRemainingLong = timeRemainingLong;
+        this.timeCreated = timeCreated;
     }
 
     public String getTitle() {
@@ -85,11 +87,6 @@ public class Giveaway implements Serializable, IEndlessAdaptable {
         return timeRemainingLong;
     }
 
-    @Override
-    public int hashCode() {
-        return giveawayId.hashCode();
-    }
-
     public boolean isEntered() {
         return entered;
     }
@@ -98,20 +95,30 @@ public class Giveaway implements Serializable, IEndlessAdaptable {
         this.entered = entered;
     }
 
+    public String getTimeCreated() {
+        return timeCreated;
+    }
+
+    @Override
+    public int hashCode() {
+        return giveawayId.hashCode();
+    }
+
     @Override
     public boolean equals(Object o) {
-        if(o == null || !(o instanceof Giveaway))
+        if (o == null || !(o instanceof Giveaway))
             return false;
         return giveawayId.equals(((Giveaway) o).giveawayId);
     }
 
     @Override
     public String toString() {
-        return "[GA "+ giveawayId + ", " + gameId + "]";
+        return "[GA " + giveawayId + ", " + gameId + "]";
     }
 
     public void setTimeRemaining(String timeRemaining) {
-        this.timeRemaining = timeRemaining.replace(" remaining", "");;
+        this.timeRemaining = timeRemaining.replace(" remaining", "");
+        ;
     }
 
     @Override

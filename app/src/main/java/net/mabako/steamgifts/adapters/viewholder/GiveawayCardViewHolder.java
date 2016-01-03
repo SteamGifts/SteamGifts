@@ -21,6 +21,7 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
     private final View progressBar;
     private final TextView user;
     private final TextView timeRemaining;
+    private final TextView timeCreated;
     private final TextView description;
 
     private final Button enterGiveaway;
@@ -36,6 +37,7 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
         progressBar = v.findViewById(R.id.progressBar);
         user = (TextView) v.findViewById(R.id.user);
         timeRemaining = (TextView) v.findViewById(R.id.remaining);
+        timeCreated = (TextView) v.findViewById(R.id.created);
         description = (TextView) v.findViewById(R.id.description);
         description.setMovementMethod(LinkMovementMethod.getInstance());
 
@@ -58,6 +60,7 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
 
         user.setText("{faw-user} " + giveaway.getCreator());
         timeRemaining.setText("{faw-clock-o} " + giveaway.getTimeRemaining());
+        timeCreated.setText("{faw-calendar-o} " + giveaway.getTimeCreated());
 
         enterGiveaway.setText(String.format(String.valueOf(itemView.getContext().getText(R.string.enter_giveaway)), giveaway.getPoints()));
         leaveGiveaway.setText(String.format(String.valueOf(itemView.getContext().getText(R.string.leave_giveaway)), giveaway.getPoints()));

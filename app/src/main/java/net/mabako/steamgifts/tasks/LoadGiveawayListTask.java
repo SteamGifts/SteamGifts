@@ -90,10 +90,11 @@ public class LoadGiveawayListTask extends AsyncTask<Void, Void, List<Giveaway>> 
 
                 // Time remaining
                 Element timeRemaining = element.select(".giveaway__columns > div span").first();
+                Element timeCreated = element.select(".giveaway__columns > div span").last();
 
                 Log.v(TAG, "GIVEAWAY for " + title + ", " + giveawayLink + "/" + giveawayName + " is " + gameId);
 
-                Giveaway giveaway = new Giveaway(title, giveawayLink, giveawayName, type, gameId, creator, entries, comments, copies, points, timeRemaining.text(), timeRemaining.attr("title"));
+                Giveaway giveaway = new Giveaway(title, giveawayLink, giveawayName, type, gameId, creator, entries, comments, copies, points, timeRemaining.text(), timeRemaining.attr("title"), timeCreated.text());
                 giveaway.setEntered(element.hasClass("is-faded"));
                 giveawayList.add(giveaway);
             }
