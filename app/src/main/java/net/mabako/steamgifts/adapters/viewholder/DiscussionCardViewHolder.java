@@ -31,6 +31,7 @@ public class DiscussionCardViewHolder extends RecyclerView.ViewHolder {
         user = (TextView) v.findViewById(R.id.user);
         discussionTime = (TextView) v.findViewById(R.id.time);
         description = (TextView) v.findViewById(R.id.description);
+        description.setMovementMethod(LinkMovementMethod.getInstance());
 
         commentDiscussion = (Button) v.findViewById(R.id.comment);
     }
@@ -57,7 +58,6 @@ public class DiscussionCardViewHolder extends RecyclerView.ViewHolder {
 
                 description.setText(desc);
                 description.setVisibility(View.VISIBLE);
-                description.setMovementMethod(LinkMovementMethod.getInstance());
             }
         }
     }

@@ -33,7 +33,9 @@ public final class Utils {
             if(avatarNode != null)
                 avatar = extractAvatar(avatarNode.attr("style"));
 
-            String content = thisComment.select(".comment__description").first().html();
+            Element desc = thisComment.select(".comment__description").first();
+            desc.select(".comment__toggle-attached").html("");
+            String content = desc.html();
 
             Element timeRemaining = thisComment.select(".comment__actions > div span").first();
 

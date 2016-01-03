@@ -37,6 +37,7 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
         user = (TextView) v.findViewById(R.id.user);
         timeRemaining = (TextView) v.findViewById(R.id.remaining);
         description = (TextView) v.findViewById(R.id.description);
+        description.setMovementMethod(LinkMovementMethod.getInstance());
 
         enterGiveaway = (Button) v.findViewById(R.id.enter);
         leaveGiveaway = (Button) v.findViewById(R.id.leave);
@@ -76,7 +77,6 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
 
                 description.setText(desc);
                 description.setVisibility(View.VISIBLE);
-                description.setMovementMethod(LinkMovementMethod.getInstance());
             }
 
             if (extras.getXsrfToken() != null) {
