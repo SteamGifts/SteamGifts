@@ -72,7 +72,7 @@ public class MainActivity extends CommonActivity implements IGiveawayUpdateNotif
 
         super.onAccountChange();
 
-        loadFragment(GiveawayListFragment.newInstance(GiveawayListFragment.Type.ALL, getIntent().getExtras() != null ? getIntent().getExtras().getString(ARGS_GIVEAWAY_QUERY, null) : null));
+        loadFragment(GiveawayListFragment.newInstance(GiveawayListFragment.Type.ALL, getIntent().getStringExtra(ARGS_GIVEAWAY_QUERY)));
         drawer.setSelection(R.string.navigation_giveaways_all, false);
     }
 

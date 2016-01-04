@@ -86,7 +86,7 @@ public class GiveawayListFragment extends ListFragment<GiveawayAdapter> implemen
             public boolean onQueryTextSubmit(String query) {
                 query = query.trim();
                 searchView.setQuery("", false);
-                searchMenu.collapseActionView();
+                MenuItemCompat.collapseActionView(searchMenu);
 
                 Intent intent = new Intent(getActivity(), MainActivity.class);
                 Bundle bundle = new Bundle();
