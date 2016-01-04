@@ -28,6 +28,11 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
     private boolean reachedTheEnd;
     private int page = 1;
 
+    /**
+     * If set to true, you've reached the end if all loaded items have appeared on a previous page.
+     */
+    protected boolean alternativeEnd = false;
+
     public EndlessAdapter(@NonNull RecyclerView view, @NonNull OnLoadListener listener) {
         final LinearLayoutManager layoutManager = (LinearLayoutManager) view.getLayoutManager();
         if (layoutManager == null)
@@ -115,6 +120,11 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
             this.items.addAll(items);
             this.notifyItemRangeInserted(getItemCount() - items.size(), items.size());
 
+            if (enoughItems && items.size() == 0 && alternativeEnd) {
+                enoughItems = false;
+            }
+
+            // Did we have enough items and have not reached the end?
             if (!enoughItems && !reachedTheEnd)
                 reachedTheEnd();
         } else {
@@ -144,7 +154,7 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     public void setStickyItem(IEndlessAdaptable stickyItem) {
-        if(this.stickyItem == null) {
+        if (this.stickyItem == null) {
             this.stickyItem = stickyItem;
             notifyItemInserted(0);
         } else {
@@ -167,7 +177,7 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
             View view = LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false);
 
             RecyclerView.ViewHolder holder = onCreateActualViewHolder(view, viewType);
-            if(holder == null)
+            if (holder == null)
                 throw new IllegalStateException("Got no giveaway holder for " + viewType);
             return holder;
         }

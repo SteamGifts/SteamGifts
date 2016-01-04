@@ -37,6 +37,7 @@ public class CommentAdapter<FragmentType extends Fragment> extends EndlessAdapte
         super(view, loadListener);
 
         this.fragment = fragment;
+        this.alternativeEnd = true;
 
         setColors();
     }
