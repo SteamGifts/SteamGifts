@@ -190,6 +190,7 @@ public class MainActivity extends CommonActivity implements IGiveawayUpdateNotif
                     }
                 })
                 .build();
+        drawer.getRecyclerView().setVerticalScrollBarEnabled(false);
 
         reconfigureNavBarItems();
     }
