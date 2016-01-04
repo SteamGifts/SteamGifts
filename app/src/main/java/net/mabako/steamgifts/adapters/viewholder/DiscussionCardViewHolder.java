@@ -42,7 +42,7 @@ public class DiscussionCardViewHolder extends RecyclerView.ViewHolder {
         DiscussionExtras extras = card.getExtras();
 
         user.setText("{faw-user} " + discussion.getCreator());
-        discussionTime.setText("{faw-clock-o} " + discussion.getTimeCreated());
+        discussionTime.setText("{faw-calendar-o} " + discussion.getTimeCreated());
 
         for (View view : new View[]{commentDiscussion, description})
             view.setVisibility(View.GONE);
