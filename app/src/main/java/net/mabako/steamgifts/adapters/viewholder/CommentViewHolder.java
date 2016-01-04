@@ -56,7 +56,7 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
         commentAuthor.setText(comment.getAuthor());
         commentTime.setText(comment.getTimeAgo());
 
-        CharSequence desc = Html.fromHtml(comment.getContent());
+        CharSequence desc = Html.fromHtml(comment.getContent(), null, new CustomHtmlTagHandler());
         desc = desc.subSequence(0, desc.length() - 2);
         commentContent.setText(desc);
 

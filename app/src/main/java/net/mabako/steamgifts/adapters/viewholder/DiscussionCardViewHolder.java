@@ -54,7 +54,7 @@ public class DiscussionCardViewHolder extends RecyclerView.ViewHolder {
             progressBar.setVisibility(View.GONE);
 
             if (extras.getDescription() != null) {
-                CharSequence desc = Html.fromHtml(extras.getDescription());
+                CharSequence desc = Html.fromHtml(extras.getDescription(), null, new CustomHtmlTagHandler());
                 desc = desc.subSequence(0, desc.length() - 2);
 
                 description.setText(desc);
