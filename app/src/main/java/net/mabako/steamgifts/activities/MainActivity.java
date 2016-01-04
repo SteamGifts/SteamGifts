@@ -37,8 +37,11 @@ import net.mabako.steamgifts.fragments.IGiveawayUpdateNotification;
 import net.mabako.steamgifts.tasks.LogoutTask;
 import net.mabako.steamgifts.web.WebUserData;
 
+import java.io.Serializable;
+
 public class MainActivity extends CommonActivity implements IGiveawayUpdateNotification {
-    public static final String ARGS_GIVEAWAY_QUERY = "giveaway-query";
+    public static final String ARG_QUERY = "query";
+    public static final String ARG_TYPE = "type";
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -58,8 +61,16 @@ public class MainActivity extends CommonActivity implements IGiveawayUpdateNotif
         // savedInstanceState is non-null if a fragment state is saved from a previous configuration.
         if (savedInstanceState == null) {
             // Load a default fragment to show all giveaways
-            loadFragment(GiveawayListFragment.newInstance(GiveawayListFragment.Type.ALL, getIntent().getStringExtra(ARGS_GIVEAWAY_QUERY)));
-            drawer.setSelection(R.string.navigation_giveaways_all, false);
+            Serializable type = getIntent().getSerializableExtra(ARG_TYPE);
+            if (type == null)
+                type = GiveawayListFragment.Type.ALL;
+
+            if (type instanceof GiveawayListFragment.Type) {
+                loadFragment(GiveawayListFragment.newInstance((GiveawayListFragment.Type) type, getIntent().getStringExtra(ARG_QUERY)));
+            } else if (type instanceof DiscussionListFragment.Type) {
+                loadFragment(DiscussionListFragment.newInstance((DiscussionListFragment.Type) type, getIntent().getStringExtra(ARG_QUERY)));
+            }
+            // TODO drawer.setSelection(R.string.navigation_giveaways_all, false);
         }
     }
 
@@ -72,7 +83,7 @@ public class MainActivity extends CommonActivity implements IGiveawayUpdateNotif
 
         super.onAccountChange();
 
-        loadFragment(GiveawayListFragment.newInstance(GiveawayListFragment.Type.ALL, getIntent().getStringExtra(ARGS_GIVEAWAY_QUERY)));
+        loadFragment(GiveawayListFragment.newInstance(GiveawayListFragment.Type.ALL, getIntent().getStringExtra(ARG_QUERY)));
         drawer.setSelection(R.string.navigation_giveaways_all, false);
     }
 
@@ -143,14 +154,14 @@ public class MainActivity extends CommonActivity implements IGiveawayUpdateNotif
                             default:
                                 for (GiveawayListFragment.Type type : GiveawayListFragment.Type.values()) {
                                     if (type.getNavbarResource() == drawerItem.getIdentifier()) {
-                                        loadFragment(GiveawayListFragment.newInstance(type, getIntent().getStringExtra(ARGS_GIVEAWAY_QUERY)));
+                                        loadFragment(GiveawayListFragment.newInstance(type, getIntent().getStringExtra(ARG_QUERY)));
                                         break;
                                     }
                                 }
 
                                 for (DiscussionListFragment.Type type : DiscussionListFragment.Type.values()) {
                                     if (type.getNavbarResource() == drawerItem.getIdentifier()) {
-                                        loadFragment(DiscussionListFragment.newInstance(type, null));
+                                        loadFragment(DiscussionListFragment.newInstance(type, getIntent().getStringExtra(ARG_QUERY)));
                                         break;
                                     }
                                 }

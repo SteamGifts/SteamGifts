@@ -1,19 +1,8 @@
 package net.mabako.steamgifts.fragments;
 
-import android.app.SearchManager;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 
 import net.mabako.steamgifts.R;
-import net.mabako.steamgifts.activities.CommonActivity;
-import net.mabako.steamgifts.activities.MainActivity;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.adapters.GiveawayAdapter;
 import net.mabako.steamgifts.data.Giveaway;
@@ -29,11 +18,6 @@ public class GiveawayListFragment extends ListFragment<GiveawayAdapter> implemen
      * Type of items to show.
      */
     private Type type = Type.ALL;
-
-    /**
-     * What are we searching for?
-     */
-    private String searchQuery = null;
 
     public static GiveawayListFragment newInstance(Type type, String query) {
         GiveawayListFragment g = new GiveawayListFragment();
@@ -72,40 +56,6 @@ public class GiveawayListFragment extends ListFragment<GiveawayAdapter> implemen
         }
     }
 
-    @Override
-    public void onCreateOptionsMenu(
-            Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.main_menu, menu);
-
-        final MenuItem searchMenu = menu.findItem(R.id.search);
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchMenu);
-        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                query = query.trim();
-                searchView.setQuery("", false);
-                MenuItemCompat.collapseActionView(searchMenu);
-
-                Intent intent = new Intent(getActivity(), MainActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString(MainActivity.ARGS_GIVEAWAY_QUERY, query);
-                intent.putExtras(bundle);
-
-                getActivity().startActivityForResult(intent, CommonActivity.REQUEST_LOGIN_PASSIVE);
-                if (searchQuery != null && !searchQuery.isEmpty())
-                    getActivity().finish();
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return true;
-            }
-        });
-    }
-
     /**
      * Returns the resource of what to show in the title.
      *
@@ -129,6 +79,11 @@ public class GiveawayListFragment extends ListFragment<GiveawayAdapter> implemen
     @Override
     protected int getLayoutResource() {
         return R.layout.fragment_giveaway_list;
+    }
+
+    @Override
+    public Type getType() {
+        return type;
     }
 
     /**
