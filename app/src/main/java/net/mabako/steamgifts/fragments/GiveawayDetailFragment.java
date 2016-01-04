@@ -185,6 +185,8 @@ public class GiveawayDetailFragment extends Fragment implements ICommentableFrag
     public void onCreateOptionsMenu(
             Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.giveaway_menu, menu);
+
+        menu.findItem(R.id.open_steam_store).setVisible(giveaway.getGameId() > 0);
     }
 
     @Override
