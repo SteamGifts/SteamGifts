@@ -67,10 +67,11 @@ public class MainActivity extends CommonActivity implements IGiveawayUpdateNotif
 
             if (type instanceof GiveawayListFragment.Type) {
                 loadFragment(GiveawayListFragment.newInstance((GiveawayListFragment.Type) type, getIntent().getStringExtra(ARG_QUERY)));
+                drawer.setSelection(((GiveawayListFragment.Type) type).getNavbarResource());
             } else if (type instanceof DiscussionListFragment.Type) {
                 loadFragment(DiscussionListFragment.newInstance((DiscussionListFragment.Type) type, getIntent().getStringExtra(ARG_QUERY)));
+                drawer.setSelection(((DiscussionListFragment.Type) type).getNavbarResource());
             }
-            // TODO drawer.setSelection(R.string.navigation_giveaways_all, false);
         }
     }
 
