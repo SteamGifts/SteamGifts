@@ -56,7 +56,8 @@
                 android:layout_height="1dp"
                 android:layout_below="@+id/user"
                 android:layout_margin="4dp"
-                android:background="@android:color/darker_gray" />
+                android:background="@drawable/material_drawer_square_mask"
+                android:backgroundTint="?android:attr/textColorSecondary" />
 
             <TextView
                 android:id="@+id/description"
