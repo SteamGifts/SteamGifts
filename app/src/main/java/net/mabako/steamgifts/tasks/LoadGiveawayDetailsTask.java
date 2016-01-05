@@ -51,6 +51,10 @@ public class LoadGiveawayDetailsTask extends AsyncTask<Void, Void, GiveawayExtra
             // Enter/Leave giveaway
             Element enterLeaveForm = document.select(".sidebar form").first();
             if (enterLeaveForm != null) {
+                if(enterLeaveForm != document.select(".sidebar > form").first()) {
+                    extras.setErrorMessage("N/A");
+                }
+
                 extras.setEntered(enterLeaveForm.select(".sidebar__entry-insert").hasClass("is-hidden"));
                 extras.setXsrfToken(enterLeaveForm.select("input[name=xsrf_token]").attr("value"));
             } else {

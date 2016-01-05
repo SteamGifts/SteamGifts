@@ -82,19 +82,20 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
                 description.setVisibility(View.VISIBLE);
             }
 
-            if (extras.getXsrfToken() != null) {
+            if (extras.getXsrfToken() != null && extras.getErrorMessage() == null) {
                 if (!extras.isEntered())
                     enterGiveaway.setVisibility(View.VISIBLE);
                 else
                     leaveGiveaway.setVisibility(View.VISIBLE);
-
-                commentGiveaway.setVisibility(View.VISIBLE);
             } else if (extras.getErrorMessage() != null) {
                 errorMessage.setText(extras.getErrorMessage());
                 errorMessage.setVisibility(View.VISIBLE);
             } else if (!WebUserData.getCurrent().isLoggedIn()) {
                 loginButton.setVisibility(View.VISIBLE);
             }
+
+            if (extras.getXsrfToken() != null)
+                commentGiveaway.setVisibility(View.VISIBLE);
 
             enterGiveaway.setEnabled(true);
             leaveGiveaway.setEnabled(true);
