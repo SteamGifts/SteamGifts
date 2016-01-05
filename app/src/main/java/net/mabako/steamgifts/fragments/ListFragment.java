@@ -149,7 +149,9 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
      */
     protected abstract void fetchItems(int page);
 
-    protected abstract int getLayoutResource();
+    protected int getLayoutResource() {
+        return R.layout.fragment_list;
+    }
 
     protected abstract Serializable getType();
 }

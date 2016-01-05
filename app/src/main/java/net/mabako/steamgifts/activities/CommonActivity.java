@@ -35,12 +35,17 @@ public class CommonActivity extends BaseActivity {
         if (actionBar != null) {
             Log.v(TAG, "Current Fragment is a " + fragment.getClass().getName());
             if (fragment instanceof IFragmentNotifications) {
+                String title = null;
                 int resource = ((IFragmentNotifications) fragment).getTitleResource();
-                String title = getString(resource);
-
                 String extra = ((IFragmentNotifications) fragment).getExtraTitle();
-                if(extra != null && !extra.isEmpty())
-                    title = String.format("%s: %s", extra, title);
+
+                if (resource != 0) {
+                    if (extra != null && !extra.isEmpty())
+                        title = String.format("%s: %s", extra, getString(resource));
+                    else
+                        title = getString(resource);
+                } else
+                    title = extra;
 
                 actionBar.setTitle(title);
                 Log.v(TAG, "Setting Toolbar title to " + title);

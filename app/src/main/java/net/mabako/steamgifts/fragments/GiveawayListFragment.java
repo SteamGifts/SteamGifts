@@ -77,11 +77,6 @@ public class GiveawayListFragment extends ListFragment<GiveawayAdapter> implemen
     }
 
     @Override
-    protected int getLayoutResource() {
-        return R.layout.fragment_giveaway_list;
-    }
-
-    @Override
     public Type getType() {
         return type;
     }

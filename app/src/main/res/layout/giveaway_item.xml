@@ -6,12 +6,13 @@
     android:focusable="true"
     android:orientation="vertical"
     android:paddingLeft="0dp"
-    android:paddingRight="4dp">
+    android:paddingRight="0dp">
 
     <LinearLayout
         android:id="@+id/list_item"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/giveaway_image"
@@ -21,12 +22,13 @@
             android:scaleType="fitCenter" />
 
         <LinearLayout
+            android:id="@+id/giveaway_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/giveaway_image"
+            android:layout_weight="1"
             android:orientation="vertical"
-            android:paddingBottom="4dp"
-            android:paddingLeft="4dp"
-            android:paddingTop="4dp">
+            android:padding="4dp">
 
             <TextView
                 android:id="@+id/giveaway_name"
@@ -38,32 +40,58 @@
                 android:text="Giveaway Name"
                 android:textAlignment="viewStart" />
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/giveaway_details"
-                    style="@style/SmallText"
-                    android:layout_width="match_parent"
+
+                <LinearLayout
+                    android:id="@+id/indicator_container"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="start"
-                    android:layout_weight="2"
-                    android:singleLine="true"
-                    android:text="Giveaway Details"
-                    android:textAlignment="viewStart" />
+                    android:layout_gravity="start">
+
+                    <View
+                        android:id="@+id/giveaway_list_indicator_whitelist"
+                        style="@style/GiveawayIndicatorIcon"
+                        android:backgroundTint="@color/giveawayIndicatorColorWhitelist" />
+
+                    <View
+                        android:id="@+id/giveaway_list_indicator_group"
+                        style="@style/GiveawayIndicatorIcon"
+                        android:backgroundTint="@color/giveawayIndicatorColorGroup" />
+
+                    <View
+                        android:id="@+id/giveaway_list_indicator_level_positive"
+                        style="@style/GiveawayIndicatorIcon"
+                        android:backgroundTint="@color/giveawayIndicatorColorLevelOkay" />
+
+                    <ImageView
+                        android:id="@+id/giveaway_list_indicator_level_negative"
+                        style="@style/GiveawayIndicatorIcon"
+                        android:backgroundTint="@color/giveawayIndicatorColorLevelTooHigh" />
+
+                    <TextView
+                        android:id="@+id/giveaway_details"
+                        style="@style/SmallText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:singleLine="true"
+                        android:text="Giveaway Details" />
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/time"
                     style="@style/SmallText"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
                     android:layout_gravity="end"
-                    android:layout_weight="1"
                     android:singleLine="true"
                     android:text="Time"
                     android:textAlignment="viewEnd" />
-            </LinearLayout>
+            </RelativeLayout>
         </LinearLayout>
     </LinearLayout>
 

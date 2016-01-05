@@ -3,7 +3,6 @@ package net.mabako.steamgifts.adapters.viewholder;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.TypedArray;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -31,6 +30,8 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
     private final EndlessAdapter adapter;
     private final Activity activity;
 
+    private final View indicatorWhitelist, indicatorGroup, indicatorLevelPositive, indicatorLevelNegative;
+
     private static int measuredHeight = 0;
 
     public GiveawayListItemViewHolder(View v, Activity activity, EndlessAdapter adapter) {
@@ -40,6 +41,11 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
         giveawayDetails = (TextView) v.findViewById(R.id.giveaway_details);
         giveawayTime = (TextView) v.findViewById(R.id.time);
         giveawayImage = (ImageView) v.findViewById(R.id.giveaway_image);
+
+        indicatorWhitelist = v.findViewById(R.id.giveaway_list_indicator_whitelist);
+        indicatorGroup = v.findViewById(R.id.giveaway_list_indicator_group);
+        indicatorLevelPositive = v.findViewById(R.id.giveaway_list_indicator_level_positive);
+        indicatorLevelNegative = v.findViewById(R.id.giveaway_list_indicator_level_negative);
 
         this.activity = activity;
         this.adapter = adapter;
@@ -88,6 +94,12 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
         } else {
             itemContainer.setBackgroundResource(R.color.colorTransparent);
         }
+
+        // Check all the indicators
+        indicatorWhitelist.setVisibility(giveaway.isWhitelist() ? View.VISIBLE : View.GONE);
+        indicatorGroup.setVisibility(giveaway.isGroup() ? View.VISIBLE : View.GONE);
+        indicatorLevelPositive.setVisibility(giveaway.isLevelPositive() ? View.VISIBLE : View.GONE);
+        indicatorLevelNegative.setVisibility(giveaway.isLevelNegative() ? View.VISIBLE : View.GONE);
     }
 
     @Override

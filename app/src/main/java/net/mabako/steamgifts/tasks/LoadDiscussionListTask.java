@@ -59,7 +59,7 @@ public class LoadDiscussionListTask extends AsyncTask<Void, Void, List<Discussio
 
             WebUserData.extract(document);
 
-            // Parse all rows of giveaways
+            // Parse all rows of discussions
             Elements discussions = document.select(".table__row-inner-wrap");
             Log.d(TAG, "Found inner " + discussions.size() + " elements");
 

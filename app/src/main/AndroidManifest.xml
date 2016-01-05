@@ -30,5 +30,8 @@
         <activity
             android:name=".activities.SettingsActivity"
             android:label="@string/preferences" />
+        <activity
+            android:name=".activities.ViewGroupsActivity"
+            android:parentActivityName=".activities.DetailActivity" />
     </application>
 </manifest>

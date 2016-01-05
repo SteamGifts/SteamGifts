@@ -32,7 +32,6 @@ public class WriteCommentActivity extends BaseActivity {
 
         setContentView(R.layout.activity_write_comment);
 
-
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {

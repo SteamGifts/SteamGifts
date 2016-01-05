@@ -2,14 +2,12 @@ package net.mabako.steamgifts.activities;
 
 import android.content.Intent;
 import android.content.res.TypedArray;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -52,7 +50,7 @@ public class MainActivity extends CommonActivity implements IGiveawayUpdateNotif
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_one_fragment);
 
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
