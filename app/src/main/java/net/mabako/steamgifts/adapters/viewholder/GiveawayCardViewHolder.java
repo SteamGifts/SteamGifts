@@ -1,8 +1,16 @@
 package net.mabako.steamgifts.adapters.viewholder;
 
+import android.annotation.TargetApi;
+import android.content.res.TypedArray;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
+import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -14,6 +22,9 @@ import net.mabako.steamgifts.data.GiveawayExtras;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
 import net.mabako.steamgifts.fragments.util.GiveawayDetailsCard;
 import net.mabako.steamgifts.web.WebUserData;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
     private GiveawayDetailFragment fragment;
@@ -29,6 +40,7 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
     private final Button commentGiveaway;
     private final Button loginButton;
     private final Button errorMessage;
+    private final Button indicator;
 
     public GiveawayCardViewHolder(View v, final GiveawayDetailFragment fragment) {
         super(v);
@@ -52,6 +64,7 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
                 ((CommonActivity) fragment.getActivity()).requestLogin();
             }
         });
+        indicator = (Button) v.findViewById(R.id.indicator);
     }
 
     public void setFrom(final GiveawayDetailsCard card) {
@@ -65,7 +78,7 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
         enterGiveaway.setText(String.format(String.valueOf(itemView.getContext().getText(R.string.enter_giveaway)), giveaway.getPoints()));
         leaveGiveaway.setText(String.format(String.valueOf(itemView.getContext().getText(R.string.leave_giveaway)), giveaway.getPoints()));
 
-        for (View view : new View[]{enterGiveaway, leaveGiveaway, commentGiveaway, loginButton, errorMessage, description})
+        for (View view : new View[]{enterGiveaway, leaveGiveaway, commentGiveaway, loginButton, errorMessage, description, indicator})
             view.setVisibility(View.GONE);
 
         if (extras == null) {
@@ -98,6 +111,8 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
 
             enterGiveaway.setEnabled(true);
             leaveGiveaway.setEnabled(true);
+
+            setupIndicators(giveaway);
         }
 
         enterGiveaway.setOnClickListener(new View.OnClickListener() {
@@ -122,5 +137,43 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
                 fragment.requestComment(null);
             }
         });
+    }
+
+    private void setupIndicators(Giveaway giveaway) {
+        List<Spannable> spans = new ArrayList<>();
+
+        if (giveaway.isWhitelist())
+            spans.add(new SpannableString("{faw-heart} "));
+
+        if (giveaway.isGroup())
+            spans.add(new SpannableString("{faw-users} "));
+
+        if (giveaway.isLevelPositive())
+            spans.add(new SpannableString("L" + giveaway.getLevel()));
+
+        if (giveaway.isLevelNegative()) {
+            Spannable span = new SpannableString("L" + giveaway.getLayout());
+            span.setSpan(new ForegroundColorSpan(fragment.getResources().getColor(R.color.giveawayIndicatorColorLevelTooHigh)), 0, span.toString().length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            spans.add(span);
+        }
+
+        if (!spans.isEmpty()) {
+            indicator.setVisibility(View.VISIBLE);
+
+            CharSequence text = TextUtils.concat(spans.toArray(new Spannable[0]));
+            Log.d("HELLO", text.toString());
+            indicator.setText(text);
+
+            if (giveaway.isGroup()) {
+                indicator.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                });
+            } else {
+                indicator.setOnClickListener(null);
+            }
+        }
     }
 }

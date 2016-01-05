@@ -2,6 +2,7 @@ package net.mabako.steamgifts.data;
 
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
+import net.mabako.steamgifts.web.WebUserData;
 
 import java.io.Serializable;
 
@@ -23,7 +24,8 @@ public class Giveaway implements Serializable, IEndlessAdaptable {
     private final String timeCreated;
     private boolean entered = false;
 
-    private boolean whitelist, group, levelPositive, levelNegative;
+    private boolean whitelist, group;
+    private int level;
 
     public Giveaway(String title, String giveawayId, String name, Type type, int gameId, String creator, int entries, int commentCount, int copies, int points, String timeRemaining, String timeRemainingLong, String timeCreated) {
         this.title = title;
@@ -117,20 +119,20 @@ public class Giveaway implements Serializable, IEndlessAdaptable {
         this.group = group;
     }
 
-    public boolean isLevelPositive() {
-        return levelPositive;
+    public int getLevel() {
+        return level;
     }
 
-    public void setLevelPositive(boolean levelPositive) {
-        this.levelPositive = levelPositive;
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public boolean isLevelPositive() {
+        return level > 0 && WebUserData.getCurrent().getLevel() >= level;
     }
 
     public boolean isLevelNegative() {
-        return levelNegative;
-    }
-
-    public void setLevelNegative(boolean levelNegative) {
-        this.levelNegative = levelNegative;
+        return level > 0 && !isLevelPositive();
     }
 
     @Override

@@ -54,7 +54,7 @@
                     <View
                         android:id="@+id/giveaway_list_indicator_whitelist"
                         style="@style/GiveawayIndicatorIcon"
-                        android:backgroundTint="@color/giveawayIndicatorColorWishlist" />
+                        android:backgroundTint="@color/giveawayIndicatorColorWhitelist" />
 
                     <View
                         android:id="@+id/giveaway_list_indicator_group"

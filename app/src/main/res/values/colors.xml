@@ -7,7 +7,7 @@
     <color name="colorAccent">#03A9F4</color>
 
     <color name="giveawayIndicatorColorGroup">@color/md_amber_600</color>
-    <color name="giveawayIndicatorColorWishlist">@color/md_blue_600</color>
+    <color name="giveawayIndicatorColorWhitelist">@color/md_blue_600</color>
     <color name="giveawayIndicatorColorLevelOkay">@color/md_green_600</color>
     <color name="giveawayIndicatorColorLevelTooHigh">@color/md_red_600</color>
 </resources>

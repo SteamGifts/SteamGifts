@@ -104,8 +104,10 @@ public class LoadGiveawayListTask extends AsyncTask<Void, Void, List<Giveaway>> 
                 // Flags
                 giveaway.setWhitelist(!element.select(".giveaway__column--whitelist").isEmpty());
                 giveaway.setGroup(!element.select(".giveaway__column--group").isEmpty());
-                giveaway.setLevelPositive(!element.select(".giveaway__column--contributor-level--positive").isEmpty());
-                giveaway.setLevelNegative(!element.select(".giveaway__column--contributor-level--negative").isEmpty());
+
+                Element level = element.select(".giveaway__column--contributor-level").first();
+                if (level != null)
+                    giveaway.setLevel(Integer.parseInt(level.text().replace("Level", "").replace("+", "").trim()));
 
                 giveawayList.add(giveaway);
             }
