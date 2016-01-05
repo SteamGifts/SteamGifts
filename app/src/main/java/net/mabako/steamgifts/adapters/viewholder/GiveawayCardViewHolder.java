@@ -1,22 +1,20 @@
 package net.mabako.steamgifts.adapters.viewholder;
 
-import android.annotation.TargetApi;
-import android.content.res.TypedArray;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.activities.CommonActivity;
+import net.mabako.steamgifts.activities.ViewGroupsActivity;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.data.GiveawayExtras;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
@@ -88,10 +86,7 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
             progressBar.setVisibility(View.GONE);
 
             if (extras.getDescription() != null) {
-                CharSequence desc = Html.fromHtml(extras.getDescription(), null, new CustomHtmlTagHandler());
-                desc = desc.subSequence(0, desc.length() - 2);
-
-                description.setText(desc);
+                description.setText(Utils.fromHtml(extras.getDescription()));
                 description.setVisibility(View.VISIBLE);
             }
 
@@ -139,7 +134,7 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
         });
     }
 
-    private void setupIndicators(Giveaway giveaway) {
+    private void setupIndicators(final Giveaway giveaway) {
         List<Spannable> spans = new ArrayList<>();
 
         if (giveaway.isWhitelist())
@@ -152,7 +147,7 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
             spans.add(new SpannableString("L" + giveaway.getLevel()));
 
         if (giveaway.isLevelNegative()) {
-            Spannable span = new SpannableString("L" + giveaway.getLayout());
+            Spannable span = new SpannableString("L" + giveaway.getLevel());
             span.setSpan(new ForegroundColorSpan(fragment.getResources().getColor(R.color.giveawayIndicatorColorLevelTooHigh)), 0, span.toString().length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
             spans.add(span);
         }
@@ -161,14 +156,17 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
             indicator.setVisibility(View.VISIBLE);
 
             CharSequence text = TextUtils.concat(spans.toArray(new Spannable[0]));
-            Log.d("HELLO", text.toString());
             indicator.setText(text);
 
             if (giveaway.isGroup()) {
                 indicator.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        Intent intent = new Intent(fragment.getContext(), ViewGroupsActivity.class);
+                        intent.putExtra(ViewGroupsActivity.TITLE, giveaway.getTitle());
+                        intent.putExtra(ViewGroupsActivity.PATH, giveaway.getGiveawayId() + "/" + giveaway.getName());
 
+                        fragment.getActivity().startActivity(intent);
                     }
                 });
             } else {

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="net.mabako.steamgifts.activities.MainActivity">
+    tools:context=".activities.ViewGroupsActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"

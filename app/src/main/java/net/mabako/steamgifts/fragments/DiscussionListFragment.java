@@ -50,11 +50,6 @@ public class DiscussionListFragment extends ListFragment<DiscussionAdapter> {
     }
 
     @Override
-    protected int getLayoutResource() {
-        return R.layout.fragment_discussion_list;
-    }
-
-    @Override
     public int getTitleResource() {
         return type.getTitleResource();
     }
