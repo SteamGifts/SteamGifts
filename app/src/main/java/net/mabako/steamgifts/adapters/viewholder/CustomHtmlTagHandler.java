@@ -1,15 +1,26 @@
 package net.mabako.steamgifts.adapters.viewholder;
 
+import android.app.Dialog;
 import android.text.Editable;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.Spanned;
+import android.text.style.BackgroundColorSpan;
 import android.text.style.BulletSpan;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.text.style.LeadingMarginSpan;
 import android.text.style.StrikethroughSpan;
+import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
+
+import net.mabako.steamgifts.R;
 
 import org.xml.sax.XMLReader;
 
+import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.Stack;
 
 public class CustomHtmlTagHandler implements Html.TagHandler {
@@ -32,6 +43,7 @@ public class CustomHtmlTagHandler implements Html.TagHandler {
 
     @Override
     public void handleTag(boolean opening, String tag, Editable output, XMLReader xmlReader) {
+        Log.d("TAGGING", opening + " -> " + tag);
         if (tag.equalsIgnoreCase("del")) {
             processStrike(opening, output);
         } else if (tag.equalsIgnoreCase("ul")) {
@@ -43,13 +55,15 @@ public class CustomHtmlTagHandler implements Html.TagHandler {
         } else if (tag.equalsIgnoreCase("ol")) {
             if (opening) {
                 lists.push(tag);
-                olNextIndex.push(Integer.valueOf(1)).toString();//TODO: add support for lists starting other index than 1
+                olNextIndex.push(Integer.valueOf(1)).toString();
             } else {
                 lists.pop();
                 olNextIndex.pop().toString();
             }
         } else if (tag.equalsIgnoreCase("li")) {
             processListItem(opening, output);
+        } else if (tag.equalsIgnoreCase("span")) {
+            processSpoiler(opening, output);
         }
     }
 
@@ -125,6 +139,36 @@ public class CustomHtmlTagHandler implements Html.TagHandler {
         }
     }
 
+    private void processSpoiler(boolean opening, Editable output) {
+        int len = output.length();
+        if (opening) {
+            output.setSpan(new Spoiler(), len, len, Spannable.SPAN_MARK_MARK);
+        } else {
+            Object obj = getLast(output, Spoiler.class);
+            int where = output.getSpanStart(obj);
+
+            output.removeSpan(obj);
+
+            if (where != len) {
+                char[] str = new char[len - where];
+                output.getChars(where, len, str, 0);
+                final String text = String.valueOf(str);
+
+                output.setSpan(new ClickableSpan() {
+                    @Override
+                    public void onClick(View widget) {
+                        Dialog dialog = new Dialog(widget.getContext());
+                        dialog.setContentView(R.layout.spoiler_dialog);
+                        ((TextView) dialog.findViewById(R.id.text)).setText(text);
+                        dialog.show();
+                    }
+                }, where, len, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                output.setSpan(new ForegroundColorSpan(0xff666666), where, len, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                output.setSpan(new BackgroundColorSpan(0xff666666), where, len, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+        }
+    }
+
     /**
      * @see android.text.Html
      */
@@ -170,4 +214,6 @@ public class CustomHtmlTagHandler implements Html.TagHandler {
     private static class Ol {
     }
 
+    private static class Spoiler {
+    }
 }
