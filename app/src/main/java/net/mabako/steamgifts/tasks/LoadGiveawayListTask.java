@@ -100,6 +100,13 @@ public class LoadGiveawayListTask extends AsyncTask<Void, Void, List<Giveaway>> 
 
                 Giveaway giveaway = new Giveaway(title, giveawayLink, giveawayName, type, gameId, creator, entries, comments, copies, points, timeRemaining.text(), timeRemaining.attr("title"), timeCreated.text());
                 giveaway.setEntered(element.hasClass("is-faded"));
+
+                // Flags
+                giveaway.setWhitelist(!element.select(".giveaway__column--whitelist").isEmpty());
+                giveaway.setGroup(!element.select(".giveaway__column--group").isEmpty());
+                giveaway.setLevelPositive(!element.select(".giveaway__column--contributor-level--positive").isEmpty());
+                giveaway.setLevelNegative(!element.select(".giveaway__column--contributor-level--negative").isEmpty());
+
                 giveawayList.add(giveaway);
             }
 

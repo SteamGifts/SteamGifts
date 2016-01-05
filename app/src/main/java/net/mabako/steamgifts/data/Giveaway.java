@@ -23,6 +23,8 @@ public class Giveaway implements Serializable, IEndlessAdaptable {
     private final String timeCreated;
     private boolean entered = false;
 
+    private boolean whitelist, group, levelPositive, levelNegative;
+
     public Giveaway(String title, String giveawayId, String name, Type type, int gameId, String creator, int entries, int commentCount, int copies, int points, String timeRemaining, String timeRemainingLong, String timeCreated) {
         this.title = title;
         this.giveawayId = giveawayId;
@@ -97,6 +99,38 @@ public class Giveaway implements Serializable, IEndlessAdaptable {
 
     public String getTimeCreated() {
         return timeCreated;
+    }
+
+    public boolean isWhitelist() {
+        return whitelist;
+    }
+
+    public void setWhitelist(boolean whitelist) {
+        this.whitelist = whitelist;
+    }
+
+    public boolean isGroup() {
+        return group;
+    }
+
+    public void setGroup(boolean group) {
+        this.group = group;
+    }
+
+    public boolean isLevelPositive() {
+        return levelPositive;
+    }
+
+    public void setLevelPositive(boolean levelPositive) {
+        this.levelPositive = levelPositive;
+    }
+
+    public boolean isLevelNegative() {
+        return levelNegative;
+    }
+
+    public void setLevelNegative(boolean levelNegative) {
+        this.levelNegative = levelNegative;
     }
 
     @Override

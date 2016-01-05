@@ -52,4 +52,12 @@
         <item name="biv_drawCircularShadow">false</item>
         <item name="biv_selectorOnPress">@color/material_drawer_primary</item>
     </style>
+
+    <style name="GiveawayIndicatorIcon">
+        <item name="android:layout_width">@dimen/giveaway_list_indicator_size</item>
+        <item name="android:layout_height">@dimen/giveaway_list_indicator_size</item>
+        <item name="android:layout_marginRight">@dimen/giveaway_list_indicator_padding</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:background">@drawable/circle</item>
+    </style>
 </resources>
