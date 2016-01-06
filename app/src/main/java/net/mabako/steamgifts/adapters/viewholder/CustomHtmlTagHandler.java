@@ -13,14 +13,13 @@ import android.text.style.LeadingMarginSpan;
 import android.text.style.StrikethroughSpan;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.TextView;
 
 import net.mabako.steamgifts.R;
 
 import org.xml.sax.XMLReader;
 
-import java.lang.reflect.Field;
-import java.util.HashMap;
 import java.util.Stack;
 
 public class CustomHtmlTagHandler implements Html.TagHandler {
@@ -158,6 +157,7 @@ public class CustomHtmlTagHandler implements Html.TagHandler {
                     @Override
                     public void onClick(View widget) {
                         Dialog dialog = new Dialog(widget.getContext());
+                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                         dialog.setContentView(R.layout.spoiler_dialog);
                         ((TextView) dialog.findViewById(R.id.text)).setText(text);
                         dialog.show();
