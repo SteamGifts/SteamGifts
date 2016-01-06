@@ -18,6 +18,7 @@ import com.squareup.picasso.Picasso;
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.data.Comment;
 import net.mabako.steamgifts.fragments.ICommentableFragment;
+import net.mabako.steamgifts.web.WebUserData;
 
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
@@ -76,14 +77,17 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        menu.setHeaderTitle("Actions");
-        menu.add(0, 1, 0, "Comment").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                if (writeCommentListener != null)
-                    writeCommentListener.onClick(itemView);
-                return true;
-            }
-        });
+        if (WebUserData.getCurrent().isLoggedIn()) {
+            menu.setHeaderTitle("Actions");
+
+            menu.add(0, 1, 0, "Comment").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    if (writeCommentListener != null)
+                        writeCommentListener.onClick(itemView);
+                    return true;
+                }
+            });
+        }
     }
 }
