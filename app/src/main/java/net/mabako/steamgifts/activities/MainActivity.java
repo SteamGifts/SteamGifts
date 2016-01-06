@@ -29,6 +29,7 @@ import com.squareup.picasso.Picasso;
 
 import net.mabako.steamgifts.BuildConfig;
 import net.mabako.steamgifts.R;
+import net.mabako.steamgifts.fragments.AboutFragment;
 import net.mabako.steamgifts.fragments.DiscussionListFragment;
 import net.mabako.steamgifts.fragments.GiveawayListFragment;
 import net.mabako.steamgifts.fragments.IGiveawayUpdateNotification;
@@ -130,20 +131,8 @@ public class MainActivity extends CommonActivity implements IGiveawayUpdateNotif
                                 onAccountChange();
                                 break;
 
-                            case R.string.feedback:
-                                String email = "lizacarvelli+steamgifts+" + BuildConfig.VERSION_NAME + "+" + BuildConfig.VERSION_CODE + "@gmail.com";
-                                Log.v(TAG, "Email to " + email);
-
-                                Intent intent = new Intent(Intent.ACTION_SENDTO);
-                                intent.setType("text/plain");
-                                intent.setData(Uri.parse("mailto:"));
-                                intent.putExtra(Intent.EXTRA_EMAIL, new String[]{email});
-                                intent.putExtra(Intent.EXTRA_SUBJECT, "SteamGifts for Android Feedback");
-                                try {
-                                    startActivity(intent);
-                                } catch (android.content.ActivityNotFoundException ex) {
-                                    Snackbar.make(findViewById(R.id.swipeContainer), "No mail clients installed", Snackbar.LENGTH_LONG);
-                                }
+                            case R.string.navigation_about:
+                                startActivity(new Intent(MainActivity.this, AboutActivity.class));
                                 break;
 
                             case R.string.preferences:
@@ -257,14 +246,14 @@ public class MainActivity extends CommonActivity implements IGiveawayUpdateNotif
         }
 
         drawer.addItems(new DividerDrawerItem());
-        // Feedback
-        drawer.addItem(new PrimaryDrawerItem().withName(R.string.feedback).withIdentifier(R.string.feedback).withSelectable(false).withIcon(FontAwesome.Icon.faw_comment));
         drawer.addItem(new PrimaryDrawerItem().withName(R.string.preferences).withIdentifier(R.string.preferences).withSelectable(false).withIcon(FontAwesome.Icon.faw_cog));
 
         // Provide a way to log out.
         if (account.isLoggedIn()) {
             drawer.addItem(new PrimaryDrawerItem().withName(R.string.logout).withIdentifier(R.string.logout).withSelectable(false).withIcon(FontAwesome.Icon.faw_sign_out));
         }
+
+        drawer.addItem(new PrimaryDrawerItem().withName(R.string.navigation_about).withIdentifier(R.string.navigation_about).withSelectable(false).withIcon(FontAwesome.Icon.faw_info));
     }
 
     @Override

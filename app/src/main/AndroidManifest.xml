@@ -33,5 +33,9 @@
         <activity
             android:name=".activities.ViewGroupsActivity"
             android:parentActivityName=".activities.DetailActivity" />
+        <activity
+            android:name=".activities.AboutActivity"
+            android:parentActivityName=".activities.MainActivity"
+            android:theme="@style/AppTheme.Dark" />
     </application>
 </manifest>

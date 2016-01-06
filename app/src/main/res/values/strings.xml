@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">SteamGifts</string>
+    <string name="navigation_about">About</string>
 
     <string name="navigation_giveaways">Giveaways</string>
     <string name="navigation_giveaways_all">All</string>
@@ -40,7 +41,10 @@
     <string name="login">Login</string>
     <string name="logout">Logout</string>
     <string name="logged_out">Goodbye!</string>
-    <string name="feedback">Send Feedback</string>
+
+    <string name="about_made_with_love">made with {faw-heart} by kt</string>
+    <string name="about_feedback">Feedback</string>
+    <string name="about_source_code">Source Code</string>
 
     <string name="enter_giveaway">Enter (%dP)</string>
     <string name="login_to_enter_giveaway">Login to Enter</string>
