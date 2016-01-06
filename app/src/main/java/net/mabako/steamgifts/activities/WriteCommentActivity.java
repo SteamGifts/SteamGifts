@@ -3,7 +3,11 @@ package net.mabako.steamgifts.activities;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewTreeObserver;
+import android.widget.ScrollView;
 
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.data.Comment;
@@ -41,6 +45,29 @@ public class WriteCommentActivity extends BaseActivity {
 
         if (getIntent().getSerializableExtra(PARENT) != null) {
             loadFragment(R.id.fragment_container, new SingleCommentFragment(), "parent");
+
+            // If the fragment is smaller than the scrollview, resize the scrollview to be smaller as well.
+            final ScrollView scrollView = (ScrollView) findViewById(R.id.scrollView);
+            scrollView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    View commentLayout = findViewById(R.id.fragment_container);
+
+                    float density = getResources().getDisplayMetrics().density;
+
+                    int commentViewHeight = commentLayout.getMeasuredHeight();
+                    int aboutHalfAScreen = getWindow().getDecorView().getHeight() / 2;
+
+                    // TODO Closing the keyboard does not expand the comment view to a "good" height (i.e. half the screen) again, but this method appears to be called.
+                    if (scrollView.getLayoutParams().height > aboutHalfAScreen || scrollView.getMeasuredHeight() < commentViewHeight || commentViewHeight == 0) {
+                        // "about half"
+                        scrollView.getLayoutParams().height = aboutHalfAScreen;
+                    } else {
+                        // 8 is an arbitrary number that simply shows no scrollbar. Might be some padding constant?
+                        scrollView.getLayoutParams().height = (int) (((commentViewHeight + 8) * density) + 0.5f);
+                    }
+                }
+            });
         }
 
         loadFragment(R.id.fragment_container2, new WriteCommentFragment(), "writer");

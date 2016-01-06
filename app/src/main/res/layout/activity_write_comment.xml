@@ -15,10 +15,17 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:title="@string/app_name" />
 
-    <FrameLayout
-        android:id="@+id/fragment_container"
+    <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <FrameLayout
+            android:id="@+id/fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </ScrollView>
 
     <View
         android:layout_width="match_parent"
@@ -29,5 +36,6 @@
         android:id="@+id/fragment_container2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:minHeight="48dp" />
+        android:layout_weight="1"
+        android:minHeight="72dp" />
 </LinearLayout>
