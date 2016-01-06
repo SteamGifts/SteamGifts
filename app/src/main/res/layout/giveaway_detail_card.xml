@@ -109,7 +109,7 @@
                 style="@style/MediumButton.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/enter_giveaway"
+                android:text="@string/enter_giveaway_with_points"
                 android:visibility="gone" />
 
             <Button
@@ -117,7 +117,7 @@
                 style="@style/MediumButton.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/leave_giveaway"
+                android:text="@string/leave_giveaway_with_points"
                 android:visibility="gone" />
 
             <Button

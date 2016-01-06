@@ -31,6 +31,9 @@ public class CommentAdapter<FragmentType extends Fragment> extends EndlessAdapte
      */
     private int[] colors = {android.R.color.holo_blue_dark, android.R.color.holo_green_dark, android.R.color.holo_orange_dark, android.R.color.holo_red_dark};
 
+    /**
+     * Fragment this all is shown in.
+     */
     private final FragmentType fragment;
 
     public CommentAdapter(FragmentType fragment, RecyclerView view, EndlessAdapter.OnLoadListener loadListener) {

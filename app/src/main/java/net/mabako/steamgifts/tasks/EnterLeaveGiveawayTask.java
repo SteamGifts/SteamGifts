@@ -3,6 +3,7 @@ package net.mabako.steamgifts.tasks;
 import android.util.Log;
 
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
+import net.mabako.steamgifts.fragments.IHasEnterableGiveaways;
 import net.mabako.steamgifts.web.WebUserData;
 
 import org.json.JSONException;
@@ -12,11 +13,11 @@ import org.jsoup.Connection;
 /**
  * Task to enter or leave giveaways.
  */
-public class EnterLeaveGiveawayTask extends AjaxTask<GiveawayDetailFragment> {
+public class EnterLeaveGiveawayTask extends AjaxTask<IHasEnterableGiveaways> {
     private final static String TAG = EnterLeaveGiveawayTask.class.getSimpleName();
     private final String giveawayId;
 
-    public EnterLeaveGiveawayTask(GiveawayDetailFragment fragment, String giveawayId, String xsrfToken, String what) {
+    public EnterLeaveGiveawayTask(IHasEnterableGiveaways fragment, String giveawayId, String xsrfToken, String what) {
         super(fragment, xsrfToken, what);
         this.giveawayId = giveawayId;
     }
@@ -28,23 +29,23 @@ public class EnterLeaveGiveawayTask extends AjaxTask<GiveawayDetailFragment> {
 
     @Override
     protected void onPostExecute(Connection.Response response) {
-        if(response != null && response.statusCode() == 200) {
+        if (response != null && response.statusCode() == 200) {
             try {
                 JSONObject root = new JSONObject(response.body());
 
                 boolean success = "success".equals(root.getString("type"));
                 int points = root.getInt("points");
 
-                getFragment().onEnterLeaveResult(getWhat(), success);
+                getFragment().onEnterLeaveResult(giveawayId, getWhat(), success);
 
                 // Update the points we have.
                 WebUserData.getCurrent().setPoints(points);
                 return;
-            } catch(JSONException e) {
+            } catch (JSONException e) {
                 Log.e(TAG, "Failed to parse JSON object", e);
             }
         }
 
-        getFragment().onEnterLeaveResult(getWhat(), null);
+        getFragment().onEnterLeaveResult(giveawayId, getWhat(), null);
     }
 }

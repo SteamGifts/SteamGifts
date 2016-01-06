@@ -24,6 +24,8 @@ public class LoadGiveawayListTask extends AsyncTask<Void, Void, List<Giveaway>> 
     private final GiveawayListFragment.Type type;
     private final String searchQuery;
 
+    private String foundXsrfToken = null;
+
     public LoadGiveawayListTask(GiveawayListFragment activity, int page, GiveawayListFragment.Type type, String searchQuery) {
         this.fragment = activity;
         this.page = page;
@@ -52,6 +54,11 @@ public class LoadGiveawayListTask extends AsyncTask<Void, Void, List<Giveaway>> 
             Document document = jsoup.get();
 
             WebUserData.extract(document);
+
+            // Fetch the xsrf token
+            Element xsrfToken = document.select("input[name=xsrf_token]").first();
+            if(xsrfToken != null)
+                foundXsrfToken = xsrfToken.attr("value");
 
             // Do away with pinned giveaways.
             document.select(".pinned-giveaways__outer-wrap").html("");
@@ -122,6 +129,6 @@ public class LoadGiveawayListTask extends AsyncTask<Void, Void, List<Giveaway>> 
     @Override
     protected void onPostExecute(List<Giveaway> result) {
         super.onPostExecute(result);
-        fragment.addItems(result, page == 1);
+        fragment.addItems(result, page == 1, foundXsrfToken);
     }
 }

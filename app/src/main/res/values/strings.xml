@@ -2,6 +2,7 @@
     <string name="app_name">SteamGifts</string>
     <string name="navigation_about">About</string>
 
+    <!-- Navigation for Giveaways -->
     <string name="navigation_giveaways">Giveaways</string>
     <string name="navigation_giveaways_all">All</string>
     <string name="navigation_giveaways_group">Group</string>
@@ -12,6 +13,7 @@
     <string name="navigation_giveaways_wishlist_title">Wishlist Giveaways</string>
     <string name="navigation_giveaways_new_title">New Giveaways</string>
 
+    <!-- Navigation for Discussions -->
     <string name="navigation_discussions">Discussions</string>
     <string name="navigation_discussions_all">All</string>
     <string name="navigation_discussions_all_title">All Discussions</string>
@@ -32,24 +34,28 @@
     <string name="navigation_discussions_puzzles">Puzzles</string>
     <string name="navigation_discussions_puzzles_title">Puzzles</string>
 
-
+    <!-- Drawer items -->
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="drawer_profile_info">Level %1$d - %2$dP</string>
 
+    <!-- Login/Logout/bye -->
     <string name="guest">Guest</string>
     <string name="login">Login</string>
     <string name="logout">Logout</string>
     <string name="logged_out">Goodbye!</string>
 
+    <!-- About dialog -->
     <string name="about_made_with_love">made with {faw-heart} by kt</string>
     <string name="about_feedback">Feedback</string>
     <string name="about_source_code">Source Code</string>
 
-    <string name="enter_giveaway">Enter (%dP)</string>
+    <!-- Details: Enter/Leave/Comment -->
+    <string name="enter_giveaway_with_points">Enter (%dP)</string>
     <string name="login_to_enter_giveaway">Login to Enter</string>
-    <string name="leave_giveaway">Remove (%dP)</string>
+    <string name="leave_giveaway_with_points">Leave (%dP)</string>
 
+    <!-- Contextual menus -->
     <string name="actions">Actions</string>
     <string name="add_comment">Comment</string>
     <string name="send_comment">Send</string>
@@ -57,14 +63,15 @@
     <string name="comment_sent">Comment sent</string>
     <string name="comment_not_sent">Comment could not be sent</string>
 
+    <!-- -->
     <string name="open_steam_store">Open on Steam Store</string>
     <string name="search">Search</string>
     <string name="end_of_endless_list">You\'ve reached the end.</string>
 
+    <!-- Settings -->
     <string name="preferences">Settings</string>
     <string name="preference_theme_header">Theme</string>
     <string name="preference_theme_nightmode">Night Mode</string>
-
 
     <!--  Strings for possible PreferenceActivity Back/Next buttons -->
     <string name="back_button_label">Back</string>

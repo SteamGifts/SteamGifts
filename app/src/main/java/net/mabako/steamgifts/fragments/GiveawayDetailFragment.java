@@ -35,7 +35,7 @@ import net.mabako.steamgifts.tasks.LoadGiveawayDetailsTask;
 
 import java.util.ArrayList;
 
-public class GiveawayDetailFragment extends Fragment implements ICommentableFragment {
+public class GiveawayDetailFragment extends Fragment implements ICommentableFragment, IHasEnterableGiveaways {
     public static final String ARG_GIVEAWAY = "giveaway";
     public static final String ENTRY_INSERT = "entry_insert";
     public static final String ENTRY_DELETE = "entry_delete";
@@ -142,15 +142,17 @@ public class GiveawayDetailFragment extends Fragment implements ICommentableFrag
         adapter.finishLoading(new ArrayList<IEndlessAdaptable>(extras.getComments()));
     }
 
-    public void requestEnterLeave(String enterOrDelete) {
+    @Override
+    public void requestEnterLeave(String giveawayId, String enterOrDelete, String xsrfToken) {
         if (enterLeaveTask != null)
             enterLeaveTask.cancel(true);
 
-        enterLeaveTask = new EnterLeaveGiveawayTask(this, giveaway.getGiveawayId(), giveawayCard.getExtras().getXsrfToken(), enterOrDelete);
+        enterLeaveTask = new EnterLeaveGiveawayTask(this, giveawayId, xsrfToken, enterOrDelete);
         enterLeaveTask.execute();
     }
 
-    public void onEnterLeaveResult(String what, Boolean success) {
+    @Override
+    public void onEnterLeaveResult(String giveawayId, String what, Boolean success) {
         Log.v(TAG, "Enter Leave Result -> " + what + ", " + success);
         if (success == Boolean.TRUE) {
 
@@ -161,8 +163,8 @@ public class GiveawayDetailFragment extends Fragment implements ICommentableFrag
             giveawayCard.setExtras(extras);
             adapter.setStickyItem(giveawayCard);
 
-            if (parent instanceof IGiveawayUpdateNotification) {
-                ((IGiveawayUpdateNotification) parent).onUpdateGiveawayStatus(giveaway.getGiveawayId(), extras.isEntered());
+            if (parent instanceof IHasEnterableGiveaways) {
+                ((IHasEnterableGiveaways) parent).onEnterLeaveResult(giveawayId, what, success);
             } else {
                 Log.d(TAG, "No parent giveaway to update status");
             }

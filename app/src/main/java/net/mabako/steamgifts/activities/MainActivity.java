@@ -27,18 +27,16 @@ import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader;
 import com.mikepenz.materialdrawer.util.DrawerImageLoader;
 import com.squareup.picasso.Picasso;
 
-import net.mabako.steamgifts.BuildConfig;
 import net.mabako.steamgifts.R;
-import net.mabako.steamgifts.fragments.AboutFragment;
 import net.mabako.steamgifts.fragments.DiscussionListFragment;
 import net.mabako.steamgifts.fragments.GiveawayListFragment;
-import net.mabako.steamgifts.fragments.IGiveawayUpdateNotification;
+import net.mabako.steamgifts.fragments.IHasEnterableGiveaways;
 import net.mabako.steamgifts.tasks.LogoutTask;
 import net.mabako.steamgifts.web.WebUserData;
 
 import java.io.Serializable;
 
-public class MainActivity extends CommonActivity implements IGiveawayUpdateNotification {
+public class MainActivity extends CommonActivity implements IHasEnterableGiveaways {
     public static final String ARG_QUERY = "query";
     public static final String ARG_TYPE = "type";
 
@@ -274,10 +272,15 @@ public class MainActivity extends CommonActivity implements IGiveawayUpdateNotif
     }
 
     @Override
-    public void onUpdateGiveawayStatus(@NonNull String giveawayId, boolean entered) {
+    public void requestEnterLeave(String giveawayId, String what, String xsrfToken) {
+        throw new UnsupportedOperationException("not implemented");
+    }
+
+    @Override
+    public void onEnterLeaveResult(String giveawayId, String what, Boolean success) {
         Fragment fragment = getCurrentFragment();
-        if (fragment instanceof IGiveawayUpdateNotification) {
-            ((IGiveawayUpdateNotification) fragment).onUpdateGiveawayStatus(giveawayId, entered);
+        if (fragment instanceof IHasEnterableGiveaways) {
+            ((IHasEnterableGiveaways) fragment).onEnterLeaveResult(giveawayId, what, success);
         }
     }
 }

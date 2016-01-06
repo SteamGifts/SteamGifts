@@ -7,6 +7,7 @@ import android.view.View;
 
 import net.mabako.steamgifts.adapters.viewholder.GiveawayListItemViewHolder;
 import net.mabako.steamgifts.data.Giveaway;
+import net.mabako.steamgifts.fragments.IHasEnterableGiveaways;
 
 import java.util.List;
 
@@ -21,14 +22,22 @@ public class GiveawayAdapter extends EndlessAdapter {
      */
     private final Activity context;
 
-    public GiveawayAdapter(Activity context, RecyclerView view, OnLoadListener listener) {
+    /**
+     * Fragment this is shown in.
+     */
+    private final IHasEnterableGiveaways fragment;
+
+    private String xsrfToken;
+
+    public GiveawayAdapter(Activity context, RecyclerView view, OnLoadListener listener, IHasEnterableGiveaways fragment) {
         super(view, listener);
         this.context = context;
+        this.fragment = fragment;
     }
 
     @Override
     protected RecyclerView.ViewHolder onCreateActualViewHolder(View view, int viewType) {
-        return new GiveawayListItemViewHolder(view, context, this);
+        return new GiveawayListItemViewHolder(view, context, this, fragment);
     }
 
     @Override
@@ -59,5 +68,13 @@ public class GiveawayAdapter extends EndlessAdapter {
         int index = getItems().indexOf(item);
         if (index >= 0)
             notifyItemChanged(index);
+    }
+
+    public String getXsrfToken() {
+        return xsrfToken;
+    }
+
+    public void setXsrfToken(String xsrfToken) {
+        this.xsrfToken = xsrfToken;
     }
 }

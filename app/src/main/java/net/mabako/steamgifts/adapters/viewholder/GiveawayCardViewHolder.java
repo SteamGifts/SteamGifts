@@ -66,15 +66,15 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void setFrom(final GiveawayDetailsCard card) {
-        Giveaway giveaway = card.getGiveaway();
-        GiveawayExtras extras = card.getExtras();
+        final Giveaway giveaway = card.getGiveaway();
+        final GiveawayExtras extras = card.getExtras();
 
         user.setText("{faw-user} " + giveaway.getCreator());
         timeRemaining.setText("{faw-clock-o} " + giveaway.getTimeRemaining());
         timeCreated.setText("{faw-calendar-o} " + giveaway.getTimeCreated());
 
-        enterGiveaway.setText(String.format(String.valueOf(itemView.getContext().getText(R.string.enter_giveaway)), giveaway.getPoints()));
-        leaveGiveaway.setText(String.format(String.valueOf(itemView.getContext().getText(R.string.leave_giveaway)), giveaway.getPoints()));
+        enterGiveaway.setText(String.format(String.valueOf(itemView.getContext().getText(R.string.enter_giveaway_with_points)), giveaway.getPoints()));
+        leaveGiveaway.setText(String.format(String.valueOf(itemView.getContext().getText(R.string.leave_giveaway_with_points)), giveaway.getPoints()));
 
         for (View view : new View[]{enterGiveaway, leaveGiveaway, commentGiveaway, loginButton, errorMessage, description, indicator})
             view.setVisibility(View.GONE);
@@ -115,7 +115,7 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View v) {
                 enterGiveaway.setEnabled(false);
-                fragment.requestEnterLeave(GiveawayDetailFragment.ENTRY_INSERT);
+                fragment.requestEnterLeave(giveaway.getGiveawayId(), GiveawayDetailFragment.ENTRY_INSERT, extras.getXsrfToken());
             }
         });
 
@@ -123,7 +123,7 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View v) {
                 leaveGiveaway.setEnabled(false);
-                fragment.requestEnterLeave(GiveawayDetailFragment.ENTRY_DELETE);
+                fragment.requestEnterLeave(giveaway.getGiveawayId(), GiveawayDetailFragment.ENTRY_DELETE, extras.getXsrfToken());
             }
         });
 

@@ -1,18 +1,26 @@
 package net.mabako.steamgifts.fragments;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.adapters.GiveawayAdapter;
+import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.data.Giveaway;
+import net.mabako.steamgifts.data.GiveawayExtras;
+import net.mabako.steamgifts.tasks.EnterLeaveGiveawayTask;
 import net.mabako.steamgifts.tasks.LoadGiveawayListTask;
+
+import java.util.List;
 
 /**
  * List of all giveaways.
  */
-public class GiveawayListFragment extends ListFragment<GiveawayAdapter> implements IGiveawayUpdateNotification {
+public class GiveawayListFragment extends ListFragment<GiveawayAdapter> implements IHasEnterableGiveaways {
     private static final String TAG = GiveawayListFragment.class.getSimpleName();
+
+    private EnterLeaveGiveawayTask enterLeaveTask;
 
     /**
      * Type of items to show.
@@ -27,33 +35,26 @@ public class GiveawayListFragment extends ListFragment<GiveawayAdapter> implemen
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        if (enterLeaveTask != null)
+            enterLeaveTask.cancel(true);
+    }
+
+    @Override
     protected GiveawayAdapter createAdapter(RecyclerView listView) {
         return new GiveawayAdapter(getActivity(), listView, new EndlessAdapter.OnLoadListener() {
             @Override
             public void onLoad(int page) {
                 fetchItems(page);
             }
-        });
+        }, this);
     }
 
     @Override
     protected void fetchItems(int page) {
         new LoadGiveawayListTask(this, page, type, searchQuery).execute();
-    }
-
-    /**
-     * Callback for a giveaway's status being updated.
-     *
-     * @param giveawayId ID of the giveaway
-     * @param entered    whether or not the giveaway is now entered.
-     */
-    @Override
-    public void onUpdateGiveawayStatus(String giveawayId, boolean entered) {
-        Giveaway giveaway = adapter.findItem(giveawayId);
-        if (giveaway != null) {
-            giveaway.setEntered(entered);
-            adapter.notifyItemChanged(giveaway);
-        }
     }
 
     /**
@@ -79,6 +80,34 @@ public class GiveawayListFragment extends ListFragment<GiveawayAdapter> implemen
     @Override
     public Type getType() {
         return type;
+    }
+
+    @Override
+    public void requestEnterLeave(String giveawayId, String what, String xsrfToken) {
+        // Probably not...
+        // if (enterLeaveTask != null)
+        // enterLeaveTask.cancel(true);
+
+        enterLeaveTask = new EnterLeaveGiveawayTask(this, giveawayId, xsrfToken, what);
+        enterLeaveTask.execute();
+    }
+
+    @Override
+    public void onEnterLeaveResult(String giveawayId, String what, Boolean success) {
+        if (success == Boolean.TRUE) {
+            Giveaway giveaway = adapter.findItem(giveawayId);
+            if (giveaway != null) {
+                giveaway.setEntered(GiveawayDetailFragment.ENTRY_INSERT.equals(what));
+                adapter.notifyItemChanged(giveaway);
+            }
+        } else {
+            Log.e(TAG, "Probably an error catching the result...");
+        }
+    }
+
+    public void addItems(List<? extends IEndlessAdaptable> items, boolean clearExistingItems, String xsrfToken) {
+        adapter.setXsrfToken(xsrfToken);
+        addItems(items, clearExistingItems);
     }
 
     /**
