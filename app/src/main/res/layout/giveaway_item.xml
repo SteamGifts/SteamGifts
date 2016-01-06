@@ -54,22 +54,22 @@
                     <View
                         android:id="@+id/giveaway_list_indicator_whitelist"
                         style="@style/GiveawayIndicatorIcon"
-                        android:backgroundTint="@color/giveawayIndicatorColorWhitelist" />
+                        android:background="@drawable/circle_indicator_whitelist" />
 
                     <View
                         android:id="@+id/giveaway_list_indicator_group"
                         style="@style/GiveawayIndicatorIcon"
-                        android:backgroundTint="@color/giveawayIndicatorColorGroup" />
+                        android:background="@drawable/circle_indicator_group" />
 
                     <View
                         android:id="@+id/giveaway_list_indicator_level_positive"
                         style="@style/GiveawayIndicatorIcon"
-                        android:backgroundTint="@color/giveawayIndicatorColorLevelOkay" />
+                        android:background="@drawable/circle_indicator_level_positive" />
 
                     <ImageView
                         android:id="@+id/giveaway_list_indicator_level_negative"
                         style="@style/GiveawayIndicatorIcon"
-                        android:backgroundTint="@color/giveawayIndicatorColorLevelTooHigh" />
+                        android:background="@drawable/circle_indicator_level_negative" />
 
                     <TextView
                         android:id="@+id/giveaway_details"
