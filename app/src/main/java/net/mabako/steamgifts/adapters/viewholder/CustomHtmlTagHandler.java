@@ -42,7 +42,6 @@ public class CustomHtmlTagHandler implements Html.TagHandler {
 
     @Override
     public void handleTag(boolean opening, String tag, Editable output, XMLReader xmlReader) {
-        Log.d("TAGGING", opening + " -> " + tag);
         if (tag.equalsIgnoreCase("del")) {
             processStrike(opening, output);
         } else if (tag.equalsIgnoreCase("ul")) {
