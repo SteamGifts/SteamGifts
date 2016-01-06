@@ -22,6 +22,8 @@ import net.mabako.steamgifts.fragments.ICommentableFragment;
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 public class CommentViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
+    private static final int MAX_VISIBLE_DEPTH = 11;
+
     private final ICommentableFragment fragment;
 
     private final TextView commentAuthor;
@@ -59,7 +61,7 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
 
         // Space before the marker
         ViewGroup.LayoutParams params = commentIndent.getLayoutParams();
-        params.width = commentMarker.getLayoutParams().width * comment.getDepth();
+        params.width = commentMarker.getLayoutParams().width * Math.min(MAX_VISIBLE_DEPTH, comment.getDepth());
         commentIndent.setLayoutParams(params);
 
         Picasso.with(context).load(comment.getAvatar()).placeholder(R.drawable.default_avatar_mask).transform(new RoundedCornersTransformation(20, 0)).into(commentImage);
