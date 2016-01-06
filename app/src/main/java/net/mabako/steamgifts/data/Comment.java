@@ -19,6 +19,8 @@ public class Comment implements Serializable, IEndlessAdaptable {
     private final String avatar;
     private final int depth;
 
+    private boolean deleted;
+
     public Comment(int id, String author, String timeAgo, String timeAgoLong, String content, int depth, String avatar) {
         this.id = id;
         this.author = author;
@@ -55,6 +57,14 @@ public class Comment implements Serializable, IEndlessAdaptable {
 
     public String getAvatar() {
         return avatar;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 
     @Override
