@@ -37,5 +37,6 @@
             android:name=".activities.AboutActivity"
             android:parentActivityName=".activities.MainActivity"
             android:theme="@style/AppTheme.Dark" />
+        <activity android:name=".activities.WebViewActivity" />
     </application>
 </manifest>

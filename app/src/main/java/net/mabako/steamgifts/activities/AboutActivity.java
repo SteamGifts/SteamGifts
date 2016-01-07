@@ -2,7 +2,6 @@ package net.mabako.steamgifts.activities;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.v7.widget.Toolbar;
 
 import com.mikepenz.iconics.context.IconicsContextWrapper;

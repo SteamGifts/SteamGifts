@@ -3,7 +3,6 @@ package net.mabako.steamgifts.activities;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.fragments.GiveawayGroupListFragment;
@@ -26,16 +25,5 @@ public class ViewGroupsActivity extends CommonActivity {
         }
 
         loadFragment(GiveawayGroupListFragment.newInstance(getIntent().getStringExtra(TITLE), getIntent().getStringExtra(PATH)));
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-            default:
-                return false;
-        }
     }
 }
