@@ -1,8 +1,13 @@
 package net.mabako.steamgifts.adapters.viewholder;
 
+import android.content.Context;
+import android.content.res.TypedArray;
+import android.os.Build;
 import android.text.Html;
-import android.text.Spanned;
 import android.util.Log;
+import android.view.View;
+
+import net.mabako.steamgifts.R;
 
 public final class Utils {
     public static CharSequence fromHtml(String source) {
@@ -23,5 +28,20 @@ public final class Utils {
         CharSequence cs = Html.fromHtml(source);
         cs = cs.subSequence(0, cs.length() - 2);
         return cs;
+    }
+
+    public static void setBackgroundDrawable(Context context, View view, boolean highlighted) {
+        if (highlighted) {
+            int attrs[] = new int[]{R.attr.colorHighlightBackground};
+            TypedArray ta = context.getTheme().obtainStyledAttributes(attrs);
+
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                view.setBackgroundDrawable(ta.getDrawable(0));
+            } else {
+                view.setBackground(ta.getDrawable(0));
+            }
+        } else {
+            view.setBackgroundResource(R.color.colorTransparent);
+        }
     }
 }

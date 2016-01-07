@@ -2,8 +2,6 @@ package net.mabako.steamgifts.adapters.viewholder;
 
 
 import android.content.Context;
-import android.content.res.TypedArray;
-import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.text.method.LinkMovementMethod;
 import android.view.ContextMenu;
@@ -57,6 +55,8 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
 
     public void setFrom(final Comment comment) {
         commentAuthor.setText(comment.getAuthor());
+        Utils.setBackgroundDrawable(context, commentAuthor, comment.isOp());
+
         commentTime.setText(comment.getTimeAgo());
         commentContent.setText(Utils.fromHtml(comment.getContent(), !comment.isDeleted()));
 

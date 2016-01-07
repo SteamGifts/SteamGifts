@@ -2,8 +2,6 @@ package net.mabako.steamgifts.adapters.viewholder;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.TypedArray;
-import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -19,11 +17,9 @@ import com.squareup.picasso.Picasso;
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.activities.DetailActivity;
 import net.mabako.steamgifts.activities.MainActivity;
-import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.adapters.GiveawayAdapter;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
-import net.mabako.steamgifts.fragments.GiveawayListFragment;
 import net.mabako.steamgifts.fragments.IHasEnterableGiveaways;
 import net.mabako.steamgifts.web.WebUserData;
 
@@ -94,18 +90,7 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
             }
         });
 
-        if (giveaway.isEntered()) {
-            int attrs[] = new int[]{R.attr.colorHighlightBackground};
-            TypedArray ta = activity.getTheme().obtainStyledAttributes(attrs);
-
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-                itemContainer.setBackgroundDrawable(ta.getDrawable(0));
-            } else {
-                itemContainer.setBackground(ta.getDrawable(0));
-            }
-        } else {
-            itemContainer.setBackgroundResource(R.color.colorTransparent);
-        }
+        Utils.setBackgroundDrawable(activity, itemContainer, giveaway.isEntered());
 
         // Check all the indicators
         indicatorWhitelist.setVisibility(giveaway.isWhitelist() ? View.VISIBLE : View.GONE);

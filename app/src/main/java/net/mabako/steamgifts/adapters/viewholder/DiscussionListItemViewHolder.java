@@ -2,8 +2,6 @@ package net.mabako.steamgifts.adapters.viewholder;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.TypedArray;
-import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -49,19 +47,7 @@ public class DiscussionListItemViewHolder extends RecyclerView.ViewHolder implem
         discussionAuthor.setText(discussion.getCreator());
         discussionTime.setText(discussion.getTimeCreated());
 
-
-        if (discussion.isLocked()) {
-            int attrs[] = new int[]{R.attr.colorHighlightBackground};
-            TypedArray ta = activity.getTheme().obtainStyledAttributes(attrs);
-
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-                itemContainer.setBackgroundDrawable(ta.getDrawable(0));
-            } else {
-                itemContainer.setBackground(ta.getDrawable(0));
-            }
-        } else {
-            itemContainer.setBackgroundResource(R.color.colorTransparent);
-        }
+        Utils.setBackgroundDrawable(activity, itemContainer, discussion.isLocked());
 
         Picasso.with(activity).load(discussion.getCreatorAvatar()).placeholder(R.drawable.default_avatar_mask).transform(new RoundedCornersTransformation(20, 0)).into(discussionAuthorAvatar);
     }

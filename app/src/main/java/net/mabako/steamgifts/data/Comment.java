@@ -18,10 +18,11 @@ public class Comment implements Serializable, IEndlessAdaptable {
     private final String content;
     private final String avatar;
     private final int depth;
+    private final boolean op;
 
     private boolean deleted;
 
-    public Comment(int id, String author, String timeAgo, String timeAgoLong, String content, int depth, String avatar) {
+    public Comment(int id, String author, String timeAgo, String timeAgoLong, String content, int depth, String avatar, boolean isOp) {
         this.id = id;
         this.author = author;
         this.timeAgo = timeAgo;
@@ -29,6 +30,7 @@ public class Comment implements Serializable, IEndlessAdaptable {
         this.content = content;
         this.depth = depth;
         this.avatar = avatar;
+        this.op = isOp;
     }
 
     public int getId() {
@@ -65,6 +67,10 @@ public class Comment implements Serializable, IEndlessAdaptable {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public boolean isOp() {
+        return op;
     }
 
     @Override

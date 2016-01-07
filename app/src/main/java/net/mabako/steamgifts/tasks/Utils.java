@@ -1,7 +1,5 @@
 package net.mabako.steamgifts.tasks;
 
-import android.util.Log;
-
 import net.mabako.steamgifts.data.Comment;
 import net.mabako.steamgifts.data.ICommentHolder;
 
@@ -27,6 +25,7 @@ public final class Utils {
 
             Element authorNode = thisComment.select(".comment__username").first();
             String author = authorNode.text();
+            boolean isOp = authorNode.hasClass("comment__username--op");
 
             String avatar = null;
             Element avatarNode = thisComment.select(".global__image-inner-wrap").first();
@@ -40,7 +39,7 @@ public final class Utils {
             Element timeRemaining = thisComment.select(".comment__actions > div span").first();
 
             // public Comment(int id, String author, String timeAgo, String timeAgoLong, String content) {
-            Comment comment = new Comment(Integer.parseInt(c.attr("data-comment-id")), author, timeRemaining.text(), timeRemaining.attr("title"), content, depth, avatar);
+            Comment comment = new Comment(Integer.parseInt(c.attr("data-comment-id")), author, timeRemaining.text(), timeRemaining.attr("title"), content, depth, avatar, isOp);
 
             // check if the comment is deleted
             comment.setDeleted(thisComment.select(".comment__summary").first().select(".comment__delete-state").size() == 1);
