@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Build;
 import android.text.Html;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
@@ -15,6 +16,9 @@ public final class Utils {
     }
 
     public static CharSequence fromHtml(String source, boolean useCustomViewHandler) {
+        if (TextUtils.isEmpty(source))
+            return source;
+
         if (useCustomViewHandler) {
             try {
                 CharSequence cs = Html.fromHtml(source, null, new CustomHtmlTagHandler());
