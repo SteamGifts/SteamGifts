@@ -3,6 +3,7 @@ package net.mabako.steamgifts.activities;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -15,6 +16,8 @@ import net.mabako.steamgifts.fragments.WriteCommentFragment;
 import net.mabako.steamgifts.tasks.PostCommentTask;
 
 public class WriteCommentActivity extends BaseActivity {
+    private static final String TAG = WriteCommentActivity.class.getSimpleName();
+
     public static final int REQUEST_COMMENT = 7;
     public static final int COMMENT_SENT = 8;
     public static final int COMMENT_NOT_SENT = 8;
@@ -43,6 +46,7 @@ public class WriteCommentActivity extends BaseActivity {
         }
 
         if (getIntent().getSerializableExtra(PARENT) != null) {
+            Log.d(TAG, "Loading parent comment");
             loadFragment(R.id.fragment_container, new SingleCommentFragment(), "parent");
 
             // If the fragment is smaller than the scrollview, resize the scrollview to be smaller as well.
@@ -67,6 +71,10 @@ public class WriteCommentActivity extends BaseActivity {
                     }
                 }
             });
+        } else {
+            Log.d(TAG, "No parent comment");
+            findViewById(R.id.scrollView).setVisibility(View.GONE);
+            findViewById(R.id.separator).setVisibility(View.GONE);
         }
 
         loadFragment(R.id.fragment_container2, new WriteCommentFragment(), "writer");
