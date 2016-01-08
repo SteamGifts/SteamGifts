@@ -103,6 +103,7 @@ public class MainActivity extends CommonActivity implements IHasEnterableGiveawa
         // Account?
         accountHeader = new AccountHeaderBuilder()
                 .withActivity(this)
+                .withCompactStyle(true)
                 .withHeaderBackground(ta.getDrawable(0))
                 .withSelectionListEnabledForSingleProfile(false)
                 .build();
