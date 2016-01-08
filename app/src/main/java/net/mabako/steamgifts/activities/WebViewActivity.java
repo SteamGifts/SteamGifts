@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -53,6 +54,7 @@ public class WebViewActivity extends CommonActivity {
             webSettings.setDisplayZoomControls(false);
 
         webView.setWebViewClient(new CustomWebViewClient());
+        webView.setWebChromeClient(new WebChromeClient());
         webView.loadUrl(url);
     }
 
