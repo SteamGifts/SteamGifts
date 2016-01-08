@@ -17,5 +17,12 @@ public class UrlHandlingActivity extends CommonActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Start whatever intent we were launching
+        Intent intentToStart = getIntentForUri(this, getIntent().getData());
+        if (intentToStart != null)
+            startActivity(intentToStart);
+
+        finish();
     }
 }
