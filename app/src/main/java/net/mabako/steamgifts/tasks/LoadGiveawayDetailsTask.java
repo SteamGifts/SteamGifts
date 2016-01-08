@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.widget.Toast;
 
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.data.GiveawayExtras;
@@ -61,7 +62,7 @@ public class LoadGiveawayDetailsTask extends AsyncTask<Void, Void, GiveawayExtra
             }
 
             return extras;
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e(TAG, "Error fetching URL", e);
             return null;
         }
@@ -134,9 +135,14 @@ public class LoadGiveawayDetailsTask extends AsyncTask<Void, Void, GiveawayExtra
     protected void onPostExecute(GiveawayExtras giveawayDetails) {
         super.onPostExecute(giveawayDetails);
 
-        if (loadDetails)
-            fragment.onPostGiveawayLoaded(loadedDetails);
+        if (giveawayDetails != null || !loadDetails) {
+            if (loadDetails)
+                fragment.onPostGiveawayLoaded(loadedDetails);
 
-        fragment.addDetails(giveawayDetails, page);
+            fragment.addDetails(giveawayDetails, page);
+        } else {
+            Toast.makeText(fragment.getContext(), "Giveaway does not exist or could not be loaded", Toast.LENGTH_LONG).show();
+            fragment.getActivity().finish();
+        }
     }
 }

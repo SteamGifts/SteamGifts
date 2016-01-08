@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.widget.Toast;
 
 import net.mabako.steamgifts.data.Discussion;
 import net.mabako.steamgifts.data.DiscussionExtras;
@@ -62,7 +63,7 @@ public class LoadDiscussionDetailsTask extends AsyncTask<Void, Void, DiscussionE
             }
 
             return extras;
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e(TAG, "Error fetching URL", e);
             return null;
         }
@@ -114,9 +115,14 @@ public class LoadDiscussionDetailsTask extends AsyncTask<Void, Void, DiscussionE
     protected void onPostExecute(DiscussionExtras discussionExtras) {
         super.onPostExecute(discussionExtras);
 
-        if (loadDetails)
-            fragment.onPostDiscussionLoaded(loadedDetails);
+        if (discussionExtras != null || !loadDetails) {
+            if (loadDetails)
+                fragment.onPostDiscussionLoaded(loadedDetails);
 
-        fragment.addDetails(discussionExtras, page);
+            fragment.addDetails(discussionExtras, page);
+        } else {
+            Toast.makeText(fragment.getContext(), "Discussion does not exist or could not be loaded", Toast.LENGTH_LONG).show();
+            fragment.getActivity().finish();
+        }
     }
 }

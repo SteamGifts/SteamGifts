@@ -70,6 +70,11 @@
     <string name="open_browser">View in Browser</string>
     <string name="loading">Loading</string>
 
+    <!-- Go to menu -->
+    <string name="go_to">Go to...</string>
+    <string name="go_to_giveaway">Giveaway</string>
+    <string name="go_to_discussion">Discussion</string>
+
     <!-- Settings -->
     <string name="preferences">Settings</string>
     <string name="preference_theme_header">Theme</string>
