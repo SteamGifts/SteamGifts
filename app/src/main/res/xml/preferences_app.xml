@@ -4,6 +4,7 @@
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="preference_theme_nightmode"
+            android:summary="@string/preference_theme_nightmode_sub"
             android:title="@string/preference_theme_nightmode" />
     </PreferenceCategory>
 </PreferenceScreen>

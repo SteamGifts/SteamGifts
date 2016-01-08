@@ -6,12 +6,11 @@ import net.mabako.steamgifts.web.WebUserData;
 
 public class Giveaway extends BasicGiveaway implements IEndlessAdaptable {
     public static final int VIEW_LAYOUT = R.layout.giveaway_item;
-    public static final int NO_APP_ID = -1;
 
     private String title;
     private String name;
-    private Type type = Type.APP;
-    private int gameId = NO_APP_ID;
+    private Game.Type type = Game.Type.APP;
+    private int gameId = Game.NO_APP_ID;
     private String creator;
     private int entries;
     private int copies;
@@ -23,6 +22,11 @@ public class Giveaway extends BasicGiveaway implements IEndlessAdaptable {
     private boolean whitelist, group;
     private int level;
     private boolean isPrivate;
+
+    /**
+     * Id used (exclusively?) for filtering games.
+     */
+    private int internalGameId;
 
     public Giveaway(String giveawayId) {
         super(giveawayId);
@@ -76,11 +80,11 @@ public class Giveaway extends BasicGiveaway implements IEndlessAdaptable {
         this.copies = copies;
     }
 
-    public Type getType() {
+    public Game.Type getType() {
         return type;
     }
 
-    public void setType(Type type) {
+    public void setType(Game.Type type) {
         this.type = type;
     }
 
@@ -157,6 +161,14 @@ public class Giveaway extends BasicGiveaway implements IEndlessAdaptable {
         return "[GA " + getGiveawayId() + ", " + gameId + "]";
     }
 
+    public int getInternalGameId() {
+        return internalGameId;
+    }
+
+    public void setInternalGameId(int internalGameId) {
+        this.internalGameId = internalGameId;
+    }
+
     @Override
     public int getLayout() {
         return VIEW_LAYOUT;
@@ -179,9 +191,5 @@ public class Giveaway extends BasicGiveaway implements IEndlessAdaptable {
 
     public void setPrivate(boolean isPrivate) {
         this.isPrivate = isPrivate;
-    }
-
-    public enum Type {
-        APP, SUB
     }
 }

@@ -28,9 +28,6 @@
             android:name=".activities.WriteCommentActivity"
             android:windowSoftInputMode="adjustResize|stateAlwaysVisible" />
         <activity
-            android:name=".activities.SettingsActivity"
-            android:label="@string/preferences" />
-        <activity
             android:name=".activities.ViewGroupsActivity"
             android:parentActivityName=".activities.DetailActivity" />
         <activity
@@ -69,5 +66,11 @@
                 <!-- <data android:path="/"/> -->
             </intent-filter>
         </activity>
+
+        <!-- Settings -->
+        <activity
+            android:name=".activities.settings.SettingsActivity"
+            android:label="@string/preferences" />
+        <activity android:name=".activities.settings.ViewHiddenGamesActivity" />
     </application>
 </manifest>

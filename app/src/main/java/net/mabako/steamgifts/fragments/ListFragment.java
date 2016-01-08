@@ -128,15 +128,7 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
                 searchView.setQuery("", false);
                 MenuItemCompat.collapseActionView(searchMenu);
 
-                Intent intent = new Intent(getActivity(), MainActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString(MainActivity.ARG_QUERY, query);
-                bundle.putSerializable(MainActivity.ARG_TYPE, getType());
-                intent.putExtras(bundle);
-
-                getActivity().startActivityForResult(intent, CommonActivity.REQUEST_LOGIN_PASSIVE);
-                if (searchQuery != null && !searchQuery.isEmpty())
-                    getActivity().finish();
+                startActivityForQuery(query);
                 return true;
             }
 
@@ -145,6 +137,18 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
                 return true;
             }
         });
+    }
+
+    protected void startActivityForQuery(String query) {
+        Intent intent = new Intent(getActivity(), MainActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString(MainActivity.ARG_QUERY, query);
+        bundle.putSerializable(MainActivity.ARG_TYPE, getType());
+        intent.putExtras(bundle);
+
+        getActivity().startActivityForResult(intent, CommonActivity.REQUEST_LOGIN_PASSIVE);
+        if (searchQuery != null && !searchQuery.isEmpty())
+            getActivity().finish();
     }
 
     protected abstract AdapterType createAdapter(RecyclerView listView);

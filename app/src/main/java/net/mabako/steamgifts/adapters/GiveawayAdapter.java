@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import net.mabako.steamgifts.adapters.viewholder.GiveawayListItemViewHolder;
+import net.mabako.steamgifts.data.Game;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.fragments.IHasEnterableGiveaways;
 
@@ -69,6 +70,19 @@ public class GiveawayAdapter extends EndlessAdapter {
         int index = getItems().indexOf(item);
         if (index >= 0)
             notifyItemChanged(index);
+    }
+
+    public void removeHiddenGame(int internalGameId) {
+        if (internalGameId == Game.NO_APP_ID)
+            throw new IllegalStateException();
+
+        for (int position = getItems().size() - 1; position >= 0; --position) {
+            Giveaway giveaway = (Giveaway) getItem(position);
+
+            if (giveaway != null && giveaway.getInternalGameId() == internalGameId) {
+                removeItem(position);
+            }
+        }
     }
 
     public String getXsrfToken() {

@@ -71,6 +71,8 @@
     <string name="open_browser">View in Browser</string>
     <string name="loading">Loading</string>
 
+    <string name="hide_game">Hide Game</string>
+
     <!-- Go to menu -->
     <string name="go_to">Go to...</string>
     <string name="go_to_giveaway">Giveaway</string>
@@ -89,6 +91,14 @@
     <string name="preferences">Settings</string>
     <string name="preference_theme_header">Theme</string>
     <string name="preference_theme_nightmode">Night Mode</string>
+    <string name="preference_theme_nightmode_sub">Use a dark background for the application</string>
+
+    <string name="preferences_sg_header">SteamGifts Account</string>
+    <string name="preference_sg_hidden_games">Hidden Games</string>
+    <string name="preference_sg_hidden_games_sub">Un-hide games from your account</string>
+
+    <string name="hidden_games_snack">Long-Press a Game to remove it</string>
+    <string name="hidden_games_snack_dismiss">Got it</string>
 
     <!--  Strings for possible PreferenceActivity Back/Next buttons -->
     <string name="back_button_label">Back</string>

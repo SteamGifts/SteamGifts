@@ -221,6 +221,13 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
      */
     protected abstract boolean hasEnoughItems(List<IEndlessAdaptable> items);
 
+
+    protected void removeItem(int position) {
+        items.remove(position);
+        notifyItemRemoved(position);
+    }
+
+
     /**
      * View holder with no interactions.
      * <p/>
