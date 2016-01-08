@@ -77,8 +77,11 @@
     <string name="go_to_user">User</string>
 
     <!-- Profiles -->
-    <string name="user_giveaways_created">Created</string>
+    <string name="user_level">Level %d</string>
+    <string name="user_giveaways_created">Sent</string>
     <string name="user_giveaway_won">Won</string>
+    <string name="user_giveaways_created_count">%1$d sent\n%2$s</string>
+    <string name="user_giveaway_won_count">%1$d won\n%2$s</string>
     <string name="private_giveaway">This giveaway is private.</string>
 
     <!-- Settings -->

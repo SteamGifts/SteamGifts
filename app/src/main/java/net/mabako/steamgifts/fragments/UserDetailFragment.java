@@ -25,11 +25,15 @@ import net.mabako.steamgifts.tasks.LoadUserDetailsTask;
 import java.io.Serializable;
 import java.util.List;
 
-public class UserDetailFragment extends Fragment {
+public class UserDetailFragment extends Fragment implements IUserNotifications {
     private static final String TAG = UserDetailFragment.class.getSimpleName();
     public static final String ARG_USER = "user";
 
     private User user;
+
+    private CustomPagerAdapter viewPagerAdapter;
+    private ViewPager viewPager;
+    private TabLayout tabLayout;
 
     public static UserDetailFragment newInstance(String userName) {
         UserDetailFragment fragment = new UserDetailFragment();
@@ -45,13 +49,25 @@ public class UserDetailFragment extends Fragment {
         ActionBar toolbar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         toolbar.setTitle(user.getName());
 
-        ViewPager viewPager = (ViewPager) layout.findViewById(R.id.viewPager);
-        viewPager.setAdapter(new CustomPagerAdapter(getActivity().getSupportFragmentManager()));
+        viewPagerAdapter = new CustomPagerAdapter(getActivity().getSupportFragmentManager());
+        viewPager = (ViewPager) layout.findViewById(R.id.viewPager);
+        viewPager.setAdapter(viewPagerAdapter);
 
-        TabLayout tabLayout = (TabLayout) layout.findViewById(R.id.tabLayout);
+        tabLayout = (TabLayout) layout.findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
 
         return layout;
+    }
+
+    @Override
+    public void onUserUpdated(User user) {
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        actionBar.setTitle(user.getName());
+        actionBar.setSubtitle(getString(R.string.user_level, user.getLevel()));
+
+        // Refresh tabs
+        for (int i = 0; i < viewPagerAdapter.getCount(); ++i)
+            tabLayout.getTabAt(i).setText(viewPagerAdapter.getPageTitle(i));
     }
 
     private class CustomPagerAdapter extends FragmentPagerAdapter {
@@ -63,20 +79,29 @@ public class UserDetailFragment extends Fragment {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return UserGiveawayListFragment.newInstance(user, "", true);
+                    return UserGiveawayListFragment.newInstance(user, "", true, UserDetailFragment.this);
                 case 1:
-                    return UserGiveawayListFragment.newInstance(user, "/giveaways/won", false);
+                    return UserGiveawayListFragment.newInstance(user, "/giveaways/won", false, UserDetailFragment.this);
             }
             return null;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return getString(R.string.user_giveaways_created);
-                case 1:
-                    return getString(R.string.user_giveaway_won);
+            if (user.isLoaded()) {
+                switch (position) {
+                    case 0:
+                        return String.format(getString(R.string.user_giveaways_created_count), user.getCreated(), user.getCreatedAmount());
+                    case 1:
+                        return String.format(getString(R.string.user_giveaway_won_count), user.getWon(), user.getWonAmount());
+                }
+            } else {
+                switch (position) {
+                    case 0:
+                        return getString(R.string.user_giveaways_created);
+                    case 1:
+                        return getString(R.string.user_giveaway_won);
+                }
             }
             return null;
         }
@@ -87,15 +112,18 @@ public class UserDetailFragment extends Fragment {
         }
     }
 
-    public static class UserGiveawayListFragment extends ListFragment<GiveawayAdapter> {
+    public static class UserGiveawayListFragment extends ListFragment<GiveawayAdapter> implements IUserNotifications {
         private User user;
         private String path;
+        private IUserNotifications iUserNotification;
 
-        public static UserGiveawayListFragment newInstance(User user, String path, boolean loadItemsInitially) {
+        public static UserGiveawayListFragment newInstance(User user, String path, boolean loadItemsInitially, IUserNotifications iUserNotification) {
             UserGiveawayListFragment fragment = new UserGiveawayListFragment();
             fragment.user = user;
             fragment.path = user.getName() + path;
             fragment.loadItemsInitially = loadItemsInitially;
+            fragment.allowSearch = false;
+            fragment.iUserNotification = iUserNotification;
             return fragment;
         }
 
@@ -121,7 +149,7 @@ public class UserDetailFragment extends Fragment {
 
         @Override
         protected void fetchItems(int page) {
-            new LoadUserDetailsTask(this, path, page).execute();
+            new LoadUserDetailsTask(this, path, page, user).execute();
         }
 
         @Override
@@ -151,6 +179,11 @@ public class UserDetailFragment extends Fragment {
                 loadItemsInitially = true;
                 fetchItems(1);
             }
+        }
+
+        @Override
+        public void onUserUpdated(User user) {
+            iUserNotification.onUserUpdated(user);
         }
     }
 }

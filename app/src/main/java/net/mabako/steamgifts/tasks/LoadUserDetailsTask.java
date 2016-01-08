@@ -4,12 +4,15 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import net.mabako.steamgifts.data.Giveaway;
+import net.mabako.steamgifts.data.User;
 import net.mabako.steamgifts.fragments.UserDetailFragment;
 import net.mabako.steamgifts.web.WebUserData;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.util.List;
 
@@ -19,11 +22,13 @@ public class LoadUserDetailsTask extends AsyncTask<Void, Void, List<Giveaway>> {
     private final UserDetailFragment.UserGiveawayListFragment fragment;
     private final String path;
     private final int page;
+    private final User user;
 
-    public LoadUserDetailsTask(UserDetailFragment.UserGiveawayListFragment fragment, String path, int page) {
+    public LoadUserDetailsTask(UserDetailFragment.UserGiveawayListFragment fragment, String path, int page, User user) {
         this.fragment = fragment;
         this.path = path;
         this.page = page;
+        this.user = user;
     }
 
     @Override
@@ -45,6 +50,9 @@ public class LoadUserDetailsTask extends AsyncTask<Void, Void, List<Giveaway>> {
 
                 WebUserData.extract(document);
 
+                if (!user.isLoaded())
+                    loadUser(document);
+
                 // Parse all rows of giveaways
                 return Utils.loadGiveawaysFromList(document);
             } else {
@@ -59,6 +67,37 @@ public class LoadUserDetailsTask extends AsyncTask<Void, Void, List<Giveaway>> {
     @Override
     protected void onPostExecute(List<Giveaway> result) {
         super.onPostExecute(result);
+
+        if (!user.isLoaded()) {
+            user.setLoaded(true);
+            fragment.onUserUpdated(user);
+        }
+
         fragment.addItems(result, page == 1);
+    }
+
+    private void loadUser(Document document) {
+        user.setName(document.select(".featured__heading__medium").first().text());
+
+        Elements columns = document.select(".featured__table__column");
+        user.setComments(parseInt(columns.first().select(".featured__table__row__right").get(3).text()));
+
+        Elements right = columns.last().select(".featured__table__row__right");
+
+        Element won = right.get(1);
+        user.setWon(parseInt(won.select("a").first().text()));
+        won.select("a").html("");
+        user.setWonAmount(won.text().trim());
+
+        Element created = right.get(2);
+        user.setCreated(parseInt(created.select("a").first().text()));
+        created.select("a").html("");
+        user.setCreatedAmount(created.text().trim());
+
+        user.setLevel((int) Float.parseFloat(right.get(3).select("span").first().attr("title")));
+    }
+
+    private static int parseInt(String str) {
+        return Integer.parseInt(str.replace(",", ""));
     }
 }

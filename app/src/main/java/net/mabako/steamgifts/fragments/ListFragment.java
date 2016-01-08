@@ -34,6 +34,8 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
     private static final String TAG = ListFragment.class.getSimpleName();
 
     protected boolean loadItemsInitially = true;
+    protected boolean allowSearch = true;
+
     protected AdapterType adapter;
     private RecyclerView listView;
 
@@ -110,6 +112,9 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
     @Override
     public void onCreateOptionsMenu(
             Menu menu, MenuInflater inflater) {
+        if (!allowSearch)
+            return;
+
         inflater.inflate(R.menu.main_menu, menu);
 
         final MenuItem searchMenu = menu.findItem(R.id.search);
