@@ -2,7 +2,11 @@ package net.mabako.steamgifts.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.activities.settings.ViewHiddenGamesActivity;
@@ -16,6 +20,11 @@ import java.io.Serializable;
 import java.util.List;
 
 public class HiddenGamesFragment extends ListFragment<HiddenGamesAdapter> {
+    /**
+     * Snack is only shown if the app is restarted.
+     */
+    private static boolean showSnack = true;
+
     public static HiddenGamesFragment newInstance(String query) {
         HiddenGamesFragment fragment = new HiddenGamesFragment();
         fragment.searchQuery = query;
@@ -50,6 +59,13 @@ public class HiddenGamesFragment extends ListFragment<HiddenGamesAdapter> {
             getActivity().finish();
     }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+
+        return view;
+    }
+
     public void requestShowGame(int internalGameId) {
         new UpdateGiveawayFilterTask<HiddenGamesFragment>(this, adapter.getXsrfToken(), UpdateGiveawayFilterTask.UNHIDE, internalGameId).execute();
     }
@@ -76,5 +92,16 @@ public class HiddenGamesFragment extends ListFragment<HiddenGamesAdapter> {
     public void addItems(List<Game> result, boolean clearExistingItems, String xsrfToken) {
         addItems(result, clearExistingItems);
         adapter.setXsrfToken(xsrfToken);
+
+        if (showSnack) {
+            showSnack = false;
+            Snackbar.make(getView().findViewById(R.id.list), R.string.hidden_games_snack, Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.hidden_games_snack_dismiss, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            // we don't really need anything here for it to be dismissable.
+                        }
+                    }).show();
+        }
     }
 }

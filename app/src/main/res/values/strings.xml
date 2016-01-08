@@ -97,6 +97,9 @@
     <string name="preference_sg_hidden_games">Hidden Games</string>
     <string name="preference_sg_hidden_games_sub">Un-hide games from your account</string>
 
+    <string name="hidden_games_snack">Long-Press a Game to remove it</string>
+    <string name="hidden_games_snack_dismiss">Got it</string>
+
     <!--  Strings for possible PreferenceActivity Back/Next buttons -->
     <string name="back_button_label">Back</string>
     <string name="next_button_label">Next</string>
