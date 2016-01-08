@@ -64,7 +64,8 @@
     <string name="comment_not_sent">Comment could not be sent</string>
 
     <!-- -->
-    <string name="open_steam_store">Open on Steam Store</string>
+    <string name="open_steam_store">Steam Store</string>
+    <string name="open_steam_profile">Steam Profile</string>
     <string name="search">Search</string>
     <string name="end_of_endless_list">You\'ve reached the end.</string>
     <string name="open_browser">View in Browser</string>

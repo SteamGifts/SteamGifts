@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activities.DetailActivity">
+
+    <item
+        android:id="@+id/open_steam_profile"
+        android:icon="@drawable/ic_steam"
+        android:title="@string/open_steam_profile"
+        app:showAsAction="ifRoom" />
+</menu>

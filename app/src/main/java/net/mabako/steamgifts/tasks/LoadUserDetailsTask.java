@@ -79,6 +79,7 @@ public class LoadUserDetailsTask extends AsyncTask<Void, Void, List<Giveaway>> {
     private void loadUser(Document document) {
         user.setName(document.select(".featured__heading__medium").first().text());
         user.setAvatar(Utils.extractAvatar(document.select(".global__image-inner-wrap").first().attr("style")));
+        user.setUrl(document.select(".sidebar a[data-tooltip=\"Visit Steam Profile\"]").first().attr("href"));
 
         Elements columns = document.select(".featured__table__column");
         user.setComments(parseInt(columns.first().select(".featured__table__row__right").get(3).text()));

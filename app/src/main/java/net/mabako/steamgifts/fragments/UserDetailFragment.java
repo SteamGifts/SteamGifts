@@ -1,5 +1,6 @@
 package net.mabako.steamgifts.fragments;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -14,6 +15,9 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -22,6 +26,7 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import net.mabako.steamgifts.R;
+import net.mabako.steamgifts.activities.WebViewActivity;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.adapters.GiveawayAdapter;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
@@ -64,6 +69,8 @@ public class UserDetailFragment extends Fragment implements IUserNotifications {
         tabLayout = (TabLayout) layout.findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
 
+        setHasOptionsMenu(true);
+
         return layout;
     }
 
@@ -98,6 +105,25 @@ public class UserDetailFragment extends Fragment implements IUserNotifications {
         // Refresh tabs
         for (int i = 0; i < viewPagerAdapter.getCount(); ++i)
             tabLayout.getTabAt(i).setText(viewPagerAdapter.getPageTitle(i));
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.user_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // TODO white- and blacklisting
+        switch (item.getItemId()) {
+            case R.id.open_steam_profile:
+                Intent intent = new Intent(getActivity(), WebViewActivity.class);
+                intent.putExtra(WebViewActivity.ARG_URL, user.getUrl());
+                getActivity().startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private class CustomPagerAdapter extends FragmentPagerAdapter {
