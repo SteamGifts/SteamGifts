@@ -1,5 +1,7 @@
 package net.mabako.steamgifts.adapters.viewholder;
 
+import android.content.Context;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
@@ -54,11 +56,11 @@ public class DiscussionCardViewHolder extends RecyclerView.ViewHolder {
             progressBar.setVisibility(View.GONE);
 
             if (extras.getDescription() != null) {
-                description.setText(Utils.fromHtml(extras.getDescription()));
+                description.setText(Utils.fromHtml(((Fragment) fragment).getContext(), extras.getDescription()));
                 description.setVisibility(View.VISIBLE);
             }
 
-            if(extras.getXsrfToken() != null)
+            if (extras.getXsrfToken() != null)
                 commentDiscussion.setVisibility(View.VISIBLE);
         }
 

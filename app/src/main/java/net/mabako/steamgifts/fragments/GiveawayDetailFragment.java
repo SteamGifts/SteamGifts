@@ -22,6 +22,7 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import net.mabako.steamgifts.R;
+import net.mabako.steamgifts.activities.WebViewActivity;
 import net.mabako.steamgifts.activities.WriteCommentActivity;
 import net.mabako.steamgifts.adapters.CommentAdapter;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
@@ -197,7 +198,8 @@ public class GiveawayDetailFragment extends Fragment implements ICommentableFrag
             case R.id.open_steam_store:
                 Log.i(TAG, "Opening Steam Store entry for game " + giveaway.getGameId());
 
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://store.steampowered.com/" + giveaway.getType().name().toLowerCase() + "/" + giveaway.getGameId() + "/"));
+                Intent intent = new Intent(getContext(), WebViewActivity.class);
+                intent.putExtra(WebViewActivity.ARG_URL, "http://store.steampowered.com/" + giveaway.getType().name().toLowerCase() + "/" + giveaway.getGameId() + "/");
                 startActivity(intent);
 
                 return true;

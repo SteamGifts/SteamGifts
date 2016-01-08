@@ -38,5 +38,6 @@
             android:parentActivityName=".activities.MainActivity"
             android:theme="@style/AppTheme.Dark" />
         <activity android:name=".activities.WebViewActivity" />
+        <activity android:name=".activities.UrlHandlingActivity" />
     </application>
 </manifest>

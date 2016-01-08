@@ -58,7 +58,7 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
         Utils.setBackgroundDrawable(context, commentAuthor, comment.isOp());
 
         commentTime.setText(comment.getTimeAgo());
-        commentContent.setText(Utils.fromHtml(comment.getContent(), !comment.isDeleted()));
+        commentContent.setText(Utils.fromHtml(context, comment.getContent(), !comment.isDeleted()));
 
         // Space before the marker
         ViewGroup.LayoutParams params = commentIndent.getLayoutParams();

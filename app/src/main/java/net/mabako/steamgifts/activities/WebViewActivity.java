@@ -1,18 +1,25 @@
 package net.mabako.steamgifts.activities;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.view.View;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import net.mabako.steamgifts.R;
 
+/**
+ * Simple activity to hold a WebView.
+ */
 public class WebViewActivity extends CommonActivity {
     public static final String ARG_URL = "url";
 
@@ -55,6 +62,24 @@ public class WebViewActivity extends CommonActivity {
             webView.goBack();
         else
             super.onBackPressed();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.web_view_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.open_browser:
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(webView.getUrl())));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private class CustomWebViewClient extends WebViewClient {
