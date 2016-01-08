@@ -71,6 +71,11 @@
                         style="@style/GiveawayIndicatorIcon"
                         android:background="@drawable/circle_indicator_level_negative" />
 
+                    <ImageView
+                        android:id="@+id/giveaway_list_indicator_private"
+                        style="@style/GiveawayIndicatorIcon"
+                        android:background="@drawable/circle_indicator_private" />
+
                     <TextView
                         android:id="@+id/giveaway_details"
                         style="@style/SmallText"

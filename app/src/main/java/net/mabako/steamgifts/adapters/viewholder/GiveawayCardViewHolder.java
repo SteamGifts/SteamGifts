@@ -153,6 +153,9 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
     private void setupIndicators(final Giveaway giveaway) {
         List<Spannable> spans = new ArrayList<>();
 
+        if (giveaway.isPrivate())
+            spans.add(new SpannableString("{faw-lock} "));
+
         if (giveaway.isWhitelist())
             spans.add(new SpannableString("{faw-heart} "));
 

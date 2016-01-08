@@ -22,6 +22,7 @@ public class Giveaway extends BasicGiveaway implements IEndlessAdaptable {
 
     private boolean whitelist, group;
     private int level;
+    private boolean isPrivate;
 
     public Giveaway(String giveawayId) {
         super(giveawayId);
@@ -99,6 +100,10 @@ public class Giveaway extends BasicGiveaway implements IEndlessAdaptable {
         this.timeRemaining = timeRemaining.replace(" remaining", "");
     }
 
+    public boolean isOpen() {
+        return timeRemaining == null || !timeRemaining.endsWith("ago");
+    }
+
     public boolean isEntered() {
         return entered;
     }
@@ -155,6 +160,25 @@ public class Giveaway extends BasicGiveaway implements IEndlessAdaptable {
     @Override
     public int getLayout() {
         return VIEW_LAYOUT;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (getGiveawayId() == null && o instanceof Giveaway) {
+            Giveaway g = (Giveaway) o;
+
+            // Compare some random attributes
+            return title.equals(g.title) && timeRemaining.equals(g.timeRemaining) && timeCreated.equals(g.timeCreated);
+        } else
+            return super.equals(o);
+    }
+
+    public boolean isPrivate() {
+        return isPrivate;
+    }
+
+    public void setPrivate(boolean isPrivate) {
+        this.isPrivate = isPrivate;
     }
 
     public enum Type {

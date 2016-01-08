@@ -8,7 +8,6 @@ import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.adapters.GiveawayAdapter;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.data.Giveaway;
-import net.mabako.steamgifts.data.GiveawayExtras;
 import net.mabako.steamgifts.tasks.EnterLeaveGiveawayTask;
 import net.mabako.steamgifts.tasks.LoadGiveawayListTask;
 
@@ -49,7 +48,7 @@ public class GiveawayListFragment extends ListFragment<GiveawayAdapter> implemen
             public void onLoad(int page) {
                 fetchItems(page);
             }
-        }, this);
+        }, this, 50);
     }
 
     @Override

@@ -15,7 +15,7 @@ public class GiveawayAdapter extends EndlessAdapter {
     /**
      * Giveaways that are shown per page.
      */
-    private static final int ITEMS_PER_PAGE = 50;
+    private final int itemsPerPage;
 
     /**
      * Context of this adapter.
@@ -29,10 +29,11 @@ public class GiveawayAdapter extends EndlessAdapter {
 
     private String xsrfToken;
 
-    public GiveawayAdapter(Activity context, RecyclerView view, OnLoadListener listener, IHasEnterableGiveaways fragment) {
+    public GiveawayAdapter(Activity context, RecyclerView view, OnLoadListener listener, IHasEnterableGiveaways fragment, int itemsPerPage) {
         super(view, listener);
         this.context = context;
         this.fragment = fragment;
+        this.itemsPerPage = itemsPerPage;
     }
 
     @Override
@@ -52,7 +53,7 @@ public class GiveawayAdapter extends EndlessAdapter {
 
     @Override
     protected boolean hasEnoughItems(List<IEndlessAdaptable> items) {
-        return items.size() == ITEMS_PER_PAGE;
+        return items.size() == itemsPerPage;
     }
 
     public Giveaway findItem(@NonNull String giveawayId) {

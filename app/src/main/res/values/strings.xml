@@ -76,6 +76,11 @@
     <string name="go_to_discussion">Discussion</string>
     <string name="go_to_user">User</string>
 
+    <!-- Profiles -->
+    <string name="user_giveaways_created">Created</string>
+    <string name="user_giveaway_won">Won</string>
+    <string name="private_giveaway">This giveaway is private.</string>
+
     <!-- Settings -->
     <string name="preferences">Settings</string>
     <string name="preference_theme_header">Theme</string>
