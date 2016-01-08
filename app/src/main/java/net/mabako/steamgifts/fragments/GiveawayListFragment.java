@@ -111,7 +111,7 @@ public class GiveawayListFragment extends ListFragment<GiveawayAdapter> implemen
     }
 
     public void requestHideGame(int internalGameId) {
-        new UpdateGiveawayFilterTask(this, adapter.getXsrfToken(), UpdateGiveawayFilterTask.HIDE, internalGameId).execute();
+        new UpdateGiveawayFilterTask<>(this, adapter.getXsrfToken(), UpdateGiveawayFilterTask.HIDE, internalGameId).execute();
     }
 
     public void onHideGame(int internalGameId) {

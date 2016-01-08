@@ -67,7 +67,7 @@ public class HiddenGamesFragment extends ListFragment<HiddenGamesAdapter> {
     }
 
     public void requestShowGame(int internalGameId) {
-        new UpdateGiveawayFilterTask<HiddenGamesFragment>(this, adapter.getXsrfToken(), UpdateGiveawayFilterTask.UNHIDE, internalGameId).execute();
+        new UpdateGiveawayFilterTask<>(this, adapter.getXsrfToken(), UpdateGiveawayFilterTask.UNHIDE, internalGameId).execute();
     }
 
     public void onShowGame(int internalGameId) {
