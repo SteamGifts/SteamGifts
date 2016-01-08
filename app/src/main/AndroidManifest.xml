@@ -59,6 +59,9 @@
                 <data android:pathPattern="/discussion/....." />
                 <data android:pathPattern="/discussion/...../.*" />
 
+                <!-- users -->
+                <data android:pathPattern="/user/.*" />
+
                 <!-- list of giveaways -->
                 <data android:path="/giveaways/search" />
 

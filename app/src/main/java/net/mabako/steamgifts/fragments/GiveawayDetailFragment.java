@@ -21,6 +21,7 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import net.mabako.steamgifts.R;
+import net.mabako.steamgifts.activities.DetailActivity;
 import net.mabako.steamgifts.activities.WebViewActivity;
 import net.mabako.steamgifts.activities.WriteCommentActivity;
 import net.mabako.steamgifts.adapters.CommentAdapter;
@@ -207,6 +208,13 @@ public class GiveawayDetailFragment extends Fragment implements ICommentableFrag
 
     public void onPostGiveawayLoaded(Giveaway giveaway) {
         onPostGiveawayLoaded(giveaway, false);
+    }
+
+    @Override
+    public void showProfile(String user) {
+        Intent intent = new Intent(getActivity(), DetailActivity.class);
+        intent.putExtra(UserDetailFragment.ARG_USER, user);
+        getActivity().startActivity(intent);
     }
 
     @Override

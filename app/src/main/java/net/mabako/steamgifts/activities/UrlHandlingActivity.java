@@ -10,6 +10,7 @@ import net.mabako.steamgifts.data.BasicDiscussion;
 import net.mabako.steamgifts.data.BasicGiveaway;
 import net.mabako.steamgifts.fragments.DiscussionDetailFragment;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
+import net.mabako.steamgifts.fragments.UserDetailFragment;
 
 import java.util.List;
 
@@ -47,6 +48,12 @@ public class UrlHandlingActivity extends CommonActivity {
                         intent.putExtra(DiscussionDetailFragment.ARG_DISCUSSION, new BasicDiscussion(discussionId));
                         return intent;
                     }
+                } else if ("user".equals(pathSegments.get(0))) {
+                    String user = pathSegments.get(1);
+
+                    Intent intent = new Intent(context, DetailActivity.class);
+                    intent.putExtra(UserDetailFragment.ARG_USER, user);
+                    return intent;
                 }
             }
         }

@@ -16,7 +16,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-import java.io.IOException;
 import java.net.URISyntaxException;
 
 public class LoadGiveawayDetailsTask extends AsyncTask<Void, Void, GiveawayExtras> {
@@ -28,6 +27,7 @@ public class LoadGiveawayDetailsTask extends AsyncTask<Void, Void, GiveawayExtra
 
     private final boolean loadDetails;
     private Giveaway loadedDetails = null;
+    private String error;
 
     public LoadGiveawayDetailsTask(GiveawayDetailFragment fragment, String giveawayId, int page, boolean loadDetails) {
         this.fragment = fragment;
@@ -52,18 +52,31 @@ public class LoadGiveawayDetailsTask extends AsyncTask<Void, Void, GiveawayExtra
             // Update user details
             WebUserData.extract(document);
 
-            GiveawayExtras extras = loadExtras(document);
-            if (loadDetails) {
-                try {
-                    loadedDetails = loadGiveaway(document, Uri.parse(response.url().toURI().toString()));
-                } catch (URISyntaxException e) {
-                    Log.w(TAG, "say what - invalid url???", e);
+            // Check if we have an error page showing...
+            Element breadcrumbs = document.select(".page__heading__breadcrumbs").first();
+            if (breadcrumbs != null && "Error".equals(breadcrumbs.text())) {
+                Log.d(TAG, "Error loading Giveaway");
+                Element errorElem = document.select(".table__column--width-fill").last();
+                if (errorElem != null) {
+                    String error = errorElem.text().replace("You do not have permission to view this giveaway, since ", "");
+                    this.error = error.substring(0, 1).toUpperCase() + error.substring(1);
                 }
-            }
+                return null;
+            } else {
+                GiveawayExtras extras = loadExtras(document);
+                if (loadDetails) {
+                    try {
+                        loadedDetails = loadGiveaway(document, Uri.parse(response.url().toURI().toString()));
+                    } catch (URISyntaxException e) {
+                        Log.w(TAG, "say what - invalid url???", e);
+                    }
+                }
 
-            return extras;
+                return extras;
+            }
         } catch (Exception e) {
             Log.e(TAG, "Error fetching URL", e);
+            error = "Giveaway does not exist or could not be loaded.";
             return null;
         }
     }
@@ -135,13 +148,13 @@ public class LoadGiveawayDetailsTask extends AsyncTask<Void, Void, GiveawayExtra
     protected void onPostExecute(GiveawayExtras giveawayDetails) {
         super.onPostExecute(giveawayDetails);
 
-        if (giveawayDetails != null || !loadDetails) {
+        if (giveawayDetails != null || (!loadDetails && error == null)) {
             if (loadDetails)
                 fragment.onPostGiveawayLoaded(loadedDetails);
 
             fragment.addDetails(giveawayDetails, page);
         } else {
-            Toast.makeText(fragment.getContext(), "Giveaway does not exist or could not be loaded", Toast.LENGTH_LONG).show();
+            Toast.makeText(fragment.getContext(), error, Toast.LENGTH_LONG).show();
             fragment.getActivity().finish();
         }
     }

@@ -64,7 +64,8 @@
     <string name="comment_not_sent">Comment could not be sent</string>
 
     <!-- -->
-    <string name="open_steam_store">Open on Steam Store</string>
+    <string name="open_steam_store">Steam Store</string>
+    <string name="open_steam_profile">Steam Profile</string>
     <string name="search">Search</string>
     <string name="end_of_endless_list">You\'ve reached the end.</string>
     <string name="open_browser">View in Browser</string>
@@ -74,6 +75,15 @@
     <string name="go_to">Go to...</string>
     <string name="go_to_giveaway">Giveaway</string>
     <string name="go_to_discussion">Discussion</string>
+    <string name="go_to_user">User</string>
+
+    <!-- Profiles -->
+    <string name="user_level">Level %d</string>
+    <string name="user_giveaways_created">Sent</string>
+    <string name="user_giveaway_won">Won</string>
+    <string name="user_giveaways_created_count">%1$d sent\n%2$s</string>
+    <string name="user_giveaway_won_count">%1$d won\n%2$s</string>
+    <string name="private_giveaway">This giveaway is private.</string>
 
     <!-- Settings -->
     <string name="preferences">Settings</string>

@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -36,7 +37,7 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
     private final Activity activity;
     private final IHasEnterableGiveaways fragment;
 
-    private final View indicatorWhitelist, indicatorGroup, indicatorLevelPositive, indicatorLevelNegative;
+    private final View indicatorWhitelist, indicatorGroup, indicatorLevelPositive, indicatorLevelNegative, indicatorPrivate;
 
     private static int measuredHeight = 0;
 
@@ -52,6 +53,7 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
         indicatorGroup = v.findViewById(R.id.giveaway_list_indicator_group);
         indicatorLevelPositive = v.findViewById(R.id.giveaway_list_indicator_level_positive);
         indicatorLevelNegative = v.findViewById(R.id.giveaway_list_indicator_level_negative);
+        indicatorPrivate = v.findViewById(R.id.giveaway_list_indicator_private);
 
         this.activity = activity;
         this.fragment = fragment;
@@ -71,24 +73,28 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
         giveawayDetails.setText(str);
 
         // giveaway_image
-        Picasso.with(activity).load("http://cdn.akamai.steamstatic.com/steam/" + giveaway.getType().name().toLowerCase() + "s/" + giveaway.getGameId() + "/capsule_184x69.jpg").into(giveawayImage, new Callback() {
-            /**
-             * We manually set the height of this image to fit the container.
-             */
-            @Override
-            public void onSuccess() {
-                if (measuredHeight <= 0)
-                    measuredHeight = itemContainer.getMeasuredHeight();
+        if (giveaway.getGameId() != Giveaway.NO_APP_ID) {
+            Picasso.with(activity).load("http://cdn.akamai.steamstatic.com/steam/" + giveaway.getType().name().toLowerCase() + "s/" + giveaway.getGameId() + "/capsule_184x69.jpg").into(giveawayImage, new Callback() {
+                /**
+                 * We manually set the height of this image to fit the container.
+                 */
+                @Override
+                public void onSuccess() {
+                    if (measuredHeight <= 0)
+                        measuredHeight = itemContainer.getMeasuredHeight();
 
-                ViewGroup.LayoutParams params = giveawayImage.getLayoutParams();
-                params.height = measuredHeight;
-            }
+                    ViewGroup.LayoutParams params = giveawayImage.getLayoutParams();
+                    params.height = measuredHeight;
+                }
 
-            @Override
-            public void onError() {
+                @Override
+                public void onError() {
 
-            }
-        });
+                }
+            });
+        } else {
+            giveawayImage.setImageResource(android.R.color.transparent);
+        }
 
         Utils.setBackgroundDrawable(activity, itemContainer, giveaway.isEntered());
 
@@ -97,17 +103,21 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
         indicatorGroup.setVisibility(giveaway.isGroup() ? View.VISIBLE : View.GONE);
         indicatorLevelPositive.setVisibility(giveaway.isLevelPositive() ? View.VISIBLE : View.GONE);
         indicatorLevelNegative.setVisibility(giveaway.isLevelNegative() ? View.VISIBLE : View.GONE);
+        indicatorPrivate.setVisibility(giveaway.isPrivate() ? View.VISIBLE : View.GONE);
     }
 
     @Override
     public void onClick(View v) {
         Giveaway giveaway = (Giveaway) adapter.getItem(getAdapterPosition());
+        if (giveaway.getGiveawayId() != null && giveaway.getName() != null) {
+            GiveawayDetailFragment.setParent(activity);
+            Intent intent = new Intent(activity, DetailActivity.class);
+            intent.putExtra(GiveawayDetailFragment.ARG_GIVEAWAY, giveaway);
 
-        GiveawayDetailFragment.setParent(activity);
-        Intent intent = new Intent(activity, DetailActivity.class);
-        intent.putExtra(GiveawayDetailFragment.ARG_GIVEAWAY, giveaway);
-
-        activity.startActivityForResult(intent, MainActivity.REQUEST_LOGIN_PASSIVE);
+            activity.startActivityForResult(intent, MainActivity.REQUEST_LOGIN_PASSIVE);
+        } else {
+            Toast.makeText(activity, R.string.private_giveaway, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -116,6 +126,10 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
         if (WebUserData.getCurrent().isLoggedIn() && adapter.getXsrfToken() != null) {
             // Which giveaway is this even for?
             final Giveaway giveaway = (Giveaway) adapter.getItem(getAdapterPosition());
+
+            // We only know this giveaway exists, not the link to it.
+            if (giveaway.getGiveawayId() == null || giveaway.getName() == null || !giveaway.isOpen())
+                return;
 
             // Header
             menu.setHeaderTitle(giveaway.getTitle());

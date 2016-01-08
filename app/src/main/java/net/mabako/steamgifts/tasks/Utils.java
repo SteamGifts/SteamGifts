@@ -6,9 +6,11 @@ import net.mabako.steamgifts.data.Comment;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.data.ICommentHolder;
 
+import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public final class Utils {
@@ -75,7 +77,7 @@ public final class Utils {
         Elements hints = element.select("." + headerHintCssNode);
         String copiesT = hints.first().text();
         String pointsT = hints.last().text();
-        int copies = hints.size() == 1 ? 1 : Integer.parseInt(copiesT.replace("(", "").replace(" Copies)", ""));
+        int copies = hints.size() == 1 ? 1 : Integer.parseInt(copiesT.replace("(", "").replace(" Copies)", "").replace(",", ""));
         int points = Integer.parseInt(pointsT.replace("(", "").replace("P)", ""));
 
         giveaway.setCopies(copies);
@@ -96,9 +98,58 @@ public final class Utils {
         // Flags
         giveaway.setWhitelist(!element.select("." + cssNode + "__column--whitelist").isEmpty());
         giveaway.setGroup(!element.select("." + cssNode + "__column--group").isEmpty());
+        giveaway.setPrivate(!element.select("." + cssNode + "__column--invite-only").isEmpty());
 
         Element level = element.select("." + cssNode + "__column--contributor-level").first();
         if (level != null)
             giveaway.setLevel(Integer.parseInt(level.text().replace("Level", "").replace("+", "").trim()));
+    }
+
+    /**
+     * Loads giveaways from a list page.
+     * <p>This is not suitable for loading individual giveaway instances from the featured list, as the HTML layout differs (see {@link LoadGiveawayDetailsTask#loadGiveaway(Document, Uri)}</p>
+     *
+     * @param document the loaded document
+     * @return list of giveaways
+     */
+    public static List<Giveaway> loadGiveawaysFromList(Document document) {
+        Elements giveaways = document.select(".giveaway__row-inner-wrap");
+
+        List<Giveaway> giveawayList = new ArrayList<>();
+        for (Element element : giveaways) {
+            // Basic information
+            Element link = element.select("h2 a").first();
+
+            Giveaway giveaway = null;
+            if (link.hasAttr("href")) {
+                Uri linkUri = Uri.parse(link.attr("href"));
+                String giveawayLink = linkUri.getPathSegments().get(1);
+                String giveawayName = linkUri.getPathSegments().get(2);
+
+                giveaway = new Giveaway(giveawayLink);
+                giveaway.setName(giveawayName);
+            } else {
+                giveaway = new Giveaway(null);
+                giveaway.setName(null);
+            }
+
+            giveaway.setTitle(link.text());
+            giveaway.setCreator(element.select(".giveaway__username").text());
+
+            // Entries, would usually have comment count too... but we don't display that anywhere.
+            Elements links = element.select(".giveaway__links a span");
+            giveaway.setEntries(Integer.parseInt(links.first().text().split(" ")[0].replace(",", "")));
+
+            giveaway.setEntered(element.hasClass("is-faded"));
+
+            // More details
+            Element icon = element.select("h2 a").last();
+            Uri uriIcon = icon == link ? null : Uri.parse(icon.attr("href"));
+
+            Utils.loadGiveaway(giveaway, element, "giveaway", "giveaway__heading__thin", uriIcon);
+            giveawayList.add(giveaway);
+        }
+
+        return giveawayList;
     }
 }

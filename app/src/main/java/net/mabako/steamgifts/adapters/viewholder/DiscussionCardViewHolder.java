@@ -40,7 +40,7 @@ public class DiscussionCardViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void setFrom(final DiscussionDetailsCard card) {
-        Discussion discussion = card.getDiscussion();
+        final Discussion discussion = card.getDiscussion();
         DiscussionExtras extras = card.getExtras();
 
         for (View view : new View[]{commentDiscussion, description, discussionTime, user, separator})
@@ -53,6 +53,12 @@ public class DiscussionCardViewHolder extends RecyclerView.ViewHolder {
                 view.setVisibility(View.VISIBLE);
 
             user.setText("{faw-user} " + discussion.getCreator());
+            user.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    fragment.showProfile(discussion.getCreator());
+                }
+            });
             discussionTime.setText("{faw-calendar-o} " + discussion.getTimeCreated());
 
             if (extras == null) {

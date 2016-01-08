@@ -65,38 +65,7 @@ public class LoadGiveawayListTask extends AsyncTask<Void, Void, List<Giveaway>> 
             document.select(".pinned-giveaways__outer-wrap").html("");
 
             // Parse all rows of giveaways
-            Elements giveaways = document.select(".giveaway__row-inner-wrap");
-            Log.d(TAG, "Found inner " + giveaways.size() + " elements");
-
-            List<Giveaway> giveawayList = new ArrayList<>();
-            for (Element element : giveaways) {
-                // Basic information
-                Element link = element.select("h2 a").first();
-                Uri linkUri = Uri.parse(link.attr("href"));
-                String giveawayLink = linkUri.getPathSegments().get(1);
-                String giveawayName = linkUri.getPathSegments().get(2);
-
-                Giveaway giveaway = new Giveaway(giveawayLink);
-                giveaway.setTitle(link.text());
-                giveaway.setName(giveawayName);
-
-                giveaway.setCreator(element.select(".giveaway__username").text());
-
-                // Entries, would usually have comment count too... but we don't display that anywhere.
-                Elements links = element.select(".giveaway__links a span");
-                giveaway.setEntries(Integer.parseInt(links.first().text().split(" ")[0].replace(",", "")));
-
-                giveaway.setEntered(element.hasClass("is-faded"));
-
-                // More details
-                Element icon = element.select("h2 a").last();
-                Uri uriIcon = icon == link ? null : Uri.parse(icon.attr("href"));
-
-                Utils.loadGiveaway(giveaway, element, "giveaway", "giveaway__heading__thin", uriIcon);
-                giveawayList.add(giveaway);
-            }
-
-            return giveawayList;
+            return Utils.loadGiveawaysFromList(document);
         } catch (Exception e) {
             Log.e(TAG, "Error fetching URL", e);
             return null;

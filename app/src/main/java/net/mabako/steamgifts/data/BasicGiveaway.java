@@ -24,6 +24,8 @@ public class BasicGiveaway implements Serializable {
 
     @Override
     public int hashCode() {
+        if (giveawayId == null)
+            return 0;
         return giveawayId.hashCode();
     }
 
@@ -31,6 +33,11 @@ public class BasicGiveaway implements Serializable {
     public boolean equals(Object o) {
         if (o == null || !(o instanceof BasicGiveaway))
             return false;
-        return giveawayId.equals(((BasicGiveaway) o).giveawayId);
+
+        if (giveawayId == null)
+            // Implement this in Giveaway to compare more attributes, but there's no real way to have "unique" GAs.
+            return false;
+        else
+            return giveawayId.equals(((BasicGiveaway) o).giveawayId);
     }
 }

@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import net.mabako.steamgifts.R;
+import net.mabako.steamgifts.activities.DetailActivity;
 import net.mabako.steamgifts.activities.WriteCommentActivity;
 import net.mabako.steamgifts.adapters.CommentAdapter;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
@@ -120,6 +121,13 @@ public class DiscussionDetailFragment extends Fragment implements ICommentableFr
         if (page == 1)
             adapter.clear();
         adapter.finishLoading(new ArrayList<IEndlessAdaptable>(extras.getComments()));
+    }
+
+    @Override
+    public void showProfile(String user) {
+        Intent intent = new Intent(getActivity(), DetailActivity.class);
+        intent.putExtra(UserDetailFragment.ARG_USER, user);
+        getActivity().startActivity(intent);
     }
 
     @Override

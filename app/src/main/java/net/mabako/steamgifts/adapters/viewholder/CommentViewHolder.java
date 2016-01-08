@@ -66,6 +66,14 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
         commentIndent.setLayoutParams(params);
 
         Picasso.with(context).load(comment.getAvatar()).placeholder(R.drawable.default_avatar_mask).transform(new RoundedCornersTransformation(20, 0)).into(commentImage);
+        View.OnClickListener viewProfileListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fragment.showProfile(comment.getAuthor());
+            }
+        };
+        commentImage.setOnClickListener(viewProfileListener);
+        commentAuthor.setOnClickListener(viewProfileListener);
 
         writeCommentListener = new View.OnClickListener() {
             @Override
