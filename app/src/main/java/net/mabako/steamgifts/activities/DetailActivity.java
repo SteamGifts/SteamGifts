@@ -12,6 +12,7 @@ import net.mabako.steamgifts.data.BasicDiscussion;
 import net.mabako.steamgifts.data.BasicGiveaway;
 import net.mabako.steamgifts.fragments.DiscussionDetailFragment;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
+import net.mabako.steamgifts.fragments.UserDetailFragment;
 
 import java.io.Serializable;
 
@@ -41,8 +42,15 @@ public class DetailActivity extends CommonActivity {
 
             serializable = getIntent().getSerializableExtra(DiscussionDetailFragment.ARG_DISCUSSION);
             if (serializable != null) {
-                setContentView(R.layout.activity_discussion_detail);
+                setContentView(R.layout.activity_detail);
                 loadFragment(DiscussionDetailFragment.newInstance((BasicDiscussion) serializable));
+                return;
+            }
+
+            String user = getIntent().getStringExtra(UserDetailFragment.ARG_USER);
+            if (user != null) {
+                setContentView(R.layout.activity_detail);
+                loadFragment(UserDetailFragment.newInstance(user));
                 return;
             }
         }

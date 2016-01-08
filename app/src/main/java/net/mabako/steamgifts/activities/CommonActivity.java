@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
+import android.text.InputFilter;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -16,6 +17,7 @@ import net.mabako.steamgifts.data.BasicGiveaway;
 import net.mabako.steamgifts.fragments.DiscussionDetailFragment;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
 import net.mabako.steamgifts.fragments.IFragmentNotifications;
+import net.mabako.steamgifts.fragments.UserDetailFragment;
 import net.mabako.steamgifts.web.WebUserData;
 
 public class CommonActivity extends BaseActivity {
@@ -101,7 +103,7 @@ public class CommonActivity extends BaseActivity {
     public boolean onKeyLongPress(int keyCode, KeyEvent event) {
         // TODO allow this to be changed to normal overflow menus in the settings.
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            final CharSequence[] strings = new CharSequence[]{getString(R.string.go_to_giveaway), getString(R.string.go_to_discussion)};
+            final CharSequence[] strings = new CharSequence[]{getString(R.string.go_to_giveaway), getString(R.string.go_to_discussion), getString(R.string.go_to_user)};
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.go_to);
@@ -122,16 +124,28 @@ public class CommonActivity extends BaseActivity {
                     });
                     final AlertDialog dialog = builder.create();
                     dialog.show();
+
+                    // Discussion and giveaway ids can only be 5 chars long
+                    final boolean limitLength = dialogSelected <= 1;
+                    if (limitLength)
+                        ((EditText) dialog.findViewById(R.id.edit_text)).setFilters(new InputFilter[]{new InputFilter.LengthFilter(5)});
+
                     dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             String target = ((EditText) view.findViewById(R.id.edit_text)).getText().toString();
-                            if (target != null && target.length() == 5) {
+                            if (target != null && (!limitLength || target.length() == 5)) {
                                 Intent intent = new Intent(CommonActivity.this, DetailActivity.class);
-                                if (dialogSelected == 0) {
-                                    intent.putExtra(GiveawayDetailFragment.ARG_GIVEAWAY, new BasicGiveaway(target));
-                                } else {
-                                    intent.putExtra(DiscussionDetailFragment.ARG_DISCUSSION, new BasicDiscussion(target));
+                                switch (dialogSelected) {
+                                    case 0:
+                                        intent.putExtra(GiveawayDetailFragment.ARG_GIVEAWAY, new BasicGiveaway(target));
+                                        break;
+                                    case 1:
+                                        intent.putExtra(DiscussionDetailFragment.ARG_DISCUSSION, new BasicDiscussion(target));
+                                        break;
+                                    case 2:
+                                        intent.putExtra(UserDetailFragment.ARG_USER, target);
+                                        break;
                                 }
                                 startActivity(intent);
 

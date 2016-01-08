@@ -74,6 +74,7 @@
     <string name="go_to">Go to...</string>
     <string name="go_to_giveaway">Giveaway</string>
     <string name="go_to_discussion">Discussion</string>
+    <string name="go_to_user">User</string>
 
     <!-- Settings -->
     <string name="preferences">Settings</string>

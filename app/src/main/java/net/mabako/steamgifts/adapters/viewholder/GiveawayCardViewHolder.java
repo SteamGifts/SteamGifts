@@ -78,6 +78,13 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
             progressBar.setVisibility(View.VISIBLE);
         } else {
             user.setText("{faw-user} " + giveaway.getCreator());
+            user.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    fragment.showProfile(giveaway.getCreator());
+                }
+            });
+
             timeRemaining.setText("{faw-clock-o} " + giveaway.getTimeRemaining());
             timeCreated.setText("{faw-calendar-o} " + giveaway.getTimeCreated());
             for (View view : new View[]{user, timeRemaining, timeCreated, separator})
