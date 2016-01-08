@@ -10,6 +10,7 @@ import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.tasks.EnterLeaveGiveawayTask;
 import net.mabako.steamgifts.tasks.LoadGiveawayListTask;
+import net.mabako.steamgifts.tasks.UpdateGiveawayFilterTask;
 
 import java.util.List;
 
@@ -107,6 +108,14 @@ public class GiveawayListFragment extends ListFragment<GiveawayAdapter> implemen
     public void addItems(List<? extends IEndlessAdaptable> items, boolean clearExistingItems, String xsrfToken) {
         adapter.setXsrfToken(xsrfToken);
         addItems(items, clearExistingItems);
+    }
+
+    public void requestHideGame(int internalGameId) {
+        new UpdateGiveawayFilterTask(this, adapter.getXsrfToken(), UpdateGiveawayFilterTask.HIDE, internalGameId).execute();
+    }
+
+    public void onHideGame(int internalGameId) {
+        adapter.removeHiddenGame(internalGameId);
     }
 
     /**

@@ -71,6 +71,8 @@
     <string name="open_browser">View in Browser</string>
     <string name="loading">Loading</string>
 
+    <string name="hide_game">Hide Game</string>
+
     <!-- Go to menu -->
     <string name="go_to">Go to...</string>
     <string name="go_to_giveaway">Giveaway</string>

@@ -71,6 +71,19 @@ public class GiveawayAdapter extends EndlessAdapter {
             notifyItemChanged(index);
     }
 
+    public void removeHiddenGame(int internalGameId) {
+        if (internalGameId == 0)
+            throw new IllegalStateException();
+
+        for (int i = getItems().size() - 1; i >= 0; --i) {
+            Giveaway giveaway = (Giveaway) getItem(i);
+
+            if (giveaway.getInternalGameId() == internalGameId) {
+                removeItem(i);
+            }
+        }
+    }
+
     public String getXsrfToken() {
         return xsrfToken;
     }

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,10 +22,11 @@ import net.mabako.steamgifts.activities.MainActivity;
 import net.mabako.steamgifts.adapters.GiveawayAdapter;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
+import net.mabako.steamgifts.fragments.GiveawayListFragment;
 import net.mabako.steamgifts.fragments.IHasEnterableGiveaways;
 import net.mabako.steamgifts.web.WebUserData;
 
-public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnCreateContextMenuListener {
+public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnCreateContextMenuListener, MenuItem.OnMenuItemClickListener {
     private static final String TAG = GiveawayListItemViewHolder.class.getSimpleName();
 
     private final View itemContainer;
@@ -135,29 +137,33 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
             menu.setHeaderTitle(giveaway.getTitle());
 
             if (giveaway.isEntered()) {
-                menu.add(0, 1, 0, String.format(activity.getString(R.string.leave_giveaway_with_points), giveaway.getPoints())).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        // We're already in the giveaway, so leave it.
-                        fragment.requestEnterLeave(giveaway.getGiveawayId(), GiveawayDetailFragment.ENTRY_DELETE, adapter.getXsrfToken());
-                        return true;
-                    }
-                });
+                menu.add(Menu.NONE, 1, Menu.NONE, String.format(activity.getString(R.string.leave_giveaway_with_points), giveaway.getPoints())).setOnMenuItemClickListener(this);
             } else {
-                menu.add(0, 2, 0, String.format(activity.getString(R.string.enter_giveaway_with_points), giveaway.getPoints())).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        // We're not in the giveaway, enter it.
-                        fragment.requestEnterLeave(giveaway.getGiveawayId(), GiveawayDetailFragment.ENTRY_INSERT, adapter.getXsrfToken());
-                        return true;
-                    }
-                    // - Should have enough points
-                    // - should be a high enough level (We don't generally see group/whitelist giveaways on the list of all giveaways, where this is displayed)
-                    // - should not be created by the current user
-                }).setEnabled(giveaway.getPoints() <= WebUserData.getCurrent().getPoints() && giveaway.getLevel() <= WebUserData.getCurrent().getLevel() && !WebUserData.getCurrent().getName().equals(giveaway.getCreator()));
+                menu.add(Menu.NONE, 2, Menu.NONE, String.format(activity.getString(R.string.enter_giveaway_with_points), giveaway.getPoints())).setOnMenuItemClickListener(this).setEnabled(giveaway.getPoints() <= WebUserData.getCurrent().getPoints() && giveaway.getLevel() <= WebUserData.getCurrent().getLevel() && !WebUserData.getCurrent().getName().equals(giveaway.getCreator()));
+            }
+
+            if (giveaway.getInternalGameId() > 0 && fragment instanceof GiveawayListFragment) {
+                menu.add(Menu.NONE, 3, Menu.NONE, R.string.hide_game).setOnMenuItemClickListener(this);
             }
         } else {
             Log.d(TAG, "Not showing context menu for giveaway. (xsrf-token: " + adapter.getXsrfToken() + ")");
         }
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        Giveaway giveaway = (Giveaway) adapter.getItem(getAdapterPosition());
+        switch (item.getItemId()) {
+            case 1:
+                fragment.requestEnterLeave(giveaway.getGiveawayId(), GiveawayDetailFragment.ENTRY_DELETE, adapter.getXsrfToken());
+                return true;
+            case 2:
+                fragment.requestEnterLeave(giveaway.getGiveawayId(), GiveawayDetailFragment.ENTRY_INSERT, adapter.getXsrfToken());
+                return true;
+            case 3:
+                ((GiveawayListFragment) fragment).requestHideGame(giveaway.getInternalGameId());
+                return true;
+        }
+        return false;
     }
 }

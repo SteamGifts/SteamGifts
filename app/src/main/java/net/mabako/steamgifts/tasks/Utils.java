@@ -103,6 +103,11 @@ public final class Utils {
         Element level = element.select("." + cssNode + "__column--contributor-level").first();
         if (level != null)
             giveaway.setLevel(Integer.parseInt(level.text().replace("Level", "").replace("+", "").trim()));
+
+        // Internal ID for blacklisting
+        Element popup = element.select(".giveaway__hide.trigger-popup").first();
+        if (popup != null)
+            giveaway.setInternalGameId(Integer.parseInt(popup.attr("data-game-id")));
     }
 
     /**
