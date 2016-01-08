@@ -32,17 +32,24 @@ public class LoadUserDetailsTask extends AsyncTask<Void, Void, List<Giveaway>> {
 
         try {
             // Fetch the Giveaway page
-            Connection jsoup = Jsoup.connect("http://www.steamgifts.com/user/" + path + "/search");
-            jsoup.data("page", Integer.toString(page));
+            Connection connection = Jsoup.connect("http://www.steamgifts.com/user/" + path + "/search");
+            connection.data("page", Integer.toString(page));
             if (WebUserData.getCurrent().isLoggedIn())
-                jsoup.cookie("PHPSESSID", WebUserData.getCurrent().getSessionId());
+                connection.cookie("PHPSESSID", WebUserData.getCurrent().getSessionId());
 
-            Document document = jsoup.get();
+            connection.followRedirects(false);
+            Connection.Response response = connection.execute();
+            Document document = response.parse();
 
-            WebUserData.extract(document);
+            if (response.statusCode() == 200) {
 
-            // Parse all rows of giveaways
-            return Utils.loadGiveawaysFromList(document);
+                WebUserData.extract(document);
+
+                // Parse all rows of giveaways
+                return Utils.loadGiveawaysFromList(document);
+            } else {
+                return null;
+            }
         } catch (Exception e) {
             Log.e(TAG, "Error fetching URL", e);
             return null;

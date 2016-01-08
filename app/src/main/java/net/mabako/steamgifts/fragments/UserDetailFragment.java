@@ -13,23 +13,27 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.adapters.GiveawayAdapter;
+import net.mabako.steamgifts.adapters.IEndlessAdaptable;
+import net.mabako.steamgifts.data.User;
 import net.mabako.steamgifts.tasks.LoadUserDetailsTask;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class UserDetailFragment extends Fragment {
     private static final String TAG = UserDetailFragment.class.getSimpleName();
     public static final String ARG_USER = "user";
 
-    private String userName;
+    private User user;
 
-    public static UserDetailFragment newInstance(String user) {
+    public static UserDetailFragment newInstance(String userName) {
         UserDetailFragment fragment = new UserDetailFragment();
-        fragment.userName = user;
+        fragment.user = new User(userName);
         return fragment;
     }
 
@@ -39,7 +43,7 @@ public class UserDetailFragment extends Fragment {
         View layout = inflater.inflate(R.layout.fragment_user, container, false);
 
         ActionBar toolbar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        toolbar.setTitle(userName);
+        toolbar.setTitle(user.getName());
 
         ViewPager viewPager = (ViewPager) layout.findViewById(R.id.viewPager);
         viewPager.setAdapter(new CustomPagerAdapter(getActivity().getSupportFragmentManager()));
@@ -59,9 +63,9 @@ public class UserDetailFragment extends Fragment {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return UserGiveawayListFragment.newInstance(userName, true);
+                    return UserGiveawayListFragment.newInstance(user, "", true);
                 case 1:
-                    return UserGiveawayListFragment.newInstance(userName + "/giveaways/won", false);
+                    return UserGiveawayListFragment.newInstance(user, "/giveaways/won", false);
             }
             return null;
         }
@@ -84,11 +88,13 @@ public class UserDetailFragment extends Fragment {
     }
 
     public static class UserGiveawayListFragment extends ListFragment<GiveawayAdapter> {
+        private User user;
         private String path;
 
-        public static UserGiveawayListFragment newInstance(String path, boolean loadItemsInitially) {
+        public static UserGiveawayListFragment newInstance(User user, String path, boolean loadItemsInitially) {
             UserGiveawayListFragment fragment = new UserGiveawayListFragment();
-            fragment.path = path;
+            fragment.user = user;
+            fragment.path = user.getName() + path;
             fragment.loadItemsInitially = loadItemsInitially;
             return fragment;
         }
@@ -101,6 +107,16 @@ public class UserDetailFragment extends Fragment {
                     fetchItems(page);
                 }
             }, null, 25);
+        }
+
+        @Override
+        public void addItems(List<? extends IEndlessAdaptable> items, boolean clearExistingItems) {
+            if (clearExistingItems && items == null && !user.isLoaded()) {
+                Toast.makeText(getContext(), "User does not exist.", Toast.LENGTH_SHORT).show();
+                getActivity().finish();
+            } else {
+                super.addItems(items, clearExistingItems);
+            }
         }
 
         @Override
