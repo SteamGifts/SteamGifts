@@ -38,6 +38,25 @@
             android:parentActivityName=".activities.MainActivity"
             android:theme="@style/AppTheme.Dark" />
         <activity android:name=".activities.WebViewActivity" />
-        <activity android:name=".activities.UrlHandlingActivity" />
+
+        <!-- handle all urls... or at least some -->
+        <activity android:name=".activities.UrlHandlingActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="www.steamgifts.com"
+                    android:scheme="http" />
+                <data
+                    android:host="steamgifts.com"
+                    android:scheme="http" />
+
+                <data android:pathPattern="/giveaway/....." />
+                <data android:pathPattern="/giveaway/...../.*" />
+            </intent-filter>
+        </activity>
     </application>
 </manifest>

@@ -98,5 +98,22 @@ public class WebViewActivity extends CommonActivity {
             toolbar.setTitle(view.getTitle());
             toolbar.setSubtitle(url);
         }
+
+        /**
+         * If the URL is handled by the application, we want to start that as activity instead of loading the related webview.
+         *
+         * @param view current webview
+         * @param url  url to load
+         * @return {@code true} if this app handles the related url, {@code false} otherwise
+         */
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            Intent intent = UrlHandlingActivity.getIntentForUri(WebViewActivity.this, Uri.parse(url));
+            if (intent != null) {
+                startActivity(intent);
+                return true;
+            }
+            return false;
+        }
     }
 }

@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import com.mikepenz.iconics.context.IconicsContextWrapper;
 
 import net.mabako.steamgifts.R;
+import net.mabako.steamgifts.data.BasicGiveaway;
 import net.mabako.steamgifts.data.Discussion;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.fragments.DiscussionDetailFragment;
@@ -35,7 +36,7 @@ public class DetailActivity extends CommonActivity {
             Serializable serializable = getIntent().getSerializableExtra(GiveawayDetailFragment.ARG_GIVEAWAY);
             if (serializable != null) {
                 setContentView(R.layout.activity_giveaway_detail);
-                loadFragment(GiveawayDetailFragment.newInstance((Giveaway) serializable));
+                loadFragment(GiveawayDetailFragment.newInstance((BasicGiveaway) serializable));
                 return;
             }
 

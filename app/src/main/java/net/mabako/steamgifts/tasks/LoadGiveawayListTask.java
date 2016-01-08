@@ -1,5 +1,6 @@
 package net.mabako.steamgifts.tasks;
 
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -57,7 +58,7 @@ public class LoadGiveawayListTask extends AsyncTask<Void, Void, List<Giveaway>> 
 
             // Fetch the xsrf token
             Element xsrfToken = document.select("input[name=xsrf_token]").first();
-            if(xsrfToken != null)
+            if (xsrfToken != null)
                 foundXsrfToken = xsrfToken.attr("value");
 
             // Do away with pinned giveaways.
@@ -69,53 +70,29 @@ public class LoadGiveawayListTask extends AsyncTask<Void, Void, List<Giveaway>> 
 
             List<Giveaway> giveawayList = new ArrayList<>();
             for (Element element : giveaways) {
-                Element link = element.select("h2 a").first();
-                Element icon = element.select("h2 a").last();
-
                 // Basic information
-                String title = link.text();
-                String giveawayLink = link.attr("href").substring(10, 15);
-                String giveawayName = link.attr("href").substring(16);
+                Element link = element.select("h2 a").first();
+                Uri linkUri = Uri.parse(link.attr("href"));
+                String giveawayLink = linkUri.getPathSegments().get(1);
+                String giveawayName = linkUri.getPathSegments().get(2);
 
-                int gameId = -1;
-                Giveaway.Type type = Giveaway.Type.APP;
-                if (icon != link) {
-                    String[] iconSplit = icon.attr("href").split("/");
-                    gameId = Integer.parseInt(iconSplit[4]);
-                    type = "app".equals(iconSplit[3]) ? Giveaway.Type.APP : Giveaway.Type.SUB;
-                }
+                Giveaway giveaway = new Giveaway(giveawayLink);
+                giveaway.setTitle(link.text());
+                giveaway.setName(giveawayName);
 
-                // Entries & Comments
+                giveaway.setCreator(element.select(".giveaway__username").text());
+
+                // Entries, would usually have comment count too... but we don't display that anywhere.
                 Elements links = element.select(".giveaway__links a span");
-                int entries = Integer.parseInt(links.first().text().split(" ")[0].replace(",", ""));
-                int comments = Integer.parseInt(links.last().text().split(" ")[0].replace(",", ""));
+                giveaway.setEntries(Integer.parseInt(links.first().text().split(" ")[0].replace(",", "")));
 
-                String creator = element.select(".giveaway__username").text();
-
-                // Copies & Points. They do not have separate markup classes, it's basically "if one thin markup element exists, it's one copy only"
-                Elements hints = element.select(".giveaway__heading__thin");
-                String copiesT = hints.first().text();
-                String pointsT = hints.last().text();
-                int copies = hints.size() == 1 ? 1 : Integer.parseInt(copiesT.replace("(", "").replace(" Copies)", ""));
-                int points = Integer.parseInt(pointsT.replace("(", "").replace("P)", ""));
-
-                // Time remaining
-                Element timeRemaining = element.select(".giveaway__columns > div span").first();
-                Element timeCreated = element.select(".giveaway__columns > div span").last();
-
-                Log.v(TAG, "GIVEAWAY for " + title + ", " + giveawayLink + "/" + giveawayName + " is " + gameId);
-
-                Giveaway giveaway = new Giveaway(title, giveawayLink, giveawayName, type, gameId, creator, entries, comments, copies, points, timeRemaining.text(), timeRemaining.attr("title"), timeCreated.text());
                 giveaway.setEntered(element.hasClass("is-faded"));
 
-                // Flags
-                giveaway.setWhitelist(!element.select(".giveaway__column--whitelist").isEmpty());
-                giveaway.setGroup(!element.select(".giveaway__column--group").isEmpty());
+                // More details
+                Element icon = element.select("h2 a").last();
+                Uri uriIcon = icon == link ? null : Uri.parse(icon.attr("href"));
 
-                Element level = element.select(".giveaway__column--contributor-level").first();
-                if (level != null)
-                    giveaway.setLevel(Integer.parseInt(level.text().replace("Level", "").replace("+", "").trim()));
-
+                Utils.loadGiveaway(giveaway, element, "giveaway", "giveaway__heading__thin", uriIcon);
                 giveawayList.add(giveaway);
             }
 

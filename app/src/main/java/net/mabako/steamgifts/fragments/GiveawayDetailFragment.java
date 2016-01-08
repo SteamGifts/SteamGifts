@@ -2,7 +2,6 @@ package net.mabako.steamgifts.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -27,6 +26,7 @@ import net.mabako.steamgifts.activities.WriteCommentActivity;
 import net.mabako.steamgifts.adapters.CommentAdapter;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
+import net.mabako.steamgifts.data.BasicGiveaway;
 import net.mabako.steamgifts.data.Comment;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.data.GiveawayExtras;
@@ -45,14 +45,14 @@ public class GiveawayDetailFragment extends Fragment implements ICommentableFrag
     /**
      * Content to show for the giveaway details.
      */
-    private Giveaway giveaway;
+    private BasicGiveaway giveaway;
     private GiveawayDetailsCard giveawayCard;
     private LoadGiveawayDetailsTask task;
     private EnterLeaveGiveawayTask enterLeaveTask;
     private RecyclerView listView;
     private CommentAdapter<GiveawayDetailFragment> adapter;
 
-    public static Fragment newInstance(Giveaway giveaway) {
+    public static Fragment newInstance(BasicGiveaway giveaway) {
         GiveawayDetailFragment fragment = new GiveawayDetailFragment();
         fragment.giveaway = giveaway;
         return fragment;
@@ -68,23 +68,11 @@ public class GiveawayDetailFragment extends Fragment implements ICommentableFrag
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_giveaway_detail, container, false);
 
-        final Activity activity = getActivity();
-        final CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
-        appBarLayout.setTitle(giveaway.getTitle());
-
-        ImageView toolbarImage = (ImageView) activity.findViewById(R.id.toolbar_image);
-        if (toolbarImage != null) {
-            Picasso.with(getContext()).load("http://cdn.akamai.steamstatic.com/steam/" + giveaway.getType().name().toLowerCase() + "s/" + giveaway.getGameId() + "/header.jpg").into(toolbarImage, new Callback() {
-                @Override
-                public void onSuccess() {
-                    appBarLayout.setExpandedTitleTextAppearance(R.style.TransparentText);
-                }
-
-                @Override
-                public void onError() {
-
-                }
-            });
+        giveawayCard = new GiveawayDetailsCard();
+        if (giveaway instanceof Giveaway) {
+            onPostGiveawayLoaded((Giveaway) giveaway, true);
+        } else {
+            Log.d(TAG, "Loading activity for basic giveaway " + giveaway.getGiveawayId());
         }
 
         listView = (RecyclerView) layout.findViewById(R.id.list);
@@ -98,7 +86,6 @@ public class GiveawayDetailFragment extends Fragment implements ICommentableFrag
         listView.setAdapter(adapter);
 
         // Add the cardview for the Giveaway details
-        giveawayCard = new GiveawayDetailsCard(giveaway);
         adapter.setStickyItem(giveawayCard);
 
         fetchItems(1);
@@ -126,7 +113,11 @@ public class GiveawayDetailFragment extends Fragment implements ICommentableFrag
         if (task != null)
             task.cancel(true);
 
-        task = new LoadGiveawayDetailsTask(this, giveaway.getGiveawayId() + "/" + giveaway.getName(), page);
+        String url = giveaway.getGiveawayId();
+        if (giveaway instanceof Giveaway)
+            url += "/" + ((Giveaway) giveaway).getName();
+
+        task = new LoadGiveawayDetailsTask(this, url, page, !(giveaway instanceof Giveaway));
         task.execute();
     }
 
@@ -134,7 +125,12 @@ public class GiveawayDetailFragment extends Fragment implements ICommentableFrag
         if (extras == null)
             return;
 
-        giveaway.setTimeRemaining(extras.getTimeRemaining());
+        // We should always have a giveaway instance at this point of time, as
+        // #onPostGiveawayLoaded is called prior to this method.
+        if (!(giveaway instanceof Giveaway))
+            throw new IllegalStateException("#onPostGiveawayLoaded was probably not called");
+        ((Giveaway) giveaway).setTimeRemaining(extras.getTimeRemaining());
+
         giveawayCard.setExtras(extras);
         adapter.setStickyItem(giveawayCard);
 
@@ -158,8 +154,8 @@ public class GiveawayDetailFragment extends Fragment implements ICommentableFrag
         if (success == Boolean.TRUE) {
 
             GiveawayExtras extras = giveawayCard.getExtras();
-            giveaway.setEntered(ENTRY_INSERT.equals(what));
-            extras.setEntered(giveaway.isEntered());
+            extras.setEntered(ENTRY_INSERT.equals(what));
+            ((Giveaway) giveaway).setEntered(extras.isEntered());
 
             giveawayCard.setExtras(extras);
             adapter.setStickyItem(giveawayCard);
@@ -174,34 +170,79 @@ public class GiveawayDetailFragment extends Fragment implements ICommentableFrag
         }
     }
 
+    /**
+     * Set the details from the task started by {@link #fetchItems(int)}.
+     *
+     * @param giveaway giveaway this is for
+     */
+    private void onPostGiveawayLoaded(Giveaway giveaway, boolean ignoreExisting) {
+        // Called this twice, eh...
+        if (this.giveaway instanceof Giveaway && !ignoreExisting)
+            return;
+
+        this.giveaway = giveaway;
+        giveawayCard.setGiveaway(giveaway);
+
+        final CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) getActivity().findViewById(R.id.toolbar_layout);
+        appBarLayout.setTitle(giveaway.getTitle());
+
+        ImageView toolbarImage = (ImageView) getActivity().findViewById(R.id.toolbar_image);
+        if (toolbarImage != null) {
+            Picasso.with(getContext()).load("http://cdn.akamai.steamstatic.com/steam/" + giveaway.getType().name().toLowerCase() + "s/" + giveaway.getGameId() + "/header.jpg").into(toolbarImage, new Callback() {
+                @Override
+                public void onSuccess() {
+                    appBarLayout.setExpandedTitleTextAppearance(R.style.TransparentText);
+                }
+
+                @Override
+                public void onError() {
+
+                }
+            });
+        }
+
+        // Re-build the options menu, which may not be created if no giveaway was present.
+        getActivity().supportInvalidateOptionsMenu();
+    }
+
+    public void onPostGiveawayLoaded(Giveaway giveaway) {
+        onPostGiveawayLoaded(giveaway, false);
+    }
+
     @Override
     public void requestComment(Comment parentComment) {
-        Intent intent = new Intent(getActivity(), WriteCommentActivity.class);
-        intent.putExtra(WriteCommentActivity.XSRF_TOKEN, giveawayCard.getExtras().getXsrfToken());
-        intent.putExtra(WriteCommentActivity.PATH, "giveaway/" + giveaway.getGiveawayId() + "/" + giveaway.getName());
-        intent.putExtra(WriteCommentActivity.PARENT, parentComment);
-        intent.putExtra(WriteCommentActivity.TITLE, giveaway.getTitle());
-        getActivity().startActivityForResult(intent, WriteCommentActivity.REQUEST_COMMENT);
+        if (giveaway instanceof Giveaway) {
+            Intent intent = new Intent(getActivity(), WriteCommentActivity.class);
+            intent.putExtra(WriteCommentActivity.XSRF_TOKEN, giveawayCard.getExtras().getXsrfToken());
+            intent.putExtra(WriteCommentActivity.PATH, "giveaway/" + giveaway.getGiveawayId() + "/" + ((Giveaway) giveaway).getName());
+            intent.putExtra(WriteCommentActivity.PARENT, parentComment);
+            intent.putExtra(WriteCommentActivity.TITLE, ((Giveaway) giveaway).getTitle());
+            getActivity().startActivityForResult(intent, WriteCommentActivity.REQUEST_COMMENT);
+        } else
+            throw new IllegalStateException("Commenting on a not fully loaded Giveaway");
     }
 
     @Override
     public void onCreateOptionsMenu(
             Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.giveaway_menu, menu);
-
-        menu.findItem(R.id.open_steam_store).setVisible(giveaway.getGameId() > 0);
+        if (giveaway instanceof Giveaway) {
+            inflater.inflate(R.menu.giveaway_menu, menu);
+            menu.findItem(R.id.open_steam_store).setVisible(((Giveaway) giveaway).getGameId() > 0);
+        }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.open_steam_store:
-                Log.i(TAG, "Opening Steam Store entry for game " + giveaway.getGameId());
+                if (this.giveaway instanceof Giveaway) {
+                    Giveaway giveaway = (Giveaway) this.giveaway;
+                    Log.i(TAG, "Opening Steam Store entry for game " + giveaway.getGameId());
 
-                Intent intent = new Intent(getContext(), WebViewActivity.class);
-                intent.putExtra(WebViewActivity.ARG_URL, "http://store.steampowered.com/" + giveaway.getType().name().toLowerCase() + "/" + giveaway.getGameId() + "/");
-                startActivity(intent);
-
+                    Intent intent = new Intent(getContext(), WebViewActivity.class);
+                    intent.putExtra(WebViewActivity.ARG_URL, "http://store.steampowered.com/" + giveaway.getType().name().toLowerCase() + "/" + giveaway.getGameId() + "/");
+                    startActivity(intent);
+                }
                 return true;
 
             default:
