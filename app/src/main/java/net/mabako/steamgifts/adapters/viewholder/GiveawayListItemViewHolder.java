@@ -20,6 +20,7 @@ import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.activities.DetailActivity;
 import net.mabako.steamgifts.activities.MainActivity;
 import net.mabako.steamgifts.adapters.GiveawayAdapter;
+import net.mabako.steamgifts.data.Game;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
 import net.mabako.steamgifts.fragments.GiveawayListFragment;
@@ -75,7 +76,7 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
         giveawayDetails.setText(str);
 
         // giveaway_image
-        if (giveaway.getGameId() != Giveaway.NO_APP_ID) {
+        if (giveaway.getGameId() != Game.NO_APP_ID) {
             Picasso.with(activity).load("http://cdn.akamai.steamstatic.com/steam/" + giveaway.getType().name().toLowerCase() + "s/" + giveaway.getGameId() + "/capsule_184x69.jpg").into(giveawayImage, new Callback() {
                 /**
                  * We manually set the height of this image to fit the container.

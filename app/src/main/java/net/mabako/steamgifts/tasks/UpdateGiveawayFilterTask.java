@@ -1,12 +1,14 @@
 package net.mabako.steamgifts.tasks;
 
+import android.support.v4.app.Fragment;
 import android.util.Log;
 
 import net.mabako.steamgifts.fragments.GiveawayListFragment;
+import net.mabako.steamgifts.fragments.HiddenGamesFragment;
 
 import org.jsoup.Connection;
 
-public class UpdateGiveawayFilterTask extends AjaxTask<GiveawayListFragment> {
+public class UpdateGiveawayFilterTask<FragmentType extends Fragment> extends AjaxTask<FragmentType> {
     public static final String HIDE = "hide_giveaways_by_game_id";
 
     /**
@@ -17,10 +19,15 @@ public class UpdateGiveawayFilterTask extends AjaxTask<GiveawayListFragment> {
 
     private final int internalGameId;
 
-    public UpdateGiveawayFilterTask(GiveawayListFragment fragment, String xsrfToken, String what, int internalGameId) {
+    public UpdateGiveawayFilterTask(FragmentType fragment, String xsrfToken, String what, int internalGameId) {
         super(fragment, xsrfToken, what);
 
-        setUrl("http://www.steamgifts.com/");
+        // We only use the normal ajax.php if we remove a game
+        // ... like seriously?
+        if (HIDE.equals("what"))
+            setUrl("http://www.steamgifts.com/");
+
+
         this.internalGameId = internalGameId;
     }
 
@@ -32,6 +39,12 @@ public class UpdateGiveawayFilterTask extends AjaxTask<GiveawayListFragment> {
     @Override
     protected void onPostExecute(Connection.Response response) {
         Log.d(UpdateGiveawayFilterTask.class.getSimpleName(), "Response code: " + response.statusCode());
-        getFragment().onHideGame(internalGameId);
+
+        FragmentType fragment = getFragment();
+        if (fragment instanceof GiveawayListFragment) {
+            ((GiveawayListFragment) fragment).onHideGame(internalGameId);
+        } else if (fragment instanceof HiddenGamesFragment) {
+            ((HiddenGamesFragment) fragment).onShowGame(internalGameId);
+        }
     }
 }

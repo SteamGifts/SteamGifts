@@ -91,6 +91,11 @@
     <string name="preferences">Settings</string>
     <string name="preference_theme_header">Theme</string>
     <string name="preference_theme_nightmode">Night Mode</string>
+    <string name="preference_theme_nightmode_sub">Use a dark background for the application</string>
+
+    <string name="preferences_sg_header">SteamGifts Account</string>
+    <string name="preference_sg_hidden_games">Hidden Games</string>
+    <string name="preference_sg_hidden_games_sub">Un-hide games from your account</string>
 
     <!--  Strings for possible PreferenceActivity Back/Next buttons -->
     <string name="back_button_label">Back</string>

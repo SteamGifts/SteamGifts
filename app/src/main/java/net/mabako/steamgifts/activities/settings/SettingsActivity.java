@@ -1,17 +1,23 @@
-package net.mabako.steamgifts.activities;
+package net.mabako.steamgifts.activities.settings;
 
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 
 import net.mabako.steamgifts.R;
+import net.mabako.steamgifts.activities.BaseActivity;
 import net.mabako.steamgifts.compat.PreferenceFragment;
+import net.mabako.steamgifts.web.WebUserData;
 
 public class SettingsActivity extends BaseActivity {
     public static class SettingsFragment extends PreferenceFragment {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.preferences);
+            addPreferencesFromResource(R.xml.preferences_app);
+
+            if (WebUserData.getCurrent().isLoggedIn()) {
+                addPreferencesFromResource(R.xml.preferences_sg);
+            }
         }
     }
 

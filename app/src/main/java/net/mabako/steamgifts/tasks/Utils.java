@@ -3,6 +3,7 @@ package net.mabako.steamgifts.tasks;
 import android.net.Uri;
 
 import net.mabako.steamgifts.data.Comment;
+import net.mabako.steamgifts.data.Game;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.data.ICommentHolder;
 
@@ -88,7 +89,7 @@ public final class Utils {
             List<String> pathSegments = steamUri.getPathSegments();
             if (pathSegments.size() >= 2)
                 giveaway.setGameId(Integer.parseInt(pathSegments.get(1)));
-            giveaway.setType("app".equals(pathSegments.get(0)) ? Giveaway.Type.APP : Giveaway.Type.SUB);
+            giveaway.setType("app".equals(pathSegments.get(0)) ? Game.Type.APP : Game.Type.SUB);
         }
 
         // Time remaining
