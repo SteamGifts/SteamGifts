@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="net.mabako.steamgifts.activities.LoginActivity">
+    tools:context=".activities.WebViewActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -14,21 +14,12 @@
         android:background="?attr/colorDefaultBackground"
         android:elevation="4dp"
         android:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        android:subtitle="URL"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:title="@string/login" />
+        app:title="@string/loading" />
 
     <WebView
         android:id="@+id/webview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone" />
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:indeterminate="true" />
+        android:layout_height="match_parent" />
 </LinearLayout>

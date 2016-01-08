@@ -4,91 +4,99 @@ import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.web.WebUserData;
 
-import java.io.Serializable;
-
-public class Giveaway implements Serializable, IEndlessAdaptable {
+public class Giveaway extends BasicGiveaway implements IEndlessAdaptable {
     public static final int VIEW_LAYOUT = R.layout.giveaway_item;
+    public static final int NO_APP_ID = -1;
 
-    private final String title;
-    private final String giveawayId;
-    private final String name;
-    private final Type type;
-    private final int gameId;
-    private final String creator;
-    private final int entries;
-    private final int commentCount;
-    private final int copies;
-    private final int points;
+    private String title;
+    private String name;
+    private Type type = Type.APP;
+    private int gameId = NO_APP_ID;
+    private String creator;
+    private int entries;
+    private int copies;
+    private int points;
     private String timeRemaining;
-    private final String timeRemainingLong;
-    private final String timeCreated;
+    private String timeCreated;
     private boolean entered = false;
 
     private boolean whitelist, group;
     private int level;
 
-    public Giveaway(String title, String giveawayId, String name, Type type, int gameId, String creator, int entries, int commentCount, int copies, int points, String timeRemaining, String timeRemainingLong, String timeCreated) {
-        this.title = title;
-        this.giveawayId = giveawayId;
-        this.name = name;
-        this.type = type;
-        this.gameId = gameId;
-        this.creator = creator;
-        this.entries = entries;
-        this.commentCount = commentCount;
-        this.copies = copies;
-        this.points = points;
-        setTimeRemaining(timeRemaining);
-        this.timeRemainingLong = timeRemainingLong;
-        this.timeCreated = timeCreated;
+    public Giveaway(String giveawayId) {
+        super(giveawayId);
     }
 
     public String getTitle() {
         return title;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public int getGameId() {
         return gameId;
     }
 
-    public String getGiveawayId() {
-        return giveawayId;
+    public void setGameId(int gameId) {
+        this.gameId = gameId;
     }
 
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getCreator() {
         return creator;
     }
 
-    public int getCommentCount() {
-        return commentCount;
+    public void setCreator(String creator) {
+        this.creator = creator;
     }
 
     public int getEntries() {
         return entries;
     }
 
+    public void setEntries(int entries) {
+        this.entries = entries;
+    }
+
     public int getCopies() {
         return copies;
+    }
+
+    public void setCopies(int copies) {
+        this.copies = copies;
     }
 
     public Type getType() {
         return type;
     }
 
+    public void setType(Type type) {
+        this.type = type;
+    }
+
     public int getPoints() {
         return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
     }
 
     public String getTimeRemaining() {
         return timeRemaining;
     }
 
-    public String getTimeRemainingLong() {
-        return timeRemainingLong;
+    public void setTimeRemaining(String timeRemaining) {
+        this.timeRemaining = timeRemaining.replace(" remaining", "");
     }
 
     public boolean isEntered() {
@@ -101,6 +109,10 @@ public class Giveaway implements Serializable, IEndlessAdaptable {
 
     public String getTimeCreated() {
         return timeCreated;
+    }
+
+    public void setTimeCreated(String timeCreated) {
+        this.timeCreated = timeCreated;
     }
 
     public boolean isWhitelist() {
@@ -136,25 +148,8 @@ public class Giveaway implements Serializable, IEndlessAdaptable {
     }
 
     @Override
-    public int hashCode() {
-        return giveawayId.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || !(o instanceof Giveaway))
-            return false;
-        return giveawayId.equals(((Giveaway) o).giveawayId);
-    }
-
-    @Override
     public String toString() {
-        return "[GA " + giveawayId + ", " + gameId + "]";
-    }
-
-    public void setTimeRemaining(String timeRemaining) {
-        this.timeRemaining = timeRemaining.replace(" remaining", "");
-        ;
+        return "[GA " + getGiveawayId() + ", " + gameId + "]";
     }
 
     @Override

@@ -37,8 +37,8 @@ public class LoginActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         webView = (WebView) findViewById(R.id.webview);
@@ -51,7 +51,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private class LoginWebViewClient extends WebViewClient {
-
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             Log.d(TAG, "Page started: " + url);

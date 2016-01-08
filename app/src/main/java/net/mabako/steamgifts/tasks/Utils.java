@@ -1,9 +1,15 @@
 package net.mabako.steamgifts.tasks;
 
+import android.net.Uri;
+
 import net.mabako.steamgifts.data.Comment;
+import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.data.ICommentHolder;
 
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.util.List;
 
 public final class Utils {
     /**
@@ -36,10 +42,9 @@ public final class Utils {
             desc.select(".comment__toggle-attached").html("");
             String content = desc.html();
 
-            Element timeRemaining = thisComment.select(".comment__actions > div span").first();
+            Element timeCreated = thisComment.select(".comment__actions > div span").first();
 
-            // public Comment(int id, String author, String timeAgo, String timeAgoLong, String content) {
-            Comment comment = new Comment(Integer.parseInt(c.attr("data-comment-id")), author, timeRemaining.text(), timeRemaining.attr("title"), content, depth, avatar, isOp);
+            Comment comment = new Comment(Integer.parseInt(c.attr("data-comment-id")), author, timeCreated.text(), timeCreated.attr("title"), content, depth, avatar, isOp);
 
             // check if the comment is deleted
             comment.setDeleted(thisComment.select(".comment__summary").first().select(".comment__delete-state").size() == 1);
@@ -54,5 +59,46 @@ public final class Utils {
 
     public static String extractAvatar(String style) {
         return style.replace("background-image:url(", "").replace(");", "").replace("_medium", "_full");
+    }
+
+    /**
+     * Load some details for the giveaway. Some items must be loaded outside of this.
+     *
+     * @param giveaway
+     * @param element
+     * @param cssNode
+     * @param headerHintCssNode
+     * @param steamUri
+     */
+    public static void loadGiveaway(Giveaway giveaway, Element element, String cssNode, String headerHintCssNode, Uri steamUri) {
+        // Copies & Points. They do not have separate markup classes, it's basically "if one thin markup element exists, it's one copy only"
+        Elements hints = element.select("." + headerHintCssNode);
+        String copiesT = hints.first().text();
+        String pointsT = hints.last().text();
+        int copies = hints.size() == 1 ? 1 : Integer.parseInt(copiesT.replace("(", "").replace(" Copies)", ""));
+        int points = Integer.parseInt(pointsT.replace("(", "").replace("P)", ""));
+
+        giveaway.setCopies(copies);
+        giveaway.setPoints(points);
+
+        // Steam link
+        if (steamUri != null) {
+            List<String> pathSegments = steamUri.getPathSegments();
+            if (pathSegments.size() >= 2)
+                giveaway.setGameId(Integer.parseInt(pathSegments.get(1)));
+            giveaway.setType("app".equals(pathSegments.get(0)) ? Giveaway.Type.APP : Giveaway.Type.SUB);
+        }
+
+        // Time remaining
+        giveaway.setTimeRemaining(element.select("." + cssNode + "__columns > div span").first().text());
+        giveaway.setTimeCreated(element.select("." + cssNode + "__columns > div span").last().text());
+
+        // Flags
+        giveaway.setWhitelist(!element.select("." + cssNode + "__column--whitelist").isEmpty());
+        giveaway.setGroup(!element.select("." + cssNode + "__column--group").isEmpty());
+
+        Element level = element.select("." + cssNode + "__column--contributor-level").first();
+        if (level != null)
+            giveaway.setLevel(Integer.parseInt(level.text().replace("Level", "").replace("+", "").trim()));
     }
 }

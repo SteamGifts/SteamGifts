@@ -2,16 +2,14 @@ package net.mabako.steamgifts.activities;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 
 import com.mikepenz.iconics.context.IconicsContextWrapper;
 
 import net.mabako.steamgifts.R;
-import net.mabako.steamgifts.data.Discussion;
-import net.mabako.steamgifts.data.Giveaway;
+import net.mabako.steamgifts.data.BasicDiscussion;
+import net.mabako.steamgifts.data.BasicGiveaway;
 import net.mabako.steamgifts.fragments.DiscussionDetailFragment;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
 
@@ -37,34 +35,17 @@ public class DetailActivity extends CommonActivity {
             Serializable serializable = getIntent().getSerializableExtra(GiveawayDetailFragment.ARG_GIVEAWAY);
             if (serializable != null) {
                 setContentView(R.layout.activity_giveaway_detail);
-                loadFragment(GiveawayDetailFragment.newInstance((Giveaway) serializable));
+                loadFragment(GiveawayDetailFragment.newInstance((BasicGiveaway) serializable));
                 return;
             }
 
             serializable = getIntent().getSerializableExtra(DiscussionDetailFragment.ARG_DISCUSSION);
             if (serializable != null) {
                 setContentView(R.layout.activity_discussion_detail);
-                loadFragment(DiscussionDetailFragment.newInstance((Discussion) serializable));
+                loadFragment(DiscussionDetailFragment.newInstance((BasicDiscussion) serializable));
                 return;
             }
         }
-    }
-
-    /**
-     * Handle "Up" navigation.
-     *
-     * @param item
-     * @return
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            // Respond to the action bar's Up/Home button
-            case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     /**

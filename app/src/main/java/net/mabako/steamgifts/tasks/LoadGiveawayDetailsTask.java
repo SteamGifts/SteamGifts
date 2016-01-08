@@ -1,8 +1,11 @@
 package net.mabako.steamgifts.tasks;
 
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
+import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.data.GiveawayExtras;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
 import net.mabako.steamgifts.web.WebUserData;
@@ -13,6 +16,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 public class LoadGiveawayDetailsTask extends AsyncTask<Void, Void, GiveawayExtras> {
     private static final String TAG = LoadGiveawayDetailsTask.class.getSimpleName();
@@ -21,10 +25,14 @@ public class LoadGiveawayDetailsTask extends AsyncTask<Void, Void, GiveawayExtra
     private final String giveawayId;
     private final int page;
 
-    public LoadGiveawayDetailsTask(GiveawayDetailFragment fragment, String giveawayId, int page) {
+    private final boolean loadDetails;
+    private Giveaway loadedDetails = null;
+
+    public LoadGiveawayDetailsTask(GiveawayDetailFragment fragment, String giveawayId, int page, boolean loadDetails) {
         this.fragment = fragment;
         this.giveawayId = giveawayId;
         this.page = page;
+        this.loadDetails = loadDetails;
     }
 
     @Override
@@ -33,45 +41,24 @@ public class LoadGiveawayDetailsTask extends AsyncTask<Void, Void, GiveawayExtra
         Log.d(TAG, "Fetching giveaway details for " + url);
 
         try {
-            Connection jsoup = Jsoup.connect(url);
+            Connection connection = Jsoup.connect(url);
             if (WebUserData.getCurrent().isLoggedIn())
-                jsoup.cookie("PHPSESSID", WebUserData.getCurrent().getSessionId());
-            Document document = jsoup.get();
+                connection.cookie("PHPSESSID", WebUserData.getCurrent().getSessionId());
+
+            Connection.Response response = connection.execute();
+            Document document = response.parse();
 
             // Update user details
             WebUserData.extract(document);
 
-            GiveawayExtras extras = new GiveawayExtras();
-
-            // Load the description
-            Element description = document.select(".page__description__display-state .markdown").first();
-            if (description != null) // This will be null if no description is given.
-                extras.setDescription(description.html());
-
-            // Enter/Leave giveaway
-            Element enterLeaveForm = document.select(".sidebar form").first();
-            if (enterLeaveForm != null) {
-                if(enterLeaveForm != document.select(".sidebar > form").first()) {
-                    extras.setErrorMessage("N/A");
+            GiveawayExtras extras = loadExtras(document);
+            if (loadDetails) {
+                try {
+                    loadedDetails = loadGiveaway(document, Uri.parse(response.url().toURI().toString()));
+                } catch (URISyntaxException e) {
+                    Log.w(TAG, "say what - invalid url???", e);
                 }
-
-                extras.setEntered(enterLeaveForm.select(".sidebar__entry-insert").hasClass("is-hidden"));
-                extras.setXsrfToken(enterLeaveForm.select("input[name=xsrf_token]").attr("value"));
-            } else {
-                Element error = document.select(".sidebar .sidebar__error").first();
-                if (error != null)
-                    extras.setErrorMessage(error.text().trim());
             }
-
-            // Time left
-            Element time = document.select("div.featured__columns div.featured__column > span").first();
-            if (time != null)
-                extras.setTimeRemaining(time.text().trim());
-
-            // Load comments
-            Element rootCommentNode = document.select(".comments").first();
-            if (rootCommentNode != null)
-                Utils.loadComments(rootCommentNode, extras);
 
             return extras;
         } catch (IOException e) {
@@ -80,9 +67,76 @@ public class LoadGiveawayDetailsTask extends AsyncTask<Void, Void, GiveawayExtra
         }
     }
 
+    private Giveaway loadGiveaway(Document document, Uri linkUri) {
+        Element element = document.select(".featured__inner-wrap").first();
+
+        // Basic information
+        String giveawayLink = linkUri.getPathSegments().get(1);
+        String giveawayName = linkUri.getPathSegments().get(2);
+
+        Giveaway giveaway = new Giveaway(giveawayLink);
+        giveaway.setTitle(element.select(".featured__heading__medium").text());
+        giveaway.setName(giveawayName);
+
+        giveaway.setCreator(element.select(".featured__columns > div a").text());
+
+        // Entries, would usually have comment count too... but we don't display that anywhere.
+        giveaway.setEntries(-12345678);
+
+        // this is overwritten by loadExtras()
+        giveaway.setEntered(false);
+
+        // More details
+        Element icon = element.select(".global__image-outer-wrap--game-large").first();
+        Uri uriIcon = icon.hasClass("global__image-outer-wrap--missing-image") ? null : Uri.parse(icon.attr("href"));
+
+        Utils.loadGiveaway(giveaway, element, "featured", "featured__heading__small", uriIcon);
+        return giveaway;
+    }
+
+    @NonNull
+    private GiveawayExtras loadExtras(Document document) {
+        GiveawayExtras extras = new GiveawayExtras();
+
+        // Load the description
+        Element description = document.select(".page__description__display-state .markdown").first();
+        if (description != null) // This will be null if no description is given.
+            extras.setDescription(description.html());
+
+        // Enter/Leave giveaway
+        Element enterLeaveForm = document.select(".sidebar form").first();
+        if (enterLeaveForm != null) {
+            if (enterLeaveForm != document.select(".sidebar > form").first()) {
+                extras.setErrorMessage("N/A");
+            }
+
+            extras.setEntered(enterLeaveForm.select(".sidebar__entry-insert").hasClass("is-hidden"));
+            extras.setXsrfToken(enterLeaveForm.select("input[name=xsrf_token]").attr("value"));
+        } else {
+            Element error = document.select(".sidebar .sidebar__error").first();
+            if (error != null)
+                extras.setErrorMessage(error.text().trim());
+        }
+
+        // Time left
+        Element time = document.select("div.featured__columns div.featured__column > span").first();
+        if (time != null)
+            extras.setTimeRemaining(time.text().trim());
+
+        // Load comments
+        Element rootCommentNode = document.select(".comments").first();
+        if (rootCommentNode != null)
+            Utils.loadComments(rootCommentNode, extras);
+        return extras;
+    }
+
     @Override
     protected void onPostExecute(GiveawayExtras giveawayDetails) {
         super.onPostExecute(giveawayDetails);
+
+        if (loadDetails)
+            fragment.onPostGiveawayLoaded(loadedDetails);
+
         fragment.addDetails(giveawayDetails, page);
     }
 }

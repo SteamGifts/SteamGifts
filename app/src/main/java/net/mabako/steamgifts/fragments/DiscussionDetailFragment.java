@@ -17,6 +17,7 @@ import net.mabako.steamgifts.activities.WriteCommentActivity;
 import net.mabako.steamgifts.adapters.CommentAdapter;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
+import net.mabako.steamgifts.data.BasicDiscussion;
 import net.mabako.steamgifts.data.Comment;
 import net.mabako.steamgifts.data.Discussion;
 import net.mabako.steamgifts.data.DiscussionExtras;
@@ -31,13 +32,13 @@ public class DiscussionDetailFragment extends Fragment implements ICommentableFr
     /**
      * Content to show for the giveaway details.
      */
-    private Discussion discussion;
+    private BasicDiscussion discussion;
     private DiscussionDetailsCard discussionCard;
     private LoadDiscussionDetailsTask task;
     private RecyclerView listView;
     private CommentAdapter<DiscussionDetailFragment> adapter;
 
-    public static Fragment newInstance(Discussion discussion) {
+    public static Fragment newInstance(BasicDiscussion discussion) {
         DiscussionDetailFragment d = new DiscussionDetailFragment();
         d.discussion = discussion;
         return d;
@@ -48,7 +49,12 @@ public class DiscussionDetailFragment extends Fragment implements ICommentableFr
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_discussion_detail, container, false);
 
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(discussion.getTitle());
+        discussionCard = new DiscussionDetailsCard();
+        if (discussion instanceof Discussion) {
+            onPostDiscussionLoaded((Discussion) discussion, true);
+        } else {
+            Log.d(TAG, "Loading activity for basic discussion " + discussion.getDiscussionId());
+        }
 
         listView = (RecyclerView) layout.findViewById(R.id.list);
         listView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -61,7 +67,6 @@ public class DiscussionDetailFragment extends Fragment implements ICommentableFr
         listView.setAdapter(adapter);
 
         // Add the cardview for the Giveaway details
-        discussionCard = new DiscussionDetailsCard(discussion);
         adapter.setStickyItem(discussionCard);
 
         fetchItems(1);
@@ -82,8 +87,27 @@ public class DiscussionDetailFragment extends Fragment implements ICommentableFr
         if (task != null)
             task.cancel(true);
 
-        task = new LoadDiscussionDetailsTask(this, discussion.getDiscussionId() + "/" + discussion.getName(), page);
+        String url = discussion.getDiscussionId();
+        if (discussion instanceof Discussion)
+            url += "/" + ((Discussion) discussion).getName();
+
+        task = new LoadDiscussionDetailsTask(this, url, page, !(discussion instanceof Discussion));
         task.execute();
+    }
+
+    public void onPostDiscussionLoaded(Discussion discussion, boolean ignoreExisting) {
+        // Called this twice, eh...
+        if (this.discussion instanceof Discussion && !ignoreExisting)
+            return;
+
+        this.discussion = discussion;
+        discussionCard.setDiscussion(discussion);
+
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(discussion.getTitle());
+    }
+
+    public void onPostDiscussionLoaded(Discussion discussion) {
+        onPostDiscussionLoaded(discussion, false);
     }
 
     public void addDetails(DiscussionExtras extras, int page) {
@@ -100,11 +124,14 @@ public class DiscussionDetailFragment extends Fragment implements ICommentableFr
 
     @Override
     public void requestComment(Comment parentComment) {
-        Intent intent = new Intent(getActivity(), WriteCommentActivity.class);
-        intent.putExtra(WriteCommentActivity.XSRF_TOKEN, discussionCard.getExtras().getXsrfToken());
-        intent.putExtra(WriteCommentActivity.PATH, "discussion/" + discussion.getDiscussionId() + "/" + discussion.getName());
-        intent.putExtra(WriteCommentActivity.PARENT, parentComment);
-        intent.putExtra(WriteCommentActivity.TITLE, discussion.getTitle());
-        getActivity().startActivityForResult(intent, WriteCommentActivity.REQUEST_COMMENT);
+        if (discussion instanceof Discussion) {
+            Intent intent = new Intent(getActivity(), WriteCommentActivity.class);
+            intent.putExtra(WriteCommentActivity.XSRF_TOKEN, discussionCard.getExtras().getXsrfToken());
+            intent.putExtra(WriteCommentActivity.PATH, "discussion/" + discussion.getDiscussionId() + "/" + ((Discussion) discussion).getName());
+            intent.putExtra(WriteCommentActivity.PARENT, parentComment);
+            intent.putExtra(WriteCommentActivity.TITLE, ((Discussion) discussion).getTitle());
+            getActivity().startActivityForResult(intent, WriteCommentActivity.REQUEST_COMMENT);
+        } else
+            throw new IllegalStateException("Commenting on a not fully loaded Giveaway");
     }
 }

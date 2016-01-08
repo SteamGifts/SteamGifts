@@ -39,6 +39,7 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
     private final Button loginButton;
     private final Button errorMessage;
     private final Button indicator;
+    private final View separator;
 
     public GiveawayCardViewHolder(View v, final GiveawayDetailFragment fragment) {
         super(v);
@@ -50,6 +51,7 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
         timeCreated = (TextView) v.findViewById(R.id.created);
         description = (TextView) v.findViewById(R.id.description);
         description.setMovementMethod(LinkMovementMethod.getInstance());
+        separator = v.findViewById(R.id.separator);
 
         enterGiveaway = (Button) v.findViewById(R.id.enter);
         leaveGiveaway = (Button) v.findViewById(R.id.leave);
@@ -69,70 +71,76 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
         final Giveaway giveaway = card.getGiveaway();
         final GiveawayExtras extras = card.getExtras();
 
-        user.setText("{faw-user} " + giveaway.getCreator());
-        timeRemaining.setText("{faw-clock-o} " + giveaway.getTimeRemaining());
-        timeCreated.setText("{faw-calendar-o} " + giveaway.getTimeCreated());
-
-        enterGiveaway.setText(String.format(String.valueOf(itemView.getContext().getText(R.string.enter_giveaway_with_points)), giveaway.getPoints()));
-        leaveGiveaway.setText(String.format(String.valueOf(itemView.getContext().getText(R.string.leave_giveaway_with_points)), giveaway.getPoints()));
-
-        for (View view : new View[]{enterGiveaway, leaveGiveaway, commentGiveaway, loginButton, errorMessage, description, indicator})
+        for (View view : new View[]{enterGiveaway, leaveGiveaway, commentGiveaway, loginButton, errorMessage, description, indicator, user, timeRemaining, timeCreated, separator})
             view.setVisibility(View.GONE);
 
-        if (extras == null) {
-            // Still loading...
+        if (giveaway == null) {
             progressBar.setVisibility(View.VISIBLE);
         } else {
-            progressBar.setVisibility(View.GONE);
+            user.setText("{faw-user} " + giveaway.getCreator());
+            timeRemaining.setText("{faw-clock-o} " + giveaway.getTimeRemaining());
+            timeCreated.setText("{faw-calendar-o} " + giveaway.getTimeCreated());
+            for (View view : new View[]{user, timeRemaining, timeCreated, separator})
+                view.setVisibility(View.VISIBLE);
 
-            if (extras.getDescription() != null) {
-                description.setText(Utils.fromHtml(extras.getDescription()));
-                description.setVisibility(View.VISIBLE);
+            enterGiveaway.setText(String.format(String.valueOf(itemView.getContext().getText(R.string.enter_giveaway_with_points)), giveaway.getPoints()));
+            leaveGiveaway.setText(String.format(String.valueOf(itemView.getContext().getText(R.string.leave_giveaway_with_points)), giveaway.getPoints()));
+
+            if (extras == null) {
+                // Still loading...
+                progressBar.setVisibility(View.VISIBLE);
+            } else {
+                progressBar.setVisibility(View.GONE);
+
+                if (extras.getDescription() != null) {
+                    description.setText(Utils.fromHtml(fragment.getContext(), extras.getDescription()));
+                    description.setVisibility(View.VISIBLE);
+                }
+
+                if (extras.getXsrfToken() != null && extras.getErrorMessage() == null) {
+                    if (!extras.isEntered())
+                        enterGiveaway.setVisibility(View.VISIBLE);
+                    else
+                        leaveGiveaway.setVisibility(View.VISIBLE);
+                } else if (extras.getErrorMessage() != null) {
+                    errorMessage.setText(extras.getErrorMessage());
+                    errorMessage.setVisibility(View.VISIBLE);
+                } else if (!WebUserData.getCurrent().isLoggedIn()) {
+                    loginButton.setVisibility(View.VISIBLE);
+                }
+
+                if (extras.getXsrfToken() != null)
+                    commentGiveaway.setVisibility(View.VISIBLE);
+
+                enterGiveaway.setEnabled(true);
+                leaveGiveaway.setEnabled(true);
+
+                setupIndicators(giveaway);
             }
 
-            if (extras.getXsrfToken() != null && extras.getErrorMessage() == null) {
-                if (!extras.isEntered())
-                    enterGiveaway.setVisibility(View.VISIBLE);
-                else
-                    leaveGiveaway.setVisibility(View.VISIBLE);
-            } else if (extras.getErrorMessage() != null) {
-                errorMessage.setText(extras.getErrorMessage());
-                errorMessage.setVisibility(View.VISIBLE);
-            } else if (!WebUserData.getCurrent().isLoggedIn()) {
-                loginButton.setVisibility(View.VISIBLE);
-            }
+            enterGiveaway.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    enterGiveaway.setEnabled(false);
+                    fragment.requestEnterLeave(giveaway.getGiveawayId(), GiveawayDetailFragment.ENTRY_INSERT, extras.getXsrfToken());
+                }
+            });
 
-            if (extras.getXsrfToken() != null)
-                commentGiveaway.setVisibility(View.VISIBLE);
+            leaveGiveaway.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    leaveGiveaway.setEnabled(false);
+                    fragment.requestEnterLeave(giveaway.getGiveawayId(), GiveawayDetailFragment.ENTRY_DELETE, extras.getXsrfToken());
+                }
+            });
 
-            enterGiveaway.setEnabled(true);
-            leaveGiveaway.setEnabled(true);
-
-            setupIndicators(giveaway);
+            commentGiveaway.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    fragment.requestComment(null);
+                }
+            });
         }
-
-        enterGiveaway.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                enterGiveaway.setEnabled(false);
-                fragment.requestEnterLeave(giveaway.getGiveawayId(), GiveawayDetailFragment.ENTRY_INSERT, extras.getXsrfToken());
-            }
-        });
-
-        leaveGiveaway.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                leaveGiveaway.setEnabled(false);
-                fragment.requestEnterLeave(giveaway.getGiveawayId(), GiveawayDetailFragment.ENTRY_DELETE, extras.getXsrfToken());
-            }
-        });
-
-        commentGiveaway.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fragment.requestComment(null);
-            }
-        });
     }
 
     private void setupIndicators(final Giveaway giveaway) {

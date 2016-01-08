@@ -8,11 +8,11 @@ import net.mabako.steamgifts.data.GiveawayExtras;
 public class GiveawayDetailsCard implements IEndlessAdaptable {
     public static final int VIEW_LAYOUT = R.layout.giveaway_detail_card;
 
-    private final Giveaway giveaway;
+    private Giveaway giveaway;
     private GiveawayExtras extras;
 
-    public GiveawayDetailsCard(Giveaway giveaway) {
-        this.giveaway = giveaway;
+    public GiveawayDetailsCard() {
+
     }
 
     @Override
@@ -22,6 +22,10 @@ public class GiveawayDetailsCard implements IEndlessAdaptable {
 
     public Giveaway getGiveaway() {
         return giveaway;
+    }
+
+    public void setGiveaway(Giveaway giveaway) {
+        this.giveaway = giveaway;
     }
 
     public GiveawayExtras getExtras() {

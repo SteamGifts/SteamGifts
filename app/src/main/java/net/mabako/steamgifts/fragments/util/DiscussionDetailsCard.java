@@ -8,12 +8,8 @@ import net.mabako.steamgifts.data.DiscussionExtras;
 public class DiscussionDetailsCard implements IEndlessAdaptable {
     public static final int VIEW_LAYOUT = R.layout.discussion_detail_card;
 
-    private final Discussion discussion;
+    private Discussion discussion;
     private DiscussionExtras extras;
-
-    public DiscussionDetailsCard(Discussion discussion) {
-        this.discussion = discussion;
-    }
 
     @Override
     public int getLayout() {
@@ -22,6 +18,10 @@ public class DiscussionDetailsCard implements IEndlessAdaptable {
 
     public Discussion getDiscussion() {
         return discussion;
+    }
+
+    public void setDiscussion(Discussion discussion) {
+        this.discussion = discussion;
     }
 
     public DiscussionExtras getExtras() {
