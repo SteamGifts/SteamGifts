@@ -22,6 +22,7 @@ import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader;
 import com.mikepenz.materialdrawer.util.DrawerImageLoader;
 import com.squareup.picasso.Picasso;
@@ -30,6 +31,7 @@ import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.fragments.DiscussionListFragment;
 import net.mabako.steamgifts.fragments.GiveawayListFragment;
 import net.mabako.steamgifts.fragments.IHasEnterableGiveaways;
+import net.mabako.steamgifts.fragments.UserDetailFragment;
 import net.mabako.steamgifts.tasks.LogoutTask;
 import net.mabako.steamgifts.web.WebUserData;
 
@@ -106,6 +108,23 @@ public class MainActivity extends CommonActivity implements IHasEnterableGiveawa
                 .withCompactStyle(true)
                 .withHeaderBackground(ta.getDrawable(0))
                 .withSelectionListEnabledForSingleProfile(false)
+                .withOnAccountHeaderProfileImageListener(new AccountHeader.OnAccountHeaderProfileImageListener() {
+                    @Override
+                    public boolean onProfileImageClick(View view, IProfile profile, boolean current) {
+                        if (WebUserData.getCurrent().isLoggedIn()) {
+                            Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+                            intent.putExtra(UserDetailFragment.ARG_USER, WebUserData.getCurrent().getName());
+                            startActivity(intent);
+                            return true;
+                        }
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onProfileImageLongClick(View view, IProfile profile, boolean current) {
+                        return false;
+                    }
+                })
                 .build();
 
         drawer = new DrawerBuilder()
