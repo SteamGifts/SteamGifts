@@ -1,10 +1,12 @@
 package net.mabako.steamgifts.tasks;
 
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
+import net.mabako.steamgifts.data.Discussion;
 import net.mabako.steamgifts.data.DiscussionExtras;
-import net.mabako.steamgifts.data.GiveawayExtras;
 import net.mabako.steamgifts.fragments.DiscussionDetailFragment;
 import net.mabako.steamgifts.web.WebUserData;
 
@@ -15,6 +17,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 public class LoadDiscussionDetailsTask extends AsyncTask<Void, Void, DiscussionExtras> {
     private static final String TAG = LoadDiscussionDetailsTask.class.getSimpleName();
@@ -22,11 +25,14 @@ public class LoadDiscussionDetailsTask extends AsyncTask<Void, Void, DiscussionE
     private final DiscussionDetailFragment fragment;
     private final String discussionId;
     private final int page;
+    private final boolean loadDetails;
+    private Discussion loadedDetails = null;
 
-    public LoadDiscussionDetailsTask(DiscussionDetailFragment fragment, String discussionId, int page) {
+    public LoadDiscussionDetailsTask(DiscussionDetailFragment fragment, String discussionId, int page, boolean loadDetails) {
         this.fragment = fragment;
         this.discussionId = discussionId;
         this.page = page;
+        this.loadDetails = loadDetails;
 
     }
 
@@ -36,33 +42,23 @@ public class LoadDiscussionDetailsTask extends AsyncTask<Void, Void, DiscussionE
         Log.d(TAG, "Fetching discussion details for " + url);
 
         try {
-            Connection jsoup = Jsoup.connect(url);
+            Connection connection = Jsoup.connect(url);
             if (WebUserData.getCurrent().isLoggedIn())
-                jsoup.cookie("PHPSESSID", WebUserData.getCurrent().getSessionId());
-            Document document = jsoup.get();
+                connection.cookie("PHPSESSID", WebUserData.getCurrent().getSessionId());
+
+            Connection.Response response = connection.execute();
+            Document document = response.parse();
 
             // Update user details
             WebUserData.extract(document);
 
-            DiscussionExtras extras = new DiscussionExtras();
-
-            // Load the description
-            Element description = document.select(".comment__display-state .markdown").first();
-            if (description != null) // This will be null if no description is given.
-                extras.setDescription(description.html());
-
-            // Can we send a comment?
-            Element xsrf = document.select(".comment--submit form input[name=xsrf_token]").first();
-            if (xsrf != null)
-                extras.setXsrfToken(xsrf.attr("value"));
-
-
-            // Load comments
-            Elements commentsNode = document.select(".comments");
-            if (commentsNode.size() > 1) {
-                Element rootCommentNode = commentsNode.last();
-                if (rootCommentNode != null)
-                    Utils.loadComments(rootCommentNode, extras);
+            DiscussionExtras extras = loadExtras(document);
+            if (loadDetails) {
+                try {
+                    loadedDetails = loadDiscussion(document, Uri.parse(response.url().toURI().toString()));
+                } catch (URISyntaxException e) {
+                    Log.w(TAG, "say what - invalid url???", e);
+                }
             }
 
             return extras;
@@ -72,9 +68,55 @@ public class LoadDiscussionDetailsTask extends AsyncTask<Void, Void, DiscussionE
         }
     }
 
+    private Discussion loadDiscussion(Document document, Uri linkUri) {
+        Element element = document.select(".comments").first();
+
+        // Basic information
+        String discussionLink = linkUri.getPathSegments().get(1);
+        String discussionName = linkUri.getPathSegments().get(2);
+
+        Discussion discussion = new Discussion(discussionLink);
+        discussion.setName(discussionName);
+        discussion.setTitle(document.title()); // TODO is this "good enough"?
+
+        discussion.setCreator(element.select(".comment__username a").first().text());
+        discussion.setTimeCreated(element.select(".comment__actions > div span").first().text());
+
+        return discussion;
+    }
+
+    @NonNull
+    private DiscussionExtras loadExtras(Document document) {
+        DiscussionExtras extras = new DiscussionExtras();
+
+        // Load the description
+        Element description = document.select(".comment__display-state .markdown").first();
+        if (description != null) // This will be null if no description is given.
+            extras.setDescription(description.html());
+
+        // Can we send a comment?
+        Element xsrf = document.select(".comment--submit form input[name=xsrf_token]").first();
+        if (xsrf != null)
+            extras.setXsrfToken(xsrf.attr("value"));
+
+
+        // Load comments
+        Elements commentsNode = document.select(".comments");
+        if (commentsNode.size() > 1) {
+            Element rootCommentNode = commentsNode.last();
+            if (rootCommentNode != null)
+                Utils.loadComments(rootCommentNode, extras);
+        }
+        return extras;
+    }
+
     @Override
     protected void onPostExecute(DiscussionExtras discussionExtras) {
         super.onPostExecute(discussionExtras);
+
+        if (loadDetails)
+            fragment.onPostDiscussionLoaded(loadedDetails);
+
         fragment.addDetails(discussionExtras, page);
     }
 }

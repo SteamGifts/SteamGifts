@@ -1,9 +1,7 @@
 package net.mabako.steamgifts.adapters.viewholder;
 
-import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.Button;
@@ -23,6 +21,7 @@ public class DiscussionCardViewHolder extends RecyclerView.ViewHolder {
     private final TextView discussionTime;
     private final TextView user;
     private final TextView description;
+    private final View separator;
 
     private final Button commentDiscussion;
 
@@ -35,6 +34,7 @@ public class DiscussionCardViewHolder extends RecyclerView.ViewHolder {
         discussionTime = (TextView) v.findViewById(R.id.time);
         description = (TextView) v.findViewById(R.id.description);
         description.setMovementMethod(LinkMovementMethod.getInstance());
+        separator = v.findViewById(R.id.separator);
 
         commentDiscussion = (Button) v.findViewById(R.id.comment);
     }
@@ -43,32 +43,39 @@ public class DiscussionCardViewHolder extends RecyclerView.ViewHolder {
         Discussion discussion = card.getDiscussion();
         DiscussionExtras extras = card.getExtras();
 
-        user.setText("{faw-user} " + discussion.getCreator());
-        discussionTime.setText("{faw-calendar-o} " + discussion.getTimeCreated());
-
-        for (View view : new View[]{commentDiscussion, description})
+        for (View view : new View[]{commentDiscussion, description, discussionTime, user, separator})
             view.setVisibility(View.GONE);
 
-        if (extras == null) {
-            // Still loading...
+        if (discussion == null) {
             progressBar.setVisibility(View.VISIBLE);
         } else {
-            progressBar.setVisibility(View.GONE);
+            for (View view : new View[]{discussionTime, user, separator})
+                view.setVisibility(View.VISIBLE);
 
-            if (extras.getDescription() != null) {
-                description.setText(Utils.fromHtml(((Fragment) fragment).getContext(), extras.getDescription()));
-                description.setVisibility(View.VISIBLE);
+            user.setText("{faw-user} " + discussion.getCreator());
+            discussionTime.setText("{faw-calendar-o} " + discussion.getTimeCreated());
+
+            if (extras == null) {
+                // Still loading...
+                progressBar.setVisibility(View.VISIBLE);
+            } else {
+                progressBar.setVisibility(View.GONE);
+
+                if (extras.getDescription() != null) {
+                    description.setText(Utils.fromHtml(((Fragment) fragment).getContext(), extras.getDescription()));
+                    description.setVisibility(View.VISIBLE);
+                }
+
+                if (extras.getXsrfToken() != null)
+                    commentDiscussion.setVisibility(View.VISIBLE);
             }
 
-            if (extras.getXsrfToken() != null)
-                commentDiscussion.setVisibility(View.VISIBLE);
+            commentDiscussion.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    fragment.requestComment(null);
+                }
+            });
         }
-
-        commentDiscussion.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fragment.requestComment(null);
-            }
-        });
     }
 }

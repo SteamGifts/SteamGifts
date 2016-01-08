@@ -1,10 +1,10 @@
 package net.mabako.steamgifts.tasks;
 
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import net.mabako.steamgifts.data.Discussion;
-import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.fragments.DiscussionListFragment;
 import net.mabako.steamgifts.web.WebUserData;
 
@@ -68,22 +68,24 @@ public class LoadDiscussionListTask extends AsyncTask<Void, Void, List<Discussio
                 Element link = element.select("h3 a").first();
 
                 // Basic information
-                String title = link.text();
-                String discussionId = link.attr("href").substring(12, 17);
-                String discussionName = link.attr("href").substring(18);
+                Uri uri = Uri.parse(link.attr("href"));
+                String discussionId = uri.getPathSegments().get(1);
+                String discussionName = uri.getPathSegments().get(2);
+
+                Discussion discussion = new Discussion(discussionId);
+                discussion.setTitle(link.text());
+                discussion.setName(discussionName);
 
                 Element p = element.select(".table__column--width-fill p").first();
-                String timeAgo = p.select("span").first().text();
-                String creator = p.select("a").last().text();
+                discussion.setTimeCreated(p.select("span").first().text());
+                discussion.setCreator(p.select("a").last().text());
 
                 // The creator's avatar
                 String avatar = null;
                 Element avatarNode = element.select(".global__image-inner-wrap").first();
                 if (avatarNode != null)
-                    avatar = Utils.extractAvatar(avatarNode.attr("style"));
+                    discussion.setCreatorAvatar(Utils.extractAvatar(avatarNode.attr("style")));
 
-
-                Discussion discussion = new Discussion(discussionId, title, discussionName, creator, timeAgo, avatar);
                 discussion.setLocked(element.hasClass("is-faded"));
                 discussionList.add(discussion);
             }

@@ -42,10 +42,9 @@ public final class Utils {
             desc.select(".comment__toggle-attached").html("");
             String content = desc.html();
 
-            Element timeRemaining = thisComment.select(".comment__actions > div span").first();
+            Element timeCreated = thisComment.select(".comment__actions > div span").first();
 
-            // public Comment(int id, String author, String timeAgo, String timeAgoLong, String content) {
-            Comment comment = new Comment(Integer.parseInt(c.attr("data-comment-id")), author, timeRemaining.text(), timeRemaining.attr("title"), content, depth, avatar, isOp);
+            Comment comment = new Comment(Integer.parseInt(c.attr("data-comment-id")), author, timeCreated.text(), timeCreated.attr("title"), content, depth, avatar, isOp);
 
             // check if the comment is deleted
             comment.setDeleted(thisComment.select(".comment__summary").first().select(".comment__delete-state").size() == 1);

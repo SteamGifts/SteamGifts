@@ -6,7 +6,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
+import net.mabako.steamgifts.data.BasicDiscussion;
 import net.mabako.steamgifts.data.BasicGiveaway;
+import net.mabako.steamgifts.fragments.DiscussionDetailFragment;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
 
 import java.util.List;
@@ -20,10 +22,14 @@ public class UrlHandlingActivity extends CommonActivity {
     public static Intent getIntentForUri(Context context, Uri uri) {
         Log.d(TAG, uri.toString());
         if ("www.steamgifts.com".equals(uri.getHost()) || "steamgifts.com".equals(uri.getHost())) {
+            Log.d(TAG, "Parsing path segment " + uri.getPath());
             List<String> pathSegments = uri.getPathSegments();
 
-            // Can't really do anything reasonable without at least two path segments
-            if (pathSegments.size() >= 2) {
+            if (pathSegments.size() == 0 || ("/giveaways/search".equals(uri.getPath()))) {
+                // TODO parse query params?
+                return new Intent(context, MainActivity.class);
+            } else if (pathSegments.size() >= 2) {
+                // Can't really do anything reasonable without at least two path segments
                 // Giveaways!
                 if ("giveaway".equals(pathSegments.get(0))) {
                     String giveawayId = pathSegments.get(1);
@@ -33,11 +39,18 @@ public class UrlHandlingActivity extends CommonActivity {
                         intent.putExtra(GiveawayDetailFragment.ARG_GIVEAWAY, new BasicGiveaway(giveawayId));
                         return intent;
                     }
+                } else if ("discussion".equals(pathSegments.get(0))) {
+                    String discussionId = pathSegments.get(1);
+                    // Discussion Ids are always 5 chars long.
+                    if (discussionId.length() == 5) {
+                        Intent intent = new Intent(context, DetailActivity.class);
+                        intent.putExtra(DiscussionDetailFragment.ARG_DISCUSSION, new BasicDiscussion(discussionId));
+                        return intent;
+                    }
                 }
             }
         }
         return null;
-
     }
 
     @Override
@@ -49,7 +62,8 @@ public class UrlHandlingActivity extends CommonActivity {
         if (intentToStart != null) {
             startActivity(intentToStart);
         } else {
-            // TODO launch in browser or something
+            // Fallback for opening an unknown url.
+            startActivity(new Intent(this, MainActivity.class));
         }
 
         finish();

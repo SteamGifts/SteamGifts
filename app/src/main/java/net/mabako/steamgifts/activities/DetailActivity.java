@@ -8,9 +8,8 @@ import android.support.v7.widget.Toolbar;
 import com.mikepenz.iconics.context.IconicsContextWrapper;
 
 import net.mabako.steamgifts.R;
+import net.mabako.steamgifts.data.BasicDiscussion;
 import net.mabako.steamgifts.data.BasicGiveaway;
-import net.mabako.steamgifts.data.Discussion;
-import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.fragments.DiscussionDetailFragment;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
 
@@ -43,7 +42,7 @@ public class DetailActivity extends CommonActivity {
             serializable = getIntent().getSerializableExtra(DiscussionDetailFragment.ARG_DISCUSSION);
             if (serializable != null) {
                 setContentView(R.layout.activity_discussion_detail);
-                loadFragment(DiscussionDetailFragment.newInstance((Discussion) serializable));
+                loadFragment(DiscussionDetailFragment.newInstance((BasicDiscussion) serializable));
                 return;
             }
         }
