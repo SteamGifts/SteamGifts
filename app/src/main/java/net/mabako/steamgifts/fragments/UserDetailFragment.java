@@ -1,5 +1,8 @@
 package net.mabako.steamgifts.fragments;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -15,6 +18,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
+
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.adapters.GiveawayAdapter;
@@ -24,6 +30,8 @@ import net.mabako.steamgifts.tasks.LoadUserDetailsTask;
 
 import java.io.Serializable;
 import java.util.List;
+
+import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 public class UserDetailFragment extends Fragment implements IUserNotifications {
     private static final String TAG = UserDetailFragment.class.getSimpleName();
@@ -61,9 +69,31 @@ public class UserDetailFragment extends Fragment implements IUserNotifications {
 
     @Override
     public void onUserUpdated(User user) {
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        final ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         actionBar.setTitle(user.getName());
         actionBar.setSubtitle(getString(R.string.user_level, user.getLevel()));
+
+        // Avatar?
+        Picasso.with(getContext()).load(user.getAvatar()).placeholder(R.drawable.default_avatar_mask).transform(new RoundedCornersTransformation(20, 0)).into(new Target() {
+            @Override
+            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                Drawable drawable = new BitmapDrawable(getResources(), bitmap);
+                actionBar.setIcon(drawable);
+                actionBar.setHomeButtonEnabled(false);
+                actionBar.setDisplayShowHomeEnabled(true);
+                actionBar.setDisplayHomeAsUpEnabled(false);
+            }
+
+            @Override
+            public void onBitmapFailed(Drawable errorDrawable) {
+
+            }
+
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+            }
+        });
 
         // Refresh tabs
         for (int i = 0; i < viewPagerAdapter.getCount(); ++i)

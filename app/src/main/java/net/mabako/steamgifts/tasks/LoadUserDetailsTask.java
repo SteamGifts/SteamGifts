@@ -68,7 +68,7 @@ public class LoadUserDetailsTask extends AsyncTask<Void, Void, List<Giveaway>> {
     protected void onPostExecute(List<Giveaway> result) {
         super.onPostExecute(result);
 
-        if (!user.isLoaded()) {
+        if (!user.isLoaded() && result != null) {
             user.setLoaded(true);
             fragment.onUserUpdated(user);
         }
@@ -78,12 +78,15 @@ public class LoadUserDetailsTask extends AsyncTask<Void, Void, List<Giveaway>> {
 
     private void loadUser(Document document) {
         user.setName(document.select(".featured__heading__medium").first().text());
+        user.setAvatar(Utils.extractAvatar(document.select(".global__image-inner-wrap").first().attr("style")));
 
         Elements columns = document.select(".featured__table__column");
         user.setComments(parseInt(columns.first().select(".featured__table__row__right").get(3).text()));
 
         Elements right = columns.last().select(".featured__table__row__right");
 
+        // Both won and created have <a href="...">[amount won]</a> [value of won items],
+        // so it's impossible to get the text for the amount directly.
         Element won = right.get(1);
         user.setWon(parseInt(won.select("a").first().text()));
         won.select("a").html("");

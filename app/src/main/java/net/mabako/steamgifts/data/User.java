@@ -3,7 +3,7 @@ package net.mabako.steamgifts.data;
 import java.io.Serializable;
 
 public class User implements Serializable {
-    private String name;
+    private String name, avatar;
 
     private int level, created, won, comments;
     private String createdAmount, wonAmount;
@@ -20,6 +20,14 @@ public class User implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public int getLevel() {
