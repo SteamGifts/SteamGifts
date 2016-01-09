@@ -13,7 +13,7 @@ import net.mabako.steamgifts.tasks.LoadDiscussionListTask;
 /**
  * List of all discussions.
  */
-public class DiscussionListFragment extends ListFragment<DiscussionAdapter> {
+public class DiscussionListFragment extends ListFragment<DiscussionAdapter> implements IFragmentNotifications {
     private static final String TAG = DiscussionListFragment.class.getSimpleName();
 
     /**

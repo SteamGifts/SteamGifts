@@ -13,7 +13,7 @@ import net.mabako.steamgifts.tasks.LoadGiveawayGroupsTask;
 
 import java.io.Serializable;
 
-public class GiveawayGroupListFragment extends ListFragment<GiveawayGroupAdapter> {
+public class GiveawayGroupListFragment extends ListFragment<GiveawayGroupAdapter> implements IFragmentNotifications {
     /**
      * Path to the giveaway
      */

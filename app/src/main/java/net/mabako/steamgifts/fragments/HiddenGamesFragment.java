@@ -19,7 +19,7 @@ import net.mabako.steamgifts.tasks.UpdateGiveawayFilterTask;
 import java.io.Serializable;
 import java.util.List;
 
-public class HiddenGamesFragment extends ListFragment<HiddenGamesAdapter> {
+public class HiddenGamesFragment extends ListFragment<HiddenGamesAdapter> implements IFragmentNotifications {
     /**
      * Snack is only shown if the app is restarted.
      */

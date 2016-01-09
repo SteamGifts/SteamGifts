@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * List of all giveaways.
  */
-public class GiveawayListFragment extends ListFragment<GiveawayAdapter> implements IHasEnterableGiveaways {
+public class GiveawayListFragment extends ListFragment<GiveawayAdapter> implements IHasEnterableGiveaways, IFragmentNotifications {
     private static final String TAG = GiveawayListFragment.class.getSimpleName();
 
     private EnterLeaveGiveawayTask enterLeaveTask;

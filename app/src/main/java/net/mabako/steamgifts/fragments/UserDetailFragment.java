@@ -213,16 +213,6 @@ public class UserDetailFragment extends Fragment implements IUserNotifications {
             throw new UnsupportedOperationException();
         }
 
-        @Override
-        public int getTitleResource() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public String getExtraTitle() {
-            throw new UnsupportedOperationException();
-        }
-
         /**
          * Load the "won" giveaways only if the user's been navigating to that tab.
          *
