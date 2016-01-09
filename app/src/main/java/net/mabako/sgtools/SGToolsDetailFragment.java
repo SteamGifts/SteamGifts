@@ -55,14 +55,6 @@ public class SGToolsDetailFragment extends Fragment implements View.OnClickListe
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Load session & username if possible
-        SharedPreferences sp = getActivity().getSharedPreferences(SGToolsLoginActivity.PREF_ACCOUNT, Activity.MODE_PRIVATE);
-        if (sp.contains(SGToolsLoginActivity.PREF_KEY_SESSION_ID)) {
-            SGToolsUserData.getCurrent().setSessionId(sp.getString(SGToolsLoginActivity.PREF_KEY_SESSION_ID, null));
-        } else {
-            SGToolsUserData.clear();
-        }
-
         layout = inflater.inflate(R.layout.fragment_sgtools, container, false);
 
         appBarLayout = (CollapsingToolbarLayout) getActivity().findViewById(R.id.toolbar_layout);

@@ -1,11 +1,17 @@
 package net.mabako.steamgifts.activities.settings;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.Preference;
+import android.preference.PreferenceCategory;
 import android.support.v7.widget.Toolbar;
+import android.widget.Toast;
 
+import net.mabako.sgtools.SGToolsLoginActivity;
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.activities.BaseActivity;
 import net.mabako.steamgifts.compat.PreferenceFragment;
+import net.mabako.steamgifts.web.SGToolsUserData;
 import net.mabako.steamgifts.web.SteamGiftsUserData;
 
 public class SettingsActivity extends BaseActivity {
@@ -17,6 +23,27 @@ public class SettingsActivity extends BaseActivity {
 
             if (SteamGiftsUserData.getCurrent().isLoggedIn()) {
                 addPreferencesFromResource(R.xml.preferences_sg);
+            }
+
+            if (SGToolsUserData.getCurrent().isLoggedIn()) {
+                addPreferencesFromResource(R.xml.preferences_sgtools);
+
+                final PreferenceCategory category = (PreferenceCategory) findPreference("preferences_sgtools_header");
+
+                findPreference("preference_sgtools_logout").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        SharedPreferences.Editor spEditor = getContext().getSharedPreferences(SGToolsLoginActivity.PREF_ACCOUNT, MODE_PRIVATE).edit();
+                        spEditor.remove(SGToolsLoginActivity.PREF_KEY_SESSION_ID);
+                        spEditor.apply();
+
+                        SGToolsUserData.clear();
+                        Toast.makeText(getContext(), R.string.preference_sgtools_logged_out, Toast.LENGTH_SHORT).show();
+
+                        getPreferenceScreen().removePreference(category);
+                        return true;
+                    }
+                });
             }
         }
     }

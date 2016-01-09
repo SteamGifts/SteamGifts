@@ -101,6 +101,10 @@
     <string name="preference_sg_hidden_games">Hidden Games</string>
     <string name="preference_sg_hidden_games_sub">Un-hide games from your account</string>
 
+    <string name="preferences_sgtools_header">sgtools.info Account</string>
+    <string name="preference_sgtools_logout">Logout</string>
+    <string name="preference_sgtools_logged_out">Cleared sgtools.info data</string>
+
     <string name="hidden_games_snack">Long-Press a Game to remove it</string>
     <string name="hidden_games_snack_dismiss">Got it</string>
 
