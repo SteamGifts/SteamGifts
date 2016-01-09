@@ -21,6 +21,7 @@ public class HiddenGamesAdapter extends EndlessAdapter {
 
     public HiddenGamesAdapter(@NonNull RecyclerView view, HiddenGamesFragment fragment, @NonNull OnLoadListener listener) {
         super(view, listener);
+        this.alternativeEnd = true;
         this.fragment = fragment;
     }
 
