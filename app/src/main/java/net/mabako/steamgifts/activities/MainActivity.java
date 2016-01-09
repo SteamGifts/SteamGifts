@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.materialdrawer.AccountHeader;
@@ -210,16 +211,38 @@ public class MainActivity extends CommonActivity implements IHasEnterableGiveawa
 
                     @Override
                     public void onDrawerSlide(View drawerView, float slideOffset) {
+                        TextView notifications = (TextView) accountHeader.getView().findViewById(R.id.material_drawer_account_header_notifications);
+
                         // Are we even logged in?
-                        if (SteamGiftsUserData.getCurrent().isLoggedIn()) {
+                        SteamGiftsUserData user = SteamGiftsUserData.getCurrent();
+                        if (user.isLoggedIn()) {
                             // Format the string
-                            String newInfo = String.format(getString(R.string.drawer_profile_info), SteamGiftsUserData.getCurrent().getLevel(), SteamGiftsUserData.getCurrent().getPoints());
+                            String newInfo = String.format(getString(R.string.drawer_profile_info), user.getLevel(), user.getPoints());
 
                             // Is this still up-to-date?
                             if (!newInfo.equals(profile.getEmail().toString())) {
                                 profile.withEmail(newInfo);
                                 accountHeader.updateProfile(profile);
                             }
+
+                            if (user.hasNotifications()) {
+                                StringBuilder sb = new StringBuilder();
+
+                                if (user.getCreatedNotification() > 0)
+                                    sb.append("{faw-gift} ").append(user.getCreatedNotification());
+
+                                if (user.getWonNotification() > 0)
+                                    sb.append(" {faw-trophy} ").append(user.getWonNotification());
+
+                                if (user.getMessageNotification() > 0)
+                                    sb.append(" {faw-envelope} ").append(user.getMessageNotification());
+
+                                notifications.setText(sb.toString());
+                                notifications.setVisibility(View.VISIBLE);
+                            } else
+                                notifications.setVisibility(View.GONE);
+                        } else {
+                            notifications.setVisibility(View.GONE);
                         }
                     }
                 })

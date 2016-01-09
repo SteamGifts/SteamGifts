@@ -89,7 +89,7 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
     }
 
     protected void showSnack(String message, int length) {
-        Snackbar.make(swipeContainer, message, length).show();
+        Snackbar.make(swipeContainer != null ? swipeContainer : getView(), message, length).show();
     }
 
 

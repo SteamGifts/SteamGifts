@@ -21,14 +21,4 @@ public class AboutActivity extends CommonActivity {
         getSupportActionBar().setTitle(R.string.navigation_about);
         loadFragment(R.id.fragment_container, new AboutFragment(), "about");
     }
-
-    /**
-     * Allow icons to be used in {@link android.widget.TextView}
-     *
-     * @param newBase
-     */
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(IconicsContextWrapper.wrap(newBase));
-    }
 }

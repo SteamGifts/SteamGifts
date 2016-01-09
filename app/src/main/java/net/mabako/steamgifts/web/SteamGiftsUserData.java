@@ -1,6 +1,7 @@
 package net.mabako.steamgifts.web;
 
 import android.app.Activity;
+import android.text.TextUtils;
 import android.util.Log;
 
 import net.mabako.steamgifts.tasks.Utils;
@@ -21,6 +22,8 @@ public class SteamGiftsUserData {
 
     private transient int points = 0;
     private transient int level = 0;
+
+    private transient int createdNotification, wonNotification, messageNotification;
 
     private static List<IPointUpdateNotification> pointUpdateHandlers = new ArrayList<>();
 
@@ -61,7 +64,20 @@ public class SteamGiftsUserData {
             // Level
             float level = Float.parseFloat(accountContainer.select("span").last().attr("title"));
             current.setLevel((int) level);
+
+            // Notifications
+            Elements notifications = navbar.select(".nav__button-container--notification");
+            current.setCreatedNotification(getInt(notifications.select("a[href=/giveaways/created]").first().text()));
+            current.setWonNotification(getInt(notifications.select("a[href=/giveaways/won]").first().text()));
+            current.setMessageNotification(getInt(notifications.select("a[href=/messages]").first().text()));
         }
+    }
+
+    private static int getInt(String text) {
+        text = text.trim();
+        if (TextUtils.isEmpty(text))
+            return 0;
+        return Integer.parseInt(text.replace("+", ""));
     }
 
     public static void clear() {
@@ -124,5 +140,33 @@ public class SteamGiftsUserData {
 
     public void setLevel(int level) {
         this.level = level;
+    }
+
+    public int getCreatedNotification() {
+        return createdNotification;
+    }
+
+    public void setCreatedNotification(int createdNotification) {
+        this.createdNotification = createdNotification;
+    }
+
+    public int getMessageNotification() {
+        return messageNotification;
+    }
+
+    public void setMessageNotification(int messageNotification) {
+        this.messageNotification = messageNotification;
+    }
+
+    public int getWonNotification() {
+        return wonNotification;
+    }
+
+    public void setWonNotification(int wonNotification) {
+        this.wonNotification = wonNotification;
+    }
+
+    public boolean hasNotifications() {
+        return createdNotification != 0 || messageNotification != 0 || wonNotification != 0;
     }
 }

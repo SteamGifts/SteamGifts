@@ -1,5 +1,6 @@
 package net.mabako.steamgifts.activities;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,8 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
+
+import com.mikepenz.iconics.context.IconicsContextWrapper;
 
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.data.BasicDiscussion;
@@ -162,5 +165,15 @@ public class CommonActivity extends BaseActivity {
             return true;
         }
         return super.onKeyLongPress(keyCode, event);
+    }
+
+    /**
+     * Allow icons to be used in {@link android.widget.TextView}
+     *
+     * @param newBase
+     */
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(IconicsContextWrapper.wrap(newBase));
     }
 }

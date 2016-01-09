@@ -67,16 +67,6 @@ public class DetailActivity extends CommonActivity {
         }
     }
 
-    /**
-     * Allow icons to be used in {@link android.widget.TextView}
-     *
-     * @param newBase
-     */
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(IconicsContextWrapper.wrap(newBase));
-    }
-
     @Override
     protected void onAccountChange() {
         super.onAccountChange();
