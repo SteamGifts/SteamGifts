@@ -37,6 +37,11 @@ public class UpdateGiveawayFilterTask<FragmentType extends Fragment> extends Aja
 
     @Override
     protected void onPostExecute(Connection.Response response) {
+        if(response == null) {
+            // TODO Socket timed out or some stupid shit like that.
+            return;
+        }
+
         FragmentType fragment = getFragment();
         if (fragment instanceof GiveawayListFragment) {
             if (response.statusCode() == 301)
