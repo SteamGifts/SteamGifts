@@ -87,6 +87,10 @@
     <string name="user_giveaway_won_count">%1$d won\n%2$s</string>
     <string name="private_giveaway">This giveaway is private.</string>
 
+    <!-- sgtools.info -->
+    <string name="sgtools_loading">Loading SGTools</string>
+    <string name="sgtools_check">Check Requirements</string>
+
     <!-- Settings -->
     <string name="preferences">Settings</string>
     <string name="preference_theme_header">Theme</string>

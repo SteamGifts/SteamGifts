@@ -2,7 +2,7 @@ package net.mabako.steamgifts.data;
 
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
-import net.mabako.steamgifts.web.WebUserData;
+import net.mabako.steamgifts.web.SteamGiftsUserData;
 
 public class Giveaway extends BasicGiveaway implements IEndlessAdaptable {
     public static final int VIEW_LAYOUT = R.layout.giveaway_item;
@@ -149,7 +149,7 @@ public class Giveaway extends BasicGiveaway implements IEndlessAdaptable {
     }
 
     public boolean isLevelPositive() {
-        return level > 0 && WebUserData.getCurrent().getLevel() >= level;
+        return level > 0 && SteamGiftsUserData.getCurrent().getLevel() >= level;
     }
 
     public boolean isLevelNegative() {

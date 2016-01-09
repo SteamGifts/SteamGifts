@@ -9,7 +9,7 @@ import android.widget.Toast;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.data.GiveawayExtras;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
-import net.mabako.steamgifts.web.WebUserData;
+import net.mabako.steamgifts.web.SteamGiftsUserData;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -43,14 +43,14 @@ public class LoadGiveawayDetailsTask extends AsyncTask<Void, Void, GiveawayExtra
 
         try {
             Connection connection = Jsoup.connect(url);
-            if (WebUserData.getCurrent().isLoggedIn())
-                connection.cookie("PHPSESSID", WebUserData.getCurrent().getSessionId());
+            if (SteamGiftsUserData.getCurrent().isLoggedIn())
+                connection.cookie("PHPSESSID", SteamGiftsUserData.getCurrent().getSessionId());
 
             Connection.Response response = connection.execute();
             Document document = response.parse();
 
             // Update user details
-            WebUserData.extract(document);
+            SteamGiftsUserData.extract(document);
 
             // Check if we have an error page showing...
             Element breadcrumbs = document.select(".page__heading__breadcrumbs").first();

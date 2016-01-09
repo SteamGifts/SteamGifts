@@ -11,7 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import net.mabako.steamgifts.R;
-import net.mabako.steamgifts.web.WebUserData;
+import net.mabako.steamgifts.web.SteamGiftsUserData;
 
 public class BaseActivity extends AppCompatActivity {
     public static final String CLOSE_NESTED = "close-nested";
@@ -31,11 +31,11 @@ public class BaseActivity extends AppCompatActivity {
         // Load session & username if possible
         SharedPreferences sp = getSharedPreferences(PREF_ACCOUNT, MODE_PRIVATE);
         if (sp.contains(PREF_KEY_SESSION_ID) && sp.contains(PREF_KEY_USERNAME)) {
-            WebUserData.getCurrent().setSessionId(sp.getString(PREF_KEY_SESSION_ID, null));
-            WebUserData.getCurrent().setName(sp.getString(PREF_KEY_USERNAME, null));
-            WebUserData.getCurrent().setImageUrl(sp.getString(PREF_KEY_IMAGE, null));
+            SteamGiftsUserData.getCurrent().setSessionId(sp.getString(PREF_KEY_SESSION_ID, null));
+            SteamGiftsUserData.getCurrent().setName(sp.getString(PREF_KEY_USERNAME, null));
+            SteamGiftsUserData.getCurrent().setImageUrl(sp.getString(PREF_KEY_IMAGE, null));
         } else {
-            WebUserData.clear();
+            SteamGiftsUserData.clear();
         }
     }
 
@@ -61,7 +61,7 @@ public class BaseActivity extends AppCompatActivity {
         // Persist all relevant data.
         SharedPreferences.Editor spEditor = getSharedPreferences(PREF_ACCOUNT, MODE_PRIVATE).edit();
 
-        WebUserData account = WebUserData.getCurrent();
+        SteamGiftsUserData account = SteamGiftsUserData.getCurrent();
         if (account.isLoggedIn()) {
             spEditor.putString(PREF_KEY_SESSION_ID, account.getSessionId());
             spEditor.putString(PREF_KEY_USERNAME, account.getName());

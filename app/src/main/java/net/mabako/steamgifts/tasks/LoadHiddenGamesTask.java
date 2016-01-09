@@ -6,7 +6,7 @@ import android.util.Log;
 
 import net.mabako.steamgifts.data.Game;
 import net.mabako.steamgifts.fragments.HiddenGamesFragment;
-import net.mabako.steamgifts.web.WebUserData;
+import net.mabako.steamgifts.web.SteamGiftsUserData;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -45,11 +45,11 @@ public class LoadHiddenGamesTask extends AsyncTask<Void, Void, List<Game>> {
             if (searchQuery != null)
                 jsoup.data("q", searchQuery);
 
-            jsoup.cookie("PHPSESSID", WebUserData.getCurrent().getSessionId());
+            jsoup.cookie("PHPSESSID", SteamGiftsUserData.getCurrent().getSessionId());
 
             Document document = jsoup.get();
 
-            WebUserData.extract(document);
+            SteamGiftsUserData.extract(document);
 
             // Fetch the xsrf token
             Element xsrfToken = document.select("input[name=xsrf_token]").first();

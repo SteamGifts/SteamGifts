@@ -5,9 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.widget.Toast;
 
 import com.mikepenz.iconics.context.IconicsContextWrapper;
 
+import net.mabako.sgtools.SGToolsDetailFragment;
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.data.BasicDiscussion;
 import net.mabako.steamgifts.data.BasicGiveaway;
@@ -16,6 +18,7 @@ import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
 import net.mabako.steamgifts.fragments.UserDetailFragment;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 public class DetailActivity extends CommonActivity {
     @Override
@@ -54,6 +57,13 @@ public class DetailActivity extends CommonActivity {
                 loadFragment(UserDetailFragment.newInstance(user));
                 return;
             }
+
+            serializable = getIntent().getSerializableExtra(SGToolsDetailFragment.ARG_UUID);
+            if (serializable != null) {
+                setContentView(R.layout.activity_giveaway_detail);
+                loadFragment(SGToolsDetailFragment.newInstance((UUID) serializable));
+                return;
+            }
         }
     }
 
@@ -70,7 +80,9 @@ public class DetailActivity extends CommonActivity {
     @Override
     protected void onAccountChange() {
         super.onAccountChange();
-        ((GiveawayDetailFragment) getCurrentFragment()).reload();
+
+        if (getCurrentFragment() instanceof GiveawayDetailFragment)
+            ((GiveawayDetailFragment) getCurrentFragment()).reload();
     }
 
     @Override
@@ -87,6 +99,18 @@ public class DetailActivity extends CommonActivity {
             setResult(0, newData);
             finish();
         }
+
+        if (requestCode == REQUEST_LOGIN_SGTOOLS && getCurrentFragment() instanceof SGToolsDetailFragment) {
+            if (resultCode == RESPONSE_LOGIN_SGTOOLS_SUCCESSFUL) {
+                // reload, basically.
+                Serializable serializable = getIntent().getSerializableExtra(SGToolsDetailFragment.ARG_UUID);
+                loadFragment(SGToolsDetailFragment.newInstance((UUID) serializable));
+            } else {
+                Toast.makeText(this, "Could not log in to sgtools.info", Toast.LENGTH_LONG).show();
+                finish();
+            }
+        }
+
         super.onActivityResult(requestCode, resultCode, data);
     }
 }

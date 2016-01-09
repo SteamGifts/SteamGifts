@@ -36,7 +36,7 @@ import net.mabako.steamgifts.fragments.IHasEnterableGiveaways;
 import net.mabako.steamgifts.fragments.UserDetailFragment;
 import net.mabako.steamgifts.tasks.LogoutTask;
 import net.mabako.steamgifts.web.IPointUpdateNotification;
-import net.mabako.steamgifts.web.WebUserData;
+import net.mabako.steamgifts.web.SteamGiftsUserData;
 
 import java.io.Serializable;
 
@@ -57,8 +57,8 @@ public class MainActivity extends CommonActivity implements IHasEnterableGiveawa
 
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
-        WebUserData.addUpdateHandler(this);
-        onUpdatePoints(WebUserData.getCurrent().getPoints());
+        SteamGiftsUserData.addUpdateHandler(this);
+        onUpdatePoints(SteamGiftsUserData.getCurrent().getPoints());
 
         setupNavBar();
 
@@ -82,7 +82,7 @@ public class MainActivity extends CommonActivity implements IHasEnterableGiveawa
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        WebUserData.removeUpdateHandler(this);
+        SteamGiftsUserData.removeUpdateHandler(this);
     }
 
     /**
@@ -101,7 +101,7 @@ public class MainActivity extends CommonActivity implements IHasEnterableGiveawa
     @Override
     protected void loadFragment(Fragment fragment) {
         super.loadFragment(fragment);
-        onUpdatePoints(WebUserData.getCurrent().getPoints());
+        onUpdatePoints(SteamGiftsUserData.getCurrent().getPoints());
     }
 
     private void setupNavBar() {
@@ -129,9 +129,9 @@ public class MainActivity extends CommonActivity implements IHasEnterableGiveawa
                 .withOnAccountHeaderProfileImageListener(new AccountHeader.OnAccountHeaderProfileImageListener() {
                     @Override
                     public boolean onProfileImageClick(View view, IProfile profile, boolean current) {
-                        if (WebUserData.getCurrent().isLoggedIn()) {
+                        if (SteamGiftsUserData.getCurrent().isLoggedIn()) {
                             Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-                            intent.putExtra(UserDetailFragment.ARG_USER, WebUserData.getCurrent().getName());
+                            intent.putExtra(UserDetailFragment.ARG_USER, SteamGiftsUserData.getCurrent().getName());
                             startActivity(intent);
                             return true;
                         }
@@ -160,9 +160,9 @@ public class MainActivity extends CommonActivity implements IHasEnterableGiveawa
                                 break;
 
                             case R.string.logout:
-                                new LogoutTask(MainActivity.this, WebUserData.getCurrent().getSessionId()).execute();
+                                new LogoutTask(MainActivity.this, SteamGiftsUserData.getCurrent().getSessionId()).execute();
 
-                                WebUserData.clear();
+                                SteamGiftsUserData.clear();
                                 onAccountChange();
                                 break;
 
@@ -211,9 +211,9 @@ public class MainActivity extends CommonActivity implements IHasEnterableGiveawa
                     @Override
                     public void onDrawerSlide(View drawerView, float slideOffset) {
                         // Are we even logged in?
-                        if (WebUserData.getCurrent().isLoggedIn()) {
+                        if (SteamGiftsUserData.getCurrent().isLoggedIn()) {
                             // Format the string
-                            String newInfo = String.format(getString(R.string.drawer_profile_info), WebUserData.getCurrent().getLevel(), WebUserData.getCurrent().getPoints());
+                            String newInfo = String.format(getString(R.string.drawer_profile_info), SteamGiftsUserData.getCurrent().getLevel(), SteamGiftsUserData.getCurrent().getPoints());
 
                             // Is this still up-to-date?
                             if (!newInfo.equals(profile.getEmail().toString())) {
@@ -240,7 +240,7 @@ public class MainActivity extends CommonActivity implements IHasEnterableGiveawa
         // Rebuild the header.
         accountHeader.clear();
 
-        WebUserData account = WebUserData.getCurrent();
+        SteamGiftsUserData account = SteamGiftsUserData.getCurrent();
         if (account.isLoggedIn()) {
             profile = new ProfileDrawerItem().withName(account.getName()).withEmail(account.getSessionId()).withIdentifier(1);
 
@@ -299,7 +299,7 @@ public class MainActivity extends CommonActivity implements IHasEnterableGiveawa
             case REQUEST_LOGIN:
                 if (resultCode == CommonActivity.RESPONSE_LOGIN_SUCCESSFUL) {
                     onAccountChange();
-                    Snackbar.make(findViewById(R.id.swipeContainer), "Welcome, " + WebUserData.getCurrent().getName() + "!", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(findViewById(R.id.swipeContainer), "Welcome, " + SteamGiftsUserData.getCurrent().getName() + "!", Snackbar.LENGTH_LONG).show();
                 } else
                     Snackbar.make(findViewById(R.id.swipeContainer), "Login failed", Snackbar.LENGTH_LONG).show();
                 break;
@@ -312,7 +312,7 @@ public class MainActivity extends CommonActivity implements IHasEnterableGiveawa
     @Override
     public void onUpdatePoints(final int newPoints) {
         ActionBar actionBar = getSupportActionBar();
-        if (WebUserData.getCurrent().isLoggedIn() && getCurrentFragment() instanceof GiveawayListFragment) {
+        if (SteamGiftsUserData.getCurrent().isLoggedIn() && getCurrentFragment() instanceof GiveawayListFragment) {
             actionBar.setSubtitle(String.format("%dP", newPoints));
         } else {
             actionBar.setSubtitle(null);

@@ -6,7 +6,7 @@ import android.support.v7.widget.Toolbar;
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.activities.BaseActivity;
 import net.mabako.steamgifts.compat.PreferenceFragment;
-import net.mabako.steamgifts.web.WebUserData;
+import net.mabako.steamgifts.web.SteamGiftsUserData;
 
 public class SettingsActivity extends BaseActivity {
     public static class SettingsFragment extends PreferenceFragment {
@@ -15,7 +15,7 @@ public class SettingsActivity extends BaseActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preferences_app);
 
-            if (WebUserData.getCurrent().isLoggedIn()) {
+            if (SteamGiftsUserData.getCurrent().isLoggedIn()) {
                 addPreferencesFromResource(R.xml.preferences_sg);
             }
         }

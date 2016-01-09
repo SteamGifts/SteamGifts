@@ -5,7 +5,7 @@ import android.util.Log;
 
 import net.mabako.steamgifts.data.GiveawayGroup;
 import net.mabako.steamgifts.fragments.GiveawayGroupListFragment;
-import net.mabako.steamgifts.web.WebUserData;
+import net.mabako.steamgifts.web.SteamGiftsUserData;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -41,11 +41,11 @@ public class LoadGiveawayGroupsTask extends AsyncTask<Void, Void, List<GiveawayG
             Connection jsoup = Jsoup.connect("http://www.steamgifts.com/giveaway/" + path + "/groups/search");
             jsoup.data("page", Integer.toString(page));
 
-            if (WebUserData.getCurrent().isLoggedIn())
-                jsoup.cookie("PHPSESSID", WebUserData.getCurrent().getSessionId());
+            if (SteamGiftsUserData.getCurrent().isLoggedIn())
+                jsoup.cookie("PHPSESSID", SteamGiftsUserData.getCurrent().getSessionId());
             Document document = jsoup.get();
 
-            WebUserData.extract(document);
+            SteamGiftsUserData.extract(document);
 
             // Parse all rows of groups
             Elements groups = document.select(".table__row-inner-wrap");

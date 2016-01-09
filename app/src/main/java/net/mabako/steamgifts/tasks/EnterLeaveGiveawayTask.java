@@ -2,9 +2,8 @@ package net.mabako.steamgifts.tasks;
 
 import android.util.Log;
 
-import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
 import net.mabako.steamgifts.fragments.IHasEnterableGiveaways;
-import net.mabako.steamgifts.web.WebUserData;
+import net.mabako.steamgifts.web.SteamGiftsUserData;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,7 +38,7 @@ public class EnterLeaveGiveawayTask extends AjaxTask<IHasEnterableGiveaways> {
                 getFragment().onEnterLeaveResult(giveawayId, getWhat(), success);
 
                 // Update the points we have.
-                WebUserData.getCurrent().setPoints(points);
+                SteamGiftsUserData.getCurrent().setPoints(points);
                 return;
             } catch (JSONException e) {
                 Log.e(TAG, "Failed to parse JSON object", e);

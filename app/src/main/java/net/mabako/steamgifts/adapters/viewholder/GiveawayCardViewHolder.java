@@ -19,7 +19,7 @@ import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.data.GiveawayExtras;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
 import net.mabako.steamgifts.fragments.util.GiveawayDetailsCard;
-import net.mabako.steamgifts.web.WebUserData;
+import net.mabako.steamgifts.web.SteamGiftsUserData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -112,7 +112,7 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
                 } else if (extras.getErrorMessage() != null) {
                     errorMessage.setText(extras.getErrorMessage());
                     errorMessage.setVisibility(View.VISIBLE);
-                } else if (!WebUserData.getCurrent().isLoggedIn()) {
+                } else if (!SteamGiftsUserData.getCurrent().isLoggedIn()) {
                     loginButton.setVisibility(View.VISIBLE);
                 }
 

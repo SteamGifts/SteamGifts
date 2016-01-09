@@ -9,7 +9,7 @@ import android.widget.Toast;
 import net.mabako.steamgifts.data.Discussion;
 import net.mabako.steamgifts.data.DiscussionExtras;
 import net.mabako.steamgifts.fragments.DiscussionDetailFragment;
-import net.mabako.steamgifts.web.WebUserData;
+import net.mabako.steamgifts.web.SteamGiftsUserData;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -17,7 +17,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
 import java.net.URISyntaxException;
 
 public class LoadDiscussionDetailsTask extends AsyncTask<Void, Void, DiscussionExtras> {
@@ -44,14 +43,14 @@ public class LoadDiscussionDetailsTask extends AsyncTask<Void, Void, DiscussionE
 
         try {
             Connection connection = Jsoup.connect(url);
-            if (WebUserData.getCurrent().isLoggedIn())
-                connection.cookie("PHPSESSID", WebUserData.getCurrent().getSessionId());
+            if (SteamGiftsUserData.getCurrent().isLoggedIn())
+                connection.cookie("PHPSESSID", SteamGiftsUserData.getCurrent().getSessionId());
 
             Connection.Response response = connection.execute();
             Document document = response.parse();
 
             // Update user details
-            WebUserData.extract(document);
+            SteamGiftsUserData.extract(document);
 
             DiscussionExtras extras = loadExtras(document);
             if (loadDetails) {

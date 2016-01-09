@@ -18,7 +18,7 @@ import net.mabako.steamgifts.fragments.DiscussionDetailFragment;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
 import net.mabako.steamgifts.fragments.IFragmentNotifications;
 import net.mabako.steamgifts.fragments.UserDetailFragment;
-import net.mabako.steamgifts.web.WebUserData;
+import net.mabako.steamgifts.web.SteamGiftsUserData;
 
 public class CommonActivity extends BaseActivity {
     private static final String TAG = CommonActivity.class.getSimpleName();
@@ -26,8 +26,10 @@ public class CommonActivity extends BaseActivity {
 
     public static final int REQUEST_LOGIN = 3;
     public static final int REQUEST_LOGIN_PASSIVE = 4;
+    public static final int REQUEST_LOGIN_SGTOOLS = 5;
 
-    public static final int RESPONSE_LOGIN_SUCCESSFUL = 5;
+    public static final int RESPONSE_LOGIN_SUCCESSFUL = 6;
+    public static final int RESPONSE_LOGIN_SGTOOLS_SUCCESSFUL = 7;
 
     public void requestLogin() {
         startActivityForResult(new Intent(this, LoginActivity.class), REQUEST_LOGIN);
@@ -70,7 +72,7 @@ public class CommonActivity extends BaseActivity {
             case REQUEST_LOGIN:
             case REQUEST_LOGIN_PASSIVE:
                 // Do not show an explicit notification.
-                if (resultCode == RESPONSE_LOGIN_SUCCESSFUL && WebUserData.getCurrent().isLoggedIn())
+                if (resultCode == RESPONSE_LOGIN_SUCCESSFUL && SteamGiftsUserData.getCurrent().isLoggedIn())
                     onAccountChange();
 
                 // Pass on the result.

@@ -6,7 +6,7 @@ import android.util.Log;
 
 import net.mabako.steamgifts.data.Discussion;
 import net.mabako.steamgifts.fragments.DiscussionListFragment;
-import net.mabako.steamgifts.web.WebUserData;
+import net.mabako.steamgifts.web.SteamGiftsUserData;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -53,11 +53,11 @@ public class LoadDiscussionListTask extends AsyncTask<Void, Void, List<Discussio
             if (searchQuery != null)
                 jsoup.data("q", searchQuery);
 
-            if (WebUserData.getCurrent().isLoggedIn())
-                jsoup.cookie("PHPSESSID", WebUserData.getCurrent().getSessionId());
+            if (SteamGiftsUserData.getCurrent().isLoggedIn())
+                jsoup.cookie("PHPSESSID", SteamGiftsUserData.getCurrent().getSessionId());
             Document document = jsoup.get();
 
-            WebUserData.extract(document);
+            SteamGiftsUserData.extract(document);
 
             // Parse all rows of discussions
             Elements discussions = document.select(".table__row-inner-wrap");

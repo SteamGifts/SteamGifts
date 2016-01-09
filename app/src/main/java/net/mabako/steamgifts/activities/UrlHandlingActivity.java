@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
+import net.mabako.sgtools.SGToolsDetailFragment;
 import net.mabako.steamgifts.data.BasicDiscussion;
 import net.mabako.steamgifts.data.BasicGiveaway;
 import net.mabako.steamgifts.fragments.DiscussionDetailFragment;
@@ -13,6 +14,7 @@ import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
 import net.mabako.steamgifts.fragments.UserDetailFragment;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Handle all URL related shenanigans.
@@ -22,9 +24,9 @@ public class UrlHandlingActivity extends CommonActivity {
 
     public static Intent getIntentForUri(Context context, Uri uri) {
         Log.d(TAG, uri.toString());
+        List<String> pathSegments = uri.getPathSegments();
         if ("www.steamgifts.com".equals(uri.getHost()) || "steamgifts.com".equals(uri.getHost())) {
             Log.d(TAG, "Parsing path segment " + uri.getPath());
-            List<String> pathSegments = uri.getPathSegments();
 
             if (pathSegments.size() == 0 || ("/giveaways/search".equals(uri.getPath()))) {
                 // TODO parse query params?
@@ -54,6 +56,21 @@ public class UrlHandlingActivity extends CommonActivity {
                     Intent intent = new Intent(context, DetailActivity.class);
                     intent.putExtra(UserDetailFragment.ARG_USER, user);
                     return intent;
+                }
+            }
+        } else if ("www.sgtools.info".equals(uri.getHost()) || "sgtools.info".equals(uri.getHost())) {
+            if (pathSegments.size() >= 2) {
+                if ("giveaways".equals(pathSegments.get(0))) {
+                    try {
+                        UUID uuid = UUID.fromString(pathSegments.get(1));
+
+                        Intent intent = new Intent(context, DetailActivity.class);
+                        intent.putExtra(SGToolsDetailFragment.ARG_UUID, uuid);
+                        return intent;
+
+                    } catch (IllegalArgumentException e) {
+                        return null;
+                    }
                 }
             }
         }

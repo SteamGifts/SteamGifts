@@ -1,20 +1,17 @@
 package net.mabako.steamgifts.tasks;
 
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.fragments.GiveawayListFragment;
-import net.mabako.steamgifts.web.WebUserData;
+import net.mabako.steamgifts.web.SteamGiftsUserData;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class LoadGiveawayListTask extends AsyncTask<Void, Void, List<Giveaway>> {
@@ -50,11 +47,11 @@ public class LoadGiveawayListTask extends AsyncTask<Void, Void, List<Giveaway>> 
             if (type != GiveawayListFragment.Type.ALL)
                 jsoup.data("type", type.name().toLowerCase());
 
-            if (WebUserData.getCurrent().isLoggedIn())
-                jsoup.cookie("PHPSESSID", WebUserData.getCurrent().getSessionId());
+            if (SteamGiftsUserData.getCurrent().isLoggedIn())
+                jsoup.cookie("PHPSESSID", SteamGiftsUserData.getCurrent().getSessionId());
             Document document = jsoup.get();
 
-            WebUserData.extract(document);
+            SteamGiftsUserData.extract(document);
 
             // Fetch the xsrf token
             Element xsrfToken = document.select("input[name=xsrf_token]").first();

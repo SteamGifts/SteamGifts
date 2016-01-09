@@ -25,7 +25,7 @@ import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
 import net.mabako.steamgifts.fragments.GiveawayListFragment;
 import net.mabako.steamgifts.fragments.IHasEnterableGiveaways;
-import net.mabako.steamgifts.web.WebUserData;
+import net.mabako.steamgifts.web.SteamGiftsUserData;
 
 public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnCreateContextMenuListener, MenuItem.OnMenuItemClickListener {
     private static final String TAG = GiveawayListItemViewHolder.class.getSimpleName();
@@ -126,7 +126,7 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         // Are we logged in & do we have a token to submit with our "form"?
-        if (WebUserData.getCurrent().isLoggedIn() && adapter.getXsrfToken() != null) {
+        if (SteamGiftsUserData.getCurrent().isLoggedIn() && adapter.getXsrfToken() != null) {
             // Which giveaway is this even for?
             final Giveaway giveaway = (Giveaway) adapter.getItem(getAdapterPosition());
 
@@ -140,7 +140,7 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
             if (giveaway.isEntered()) {
                 menu.add(Menu.NONE, 1, Menu.NONE, String.format(activity.getString(R.string.leave_giveaway_with_points), giveaway.getPoints())).setOnMenuItemClickListener(this);
             } else {
-                menu.add(Menu.NONE, 2, Menu.NONE, String.format(activity.getString(R.string.enter_giveaway_with_points), giveaway.getPoints())).setOnMenuItemClickListener(this).setEnabled(giveaway.getPoints() <= WebUserData.getCurrent().getPoints() && giveaway.getLevel() <= WebUserData.getCurrent().getLevel() && !WebUserData.getCurrent().getName().equals(giveaway.getCreator()));
+                menu.add(Menu.NONE, 2, Menu.NONE, String.format(activity.getString(R.string.enter_giveaway_with_points), giveaway.getPoints())).setOnMenuItemClickListener(this).setEnabled(giveaway.getPoints() <= SteamGiftsUserData.getCurrent().getPoints() && giveaway.getLevel() <= SteamGiftsUserData.getCurrent().getLevel() && !SteamGiftsUserData.getCurrent().getName().equals(giveaway.getCreator()));
             }
 
             if (giveaway.getInternalGameId() > 0 && fragment instanceof GiveawayListFragment) {

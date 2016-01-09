@@ -4,7 +4,7 @@ import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.Log;
 
-import net.mabako.steamgifts.web.WebUserData;
+import net.mabako.steamgifts.web.SteamGiftsUserData;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -41,7 +41,7 @@ abstract class AjaxTask<FragmentType> extends AsyncTask<Void, Void, Connection.R
                     .connect(url)
                     .data("xsrf_token", xsrfToken)
                     .data("do", what)
-                    .cookie("PHPSESSID", WebUserData.getCurrent().getSessionId())
+                    .cookie("PHPSESSID", SteamGiftsUserData.getCurrent().getSessionId())
                     .followRedirects(false);
 
             addExtraParameters(connection);

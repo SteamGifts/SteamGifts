@@ -12,9 +12,9 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WebUserData {
-    private static final String TAG = WebUserData.class.getSimpleName();
-    private static WebUserData current = new WebUserData();
+public class SteamGiftsUserData {
+    private static final String TAG = SteamGiftsUserData.class.getSimpleName();
+    private static SteamGiftsUserData current = new SteamGiftsUserData();
     private String sessionId;
     private String name;
     private String imageUrl;
@@ -32,7 +32,7 @@ public class WebUserData {
         pointUpdateHandlers.remove(handler);
     }
 
-    public static WebUserData getCurrent() {
+    public static SteamGiftsUserData getCurrent() {
         return current;
     }
 
@@ -65,7 +65,7 @@ public class WebUserData {
     }
 
     public static void clear() {
-        current = new WebUserData();
+        current = new SteamGiftsUserData();
     }
 
     public boolean isLoggedIn() {
