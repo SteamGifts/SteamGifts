@@ -68,7 +68,7 @@ public class DiscussionCardViewHolder extends RecyclerView.ViewHolder {
                 progressBar.setVisibility(View.GONE);
 
                 if (extras.getDescription() != null) {
-                    description.setText(Utils.fromHtml(((Fragment) fragment).getContext(), extras.getDescription()));
+                    description.setText(Utils.fromHtml(((Fragment) fragment).getActivity(), extras.getDescription()));
                     description.setVisibility(View.VISIBLE);
                 }
 

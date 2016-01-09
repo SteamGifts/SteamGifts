@@ -1,6 +1,7 @@
 package net.mabako.steamgifts.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -70,5 +71,22 @@ public class DetailActivity extends CommonActivity {
     protected void onAccountChange() {
         super.onAccountChange();
         ((GiveawayDetailFragment) getCurrentFragment()).reload();
+    }
+
+    @Override
+    public String getNestingStringForHomePressed() {
+        return getCurrentFragment() == null ? "unknown" : getCurrentFragment().getClass().getSimpleName();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (data != null && data.hasExtra(CLOSE_NESTED) && getNestingStringForHomePressed().equals(data.getStringExtra(CLOSE_NESTED))) {
+            Intent newData = new Intent();
+            newData.putExtra(CLOSE_NESTED, getNestingStringForHomePressed());
+
+            setResult(0, newData);
+            finish();
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

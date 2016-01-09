@@ -100,7 +100,7 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
                 progressBar.setVisibility(View.GONE);
 
                 if (extras.getDescription() != null) {
-                    description.setText(Utils.fromHtml(fragment.getContext(), extras.getDescription()));
+                    description.setText(Utils.fromHtml(fragment.getActivity(), extras.getDescription()));
                     description.setVisibility(View.VISIBLE);
                 }
 
@@ -185,7 +185,7 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
                         intent.putExtra(ViewGroupsActivity.TITLE, giveaway.getTitle());
                         intent.putExtra(ViewGroupsActivity.PATH, giveaway.getGiveawayId() + "/" + giveaway.getName());
 
-                        fragment.getActivity().startActivity(intent);
+                        fragment.getActivity().startActivityForResult(intent, CommonActivity.REQUEST_LOGIN_PASSIVE);
                     }
                 });
             } else {

@@ -1,5 +1,6 @@
 package net.mabako.steamgifts.adapters.viewholder;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
@@ -12,10 +13,9 @@ import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
 import android.util.Log;
 import android.view.View;
-import android.webkit.WebView;
-import android.widget.Toast;
 
 import net.mabako.steamgifts.R;
+import net.mabako.steamgifts.activities.CommonActivity;
 import net.mabako.steamgifts.activities.UrlHandlingActivity;
 import net.mabako.steamgifts.activities.WebViewActivity;
 
@@ -73,8 +73,15 @@ public final class Utils {
                             // Nope, just open a normal webview.
                             intent = new Intent(context, WebViewActivity.class);
                             intent.putExtra(WebViewActivity.ARG_URL, url);
+
+                            context.startActivity(intent);
+                        } else {
+                            if (context instanceof Activity) {
+                                ((Activity) context).startActivityForResult(intent, CommonActivity.REQUEST_LOGIN_PASSIVE);
+                            } else {
+                                context.startActivity(intent);
+                            }
                         }
-                        context.startActivity(intent);
                     }
                 }, start, end, flags);
                 stringBuilder.removeSpan(span);

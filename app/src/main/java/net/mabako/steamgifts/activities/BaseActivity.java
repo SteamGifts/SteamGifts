@@ -1,5 +1,6 @@
 package net.mabako.steamgifts.activities;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -13,6 +14,8 @@ import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.web.WebUserData;
 
 public class BaseActivity extends AppCompatActivity {
+    public static final String CLOSE_NESTED = "close-nested";
+
     private static final String PREF_KEY_SESSION_ID = "session-id";
     private static final String PREF_ACCOUNT = "account";
     private static final String PREF_KEY_USERNAME = "username";
@@ -92,9 +95,21 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
+            Intent data = new Intent();
+            data.putExtra(CLOSE_NESTED, getNestingStringForHomePressed());
+
+            setResult(0, data);
             finish();
+
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * What happens when the user presses home?
+     */
+    public String getNestingStringForHomePressed() {
+        return "";
     }
 }
