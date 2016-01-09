@@ -2,7 +2,6 @@ package net.mabako.steamgifts.adapters;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 
 import net.mabako.steamgifts.adapters.viewholder.GameViewHolder;
@@ -58,7 +57,6 @@ public class HiddenGamesAdapter extends EndlessAdapter {
             throw new IllegalStateException();
 
         for (int position = getItems().size() - 1; position >= 0; --position) {
-            Log.d("Item", "" + position);
             Game game = (Game) getItem(position);
 
             if (game != null && game.getInternalGameId() == internalGameId) {

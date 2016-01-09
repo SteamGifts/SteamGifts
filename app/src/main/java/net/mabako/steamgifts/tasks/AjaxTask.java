@@ -1,6 +1,7 @@
 package net.mabako.steamgifts.tasks;
 
 import android.os.AsyncTask;
+import android.text.TextUtils;
 import android.util.Log;
 
 import net.mabako.steamgifts.web.WebUserData;
@@ -24,11 +25,18 @@ abstract class AjaxTask<FragmentType> extends AsyncTask<Void, Void, Connection.R
         this.fragment = fragment;
         this.xsrfToken = xsrfToken;
         this.what = what;
+
+        if (TextUtils.isEmpty(this.xsrfToken))
+            Log.w(TAG, "no xsrf token for ajax call");
+
+        if (TextUtils.isEmpty(this.what))
+            Log.w(TAG, "no what for ajax call");
     }
 
     @Override
     protected Connection.Response doInBackground(Void... params) {
         try {
+            Log.v(TAG, "Connecting to " + url);
             Connection connection = Jsoup
                     .connect(url)
                     .data("xsrf_token", xsrfToken)
