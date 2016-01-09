@@ -1,5 +1,6 @@
 package net.mabako.steamgifts.web;
 
+import android.app.Activity;
 import android.util.Log;
 
 import net.mabako.steamgifts.tasks.Utils;
@@ -7,6 +8,9 @@ import net.mabako.steamgifts.tasks.Utils;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class WebUserData {
     private static final String TAG = WebUserData.class.getSimpleName();
@@ -17,6 +21,16 @@ public class WebUserData {
 
     private transient int points = 0;
     private transient int level = 0;
+
+    private static List<IPointUpdateNotification> pointUpdateHandlers = new ArrayList<>();
+
+    public static void addUpdateHandler(IPointUpdateNotification handler) {
+        pointUpdateHandlers.add(handler);
+    }
+
+    public static void removeUpdateHandler(IPointUpdateNotification handler) {
+        pointUpdateHandlers.remove(handler);
+    }
 
     public static WebUserData getCurrent() {
         return current;
@@ -87,9 +101,21 @@ public class WebUserData {
         return points;
     }
 
-    public void setPoints(int points) {
-        Log.v(TAG, "Setting current user points to " + points);
+    public void setPoints(final int points) {
         this.points = points;
+        for (final IPointUpdateNotification handler : pointUpdateHandlers) {
+            if (handler instanceof Activity) {
+                ((Activity) handler).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        handler.onUpdatePoints(points);
+                    }
+                });
+            } else {
+                handler.onUpdatePoints(points);
+            }
+        }
+
     }
 
     public int getLevel() {

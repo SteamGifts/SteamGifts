@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -34,11 +35,12 @@ import net.mabako.steamgifts.fragments.GiveawayListFragment;
 import net.mabako.steamgifts.fragments.IHasEnterableGiveaways;
 import net.mabako.steamgifts.fragments.UserDetailFragment;
 import net.mabako.steamgifts.tasks.LogoutTask;
+import net.mabako.steamgifts.web.IPointUpdateNotification;
 import net.mabako.steamgifts.web.WebUserData;
 
 import java.io.Serializable;
 
-public class MainActivity extends CommonActivity implements IHasEnterableGiveaways {
+public class MainActivity extends CommonActivity implements IHasEnterableGiveaways, IPointUpdateNotification {
     public static final String ARG_QUERY = "query";
     public static final String ARG_TYPE = "type";
 
@@ -54,6 +56,9 @@ public class MainActivity extends CommonActivity implements IHasEnterableGiveawa
         setContentView(R.layout.activity_one_fragment);
 
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+
+        WebUserData.addUpdateHandler(this);
+        onUpdatePoints(WebUserData.getCurrent().getPoints());
 
         setupNavBar();
 
@@ -74,6 +79,12 @@ public class MainActivity extends CommonActivity implements IHasEnterableGiveawa
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        WebUserData.removeUpdateHandler(this);
+    }
+
     /**
      * Triggered upon the user logging in or logging out.
      */
@@ -85,6 +96,12 @@ public class MainActivity extends CommonActivity implements IHasEnterableGiveawa
 
         loadFragment(GiveawayListFragment.newInstance(GiveawayListFragment.Type.ALL, getIntent().getStringExtra(ARG_QUERY)));
         drawer.setSelection(R.string.navigation_giveaways_all, false);
+    }
+
+    @Override
+    protected void loadFragment(Fragment fragment) {
+        super.loadFragment(fragment);
+        onUpdatePoints(WebUserData.getCurrent().getPoints());
     }
 
     private void setupNavBar() {
@@ -277,6 +294,7 @@ public class MainActivity extends CommonActivity implements IHasEnterableGiveawa
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.v(TAG, "Activity result for " + requestCode + " => " + resultCode);
+
         switch (requestCode) {
             case REQUEST_LOGIN:
                 if (resultCode == CommonActivity.RESPONSE_LOGIN_SUCCESSFUL) {
@@ -288,6 +306,16 @@ public class MainActivity extends CommonActivity implements IHasEnterableGiveawa
 
             default:
                 super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    @Override
+    public void onUpdatePoints(final int newPoints) {
+        ActionBar actionBar = getSupportActionBar();
+        if (WebUserData.getCurrent().isLoggedIn() && getCurrentFragment() instanceof GiveawayListFragment) {
+            actionBar.setSubtitle(String.format("%dP", newPoints));
+        } else {
+            actionBar.setSubtitle(null);
         }
     }
 
