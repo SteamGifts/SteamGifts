@@ -88,6 +88,14 @@ public class DetailActivity extends CommonActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == WriteCommentActivity.REQUEST_COMMENT) {
+            if (resultCode == WriteCommentActivity.COMMENT_SENT) {
+                Toast.makeText(this, R.string.comment_sent, Toast.LENGTH_SHORT).show();
+            } else if (resultCode == WriteCommentActivity.COMMENT_NOT_SENT) {
+                Toast.makeText(this, R.string.comment_not_sent, Toast.LENGTH_SHORT).show();
+            }
+        }
+
         if (data != null && data.hasExtra(CLOSE_NESTED) && getNestingStringForHomePressed().equals(data.getStringExtra(CLOSE_NESTED))) {
             Intent newData = new Intent();
             newData.putExtra(CLOSE_NESTED, getNestingStringForHomePressed());

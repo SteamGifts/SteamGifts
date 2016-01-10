@@ -1,10 +1,10 @@
 package net.mabako.steamgifts.tasks;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.util.Log;
 
 import net.mabako.steamgifts.activities.WriteCommentActivity;
-import net.mabako.steamgifts.fragments.WriteCommentFragment;
 
 import org.jsoup.Connection;
 
@@ -31,12 +31,14 @@ public class PostCommentTask extends AjaxTask<Activity> {
     @Override
     protected void onPostExecute(Connection.Response response) {
         Activity activity = getFragment();
-        if(response.statusCode() == 301) {
-            activity.setResult(WriteCommentActivity.COMMENT_SENT);
+        if (response.statusCode() == 301) {
+            Intent data = new Intent();
+            data.putExtra("parent", parentId);
+            activity.setResult(WriteCommentActivity.COMMENT_SENT, data);
         } else {
             activity.setResult(WriteCommentActivity.COMMENT_NOT_SENT);
             Log.d("Status", "" + response.statusCode());
-            for(Map.Entry<String, String> header : response.headers().entrySet()) {
+            for (Map.Entry<String, String> header : response.headers().entrySet()) {
                 Log.d("Status", header.getKey() + "=" + header.getValue());
             }
         }
