@@ -71,10 +71,10 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
 
             if (type instanceof GiveawayListFragment.Type) {
                 loadFragment(GiveawayListFragment.newInstance((GiveawayListFragment.Type) type, getIntent().getStringExtra(ARG_QUERY)));
-                drawer.setSelection(((GiveawayListFragment.Type) type).getNavbarResource());
+                drawer.setSelection(((GiveawayListFragment.Type) type).getNavbarResource(), false);
             } else if (type instanceof DiscussionListFragment.Type) {
                 loadFragment(DiscussionListFragment.newInstance((DiscussionListFragment.Type) type, getIntent().getStringExtra(ARG_QUERY)));
-                drawer.setSelection(((DiscussionListFragment.Type) type).getNavbarResource());
+                drawer.setSelection(((DiscussionListFragment.Type) type).getNavbarResource(), false);
             }
         }
     }
