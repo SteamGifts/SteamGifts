@@ -60,7 +60,7 @@
     <string name="add_comment">Comment</string>
     <string name="send_comment">Send</string>
 
-    <string name="comment_sent">Comment sent</string>
+    <string name="comment_sent">Comment sent, please reload to see.</string>
     <string name="comment_not_sent">Comment could not be sent</string>
 
     <!-- -->
