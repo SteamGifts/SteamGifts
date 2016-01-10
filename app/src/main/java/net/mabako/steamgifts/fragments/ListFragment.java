@@ -31,8 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class ListFragment<AdapterType extends EndlessAdapter> extends Fragment {
-    private static final String TAG = ListFragment.class.getSimpleName();
-
     protected boolean loadItemsInitially = true;
     protected boolean allowSearch = true;
 

@@ -32,13 +32,15 @@ public class GameViewHolder extends RecyclerView.ViewHolder {
     public void setFrom(final Game game) {
         gameName.setText(game.getName());
 
-        itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                fragment.requestShowGame(game.getInternalGameId());
-                return true;
-            }
-        });
+        if (game.getInternalGameId() != Game.NO_APP_ID) {
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    fragment.requestShowGame(game.getInternalGameId());
+                    return true;
+                }
+            });
+        }
 
         // giveaway_image
         if (game.getGameId() != Game.NO_APP_ID) {

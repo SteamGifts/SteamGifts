@@ -76,13 +76,18 @@ public final class Utils {
     public static void loadGiveaway(Giveaway giveaway, Element element, String cssNode, String headerHintCssNode, Uri steamUri) {
         // Copies & Points. They do not have separate markup classes, it's basically "if one thin markup element exists, it's one copy only"
         Elements hints = element.select("." + headerHintCssNode);
-        String copiesT = hints.first().text();
-        String pointsT = hints.last().text();
-        int copies = hints.size() == 1 ? 1 : Integer.parseInt(copiesT.replace("(", "").replace(" Copies)", "").replace(",", ""));
-        int points = Integer.parseInt(pointsT.replace("(", "").replace("P)", ""));
+        if (!hints.isEmpty()) {
+            String copiesT = hints.first().text();
+            String pointsT = hints.last().text();
+            int copies = hints.size() == 1 ? 1 : Integer.parseInt(copiesT.replace("(", "").replace(" Copies)", "").replace(",", ""));
+            int points = Integer.parseInt(pointsT.replace("(", "").replace("P)", ""));
 
-        giveaway.setCopies(copies);
-        giveaway.setPoints(points);
+            giveaway.setCopies(copies);
+            giveaway.setPoints(points);
+        } else {
+            giveaway.setCopies(1);
+            giveaway.setPoints(0);
+        }
 
         // Steam link
         if (steamUri != null) {
