@@ -52,7 +52,7 @@ public class UpdateGiveawayFilterTask<FragmentType extends Fragment> extends Aja
                 ((HiddenGamesFragment) fragment).onShowGame(internalGameId);
         } else if (fragment instanceof GiveawayDetailFragment) {
             if (response.statusCode() == 301)
-                fragment.getActivity().finish();
+                ((GiveawayDetailFragment) fragment).onHideGame(internalGameId);
         }
     }
 }

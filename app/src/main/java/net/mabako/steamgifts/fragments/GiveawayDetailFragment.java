@@ -22,6 +22,7 @@ import com.squareup.picasso.Picasso;
 
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.activities.DetailActivity;
+import net.mabako.steamgifts.activities.MainActivity;
 import net.mabako.steamgifts.activities.WebViewActivity;
 import net.mabako.steamgifts.activities.WriteCommentActivity;
 import net.mabako.steamgifts.adapters.CommentAdapter;
@@ -269,5 +270,15 @@ public class GiveawayDetailFragment extends Fragment implements ICommentableFrag
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void onHideGame(int internalGameId) {
+        if (parent instanceof MainActivity) {
+            ((MainActivity) parent).onHideGame(internalGameId);
+        } else {
+            Log.d(TAG, "No parent giveaway to update hidden");
+        }
+
+        getActivity().finish();
     }
 }
