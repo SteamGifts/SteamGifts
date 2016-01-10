@@ -31,7 +31,7 @@ public final class Utils {
         if (useCustomViewHandler) {
             try {
                 CharSequence cs = Html.fromHtml(source, null, new CustomHtmlTagHandler());
-                cs = cs.subSequence(0, cs.length() - 2);
+                cs = trim(cs, 0, cs.length());
                 return addProperLinks(context, cs);
             } catch (Exception e) {
                 Log.e(Utils.class.getSimpleName(), "Failed to parse HTML with custom parser", e);
@@ -39,8 +39,20 @@ public final class Utils {
         }
 
         CharSequence cs = Html.fromHtml(source);
-        cs = cs.subSequence(0, cs.length() - 2);
+        cs = trim(cs, 0, cs.length());
         return addProperLinks(context, cs);
+    }
+
+    private static CharSequence trim(CharSequence s, int start, int end) {
+        while (start < end && Character.isWhitespace(s.charAt(start))) {
+            start++;
+        }
+
+        while (end > start && Character.isWhitespace(s.charAt(end - 1))) {
+            end--;
+        }
+
+        return s.subSequence(start, end);
     }
 
     /**

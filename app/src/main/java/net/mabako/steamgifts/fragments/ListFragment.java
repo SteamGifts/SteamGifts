@@ -11,6 +11,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -87,6 +88,8 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
     }
 
     protected void showSnack(String message, int length) {
+        if (getView() == null)
+            Log.e(ListFragment.class.getSimpleName(), "List not loaded yet...");
         Snackbar.make(swipeContainer != null ? swipeContainer : getView(), message, length).show();
     }
 

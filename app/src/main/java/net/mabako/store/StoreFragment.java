@@ -13,6 +13,10 @@ import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.adapters.viewholder.GameViewHolder;
 import net.mabako.steamgifts.data.Game;
+import net.mabako.store.data.Picture;
+import net.mabako.store.data.Text;
+import net.mabako.store.viewholder.PictureViewHolder;
+import net.mabako.store.viewholder.TextViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,19 +70,35 @@ public abstract class StoreFragment extends Fragment {
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(getContext()).inflate(viewType, parent, false);
-            switch (viewType) {
-                case Game.VIEW_LAYOUT:
-                    return new GameViewHolder(view, StoreFragment.this);
-            }
+            if (viewType == 0) {
+                View view = LayoutInflater.from(getContext()).inflate(R.layout.endless_spacer, parent, false);
+                return new RecyclerView.ViewHolder(view) {
+                };
+            } else {
+                View view = LayoutInflater.from(getContext()).inflate(viewType, parent, false);
+                switch (viewType) {
+                    case Game.VIEW_LAYOUT:
+                        return new GameViewHolder(view, StoreFragment.this);
 
-            throw new IllegalStateException("No View");
+                    case Picture.VIEW_LAYOUT:
+                        return new PictureViewHolder(view, getContext());
+
+                    case Text.VIEW_LAYOUT:
+                        return new TextViewHolder(view, getContext());
+                }
+
+                throw new IllegalStateException("No View");
+            }
         }
 
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder h, int position) {
-            if (h instanceof GameViewHolder) {
-                ((GameViewHolder) h).setFrom((Game) getItem(position));
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            if (holder instanceof GameViewHolder) {
+                ((GameViewHolder) holder).setFrom((Game) getItem(position));
+            } else if (holder instanceof PictureViewHolder) {
+                ((PictureViewHolder) holder).setFrom((Picture) getItem(position));
+            } else if (holder instanceof TextViewHolder) {
+                ((TextViewHolder) holder).setFrom((Text) getItem(position));
             }
         }
 
@@ -93,7 +113,7 @@ public abstract class StoreFragment extends Fragment {
 
         @Override
         public int getItemViewType(int position) {
-            return items.get(position).getLayout();
+            return items.get(position) == null ? 0 : items.get(position).getLayout();
         }
 
         public void add(IEndlessAdaptable adaptable) {

@@ -54,11 +54,9 @@ public class StoreSubFragment extends StoreFragment {
 
                             adapter.add(game);
                         }
-
-                        Log.d(StoreSubFragment.class.getSimpleName(), "--> " + adapter.getItemCount());
                     } else throw new Exception("not successful");
                 } catch (Exception e) {
-                    Toast.makeText(getContext(), "Unable to load Store App", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "Unable to load Store Sub", Toast.LENGTH_LONG).show();
                 }
             } else {
                 Toast.makeText(getContext(), "Unable to load Store Sub", Toast.LENGTH_LONG).show();
