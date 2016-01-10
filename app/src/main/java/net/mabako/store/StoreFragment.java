@@ -23,7 +23,7 @@ import java.util.List;
 
 public abstract class StoreFragment extends Fragment {
     protected int appId;
-    private boolean loaded;
+    protected boolean loaded;
 
     private LoadStoreTask task;
     private View layout;

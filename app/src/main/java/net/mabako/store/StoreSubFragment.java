@@ -1,6 +1,5 @@
 package net.mabako.store;
 
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -57,9 +56,11 @@ public class StoreSubFragment extends StoreFragment {
                     } else throw new Exception("not successful");
                 } catch (Exception e) {
                     Toast.makeText(getContext(), "Unable to load Store Sub", Toast.LENGTH_LONG).show();
+                    loaded = false;
                 }
             } else {
                 Toast.makeText(getContext(), "Unable to load Store Sub", Toast.LENGTH_LONG).show();
+                loaded = false;
             }
 
             getView().findViewById(R.id.progressBar).setVisibility(View.GONE);

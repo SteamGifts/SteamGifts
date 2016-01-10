@@ -77,9 +77,11 @@ public class StoreAppFragment extends StoreFragment {
                     } else throw new Exception("not successful");
                 } catch (Exception e) {
                     Toast.makeText(getContext(), "Unable to load Store App", Toast.LENGTH_LONG).show();
+                    loaded = false;
                 }
             } else {
                 Toast.makeText(getContext(), "Unable to load Store App", Toast.LENGTH_LONG).show();
+                loaded = false;
             }
 
             getView().findViewById(R.id.progressBar).setVisibility(View.GONE);
