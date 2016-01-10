@@ -11,9 +11,6 @@ import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.adapters.viewholder.Utils;
 import net.mabako.store.data.Text;
 
-/**
- * Created by mabako on 10.01.2016.
- */
 public class TextViewHolder extends RecyclerView.ViewHolder {
     private final Context context;
     private final TextView textView;
