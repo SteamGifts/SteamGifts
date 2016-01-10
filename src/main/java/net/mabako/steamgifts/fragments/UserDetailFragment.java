@@ -31,6 +31,7 @@ import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.adapters.GiveawayAdapter;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.data.User;
+import net.mabako.steamgifts.fragments.interfaces.IUserNotifications;
 import net.mabako.steamgifts.tasks.LoadUserDetailsTask;
 
 import java.io.Serializable;

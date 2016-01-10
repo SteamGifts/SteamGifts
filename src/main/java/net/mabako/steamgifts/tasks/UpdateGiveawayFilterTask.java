@@ -2,9 +2,8 @@ package net.mabako.steamgifts.tasks;
 
 import android.support.v4.app.Fragment;
 
-import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
-import net.mabako.steamgifts.fragments.GiveawayListFragment;
 import net.mabako.steamgifts.fragments.HiddenGamesFragment;
+import net.mabako.steamgifts.fragments.interfaces.IHasHideableGiveaways;
 
 import org.jsoup.Connection;
 
@@ -44,15 +43,12 @@ public class UpdateGiveawayFilterTask<FragmentType extends Fragment> extends Aja
         }
 
         FragmentType fragment = getFragment();
-        if (fragment instanceof GiveawayListFragment) {
+        if (fragment instanceof IHasHideableGiveaways) {
             if (response.statusCode() == 301)
-                ((GiveawayListFragment) fragment).onHideGame(internalGameId);
+                ((IHasHideableGiveaways) fragment).onHideGame(internalGameId, true);
         } else if (fragment instanceof HiddenGamesFragment) {
             if (response.statusCode() == 200)
                 ((HiddenGamesFragment) fragment).onShowGame(internalGameId);
-        } else if (fragment instanceof GiveawayDetailFragment) {
-            if (response.statusCode() == 301)
-                ((GiveawayDetailFragment) fragment).onHideGame(internalGameId);
         }
     }
 }

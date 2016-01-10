@@ -24,7 +24,7 @@ import net.mabako.steamgifts.data.Game;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
 import net.mabako.steamgifts.fragments.GiveawayListFragment;
-import net.mabako.steamgifts.fragments.IHasEnterableGiveaways;
+import net.mabako.steamgifts.fragments.interfaces.IHasEnterableGiveaways;
 import net.mabako.steamgifts.web.SteamGiftsUserData;
 
 public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnCreateContextMenuListener, MenuItem.OnMenuItemClickListener {
@@ -113,7 +113,6 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
     public void onClick(View v) {
         Giveaway giveaway = (Giveaway) adapter.getItem(getAdapterPosition());
         if (giveaway.getGiveawayId() != null && giveaway.getName() != null) {
-            GiveawayDetailFragment.setParent(activity);
             Intent intent = new Intent(activity, DetailActivity.class);
             intent.putExtra(GiveawayDetailFragment.ARG_GIVEAWAY, giveaway);
 

@@ -8,12 +8,13 @@ import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.adapters.DiscussionAdapter;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
+import net.mabako.steamgifts.fragments.interfaces.IActivityTitle;
 import net.mabako.steamgifts.tasks.LoadDiscussionListTask;
 
 /**
  * List of all discussions.
  */
-public class DiscussionListFragment extends ListFragment<DiscussionAdapter> implements IFragmentNotifications {
+public class DiscussionListFragment extends ListFragment<DiscussionAdapter> implements IActivityTitle {
     private static final String TAG = DiscussionListFragment.class.getSimpleName();
 
     /**

@@ -1,4 +1,4 @@
-package net.mabako.steamgifts.fragments;
+package net.mabako.steamgifts.fragments.interfaces;
 
 /**
  * Notifications for entering or leaving a giveaway.
@@ -20,5 +20,5 @@ public interface IHasEnterableGiveaways {
      * @param what       what kind of action was executed
      * @param success    whether or not the action was successful
      */
-    void onEnterLeaveResult(String giveawayId, String what, Boolean success);
+    void onEnterLeaveResult(String giveawayId, String what, Boolean success, boolean propagate);
 }

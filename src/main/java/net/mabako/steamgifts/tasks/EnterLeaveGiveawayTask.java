@@ -2,7 +2,7 @@ package net.mabako.steamgifts.tasks;
 
 import android.util.Log;
 
-import net.mabako.steamgifts.fragments.IHasEnterableGiveaways;
+import net.mabako.steamgifts.fragments.interfaces.IHasEnterableGiveaways;
 import net.mabako.steamgifts.web.SteamGiftsUserData;
 
 import org.json.JSONException;
@@ -35,7 +35,7 @@ public class EnterLeaveGiveawayTask extends AjaxTask<IHasEnterableGiveaways> {
                 boolean success = "success".equals(root.getString("type"));
                 int points = root.getInt("points");
 
-                getFragment().onEnterLeaveResult(giveawayId, getWhat(), success);
+                getFragment().onEnterLeaveResult(giveawayId, getWhat(), success, true);
 
                 // Update the points we have.
                 SteamGiftsUserData.getCurrent().setPoints(points);
@@ -45,6 +45,6 @@ public class EnterLeaveGiveawayTask extends AjaxTask<IHasEnterableGiveaways> {
             }
         }
 
-        getFragment().onEnterLeaveResult(giveawayId, getWhat(), null);
+        getFragment().onEnterLeaveResult(giveawayId, getWhat(), null, false);
     }
 }

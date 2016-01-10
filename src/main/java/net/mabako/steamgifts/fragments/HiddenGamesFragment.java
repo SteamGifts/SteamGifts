@@ -13,13 +13,14 @@ import net.mabako.steamgifts.activities.settings.ViewHiddenGamesActivity;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.adapters.HiddenGamesAdapter;
 import net.mabako.steamgifts.data.Game;
+import net.mabako.steamgifts.fragments.interfaces.IActivityTitle;
 import net.mabako.steamgifts.tasks.LoadHiddenGamesTask;
 import net.mabako.steamgifts.tasks.UpdateGiveawayFilterTask;
 
 import java.io.Serializable;
 import java.util.List;
 
-public class HiddenGamesFragment extends ListFragment<HiddenGamesAdapter> implements IFragmentNotifications {
+public class HiddenGamesFragment extends ListFragment<HiddenGamesAdapter> implements IActivityTitle {
     /**
      * Snack is only shown if the app is restarted.
      */

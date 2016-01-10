@@ -1,4 +1,4 @@
-package net.mabako.steamgifts.fragments;
+package net.mabako.steamgifts.fragments.interfaces;
 
 import net.mabako.steamgifts.data.User;
 

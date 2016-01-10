@@ -5,15 +5,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 
-import net.mabako.steamgifts.R;
-import net.mabako.steamgifts.adapters.DiscussionAdapter;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.adapters.GiveawayGroupAdapter;
+import net.mabako.steamgifts.fragments.interfaces.IActivityTitle;
 import net.mabako.steamgifts.tasks.LoadGiveawayGroupsTask;
 
 import java.io.Serializable;
 
-public class GiveawayGroupListFragment extends ListFragment<GiveawayGroupAdapter> implements IFragmentNotifications {
+public class GiveawayGroupListFragment extends ListFragment<GiveawayGroupAdapter> implements IActivityTitle {
     /**
      * Path to the giveaway
      */

@@ -8,7 +8,7 @@ import android.view.View;
 import net.mabako.steamgifts.adapters.viewholder.GiveawayListItemViewHolder;
 import net.mabako.steamgifts.data.Game;
 import net.mabako.steamgifts.data.Giveaway;
-import net.mabako.steamgifts.fragments.IHasEnterableGiveaways;
+import net.mabako.steamgifts.fragments.interfaces.IHasEnterableGiveaways;
 
 import java.util.List;
 

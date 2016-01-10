@@ -11,7 +11,7 @@ import net.mabako.steamgifts.adapters.viewholder.GiveawayCardViewHolder;
 import net.mabako.steamgifts.data.Comment;
 import net.mabako.steamgifts.fragments.DiscussionDetailFragment;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
-import net.mabako.steamgifts.fragments.ICommentableFragment;
+import net.mabako.steamgifts.fragments.interfaces.ICommentableFragment;
 import net.mabako.steamgifts.fragments.util.DiscussionDetailsCard;
 import net.mabako.steamgifts.fragments.util.GiveawayDetailsCard;
 

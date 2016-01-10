@@ -19,7 +19,7 @@ import net.mabako.steamgifts.data.BasicDiscussion;
 import net.mabako.steamgifts.data.BasicGiveaway;
 import net.mabako.steamgifts.fragments.DiscussionDetailFragment;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
-import net.mabako.steamgifts.fragments.IFragmentNotifications;
+import net.mabako.steamgifts.fragments.interfaces.IActivityTitle;
 import net.mabako.steamgifts.fragments.UserDetailFragment;
 import net.mabako.steamgifts.web.SteamGiftsUserData;
 
@@ -45,10 +45,10 @@ public class CommonActivity extends BaseActivity {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             Log.v(TAG, "Current Fragment is a " + fragment.getClass().getName());
-            if (fragment instanceof IFragmentNotifications) {
+            if (fragment instanceof IActivityTitle) {
                 String title = null;
-                int resource = ((IFragmentNotifications) fragment).getTitleResource();
-                String extra = ((IFragmentNotifications) fragment).getExtraTitle();
+                int resource = ((IActivityTitle) fragment).getTitleResource();
+                String extra = ((IActivityTitle) fragment).getExtraTitle();
 
                 if (resource != 0) {
                     if (extra != null && !extra.isEmpty())

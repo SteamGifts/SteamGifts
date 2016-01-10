@@ -33,7 +33,6 @@ import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.activities.settings.SettingsActivity;
 import net.mabako.steamgifts.fragments.DiscussionListFragment;
 import net.mabako.steamgifts.fragments.GiveawayListFragment;
-import net.mabako.steamgifts.fragments.IHasEnterableGiveaways;
 import net.mabako.steamgifts.fragments.UserDetailFragment;
 import net.mabako.steamgifts.tasks.LogoutTask;
 import net.mabako.steamgifts.web.IPointUpdateNotification;
@@ -41,7 +40,7 @@ import net.mabako.steamgifts.web.SteamGiftsUserData;
 
 import java.io.Serializable;
 
-public class MainActivity extends CommonActivity implements IHasEnterableGiveaways, IPointUpdateNotification {
+public class MainActivity extends CommonActivity implements IPointUpdateNotification {
     public static final String ARG_QUERY = "query";
     public static final String ARG_TYPE = "type";
 
@@ -340,24 +339,5 @@ public class MainActivity extends CommonActivity implements IHasEnterableGiveawa
         } else {
             actionBar.setSubtitle(null);
         }
-    }
-
-    @Override
-    public void requestEnterLeave(String giveawayId, String what, String xsrfToken) {
-        throw new UnsupportedOperationException("not implemented");
-    }
-
-    @Override
-    public void onEnterLeaveResult(String giveawayId, String what, Boolean success) {
-        Fragment fragment = getCurrentFragment();
-        if (fragment instanceof IHasEnterableGiveaways) {
-            ((IHasEnterableGiveaways) fragment).onEnterLeaveResult(giveawayId, what, success);
-        }
-    }
-
-    public void onHideGame(int internalGameId) {
-        Fragment fragment = getCurrentFragment();
-        if (fragment instanceof GiveawayListFragment)
-            ((GiveawayListFragment) fragment).onHideGame(internalGameId);
     }
 }

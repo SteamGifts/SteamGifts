@@ -1,13 +1,21 @@
 package net.mabako.steamgifts.fragments;
 
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.adapters.GiveawayAdapter;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.data.Giveaway;
+import net.mabako.steamgifts.fragments.interfaces.IActivityTitle;
+import net.mabako.steamgifts.fragments.interfaces.IHasEnterableGiveaways;
+import net.mabako.steamgifts.fragments.interfaces.IHasHideableGiveaways;
+import net.mabako.steamgifts.fragments.util.GiveawayListFragmentStack;
 import net.mabako.steamgifts.tasks.EnterLeaveGiveawayTask;
 import net.mabako.steamgifts.tasks.LoadGiveawayListTask;
 import net.mabako.steamgifts.tasks.UpdateGiveawayFilterTask;
@@ -17,7 +25,7 @@ import java.util.List;
 /**
  * List of all giveaways.
  */
-public class GiveawayListFragment extends ListFragment<GiveawayAdapter> implements IHasEnterableGiveaways, IFragmentNotifications {
+public class GiveawayListFragment extends ListFragment<GiveawayAdapter> implements IHasEnterableGiveaways, IHasHideableGiveaways, IActivityTitle {
     private static final String TAG = GiveawayListFragment.class.getSimpleName();
 
     private EnterLeaveGiveawayTask enterLeaveTask;
@@ -35,7 +43,15 @@ public class GiveawayListFragment extends ListFragment<GiveawayAdapter> implemen
     }
 
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+        GiveawayListFragmentStack.addFragment(this);
+        return view;
+    }
+
+    @Override
     public void onDestroyView() {
+        GiveawayListFragmentStack.removeFragment(this);
         super.onDestroyView();
 
         if (enterLeaveTask != null)
@@ -93,7 +109,7 @@ public class GiveawayListFragment extends ListFragment<GiveawayAdapter> implemen
     }
 
     @Override
-    public void onEnterLeaveResult(String giveawayId, String what, Boolean success) {
+    public void onEnterLeaveResult(String giveawayId, String what, Boolean success, boolean propagate) {
         if (success == Boolean.TRUE) {
             Giveaway giveaway = adapter.findItem(giveawayId);
             if (giveaway != null) {
@@ -103,6 +119,9 @@ public class GiveawayListFragment extends ListFragment<GiveawayAdapter> implemen
         } else {
             Log.e(TAG, "Probably an error catching the result...");
         }
+
+        if (propagate)
+            GiveawayListFragmentStack.onEnterLeaveResult(giveawayId, what, success);
     }
 
     public void addItems(List<? extends IEndlessAdaptable> items, boolean clearExistingItems, String xsrfToken) {
@@ -114,8 +133,12 @@ public class GiveawayListFragment extends ListFragment<GiveawayAdapter> implemen
         new UpdateGiveawayFilterTask<>(this, adapter.getXsrfToken(), UpdateGiveawayFilterTask.HIDE, internalGameId).execute();
     }
 
-    public void onHideGame(int internalGameId) {
+    @Override
+    public void onHideGame(int internalGameId, boolean propagate) {
         adapter.removeHiddenGame(internalGameId);
+
+        if (propagate)
+            GiveawayListFragmentStack.onHideGame(internalGameId);
     }
 
     /**

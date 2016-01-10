@@ -11,7 +11,7 @@ import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.data.Discussion;
 import net.mabako.steamgifts.data.DiscussionExtras;
 import net.mabako.steamgifts.fragments.DiscussionDetailFragment;
-import net.mabako.steamgifts.fragments.ICommentableFragment;
+import net.mabako.steamgifts.fragments.interfaces.ICommentableFragment;
 import net.mabako.steamgifts.fragments.util.DiscussionDetailsCard;
 
 public class DiscussionCardViewHolder extends RecyclerView.ViewHolder {

@@ -1,6 +1,5 @@
 package net.mabako.steamgifts.fragments;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -22,7 +21,6 @@ import com.squareup.picasso.Picasso;
 
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.activities.DetailActivity;
-import net.mabako.steamgifts.activities.MainActivity;
 import net.mabako.steamgifts.activities.WebViewActivity;
 import net.mabako.steamgifts.activities.WriteCommentActivity;
 import net.mabako.steamgifts.adapters.CommentAdapter;
@@ -33,7 +31,11 @@ import net.mabako.steamgifts.data.Comment;
 import net.mabako.steamgifts.data.Game;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.data.GiveawayExtras;
+import net.mabako.steamgifts.fragments.interfaces.ICommentableFragment;
+import net.mabako.steamgifts.fragments.interfaces.IHasEnterableGiveaways;
+import net.mabako.steamgifts.fragments.interfaces.IHasHideableGiveaways;
 import net.mabako.steamgifts.fragments.util.GiveawayDetailsCard;
+import net.mabako.steamgifts.fragments.util.GiveawayListFragmentStack;
 import net.mabako.steamgifts.tasks.EnterLeaveGiveawayTask;
 import net.mabako.steamgifts.tasks.LoadGiveawayDetailsTask;
 import net.mabako.steamgifts.tasks.UpdateGiveawayFilterTask;
@@ -42,12 +44,12 @@ import net.mabako.store.StoreSubFragment;
 
 import java.util.ArrayList;
 
-public class GiveawayDetailFragment extends Fragment implements ICommentableFragment, IHasEnterableGiveaways {
+public class GiveawayDetailFragment extends Fragment implements ICommentableFragment, IHasEnterableGiveaways, IHasHideableGiveaways {
     public static final String ARG_GIVEAWAY = "giveaway";
     public static final String ENTRY_INSERT = "entry_insert";
     public static final String ENTRY_DELETE = "entry_delete";
     private static final String TAG = GiveawayDetailFragment.class.getSimpleName();
-    private static Activity parent;
+
     /**
      * Content to show for the giveaway details.
      */
@@ -62,11 +64,6 @@ public class GiveawayDetailFragment extends Fragment implements ICommentableFrag
         GiveawayDetailFragment fragment = new GiveawayDetailFragment();
         fragment.giveaway = giveaway;
         return fragment;
-    }
-
-    public static void setParent(Activity parent) {
-        // TODO better way of using this?
-        GiveawayDetailFragment.parent = parent;
     }
 
     @Nullable
@@ -155,8 +152,16 @@ public class GiveawayDetailFragment extends Fragment implements ICommentableFrag
         enterLeaveTask.execute();
     }
 
+    /**
+     * This is called for the current game, but not for other games up the stack - only list fragments.
+     *
+     * @param giveawayId ID of the giveaway
+     * @param what       what kind of action was executed
+     * @param success    whether or not the action was successful
+     * @param propagate
+     */
     @Override
-    public void onEnterLeaveResult(String giveawayId, String what, Boolean success) {
+    public void onEnterLeaveResult(String giveawayId, String what, Boolean success, boolean propagate) {
         Log.v(TAG, "Enter Leave Result -> " + what + ", " + success);
         if (success == Boolean.TRUE) {
 
@@ -166,15 +171,12 @@ public class GiveawayDetailFragment extends Fragment implements ICommentableFrag
 
             giveawayCard.setExtras(extras);
             adapter.setStickyItem(giveawayCard);
-
-            if (parent instanceof IHasEnterableGiveaways) {
-                ((IHasEnterableGiveaways) parent).onEnterLeaveResult(giveawayId, what, success);
-            } else {
-                Log.d(TAG, "No parent giveaway to update status");
-            }
         } else {
             Log.e(TAG, "Probably an error catching the result...");
         }
+
+        if (propagate)
+            GiveawayListFragmentStack.onEnterLeaveResult(giveawayId, what, success);
     }
 
     /**
@@ -272,13 +274,17 @@ public class GiveawayDetailFragment extends Fragment implements ICommentableFrag
         }
     }
 
-    public void onHideGame(int internalGameId) {
-        if (parent instanceof MainActivity) {
-            ((MainActivity) parent).onHideGame(internalGameId);
-        } else {
-            Log.d(TAG, "No parent giveaway to update hidden");
-        }
-
+    /**
+     * This is called for the current game, but not for other games up the stack - only list fragments.
+     *
+     * @param internalGameId
+     * @param propagate
+     */
+    @Override
+    public void onHideGame(int internalGameId, boolean propagate) {
         getActivity().finish();
+
+        if (propagate)
+            GiveawayListFragmentStack.onHideGame(internalGameId);
     }
 }
