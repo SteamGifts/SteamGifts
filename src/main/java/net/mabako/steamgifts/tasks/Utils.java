@@ -12,6 +12,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public final class Utils {
@@ -22,11 +23,16 @@ public final class Utils {
      * @param parent
      */
     public static void loadComments(Element commentNode, ICommentHolder parent) {
-        loadComments(commentNode, parent, 0);
+        loadComments(commentNode, parent, 0, false);
     }
 
-    private static void loadComments(Element commentNode, ICommentHolder parent, int depth) {
-        for (Element c : commentNode.children()) {
+    public static void loadComments(Element commentNode, ICommentHolder parent, int depth, boolean reversed) {
+        Elements children = commentNode.children();
+
+        if(reversed)
+            Collections.reverse(children);
+
+        for (Element c : children) {
             Element thisComment = c.child(0);
 
             // Remove "Save Changes" & "Cancel"
@@ -56,7 +62,7 @@ public final class Utils {
             parent.addComment(comment);
 
             // Add all children
-            loadComments(c.select(".comment__children").first(), parent, depth + 1);
+            loadComments(c.select(".comment__children").first(), parent, depth + 1, false);
         }
     }
 

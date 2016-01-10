@@ -17,6 +17,9 @@ import java.util.List;
 public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final String TAG = EndlessAdapter.class.getSimpleName();
 
+    public static final int FIRST_PAGE = 1;
+    public static final int LAST_PAGE = 11223344;
+
     private static final int PROGRESS_VIEW = -1;
     private static final int END_VIEW = -2;
 
@@ -26,7 +29,9 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
     private boolean loading = false;
     private OnLoadListener loadListener;
     private boolean reachedTheEnd;
-    private int page = 1;
+
+    private int page = FIRST_PAGE;
+    private boolean viewInReverse = false;
 
     /**
      * If set to true, you've reached the end if all loaded items have appeared on a previous page.
@@ -65,7 +70,7 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
         items.add(null);
         notifyItemInserted(getItemCount() - 1);
 
-        Log.v(TAG, "Starting to load more content on page " + page);
+        Log.d(TAG, "Starting to load more content on page " + page);
         loadListener.onLoad(page);
     }
 
@@ -83,7 +88,14 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
         } else {
             addAll(addedItems);
         }
-        ++page;
+
+        // Have we reached the last page yet?
+        if (viewInReverse) {
+            --page;
+            if (page < FIRST_PAGE && !reachedTheEnd)
+                reachedTheEnd();
+        } else
+            ++page;
     }
 
     public void reachedTheEnd() {
@@ -124,6 +136,10 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
                 enoughItems = false;
             }
 
+            if (viewInReverse && page > FIRST_PAGE) {
+                enoughItems = true;
+            }
+
             // Did we have enough items and have not reached the end?
             if (!enoughItems && !reachedTheEnd)
                 reachedTheEnd();
@@ -137,7 +153,7 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         items.clear();
         reachedTheEnd = false;
-        page = 1;
+        page = viewInReverse ? LAST_PAGE : FIRST_PAGE;
         notifyDataSetChanged();
     }
 
@@ -225,6 +241,36 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
     protected void removeItem(int position) {
         items.remove(position);
         notifyItemRemoved(position);
+    }
+
+    /**
+     * Clear the list of elements if you're on the first page if {@link #viewInReverse} is not set, or the last page if {@link #viewInReverse} is set.
+     *
+     * @param page     current page
+     * @param lastPage is this page the last page?
+     */
+    public void notifyPage(int page, boolean lastPage) {
+        Log.d(TAG, "asdf " + page + ", " + this.page + ", " + lastPage + ", " + viewInReverse);
+        if (viewInReverse && lastPage) {
+            clear();
+            this.page = page;
+        } else if (!viewInReverse && page == 1)
+            clear();
+    }
+
+    /**
+     * Start from the last page, instead of the first.
+     */
+    public void setViewInReverse() {
+        if (!alternativeEnd)
+            throw new UnsupportedOperationException("could not reverse an endless adapter without alternativeEnd set [will have no content on the last pages]");
+
+        viewInReverse = true;
+        page = LAST_PAGE;
+    }
+
+    public boolean isViewInReverse() {
+        return viewInReverse;
     }
 
 

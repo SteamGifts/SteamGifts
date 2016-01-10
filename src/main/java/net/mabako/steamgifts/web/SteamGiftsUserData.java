@@ -40,13 +40,11 @@ public class SteamGiftsUserData {
     }
 
     public static void extract(Document document) {
-        Log.d(TAG, "Parsing user data...");
-
         Elements navbar = document.select(".nav__button-container");
 
         Element userContainer = navbar.last().select("a").first();
         String link = userContainer.attr("href");
-        Log.d(TAG, "Link to profile: " + link);
+        Log.v(TAG, "Link to profile: " + link);
 
         if (link.startsWith("/user/")) {
             current.setName(link.substring(6));

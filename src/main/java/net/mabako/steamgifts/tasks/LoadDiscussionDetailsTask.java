@@ -24,9 +24,10 @@ public class LoadDiscussionDetailsTask extends AsyncTask<Void, Void, DiscussionE
 
     private final DiscussionDetailFragment fragment;
     private final String discussionId;
-    private final int page;
+    private int page;
     private final boolean loadDetails;
     private Discussion loadedDetails = null;
+    private boolean lastPage = false;
 
     public LoadDiscussionDetailsTask(DiscussionDetailFragment fragment, String discussionId, int page, boolean loadDetails) {
         this.fragment = fragment;
@@ -59,6 +60,19 @@ public class LoadDiscussionDetailsTask extends AsyncTask<Void, Void, DiscussionE
                 } catch (URISyntaxException e) {
                     Log.w(TAG, "say what - invalid url???", e);
                 }
+            }
+
+            // Do we have a page?
+            Element pagination = document.select(".pagination__navigation a").last();
+            if (pagination != null) {
+                lastPage = !"Last".equalsIgnoreCase(pagination.text());
+                if (lastPage)
+                    page = Integer.parseInt(pagination.attr("data-page-number"));
+
+            } else {
+                // no pagination
+                lastPage = true;
+                page = 1;
             }
 
             return extras;
@@ -105,7 +119,7 @@ public class LoadDiscussionDetailsTask extends AsyncTask<Void, Void, DiscussionE
         if (commentsNode.size() > 1) {
             Element rootCommentNode = commentsNode.last();
             if (rootCommentNode != null)
-                Utils.loadComments(rootCommentNode, extras);
+                Utils.loadComments(rootCommentNode, extras, 0, fragment.getAdapter().isViewInReverse());
         }
         return extras;
     }
@@ -118,7 +132,7 @@ public class LoadDiscussionDetailsTask extends AsyncTask<Void, Void, DiscussionE
             if (loadDetails)
                 fragment.onPostDiscussionLoaded(loadedDetails);
 
-            fragment.addDetails(discussionExtras, page);
+            fragment.addDetails(discussionExtras, page, lastPage);
         } else {
             Toast.makeText(fragment.getContext(), "Discussion does not exist or could not be loaded", Toast.LENGTH_LONG).show();
             fragment.getActivity().finish();

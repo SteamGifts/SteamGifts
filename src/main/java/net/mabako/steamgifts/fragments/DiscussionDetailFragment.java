@@ -1,7 +1,9 @@
 package net.mabako.steamgifts.fragments;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -70,7 +72,14 @@ public class DiscussionDetailFragment extends Fragment implements ICommentableFr
         // Add the cardview for the Giveaway details
         adapter.setStickyItem(discussionCard);
 
-        fetchItems(1);
+        // To reverse or not to reverse?
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        if (prefs.getBoolean("preference_discussion_comments_reversed", false)) {
+            adapter.setViewInReverse();
+            fetchItems(EndlessAdapter.LAST_PAGE);
+        } else {
+            fetchItems(EndlessAdapter.FIRST_PAGE);
+        }
         setHasOptionsMenu(true);
 
         return layout;
@@ -111,15 +120,14 @@ public class DiscussionDetailFragment extends Fragment implements ICommentableFr
         onPostDiscussionLoaded(discussion, false);
     }
 
-    public void addDetails(DiscussionExtras extras, int page) {
+    public void addDetails(DiscussionExtras extras, int page, boolean lastPage) {
         if (extras == null)
             return;
 
         discussionCard.setExtras(extras);
         adapter.setStickyItem(discussionCard);
 
-        if (page == 1)
-            adapter.clear();
+        adapter.notifyPage(page, lastPage);
         adapter.finishLoading(new ArrayList<IEndlessAdaptable>(extras.getComments()));
     }
 
@@ -141,5 +149,9 @@ public class DiscussionDetailFragment extends Fragment implements ICommentableFr
             getActivity().startActivityForResult(intent, WriteCommentActivity.REQUEST_COMMENT);
         } else
             throw new IllegalStateException("Commenting on a not fully loaded Giveaway");
+    }
+
+    public CommentAdapter<DiscussionDetailFragment> getAdapter() {
+        return adapter;
     }
 }
