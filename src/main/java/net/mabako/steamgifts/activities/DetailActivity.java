@@ -66,7 +66,7 @@ public class DetailActivity extends CommonActivity {
 
             serializable = getIntent().getSerializableExtra(SGToolsDetailFragment.ARG_UUID);
             if (serializable != null) {
-                setContentView(R.layout.activity_giveaway_detail);
+                setContentView(R.layout.activity_detail_expanding_toolbar);
                 loadFragment(SGToolsDetailFragment.newInstance((UUID) serializable));
                 return;
             }
