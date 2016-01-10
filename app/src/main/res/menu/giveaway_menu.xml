@@ -8,4 +8,9 @@
         android:icon="@drawable/ic_steam"
         android:title="@string/open_steam_store"
         app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/hide_game"
+        android:title="@string/hide_game"
+        app:showAsAction="never" />
 </menu>

@@ -32,11 +32,12 @@ import net.mabako.steamgifts.data.Comment;
 import net.mabako.steamgifts.data.Game;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.data.GiveawayExtras;
-import net.mabako.store.StoreAppFragment;
-import net.mabako.store.StoreSubFragment;
 import net.mabako.steamgifts.fragments.util.GiveawayDetailsCard;
 import net.mabako.steamgifts.tasks.EnterLeaveGiveawayTask;
 import net.mabako.steamgifts.tasks.LoadGiveawayDetailsTask;
+import net.mabako.steamgifts.tasks.UpdateGiveawayFilterTask;
+import net.mabako.store.StoreAppFragment;
+import net.mabako.store.StoreSubFragment;
 
 import java.util.ArrayList;
 
@@ -136,6 +137,7 @@ public class GiveawayDetailFragment extends Fragment implements ICommentableFrag
         ((Giveaway) giveaway).setTimeRemaining(extras.getTimeRemaining());
 
         giveawayCard.setExtras(extras);
+        getActivity().supportInvalidateOptionsMenu();
         adapter.setStickyItem(giveawayCard);
 
         if (page == 1)
@@ -209,7 +211,7 @@ public class GiveawayDetailFragment extends Fragment implements ICommentableFrag
         getActivity().supportInvalidateOptionsMenu();
 
         if (getActivity() instanceof DetailActivity && giveaway.getGameId() != Game.NO_APP_ID)
-            ((DetailActivity) getActivity()).addFragment(giveaway.getType() == Game.Type.APP ? StoreAppFragment.newInstance(giveaway.getGameId()) : StoreSubFragment.newInstance(giveaway.getGameId()));
+            ((DetailActivity) getActivity()).addFragment(giveaway.getType() == Game.Type.APP ? StoreAppFragment.newInstance(giveaway.getGameId(), this) : StoreSubFragment.newInstance(giveaway.getGameId(), this));
     }
 
     public void onPostGiveawayLoaded(Giveaway giveaway) {
@@ -242,6 +244,7 @@ public class GiveawayDetailFragment extends Fragment implements ICommentableFrag
         if (giveaway instanceof Giveaway) {
             inflater.inflate(R.menu.giveaway_menu, menu);
             menu.findItem(R.id.open_steam_store).setVisible(((Giveaway) giveaway).getGameId() > 0);
+            menu.findItem(R.id.hide_game).setVisible(((Giveaway) giveaway).getInternalGameId() > 0 && giveawayCard.getExtras() != null && giveawayCard.getExtras().getXsrfToken() != null);
         }
     }
 
@@ -257,6 +260,10 @@ public class GiveawayDetailFragment extends Fragment implements ICommentableFrag
                     intent.putExtra(WebViewActivity.ARG_URL, "http://store.steampowered.com/" + giveaway.getType().name().toLowerCase() + "/" + giveaway.getGameId() + "/");
                     startActivity(intent);
                 }
+                return true;
+
+            case R.id.hide_game:
+                new UpdateGiveawayFilterTask<GiveawayDetailFragment>(this, giveawayCard.getExtras().getXsrfToken(), UpdateGiveawayFilterTask.HIDE, ((Giveaway) giveaway).getInternalGameId()).execute();
                 return true;
 
             default:

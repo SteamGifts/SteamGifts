@@ -1,5 +1,6 @@
 package net.mabako.store;
 
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.Toast;
 
@@ -12,9 +13,10 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 
 public class StoreSubFragment extends StoreFragment {
-    public static StoreSubFragment newInstance(int appId) {
+    public static StoreSubFragment newInstance(int appId, Fragment primaryFragment) {
         StoreSubFragment fragment = new StoreSubFragment();
         fragment.appId = appId;
+        fragment.primaryFragment = primaryFragment;
         return fragment;
     }
 

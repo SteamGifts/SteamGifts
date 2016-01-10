@@ -1,5 +1,6 @@
 package net.mabako.store;
 
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.Toast;
 
@@ -13,9 +14,10 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 
 public class StoreAppFragment extends StoreFragment {
-    public static StoreAppFragment newInstance(int appId) {
+    public static StoreAppFragment newInstance(int appId, Fragment primaryFragment) {
         StoreAppFragment fragment = new StoreAppFragment();
         fragment.appId = appId;
+        fragment.primaryFragment = primaryFragment;
         return fragment;
     }
 
@@ -48,7 +50,7 @@ public class StoreAppFragment extends StoreFragment {
                         adapter.add(new Text(data.getString("about_the_game"), true));
 
                         // Release?
-                        adapter.add(new Text("<strong>Release:</strong>" + data.getJSONObject("release_date").getString("date"), true));
+                        adapter.add(new Text("<strong>Release:</strong> " + data.getJSONObject("release_date").getString("date"), true));
 
                         // Genres
                         JSONArray genres = data.getJSONArray("genres");

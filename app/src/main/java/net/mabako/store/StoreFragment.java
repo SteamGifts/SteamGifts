@@ -6,6 +6,9 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -25,6 +28,11 @@ public abstract class StoreFragment extends Fragment {
     protected int appId;
     protected boolean loaded;
 
+    /**
+     * Fragment in which the giveaway is shown.
+     */
+    protected Fragment primaryFragment;
+
     private LoadStoreTask task;
     private View layout;
 
@@ -35,6 +43,8 @@ public abstract class StoreFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         layout = inflater.inflate(R.layout.fragment_simple_list, container, false);
+
+        setHasOptionsMenu(true);
 
         listView = (RecyclerView) layout.findViewById(R.id.list);
         adapter = new Adapter();
@@ -120,5 +130,15 @@ public abstract class StoreFragment extends Fragment {
             items.add(adaptable);
             notifyItemInserted(items.size() - 1);
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        primaryFragment.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return primaryFragment.onOptionsItemSelected(item);
     }
 }
