@@ -1,5 +1,6 @@
 package net.mabako.steamgifts.adapters.viewholder;
 
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +18,11 @@ public class GameViewHolder extends RecyclerView.ViewHolder {
     private final TextView gameName;
     private final ImageView image;
 
-    private final HiddenGamesFragment fragment;
+    private final Fragment fragment;
 
     private static int measuredHeight = 0;
 
-    public GameViewHolder(View itemView, HiddenGamesFragment fragment) {
+    public GameViewHolder(View itemView, Fragment fragment) {
         super(itemView);
         this.fragment = fragment;
 
@@ -32,14 +33,16 @@ public class GameViewHolder extends RecyclerView.ViewHolder {
     public void setFrom(final Game game) {
         gameName.setText(game.getName());
 
-        if (game.getInternalGameId() != Game.NO_APP_ID) {
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    fragment.requestShowGame(game.getInternalGameId());
-                    return true;
-                }
-            });
+        if (fragment instanceof HiddenGamesFragment) {
+            if (game.getInternalGameId() != Game.NO_APP_ID) {
+                itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        ((HiddenGamesFragment) fragment).requestShowGame(game.getInternalGameId());
+                        return true;
+                    }
+                });
+            }
         }
 
         // giveaway_image

@@ -1,13 +1,14 @@
 package net.mabako.steamgifts.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
-
-import com.mikepenz.iconics.context.IconicsContextWrapper;
 
 import net.mabako.sgtools.SGToolsDetailFragment;
 import net.mabako.steamgifts.R;
@@ -18,9 +19,14 @@ import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
 import net.mabako.steamgifts.fragments.UserDetailFragment;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 public class DetailActivity extends CommonActivity {
+    private SimplePagerAdapter pagerAdapter = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +46,7 @@ public class DetailActivity extends CommonActivity {
             Serializable serializable = getIntent().getSerializableExtra(GiveawayDetailFragment.ARG_GIVEAWAY);
             if (serializable != null) {
                 setContentView(R.layout.activity_giveaway_detail);
-                loadFragment(GiveawayDetailFragment.newInstance((BasicGiveaway) serializable));
+                loadPagedFragments(GiveawayDetailFragment.newInstance((BasicGiveaway) serializable));
                 return;
             }
 
@@ -102,5 +108,61 @@ public class DetailActivity extends CommonActivity {
         }
 
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    /**
+     * Initialize the {@link ViewPager} adapter.
+     *
+     * @param fragments
+     */
+    private void loadPagedFragments(Fragment... fragments) {
+        ViewPager pager = (ViewPager) findViewById(R.id.viewPager);
+
+        pagerAdapter = new SimplePagerAdapter(getSupportFragmentManager(), fragments);
+        pager.setAdapter(pagerAdapter);
+    }
+
+    /**
+     * Returns the first fragment if this is page-able, otherwise the only fragment.
+     *
+     * @return the fragment
+     */
+    @Override
+    public Fragment getCurrentFragment() {
+        return pagerAdapter == null ? super.getCurrentFragment() : pagerAdapter.getItem(0);
+    }
+
+    public void addFragment(Fragment fragment) {
+        if (pagerAdapter == null)
+            throw new IllegalStateException("not a paged view");
+
+        pagerAdapter.add(fragment);
+    }
+
+    /**
+     * Simple fragment adapter that basically just holds a list of... fragments, without any fancy schmuck.
+     */
+    private class SimplePagerAdapter extends FragmentPagerAdapter {
+        private List<Fragment> fragments = new ArrayList<>();
+
+        public SimplePagerAdapter(FragmentManager fm, Fragment... fragments) {
+            super(fm);
+            this.fragments.addAll(Arrays.asList(fragments));
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return fragments.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return fragments.size();
+        }
+
+        public void add(Fragment fragment) {
+            fragments.add(fragment);
+            notifyDataSetChanged();
+        }
     }
 }

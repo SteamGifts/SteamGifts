@@ -29,8 +29,11 @@ import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.data.BasicGiveaway;
 import net.mabako.steamgifts.data.Comment;
+import net.mabako.steamgifts.data.Game;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.data.GiveawayExtras;
+import net.mabako.store.StoreAppFragment;
+import net.mabako.store.StoreSubFragment;
 import net.mabako.steamgifts.fragments.util.GiveawayDetailsCard;
 import net.mabako.steamgifts.tasks.EnterLeaveGiveawayTask;
 import net.mabako.steamgifts.tasks.LoadGiveawayDetailsTask;
@@ -204,6 +207,9 @@ public class GiveawayDetailFragment extends Fragment implements ICommentableFrag
 
         // Re-build the options menu, which may not be created if no giveaway was present.
         getActivity().supportInvalidateOptionsMenu();
+
+        if (getActivity() instanceof DetailActivity && giveaway.getGameId() != Game.NO_APP_ID)
+            ((DetailActivity) getActivity()).addFragment(giveaway.getType() == Game.Type.APP ? StoreAppFragment.newInstance(giveaway.getGameId()) : StoreSubFragment.newInstance(giveaway.getGameId()));
     }
 
     public void onPostGiveawayLoaded(Giveaway giveaway) {
