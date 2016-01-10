@@ -24,6 +24,8 @@ public class ViewGroupsActivity extends CommonActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        loadFragment(GiveawayGroupListFragment.newInstance(getIntent().getStringExtra(TITLE), getIntent().getStringExtra(PATH)));
+        if (savedInstanceState == null) {
+            loadFragment(GiveawayGroupListFragment.newInstance(getIntent().getStringExtra(TITLE), getIntent().getStringExtra(PATH)));
+        }
     }
 }

@@ -24,6 +24,8 @@ public class ViewHiddenGamesActivity extends CommonActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        loadFragment(HiddenGamesFragment.newInstance(getIntent().getStringExtra(ARG_QUERY)));
+        if (savedInstanceState == null) {
+            loadFragment(HiddenGamesFragment.newInstance(getIntent().getStringExtra(ARG_QUERY)));
+        }
     }
 }
