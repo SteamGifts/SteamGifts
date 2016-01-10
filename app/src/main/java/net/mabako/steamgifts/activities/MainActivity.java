@@ -354,4 +354,10 @@ public class MainActivity extends CommonActivity implements IHasEnterableGiveawa
             ((IHasEnterableGiveaways) fragment).onEnterLeaveResult(giveawayId, what, success);
         }
     }
+
+    public void onHideGame(int internalGameId) {
+        Fragment fragment = getCurrentFragment();
+        if (fragment instanceof GiveawayListFragment)
+            ((GiveawayListFragment) fragment).onHideGame(internalGameId);
+    }
 }

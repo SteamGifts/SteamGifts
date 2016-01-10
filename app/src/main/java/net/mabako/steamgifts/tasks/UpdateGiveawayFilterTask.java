@@ -2,6 +2,7 @@ package net.mabako.steamgifts.tasks;
 
 import android.support.v4.app.Fragment;
 
+import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
 import net.mabako.steamgifts.fragments.GiveawayListFragment;
 import net.mabako.steamgifts.fragments.HiddenGamesFragment;
 
@@ -37,7 +38,7 @@ public class UpdateGiveawayFilterTask<FragmentType extends Fragment> extends Aja
 
     @Override
     protected void onPostExecute(Connection.Response response) {
-        if(response == null) {
+        if (response == null) {
             // TODO Socket timed out or some stupid shit like that.
             return;
         }
@@ -49,6 +50,9 @@ public class UpdateGiveawayFilterTask<FragmentType extends Fragment> extends Aja
         } else if (fragment instanceof HiddenGamesFragment) {
             if (response.statusCode() == 200)
                 ((HiddenGamesFragment) fragment).onShowGame(internalGameId);
+        } else if (fragment instanceof GiveawayDetailFragment) {
+            if (response.statusCode() == 301)
+                ((GiveawayDetailFragment) fragment).onHideGame(internalGameId);
         }
     }
 }

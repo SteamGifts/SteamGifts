@@ -22,6 +22,7 @@ import com.squareup.picasso.Picasso;
 
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.activities.DetailActivity;
+import net.mabako.steamgifts.activities.MainActivity;
 import net.mabako.steamgifts.activities.WebViewActivity;
 import net.mabako.steamgifts.activities.WriteCommentActivity;
 import net.mabako.steamgifts.adapters.CommentAdapter;
@@ -29,11 +30,15 @@ import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.data.BasicGiveaway;
 import net.mabako.steamgifts.data.Comment;
+import net.mabako.steamgifts.data.Game;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.data.GiveawayExtras;
 import net.mabako.steamgifts.fragments.util.GiveawayDetailsCard;
 import net.mabako.steamgifts.tasks.EnterLeaveGiveawayTask;
 import net.mabako.steamgifts.tasks.LoadGiveawayDetailsTask;
+import net.mabako.steamgifts.tasks.UpdateGiveawayFilterTask;
+import net.mabako.store.StoreAppFragment;
+import net.mabako.store.StoreSubFragment;
 
 import java.util.ArrayList;
 
@@ -133,6 +138,7 @@ public class GiveawayDetailFragment extends Fragment implements ICommentableFrag
         ((Giveaway) giveaway).setTimeRemaining(extras.getTimeRemaining());
 
         giveawayCard.setExtras(extras);
+        getActivity().supportInvalidateOptionsMenu();
         adapter.setStickyItem(giveawayCard);
 
         if (page == 1)
@@ -204,6 +210,9 @@ public class GiveawayDetailFragment extends Fragment implements ICommentableFrag
 
         // Re-build the options menu, which may not be created if no giveaway was present.
         getActivity().supportInvalidateOptionsMenu();
+
+        if (getActivity() instanceof DetailActivity && giveaway.getGameId() != Game.NO_APP_ID)
+            ((DetailActivity) getActivity()).addFragment(giveaway.getType() == Game.Type.APP ? StoreAppFragment.newInstance(giveaway.getGameId(), this) : StoreSubFragment.newInstance(giveaway.getGameId(), this));
     }
 
     public void onPostGiveawayLoaded(Giveaway giveaway) {
@@ -236,6 +245,7 @@ public class GiveawayDetailFragment extends Fragment implements ICommentableFrag
         if (giveaway instanceof Giveaway) {
             inflater.inflate(R.menu.giveaway_menu, menu);
             menu.findItem(R.id.open_steam_store).setVisible(((Giveaway) giveaway).getGameId() > 0);
+            menu.findItem(R.id.hide_game).setVisible(((Giveaway) giveaway).getInternalGameId() > 0 && giveawayCard.getExtras() != null && giveawayCard.getExtras().getXsrfToken() != null);
         }
     }
 
@@ -253,8 +263,22 @@ public class GiveawayDetailFragment extends Fragment implements ICommentableFrag
                 }
                 return true;
 
+            case R.id.hide_game:
+                new UpdateGiveawayFilterTask<GiveawayDetailFragment>(this, giveawayCard.getExtras().getXsrfToken(), UpdateGiveawayFilterTask.HIDE, ((Giveaway) giveaway).getInternalGameId()).execute();
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void onHideGame(int internalGameId) {
+        if (parent instanceof MainActivity) {
+            ((MainActivity) parent).onHideGame(internalGameId);
+        } else {
+            Log.d(TAG, "No parent giveaway to update hidden");
+        }
+
+        getActivity().finish();
     }
 }
