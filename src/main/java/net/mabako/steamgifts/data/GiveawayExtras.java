@@ -11,6 +11,7 @@ public class GiveawayExtras implements Serializable, ICommentHolder {
     private String timeRemaining;
     private final List<Comment> loadedComments;
     private String errorMessage;
+    private boolean enterable;
 
     public GiveawayExtras() {
         loadedComments = new ArrayList<>();
@@ -64,5 +65,13 @@ public class GiveawayExtras implements Serializable, ICommentHolder {
 
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
+    }
+
+    public boolean isEnterable() {
+        return enterable;
+    }
+
+    public void setEnterable(boolean enterable) {
+        this.enterable = enterable;
     }
 }

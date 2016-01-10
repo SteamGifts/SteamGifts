@@ -104,7 +104,7 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
                     description.setVisibility(View.VISIBLE);
                 }
 
-                if (extras.getXsrfToken() != null && extras.getErrorMessage() == null) {
+                if (extras.getXsrfToken() != null && extras.getErrorMessage() == null && extras.isEnterable()) {
                     if (!extras.isEntered())
                         enterGiveaway.setVisibility(View.VISIBLE);
                     else

@@ -117,15 +117,21 @@ public class LoadGiveawayDetailsTask extends AsyncTask<Void, Void, GiveawayExtra
         if (description != null) // This will be null if no description is given.
             extras.setDescription(description.html());
 
+        // Load the xsrf token regardless of whether or not you can enter.
+        Element xsrfToken = document.select("input[name=xsrf_token]").first();
+        if (xsrfToken != null)
+            extras.setXsrfToken(xsrfToken.attr("value"));
+
         // Enter/Leave giveaway
         Element enterLeaveForm = document.select(".sidebar form").first();
         if (enterLeaveForm != null) {
-            if (enterLeaveForm != document.select(".sidebar > form").first()) {
+            extras.setEntered(enterLeaveForm.select(".sidebar__entry-insert").hasClass("is-hidden"));
+
+            if (enterLeaveForm == document.select(".sidebar > form").first()) {
+                extras.setEnterable(true);
+            } else {
                 extras.setErrorMessage("N/A");
             }
-
-            extras.setEntered(enterLeaveForm.select(".sidebar__entry-insert").hasClass("is-hidden"));
-            extras.setXsrfToken(enterLeaveForm.select("input[name=xsrf_token]").attr("value"));
         } else {
             Element error = document.select(".sidebar .sidebar__error").first();
             if (error != null)
