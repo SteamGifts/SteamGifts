@@ -70,10 +70,15 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
         giveawayName.setText(giveaway.getTitle());
         giveawayTime.setText(giveaway.getTimeRemaining());
 
-        String str = giveaway.getPoints() + "P | " + giveaway.getEntries() + " entries";
+        StringBuilder sb = new StringBuilder();
         if (giveaway.getCopies() > 1)
-            str = giveaway.getCopies() + " copies | " + str;
-        giveawayDetails.setText(str);
+            sb.append(giveaway.getCopies()).append("copies | ");
+        sb.append(giveaway.getPoints()).append("P | ");
+        if (giveaway.getLevel() > 0)
+            sb.append("L").append(giveaway.getLevel()).append(" | ");
+        sb.append(giveaway.getEntries()).append(" entries");
+
+        giveawayDetails.setText(sb);
 
         // giveaway_image
         if (giveaway.getGameId() != Game.NO_APP_ID) {
