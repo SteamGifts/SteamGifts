@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import net.mabako.steamgifts.BuildConfig;
 import net.mabako.steamgifts.R;
+import net.mabako.steamgifts.activities.DetailActivity;
+import net.mabako.steamgifts.data.BasicDiscussion;
 
 public class AboutFragment extends Fragment {
     @Nullable
@@ -23,7 +25,16 @@ public class AboutFragment extends Fragment {
 
         ((TextView) layout.findViewById(R.id.version)).setText(String.format("Version %s (Build %d)", BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE));
 
-        layout.findViewById(R.id.contact).setOnClickListener(new View.OnClickListener() {
+        layout.findViewById(R.id.forum_thread).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), DetailActivity.class);
+                intent.putExtra(DiscussionDetailFragment.ARG_DISCUSSION, new BasicDiscussion("Zpeq5"));
+                getActivity().startActivity(intent);
+            }
+        });
+
+        layout.findViewById(R.id.mail).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String email = "lizacarvelli+steamgifts+" + BuildConfig.VERSION_CODE + "@gmail.com";

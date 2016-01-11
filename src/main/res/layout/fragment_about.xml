@@ -20,8 +20,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="16dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingTop="16dp">
 
             <TextView
                 android:layout_width="match_parent"
@@ -48,17 +48,25 @@
                 android:paddingBottom="4dp"
                 android:text="Version Code" />
 
+            <Button
+                android:id="@+id/forum_thread"
+                style="@style/MediumButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/about_forum_thread" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center">
 
                 <Button
-                    android:id="@+id/contact"
+                    android:id="@+id/mail"
                     style="@style/MediumButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/about_feedback" />
+                    android:text="@string/about_mail" />
 
                 <Button
                     android:id="@+id/source"
