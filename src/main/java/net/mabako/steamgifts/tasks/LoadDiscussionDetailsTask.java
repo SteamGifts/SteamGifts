@@ -17,13 +17,13 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.net.URISyntaxException;
+import java.io.IOException;
 
 public class LoadDiscussionDetailsTask extends AsyncTask<Void, Void, DiscussionExtras> {
     private static final String TAG = LoadDiscussionDetailsTask.class.getSimpleName();
 
     private final DiscussionDetailFragment fragment;
-    private final String discussionId;
+    private String discussionId;
     private int page;
     private final boolean loadDetails;
     private Discussion loadedDetails = null;
@@ -39,47 +39,65 @@ public class LoadDiscussionDetailsTask extends AsyncTask<Void, Void, DiscussionE
 
     @Override
     protected DiscussionExtras doInBackground(Void... params) {
-        String url = "http://www.steamgifts.com/discussion/" + discussionId + "/search?page=" + page;
-        Log.d(TAG, "Fetching discussion details for " + url);
 
         try {
-            Connection connection = Jsoup.connect(url);
-            if (SteamGiftsUserData.getCurrent().isLoggedIn())
-                connection.cookie("PHPSESSID", SteamGiftsUserData.getCurrent().getSessionId());
+            Connection.Response response = connect();
+            if (response.statusCode() == 200) {
+                Uri uri = Uri.parse(response.url().toURI().toString());
+                Log.v(TAG, "Current URI -> " + uri);
+                if (uri.getPathSegments().size() < 2)
+                    throw new Exception("Could actually not find the discussion, we're at URI " + uri.toString());
 
-            Connection.Response response = connection.execute();
-            Document document = response.parse();
-
-            // Update user details
-            SteamGiftsUserData.extract(document);
-
-            DiscussionExtras extras = loadExtras(document);
-            if (loadDetails) {
-                try {
-                    loadedDetails = loadDiscussion(document, Uri.parse(response.url().toURI().toString()));
-                } catch (URISyntaxException e) {
-                    Log.w(TAG, "say what - invalid url???", e);
+                // are we expecting to be on this page? this can be most easily figured out if we check for the last path segment to be "search"
+                if (!"search".equals(uri.getLastPathSegment())) {
+                    // Let's just try again.
+                    discussionId = uri.getPathSegments().get(1) + "/" + uri.getPathSegments().get(2);
+                    response = connect();
                 }
+
+
+                Document document = response.parse();
+
+                // Update user details
+                SteamGiftsUserData.extract(document);
+
+                DiscussionExtras extras = loadExtras(document);
+                if (loadDetails) {
+                    loadedDetails = loadDiscussion(document, uri);
+                }
+
+                // Do we have a page?
+                Element pagination = document.select(".pagination__navigation a").last();
+                if (pagination != null) {
+                    lastPage = !"Last".equalsIgnoreCase(pagination.text());
+                    if (lastPage)
+                        page = Integer.parseInt(pagination.attr("data-page-number"));
+
+                } else {
+                    // no pagination
+                    lastPage = true;
+                    page = 1;
+                }
+
+                return extras;
             }
-
-            // Do we have a page?
-            Element pagination = document.select(".pagination__navigation a").last();
-            if (pagination != null) {
-                lastPage = !"Last".equalsIgnoreCase(pagination.text());
-                if (lastPage)
-                    page = Integer.parseInt(pagination.attr("data-page-number"));
-
-            } else {
-                // no pagination
-                lastPage = true;
-                page = 1;
-            }
-
-            return extras;
         } catch (Exception e) {
             Log.e(TAG, "Error fetching URL", e);
-            return null;
         }
+        return null;
+    }
+
+    private Connection.Response connect() throws IOException {
+        String url = "http://www.steamgifts.com/discussion/" + discussionId + "/search?page=" + page;
+        Log.v(TAG, "Fetching discussion details for " + url);
+        Connection connection = Jsoup.connect(url)
+                .followRedirects(true);
+
+        if (SteamGiftsUserData.getCurrent().isLoggedIn())
+            connection.cookie("PHPSESSID", SteamGiftsUserData.getCurrent().getSessionId());
+
+        Connection.Response response = connection.execute();
+        return response;
     }
 
     private Discussion loadDiscussion(Document document, Uri linkUri) {

@@ -101,6 +101,8 @@ public class DiscussionDetailFragment extends Fragment implements ICommentableFr
         String url = discussion.getDiscussionId();
         if (discussion instanceof Discussion)
             url += "/" + ((Discussion) discussion).getName();
+        else
+            url += "/sgforandroid";
 
         task = new LoadDiscussionDetailsTask(this, url, page, !(discussion instanceof Discussion));
         task.execute();
