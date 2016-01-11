@@ -87,6 +87,8 @@
     <string name="user_giveaway_won_count">%1$d won\n%2$s</string>
     <string name="private_giveaway">This giveaway is private.</string>
 
+    <string name="user_tab_notifications">Messages</string>
+
     <!-- sgtools.info -->
     <string name="sgtools_loading">Loading SGTools</string>
     <string name="sgtools_check">Check Requirements</string>
@@ -119,4 +121,6 @@
 
     <!-- Optional button to Skip a PreferenceActivity [CHAR LIMIT=20] -->
     <string name="skip_button_label">Skip</string>
+    <string name="view_profile">View Profile</string>
+    <string name="mark_read">Mark as Read</string>
 </resources>

@@ -152,6 +152,20 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
             getActivity().finish();
     }
 
+    /**
+     * Load a tab's items only if the user is on that tab.
+     *
+     * @param isVisibleToUser
+     */
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser && !loadItemsInitially) {
+            loadItemsInitially = true;
+            fetchItems(1);
+        }
+    }
+
     protected abstract AdapterType createAdapter(RecyclerView listView);
 
     /**

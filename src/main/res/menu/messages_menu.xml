@@ -1,0 +1,19 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activities.DetailActivity">
+
+    <item
+        android:id="@+id/mark_read"
+        android:icon="@drawable/ic_check_all"
+        android:title="@string/mark_read"
+        android:visible="false"
+        app:showAsAction="always"
+        tools:visible="true" />
+
+    <item
+        android:id="@+id/user"
+        android:icon="@drawable/ic_account"
+        android:title="@string/view_profile"
+        app:showAsAction="always" />
+</menu>

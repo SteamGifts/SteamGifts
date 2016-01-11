@@ -214,20 +214,6 @@ public class UserDetailFragment extends Fragment implements IUserNotifications {
             throw new UnsupportedOperationException();
         }
 
-        /**
-         * Load the "won" giveaways only if the user's been navigating to that tab.
-         *
-         * @param isVisibleToUser
-         */
-        @Override
-        public void setUserVisibleHint(boolean isVisibleToUser) {
-            super.setUserVisibleHint(isVisibleToUser);
-            if (isVisibleToUser && !loadItemsInitially) {
-                loadItemsInitially = true;
-                fetchItems(1);
-            }
-        }
-
         @Override
         public void onUserUpdated(User user) {
             iUserNotification.onUserUpdated(user);

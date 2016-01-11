@@ -54,6 +54,8 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
     }
 
     public void setFrom(final Comment comment) {
+        Utils.setBackgroundDrawable(context, itemView, comment.isHighlighted());
+
         commentAuthor.setText(comment.getAuthor());
         Utils.setBackgroundDrawable(context, commentAuthor, comment.isOp());
 
@@ -75,7 +77,7 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
         commentImage.setOnClickListener(viewProfileListener);
         commentAuthor.setOnClickListener(viewProfileListener);
 
-        writeCommentListener = new View.OnClickListener() {
+        writeCommentListener = comment.getId() == 0 ? null : new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 fragment.requestComment(comment);
@@ -88,14 +90,16 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
         if (SteamGiftsUserData.getCurrent().isLoggedIn()) {
             menu.setHeaderTitle(R.string.actions);
 
-            menu.add(0, 1, 0, R.string.add_comment).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    if (writeCommentListener != null)
-                        writeCommentListener.onClick(itemView);
-                    return true;
-                }
-            });
+            if (writeCommentListener != null) {
+                menu.add(0, 1, 0, R.string.add_comment).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        if (writeCommentListener != null)
+                            writeCommentListener.onClick(itemView);
+                        return true;
+                    }
+                });
+            }
         }
     }
 }

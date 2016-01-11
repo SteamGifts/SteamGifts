@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.text.InputFilter;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -19,8 +18,8 @@ import net.mabako.steamgifts.data.BasicDiscussion;
 import net.mabako.steamgifts.data.BasicGiveaway;
 import net.mabako.steamgifts.fragments.DiscussionDetailFragment;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
-import net.mabako.steamgifts.fragments.interfaces.IActivityTitle;
 import net.mabako.steamgifts.fragments.UserDetailFragment;
+import net.mabako.steamgifts.fragments.interfaces.IActivityTitle;
 import net.mabako.steamgifts.web.SteamGiftsUserData;
 
 public class CommonActivity extends BaseActivity {
@@ -44,25 +43,28 @@ public class CommonActivity extends BaseActivity {
         // Update the title.
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            Log.v(TAG, "Current Fragment is a " + fragment.getClass().getName());
             if (fragment instanceof IActivityTitle) {
-                String title = null;
-                int resource = ((IActivityTitle) fragment).getTitleResource();
-                String extra = ((IActivityTitle) fragment).getExtraTitle();
-
-                if (resource != 0) {
-                    if (extra != null && !extra.isEmpty())
-                        title = String.format("%s: %s", extra, getString(resource));
-                    else
-                        title = getString(resource);
-                } else
-                    title = extra;
-
-                actionBar.setTitle(title);
-                Log.v(TAG, "Setting Toolbar title to " + title);
+                actionBar.setTitle(getFragmentTitle(fragment));
             } else
                 actionBar.setTitle(R.string.app_name);
         }
+    }
+
+    protected String getFragmentTitle(Fragment fragment) {
+        String title = null;
+        if (fragment instanceof IActivityTitle) {
+            int resource = ((IActivityTitle) fragment).getTitleResource();
+            String extra = ((IActivityTitle) fragment).getExtraTitle();
+
+            if (resource != 0) {
+                if (extra != null && !extra.isEmpty())
+                    title = String.format("%s: %s", extra, getString(resource));
+                else
+                    title = getString(resource);
+            } else
+                title = extra;
+        }
+        return title;
     }
 
     public Fragment getCurrentFragment() {
