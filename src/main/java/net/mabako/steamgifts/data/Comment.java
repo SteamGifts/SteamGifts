@@ -78,6 +78,8 @@ public class Comment implements Serializable, IEndlessAdaptable {
         if (o == null || !(o instanceof Comment))
             return false;
 
+        if (id == 0)
+            return false;
         return ((Comment) o).id == id;
     }
 

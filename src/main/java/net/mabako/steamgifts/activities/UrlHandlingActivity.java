@@ -23,10 +23,10 @@ public class UrlHandlingActivity extends CommonActivity {
     private static final String TAG = UrlHandlingActivity.class.getSimpleName();
 
     public static Intent getIntentForUri(Context context, Uri uri) {
-        Log.d(TAG, uri.toString());
+        Log.v(TAG, uri.toString());
         List<String> pathSegments = uri.getPathSegments();
         if ("www.steamgifts.com".equals(uri.getHost()) || "steamgifts.com".equals(uri.getHost())) {
-            Log.d(TAG, "Parsing path segment " + uri.getPath());
+            Log.v(TAG, "Parsing path segment " + uri.getPath());
 
             if (pathSegments.size() == 0 || ("/giveaways/search".equals(uri.getPath()))) {
                 // TODO parse query params?

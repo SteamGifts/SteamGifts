@@ -33,7 +33,6 @@ import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.activities.settings.SettingsActivity;
 import net.mabako.steamgifts.fragments.DiscussionListFragment;
 import net.mabako.steamgifts.fragments.GiveawayListFragment;
-import net.mabako.steamgifts.fragments.UserDetailFragment;
 import net.mabako.steamgifts.tasks.LogoutTask;
 import net.mabako.steamgifts.web.IPointUpdateNotification;
 import net.mabako.steamgifts.web.SteamGiftsUserData;
@@ -131,7 +130,7 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
                     public boolean onProfileImageClick(View view, IProfile profile, boolean current) {
                         if (SteamGiftsUserData.getCurrent().isLoggedIn()) {
                             Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-                            intent.putExtra(UserDetailFragment.ARG_USER, SteamGiftsUserData.getCurrent().getName());
+                            intent.putExtra(DetailActivity.ARG_NOTIFICATIONS, true);
                             startActivity(intent);
                             return true;
                         }

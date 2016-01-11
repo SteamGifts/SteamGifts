@@ -27,9 +27,12 @@ public final class Utils {
     }
 
     public static void loadComments(Element commentNode, ICommentHolder parent, int depth, boolean reversed) {
+        if(commentNode == null)
+            return;
+
         Elements children = commentNode.children();
 
-        if(reversed)
+        if (reversed)
             Collections.reverse(children);
 
         for (Element c : children) {
@@ -53,7 +56,13 @@ public final class Utils {
 
             Element timeCreated = thisComment.select(".comment__actions > div span").first();
 
-            Comment comment = new Comment(Integer.parseInt(c.attr("data-comment-id")), author, timeCreated.text(), timeCreated.attr("title"), content, depth, avatar, isOp);
+            int commentId = 0;
+            try {
+                commentId = Integer.parseInt(c.attr("data-comment-id"));
+            } catch (NumberFormatException e) {
+            }
+
+            Comment comment = new Comment(commentId, author, timeCreated.text(), timeCreated.attr("title"), content, depth, avatar, isOp);
 
             // check if the comment is deleted
             comment.setDeleted(thisComment.select(".comment__summary").first().select(".comment__delete-state").size() == 1);

@@ -2,6 +2,7 @@ package net.mabako.steamgifts.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -17,6 +18,7 @@ import net.mabako.steamgifts.data.BasicGiveaway;
 import net.mabako.steamgifts.fragments.DiscussionDetailFragment;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
 import net.mabako.steamgifts.fragments.UserDetailFragment;
+import net.mabako.steamgifts.fragments.profile.MessageListFragment;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -25,7 +27,10 @@ import java.util.List;
 import java.util.UUID;
 
 public class DetailActivity extends CommonActivity {
+    public static final String ARG_NOTIFICATIONS = "notifications";
+
     private SimplePagerAdapter pagerAdapter = null;
+    private TabLayout tabLayout = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,14 +57,14 @@ public class DetailActivity extends CommonActivity {
 
             serializable = getIntent().getSerializableExtra(DiscussionDetailFragment.ARG_DISCUSSION);
             if (serializable != null) {
-                setContentView(R.layout.activity_detail);
+                setContentView(R.layout.activity_one_fragment);
                 loadFragment(DiscussionDetailFragment.newInstance((BasicDiscussion) serializable));
                 return;
             }
 
             String user = getIntent().getStringExtra(UserDetailFragment.ARG_USER);
             if (user != null) {
-                setContentView(R.layout.activity_detail);
+                setContentView(R.layout.activity_one_fragment);
                 loadFragment(UserDetailFragment.newInstance(user));
                 return;
             }
@@ -70,6 +75,14 @@ public class DetailActivity extends CommonActivity {
                 loadFragment(SGToolsDetailFragment.newInstance((UUID) serializable));
                 return;
             }
+
+            if (getIntent().hasExtra(ARG_NOTIFICATIONS)) {
+                setContentView(R.layout.activity_paged_fragments);
+                loadPagedFragments(new MessageListFragment());
+                return;
+            }
+
+            throw new IllegalStateException("no detail activity");
         }
     }
 
@@ -128,6 +141,11 @@ public class DetailActivity extends CommonActivity {
 
         pagerAdapter = new SimplePagerAdapter(getSupportFragmentManager(), fragments);
         pager.setAdapter(pagerAdapter);
+
+        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        if (tabLayout != null) {
+            tabLayout.setupWithViewPager(pager);
+        }
     }
 
     /**
@@ -166,6 +184,11 @@ public class DetailActivity extends CommonActivity {
         @Override
         public int getCount() {
             return fragments.size();
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return getFragmentTitle(getItem(position));
         }
 
         public void add(Fragment fragment) {
