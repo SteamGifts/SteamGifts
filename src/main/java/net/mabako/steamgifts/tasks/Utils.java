@@ -27,7 +27,7 @@ public final class Utils {
     }
 
     public static void loadComments(Element commentNode, ICommentHolder parent, int depth, boolean reversed) {
-        if(commentNode == null)
+        if (commentNode == null)
             return;
 
         Elements children = commentNode.children();
@@ -66,6 +66,8 @@ public final class Utils {
 
             // check if the comment is deleted
             comment.setDeleted(thisComment.select(".comment__summary").first().select(".comment__delete-state").size() == 1);
+
+            comment.setHighlighted(thisComment.select(".comment__parent > .comment__envelope").size() != 0);
 
             // add this
             parent.addComment(comment);

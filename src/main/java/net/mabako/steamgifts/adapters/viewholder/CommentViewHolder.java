@@ -54,6 +54,8 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
     }
 
     public void setFrom(final Comment comment) {
+        Utils.setBackgroundDrawable(context, itemView, comment.isHighlighted());
+
         commentAuthor.setText(comment.getAuthor());
         Utils.setBackgroundDrawable(context, commentAuthor, comment.isOp());
 
