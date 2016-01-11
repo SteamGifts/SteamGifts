@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.activities.DetailActivity;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
+import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.adapters.MessageAdapter;
 import net.mabako.steamgifts.data.Comment;
 import net.mabako.steamgifts.fragments.ListFragment;
@@ -20,11 +21,15 @@ import net.mabako.steamgifts.fragments.UserDetailFragment;
 import net.mabako.steamgifts.fragments.interfaces.IActivityTitle;
 import net.mabako.steamgifts.fragments.interfaces.ICommentableFragment;
 import net.mabako.steamgifts.tasks.LoadMessagesTask;
+import net.mabako.steamgifts.tasks.MarkMessagesReadTask;
 import net.mabako.steamgifts.web.SteamGiftsUserData;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class MessageListFragment extends ListFragment<MessageAdapter> implements IActivityTitle, ICommentableFragment {
+    private String xsrfToken = null;
+
     public MessageListFragment() {
         allowSearch = false;
         loadItemsInitially = false;
@@ -84,6 +89,8 @@ public class MessageListFragment extends ListFragment<MessageAdapter> implements
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.messages_menu, menu);
+
+        menu.findItem(R.id.mark_read).setVisible(xsrfToken != null);
     }
 
     @Override
@@ -92,8 +99,38 @@ public class MessageListFragment extends ListFragment<MessageAdapter> implements
             case R.id.user:
                 showProfile(SteamGiftsUserData.getCurrent().getName());
                 return true;
+
+            case R.id.mark_read:
+                new MarkMessagesReadTask(this, xsrfToken).execute();
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void addItems(List<IEndlessAdaptable> items, boolean clearExistingItems, String foundXsrfToken) {
+        addItems(items, clearExistingItems);
+
+        xsrfToken = foundXsrfToken;
+        getActivity().supportInvalidateOptionsMenu();
+    }
+
+    public void onMarkedMessagesRead() {
+        for (int i = 0, size = adapter.getItemCount(); i < size; ++i) {
+            IEndlessAdaptable element = adapter.getItem(i);
+            if (!(element instanceof Comment))
+                continue;
+
+            Comment comment = (Comment) element;
+
+            if (comment.isHighlighted()) {
+                comment.setHighlighted(false);
+                adapter.notifyItemChanged(i);
+            }
+        }
+
+        xsrfToken = null;
+        getActivity().supportInvalidateOptionsMenu();
     }
 }

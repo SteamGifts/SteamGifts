@@ -27,6 +27,8 @@ public class LoadMessagesTask extends AsyncTask<Void, Void, List<IEndlessAdaptab
     private final MessageListFragment fragment;
     private final int page;
 
+    private String foundXsrfToken = null;
+
     public LoadMessagesTask(MessageListFragment fragment, int page) {
         this.fragment = fragment;
         this.page = page;
@@ -44,6 +46,11 @@ public class LoadMessagesTask extends AsyncTask<Void, Void, List<IEndlessAdaptab
             Document document = jsoup.get();
 
             SteamGiftsUserData.extract(document);
+
+            // Fetch the xsrf token
+            Element xsrfToken = document.select("input[name=xsrf_token]").first();
+            if (xsrfToken != null)
+                foundXsrfToken = xsrfToken.attr("value");
 
             // Parse all rows of giveaways
             return loadMessages(document);
@@ -84,6 +91,6 @@ public class LoadMessagesTask extends AsyncTask<Void, Void, List<IEndlessAdaptab
     @Override
     protected void onPostExecute(List<IEndlessAdaptable> iEndlessAdaptables) {
         super.onPostExecute(iEndlessAdaptables);
-        fragment.addItems(iEndlessAdaptables, page == 1);
+        fragment.addItems(iEndlessAdaptables, page == 1, foundXsrfToken);
     }
 }
