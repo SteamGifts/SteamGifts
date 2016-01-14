@@ -46,4 +46,5 @@ dependencies {
     }
     compile 'com.mikepenz:fontawesome-typeface:4.5.0.1@aar'
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.github.paolorotolo:appintro:3.3.0'
 }

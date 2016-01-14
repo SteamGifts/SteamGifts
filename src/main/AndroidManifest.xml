@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="net.mabako.steamgifts">
 
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-sdk tools:overrideLibrary="com.github.paolorotolo.appintro" />
 
     <application
         android:allowBackup="false"
@@ -75,5 +78,10 @@
 
         <!-- sgtools.info -->
         <activity android:name="net.mabako.sgtools.SGToolsLoginActivity" />
+
+        <!-- intro -->
+        <activity
+            android:name=".intro.Intro"
+            android:theme="@style/AppTheme.Light" />
     </application>
 </manifest>

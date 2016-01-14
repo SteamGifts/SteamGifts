@@ -48,7 +48,7 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
 
         commentMarker = v.findViewById(R.id.comment_marker);
         commentIndent = v.findViewById(R.id.comment_indent);
-        commentImage = (ImageView) v.findViewById(R.id.image);
+        commentImage = (ImageView) v.findViewById(R.id.author_avatar);
 
         v.setOnCreateContextMenuListener(this);
     }
