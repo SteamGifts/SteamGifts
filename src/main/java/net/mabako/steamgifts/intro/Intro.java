@@ -29,6 +29,7 @@ public class Intro extends AppIntro2 {
         switch (getIntent().getStringExtra("type")) {
             case INTRO_MAIN:
                 addSlide(Slide.newInstance(SubView.MAIN_GIVEAWAY_1));
+                addSlide(Slide.newInstance(SubView.MAIN_GIVEAWAY_2));
                 break;
         }
     }

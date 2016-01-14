@@ -49,6 +49,10 @@ public class Slide extends Fragment {
                 Picasso.with(getContext()).load(R.drawable.default_avatar).placeholder(R.drawable.default_avatar_mask).transform(new RoundedCornersTransformation(20, 0)).into((ImageView) (commentView.findViewById(R.id.author_avatar)));
                 commentView.findViewById(R.id.comment_indent).getLayoutParams().width = 0;
                 break;
+
+            case MAIN_GIVEAWAY_2:
+                view.findViewById(R.id.separator).setVisibility(View.GONE);
+                break;
         }
     }
 }

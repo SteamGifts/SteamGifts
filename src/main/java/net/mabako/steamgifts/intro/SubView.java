@@ -7,7 +7,8 @@ import net.mabako.steamgifts.R;
  */
 public enum SubView {
     MAIN_WELCOME(0),
-    MAIN_GIVEAWAY_1(R.layout.intro_main_giveaway_1);
+    MAIN_GIVEAWAY_1(R.layout.intro_main_giveaway_1),
+    MAIN_GIVEAWAY_2(R.layout.intro_main_giveaway_2);
 
     private final int layout;
 

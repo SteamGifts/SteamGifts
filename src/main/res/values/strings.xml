@@ -128,4 +128,11 @@
     <!-- Intro -->
     <string name="intro_giveaway_context">Long-Clicking a Giveaway or Comment to quickly enter or comment.</string>
     <string name="intro_giveaway_context_header">Context Menus</string>
+
+    <string name="intro_giveaway_indicators_header">Indicators</string>
+    <string name="intro_giveaway_indicators_whitelist">Whitelist Giveaway</string>
+    <string name="intro_giveaway_indicators_group">Group Giveaway</string>
+    <string name="intro_giveaway_indicators_level_positive">At or below your Level</string>
+    <string name="intro_giveaway_indicators_level_negative">Above your Level</string>
+    <string name="intro_giveaway_indicators_private">Private Giveaway</string>
 </resources>
