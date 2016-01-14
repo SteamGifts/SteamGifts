@@ -124,4 +124,8 @@
     <string name="skip_button_label">Skip</string>
     <string name="view_profile">View Profile</string>
     <string name="mark_read">Mark as Read</string>
+
+    <!-- Intro -->
+    <string name="intro_giveaway_context">Long-Clicking a Giveaway or Comment to quickly enter or comment.</string>
+    <string name="intro_giveaway_context_header">Context Menus</string>
 </resources>

@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
                 android:singleLine="true"
-                android:text="Giveaway Name"
+                android:text="Name of the Game"
                 android:textAlignment="viewStart" />
 
             <RelativeLayout
@@ -83,7 +83,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:singleLine="true"
-                        android:text="Giveaway Details" />
+                        android:text="Points | Entries" />
                 </LinearLayout>
 
                 <TextView
@@ -94,13 +94,14 @@
                     android:layout_alignParentRight="true"
                     android:layout_gravity="end"
                     android:singleLine="true"
-                    android:text="Time"
+                    android:text="Time left"
                     android:textAlignment="viewEnd" />
             </RelativeLayout>
         </LinearLayout>
     </LinearLayout>
 
     <View
+        android:id="@id/separator"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="?android:attr/listDivider" />

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -33,6 +34,7 @@ import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.activities.settings.SettingsActivity;
 import net.mabako.steamgifts.fragments.DiscussionListFragment;
 import net.mabako.steamgifts.fragments.GiveawayListFragment;
+import net.mabako.steamgifts.intro.Intro;
 import net.mabako.steamgifts.tasks.LogoutTask;
 import net.mabako.steamgifts.web.IPointUpdateNotification;
 import net.mabako.steamgifts.web.SteamGiftsUserData;
@@ -76,6 +78,9 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
                 drawer.setSelection(((DiscussionListFragment.Type) type).getNavbarResource(), false);
             }
         }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+            Intro.showIntroIfNeccessary(this, Intro.INTRO_MAIN, Intro.INTRO_MAIN_VERSION);
     }
 
     @Override
