@@ -42,7 +42,7 @@ public class SingleCommentFragment extends Fragment {
         params.width = 0;
         commentIndent.setLayoutParams(params);
 
-        Picasso.with(getContext()).load(comment.getAvatar()).placeholder(R.drawable.default_avatar_mask).transform(new RoundedCornersTransformation(20, 0)).into((ImageView) layout.findViewById(R.id.image));
+        Picasso.with(getContext()).load(comment.getAvatar()).placeholder(R.drawable.default_avatar_mask).transform(new RoundedCornersTransformation(20, 0)).into((ImageView) layout.findViewById(R.id.author_avatar));
 
         return layout;
     }
