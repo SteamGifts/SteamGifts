@@ -72,7 +72,7 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
 
         StringBuilder sb = new StringBuilder();
         if (giveaway.getCopies() > 1)
-            sb.append(giveaway.getCopies()).append("copies | ");
+            sb.append(giveaway.getCopies()).append(" copies | ");
         sb.append(giveaway.getPoints()).append("P | ");
         if (giveaway.getLevel() > 0)
             sb.append("L").append(giveaway.getLevel()).append(" | ");
