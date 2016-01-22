@@ -16,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.activities.CommonActivity;
@@ -84,6 +85,7 @@ public abstract class SearchableListFragment<AdapterType extends EndlessAdapter>
         if (searchQuery != null) {
             MenuItemCompat.expandActionView(searchMenu);
             searchView.setQuery(searchQuery, false);
+            searchView.clearFocus();
         }
     }
 
@@ -93,7 +95,7 @@ public abstract class SearchableListFragment<AdapterType extends EndlessAdapter>
         AppCompatActivity activity = ((AppCompatActivity) getActivity());
         FragmentManager fragmentManager = activity.getSupportFragmentManager();
 
-        if(searchQuery != null)
+        if (searchQuery != null)
             stopSearch();
 
         FragmentTransaction transaction = fragmentManager.beginTransaction();
