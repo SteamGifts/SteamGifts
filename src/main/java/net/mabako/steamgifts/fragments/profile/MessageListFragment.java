@@ -131,5 +131,8 @@ public class MessageListFragment extends ListFragment<MessageAdapter> implements
 
         xsrfToken = null;
         getActivity().supportInvalidateOptionsMenu();
+
+        // We no longer have any notifications
+        SteamGiftsUserData.getCurrent().setMessageNotification(0);
     }
 }
