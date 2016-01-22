@@ -60,6 +60,8 @@ public abstract class StoreFragment extends Fragment {
 
         if (task != null)
             task.cancel(true);
+
+        loaded = false;
     }
 
     public abstract LoadStoreTask getTaskToStart();

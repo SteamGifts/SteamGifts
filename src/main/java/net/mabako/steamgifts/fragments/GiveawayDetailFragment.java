@@ -50,6 +50,8 @@ public class GiveawayDetailFragment extends Fragment implements ICommentableFrag
     public static final String ENTRY_DELETE = "entry_delete";
     private static final String TAG = GiveawayDetailFragment.class.getSimpleName();
 
+    private boolean fragmentAdded = false;
+
     /**
      * Content to show for the giveaway details.
      */
@@ -66,12 +68,29 @@ public class GiveawayDetailFragment extends Fragment implements ICommentableFrag
         return fragment;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (savedInstanceState == null) {
+            giveawayCard = new GiveawayDetailsCard();
+            adapter = new CommentAdapter<>(this, new EndlessAdapter.OnLoadListener() {
+                @Override
+                public void onLoad(int page) {
+                    fetchItems(page);
+                }
+            });
+
+            // Add the cardview for the Giveaway details
+            adapter.setStickyItem(giveawayCard);
+        }
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_giveaway_detail, container, false);
 
-        giveawayCard = new GiveawayDetailsCard();
         if (giveaway instanceof Giveaway) {
             onPostGiveawayLoaded((Giveaway) giveaway, true);
         } else {
@@ -80,19 +99,12 @@ public class GiveawayDetailFragment extends Fragment implements ICommentableFrag
 
         listView = (RecyclerView) layout.findViewById(R.id.list);
         listView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new CommentAdapter<>(this, new EndlessAdapter.OnLoadListener() {
-            @Override
-            public void onLoad(int page) {
-                fetchItems(page);
-            }
-        });
         listView.addOnScrollListener(adapter.getScrollListener());
         listView.setAdapter(adapter);
 
-        // Add the cardview for the Giveaway details
-        adapter.setStickyItem(giveawayCard);
+        if (adapter.isEmpty())
+            fetchItems(1);
 
-        fetchItems(1);
         setHasOptionsMenu(true);
 
         return layout;
@@ -105,7 +117,9 @@ public class GiveawayDetailFragment extends Fragment implements ICommentableFrag
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        task.cancel(true);
+
+        if (task != null)
+            task.cancel(true);
 
         if (enterLeaveTask != null)
             enterLeaveTask.cancel(true);
@@ -214,8 +228,10 @@ public class GiveawayDetailFragment extends Fragment implements ICommentableFrag
         // Re-build the options menu, which may not be created if no giveaway was present.
         getActivity().supportInvalidateOptionsMenu();
 
-        if (getActivity() instanceof DetailActivity && giveaway.getGameId() != Game.NO_APP_ID)
+        if (getActivity() instanceof DetailActivity && giveaway.getGameId() != Game.NO_APP_ID && !fragmentAdded) {
             ((DetailActivity) getActivity()).addFragment(giveaway.getType() == Game.Type.APP ? StoreAppFragment.newInstance(giveaway.getGameId(), this) : StoreSubFragment.newInstance(giveaway.getGameId(), this));
+            fragmentAdded = true;
+        }
     }
 
     public void onPostGiveawayLoaded(Giveaway giveaway) {

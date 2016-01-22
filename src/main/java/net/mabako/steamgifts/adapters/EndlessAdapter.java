@@ -360,7 +360,7 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
      * @return true if any items are loaded, false otherwise
      */
     public boolean isEmpty() {
-        return stickyItem == null && items.isEmpty();
+        return items.isEmpty();
     }
 
     /**

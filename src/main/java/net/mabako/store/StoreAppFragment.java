@@ -1,6 +1,7 @@
 package net.mabako.store;
 
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
@@ -45,6 +46,9 @@ public class StoreAppFragment extends StoreFragment {
                     // Were we successful in fetching the details?
                     if (sub.getBoolean("success")) {
                         JSONObject data = sub.getJSONObject("data");
+
+                        // Game name
+                        adapter.add(new Text("<h1>" + TextUtils.htmlEncode(data.getString("name")) + "</h1>", true));
 
                         // Game description.
                         adapter.add(new Text(data.getString("about_the_game"), true));
