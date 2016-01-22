@@ -43,7 +43,6 @@ import net.mabako.steamgifts.web.SteamGiftsUserData;
 import java.io.Serializable;
 
 public class MainActivity extends CommonActivity implements IPointUpdateNotification {
-    public static final String ARG_QUERY = "query";
     public static final String ARG_TYPE = "type";
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -72,10 +71,10 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
                 type = GiveawayListFragment.Type.ALL;
 
             if (type instanceof GiveawayListFragment.Type) {
-                loadFragment(GiveawayListFragment.newInstance((GiveawayListFragment.Type) type, getIntent().getStringExtra(ARG_QUERY)));
+                loadFragment(GiveawayListFragment.newInstance((GiveawayListFragment.Type) type, null));
                 drawer.setSelection(((GiveawayListFragment.Type) type).getNavbarResource(), false);
             } else if (type instanceof DiscussionListFragment.Type) {
-                loadFragment(DiscussionListFragment.newInstance((DiscussionListFragment.Type) type, getIntent().getStringExtra(ARG_QUERY)));
+                loadFragment(DiscussionListFragment.newInstance((DiscussionListFragment.Type) type, null));
                 drawer.setSelection(((DiscussionListFragment.Type) type).getNavbarResource(), false);
             }
         }
@@ -99,7 +98,7 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
 
         super.onAccountChange();
 
-        loadFragment(GiveawayListFragment.newInstance(GiveawayListFragment.Type.ALL, getIntent().getStringExtra(ARG_QUERY)));
+        loadFragment(GiveawayListFragment.newInstance(GiveawayListFragment.Type.ALL, null));
         drawer.setSelection(R.string.navigation_giveaways_all, false);
     }
 
