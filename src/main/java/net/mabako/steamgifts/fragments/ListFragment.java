@@ -3,6 +3,7 @@ package net.mabako.steamgifts.fragments;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -46,6 +47,8 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
      */
     protected String searchQuery = null;
 
+    private AsyncTask<Void, Void, ?> taskToFetchItems = null;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         RelativeLayout layout = (RelativeLayout) inflater.inflate(getLayoutResource(), container, false);
@@ -63,6 +66,12 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
 
         return layout;
 
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        cancelFetch();
     }
 
     private void setupListViewAdapter() {
@@ -112,6 +121,8 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
         progressBar.setVisibility(View.GONE);
         swipeContainer.setVisibility(View.VISIBLE);
         swipeContainer.setRefreshing(false);
+
+        taskToFetchItems = null;
     }
 
 
@@ -178,7 +189,24 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
      *
      * @param page page to load items from
      */
-    protected abstract void fetchItems(int page);
+    protected final void fetchItems(int page) {
+        if (taskToFetchItems != null)
+            taskToFetchItems.cancel(true);
+
+        taskToFetchItems = getFetchItemsTask(page);
+        taskToFetchItems.execute();
+    }
+
+    protected final void cancelFetch() {
+        if (taskToFetchItems != null)
+            taskToFetchItems.cancel(true);
+
+        taskToFetchItems = null;
+        adapter.cancelLoading();
+        swipeContainer.setRefreshing(false);
+    }
+
+    protected abstract AsyncTask<Void, Void, ?> getFetchItemsTask(int page);
 
     protected int getLayoutResource() {
         return R.layout.fragment_list;

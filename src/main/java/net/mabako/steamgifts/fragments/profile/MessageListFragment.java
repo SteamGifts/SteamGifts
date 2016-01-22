@@ -1,6 +1,7 @@
 package net.mabako.steamgifts.fragments.profile;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -55,8 +56,8 @@ public class MessageListFragment extends ListFragment<MessageAdapter> implements
     }
 
     @Override
-    protected void fetchItems(int page) {
-        new LoadMessagesTask(this, page).execute();
+    protected AsyncTask<Void, Void, ?> getFetchItemsTask(int page) {
+        return new LoadMessagesTask(this, page);
     }
 
     @Override

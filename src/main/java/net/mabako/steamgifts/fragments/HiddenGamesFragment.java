@@ -1,6 +1,7 @@
 package net.mabako.steamgifts.fragments;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
@@ -43,8 +44,8 @@ public class HiddenGamesFragment extends ListFragment<HiddenGamesAdapter> implem
     }
 
     @Override
-    protected void fetchItems(int page) {
-        new LoadHiddenGamesTask(this, page, searchQuery).execute();
+    protected AsyncTask<Void, Void, ?> getFetchItemsTask(int page) {
+        return new LoadHiddenGamesTask(this, page, searchQuery);
     }
 
     @Override

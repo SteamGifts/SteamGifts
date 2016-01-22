@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -205,8 +206,8 @@ public class UserDetailFragment extends Fragment implements IUserNotifications {
         }
 
         @Override
-        protected void fetchItems(int page) {
-            new LoadUserDetailsTask(this, path, page, user).execute();
+        protected AsyncTask<Void, Void, ?> getFetchItemsTask(int page) {
+            return new LoadUserDetailsTask(this, path, page, user);
         }
 
         @Override

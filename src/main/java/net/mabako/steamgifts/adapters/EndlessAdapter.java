@@ -98,6 +98,10 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
             ++page;
     }
 
+    public void cancelLoading() {
+        loading = false;
+    }
+
     public void reachedTheEnd() {
         Log.d(TAG, "Reached the end");
 

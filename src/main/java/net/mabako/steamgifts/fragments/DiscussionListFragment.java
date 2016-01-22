@@ -1,5 +1,6 @@
 package net.mabako.steamgifts.fragments;
 
+import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 
@@ -46,8 +47,8 @@ public class DiscussionListFragment extends ListFragment<DiscussionAdapter> impl
     }
 
     @Override
-    protected void fetchItems(int page) {
-        new LoadDiscussionListTask(this, page, type, searchQuery).execute();
+    protected AsyncTask<Void, Void, ?> getFetchItemsTask(int page) {
+        return new LoadDiscussionListTask(this, page, type, searchQuery);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package net.mabako.steamgifts.fragments;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -69,8 +70,8 @@ public class GiveawayListFragment extends ListFragment<GiveawayAdapter> implemen
     }
 
     @Override
-    protected void fetchItems(int page) {
-        new LoadGiveawayListTask(this, page, type, searchQuery).execute();
+    protected AsyncTask<Void, Void, ?> getFetchItemsTask(int page) {
+        return new LoadGiveawayListTask(this, page, type, searchQuery);
     }
 
     /**
