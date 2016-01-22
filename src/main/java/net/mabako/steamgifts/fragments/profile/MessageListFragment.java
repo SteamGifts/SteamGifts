@@ -32,7 +32,6 @@ public class MessageListFragment extends ListFragment<MessageAdapter> implements
     private String xsrfToken = null;
 
     public MessageListFragment() {
-        allowSearch = false;
         loadItemsInitially = false;
     }
 

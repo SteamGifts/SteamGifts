@@ -1,30 +1,20 @@
 package net.mabako.steamgifts.fragments;
 
-import android.app.SearchManager;
-import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import net.mabako.steamgifts.R;
-import net.mabako.steamgifts.activities.CommonActivity;
-import net.mabako.steamgifts.activities.MainActivity;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 
@@ -34,18 +24,12 @@ import java.util.List;
 
 public abstract class ListFragment<AdapterType extends EndlessAdapter> extends Fragment {
     protected boolean loadItemsInitially = true;
-    protected boolean allowSearch = true;
 
     protected AdapterType adapter;
     private RecyclerView listView;
 
     private SwipeRefreshLayout swipeContainer;
     private ProgressBar progressBar;
-
-    /**
-     * What are we searching for?
-     */
-    protected String searchQuery = null;
 
     private AsyncTask<Void, Void, ?> taskToFetchItems = null;
 
@@ -60,7 +44,6 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
         setupListViewAdapter();
         setupSwipeContainer();
 
-        setHasOptionsMenu(true);
         if (loadItemsInitially)
             fetchItems(1);
 
@@ -123,49 +106,6 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
         swipeContainer.setRefreshing(false);
 
         taskToFetchItems = null;
-    }
-
-
-    @Override
-    public void onCreateOptionsMenu(
-            Menu menu, MenuInflater inflater) {
-        if (!allowSearch)
-            return;
-
-        inflater.inflate(R.menu.main_menu, menu);
-
-        final MenuItem searchMenu = menu.findItem(R.id.search);
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchMenu);
-        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                query = query.trim();
-                searchView.setQuery("", false);
-                MenuItemCompat.collapseActionView(searchMenu);
-
-                startActivityForQuery(query);
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return true;
-            }
-        });
-    }
-
-    protected void startActivityForQuery(String query) {
-        Intent intent = new Intent(getActivity(), MainActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putString(MainActivity.ARG_QUERY, query);
-        bundle.putSerializable(MainActivity.ARG_TYPE, getType());
-        intent.putExtras(bundle);
-
-        getActivity().startActivityForResult(intent, CommonActivity.REQUEST_LOGIN_PASSIVE);
-        if (searchQuery != null && !searchQuery.isEmpty())
-            getActivity().finish();
     }
 
     /**

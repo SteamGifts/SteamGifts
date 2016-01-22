@@ -180,7 +180,6 @@ public class UserDetailFragment extends Fragment implements IUserNotifications {
             fragment.user = user;
             fragment.path = user.getName() + path;
             fragment.loadItemsInitially = loadItemsInitially;
-            fragment.allowSearch = false;
             fragment.iUserNotification = iUserNotification;
             return fragment;
         }

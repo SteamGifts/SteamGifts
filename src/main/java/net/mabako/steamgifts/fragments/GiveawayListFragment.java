@@ -2,6 +2,7 @@ package net.mabako.steamgifts.fragments;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,7 +27,7 @@ import java.util.List;
 /**
  * List of all giveaways.
  */
-public class GiveawayListFragment extends ListFragment<GiveawayAdapter> implements IHasEnterableGiveaways, IHasHideableGiveaways, IActivityTitle {
+public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter> implements IHasEnterableGiveaways, IHasHideableGiveaways, IActivityTitle {
     private static final String TAG = GiveawayListFragment.class.getSimpleName();
 
     private EnterLeaveGiveawayTask enterLeaveTask;
@@ -140,6 +141,11 @@ public class GiveawayListFragment extends ListFragment<GiveawayAdapter> implemen
 
         if (propagate)
             GiveawayListFragmentStack.onHideGame(internalGameId);
+    }
+
+    @Override
+    public Fragment newSearchingInstance(String query) {
+        return newInstance(type, query);
     }
 
     /**

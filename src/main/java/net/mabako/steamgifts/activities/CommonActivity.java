@@ -24,7 +24,7 @@ import net.mabako.steamgifts.web.SteamGiftsUserData;
 
 public class CommonActivity extends BaseActivity {
     private static final String TAG = CommonActivity.class.getSimpleName();
-    private static final String FRAGMENT_TAG = "Fragment Root";
+    public static final String FRAGMENT_TAG = "Fragment Root";
 
     public static final int REQUEST_LOGIN = 3;
     public static final int REQUEST_LOGIN_PASSIVE = 4;

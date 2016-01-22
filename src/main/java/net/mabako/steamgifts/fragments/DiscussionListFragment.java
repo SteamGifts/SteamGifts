@@ -15,18 +15,11 @@ import net.mabako.steamgifts.tasks.LoadDiscussionListTask;
 /**
  * List of all discussions.
  */
-public class DiscussionListFragment extends ListFragment<DiscussionAdapter> implements IActivityTitle {
-    private static final String TAG = DiscussionListFragment.class.getSimpleName();
-
+public class DiscussionListFragment extends SearchableListFragment<DiscussionAdapter> implements IActivityTitle {
     /**
      * Type of items to show.
      */
     private Type type = Type.ALL;
-
-    /**
-     * What are we searching for?
-     */
-    private String searchQuery = null;
 
     public static Fragment newInstance(Type type, String query) {
         DiscussionListFragment f = new DiscussionListFragment();
@@ -64,6 +57,11 @@ public class DiscussionListFragment extends ListFragment<DiscussionAdapter> impl
     @Override
     public Type getType() {
         return type;
+    }
+
+    @Override
+    public Fragment newSearchingInstance(String query) {
+        return newInstance(type, query);
     }
 
     /**

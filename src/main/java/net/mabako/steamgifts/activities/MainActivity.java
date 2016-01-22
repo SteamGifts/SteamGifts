@@ -34,6 +34,7 @@ import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.activities.settings.SettingsActivity;
 import net.mabako.steamgifts.fragments.DiscussionListFragment;
 import net.mabako.steamgifts.fragments.GiveawayListFragment;
+import net.mabako.steamgifts.fragments.SearchableListFragment;
 import net.mabako.steamgifts.intro.Intro;
 import net.mabako.steamgifts.tasks.LogoutTask;
 import net.mabako.steamgifts.web.IPointUpdateNotification;
@@ -158,6 +159,11 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                        // Stop searching, if any is done
+                        Fragment fragment = getCurrentFragment();
+                        if (fragment instanceof SearchableListFragment)
+                            ((SearchableListFragment) fragment).stopSearch();
+
                         switch (drawerItem.getIdentifier()) {
                             case R.string.login:
                                 requestLogin();
@@ -181,14 +187,14 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
                             default:
                                 for (GiveawayListFragment.Type type : GiveawayListFragment.Type.values()) {
                                     if (type.getNavbarResource() == drawerItem.getIdentifier()) {
-                                        loadFragment(GiveawayListFragment.newInstance(type, getIntent().getStringExtra(ARG_QUERY)));
+                                        loadFragment(GiveawayListFragment.newInstance(type, null));
                                         break;
                                     }
                                 }
 
                                 for (DiscussionListFragment.Type type : DiscussionListFragment.Type.values()) {
                                     if (type.getNavbarResource() == drawerItem.getIdentifier()) {
-                                        loadFragment(DiscussionListFragment.newInstance(type, getIntent().getStringExtra(ARG_QUERY)));
+                                        loadFragment(DiscussionListFragment.newInstance(type, null));
                                         break;
                                     }
                                 }

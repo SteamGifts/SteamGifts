@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +22,7 @@ import net.mabako.steamgifts.tasks.UpdateGiveawayFilterTask;
 import java.io.Serializable;
 import java.util.List;
 
-public class HiddenGamesFragment extends ListFragment<HiddenGamesAdapter> implements IActivityTitle {
+public class HiddenGamesFragment extends SearchableListFragment<HiddenGamesAdapter> implements IActivityTitle {
     /**
      * Snack is only shown if the app is restarted.
      */
@@ -49,23 +50,8 @@ public class HiddenGamesFragment extends ListFragment<HiddenGamesAdapter> implem
     }
 
     @Override
-    protected void startActivityForQuery(String query) {
-
-        Intent intent = new Intent(getActivity(), ViewHiddenGamesActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putString(ViewHiddenGamesActivity.ARG_QUERY, query);
-        intent.putExtras(bundle);
-
-        getActivity().startActivity(intent);
-        if (searchQuery != null && !searchQuery.isEmpty())
-            getActivity().finish();
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
-
-        return view;
+    public Fragment newSearchingInstance(String query) {
+        return newInstance(query);
     }
 
     public void requestShowGame(int internalGameId) {
