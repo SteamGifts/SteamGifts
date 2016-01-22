@@ -68,12 +68,29 @@ public class GiveawayDetailFragment extends Fragment implements ICommentableFrag
         return fragment;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (savedInstanceState == null) {
+            giveawayCard = new GiveawayDetailsCard();
+            adapter = new CommentAdapter<>(this, new EndlessAdapter.OnLoadListener() {
+                @Override
+                public void onLoad(int page) {
+                    fetchItems(page);
+                }
+            });
+
+            // Add the cardview for the Giveaway details
+            adapter.setStickyItem(giveawayCard);
+        }
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_giveaway_detail, container, false);
 
-        giveawayCard = new GiveawayDetailsCard();
         if (giveaway instanceof Giveaway) {
             onPostGiveawayLoaded((Giveaway) giveaway, true);
         } else {
@@ -82,19 +99,12 @@ public class GiveawayDetailFragment extends Fragment implements ICommentableFrag
 
         listView = (RecyclerView) layout.findViewById(R.id.list);
         listView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new CommentAdapter<>(this, new EndlessAdapter.OnLoadListener() {
-            @Override
-            public void onLoad(int page) {
-                fetchItems(page);
-            }
-        });
         listView.addOnScrollListener(adapter.getScrollListener());
         listView.setAdapter(adapter);
 
-        // Add the cardview for the Giveaway details
-        adapter.setStickyItem(giveawayCard);
+        if (adapter.isEmpty())
+            fetchItems(1);
 
-        fetchItems(1);
         setHasOptionsMenu(true);
 
         return layout;
@@ -107,7 +117,9 @@ public class GiveawayDetailFragment extends Fragment implements ICommentableFrag
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        task.cancel(true);
+
+        if (task != null)
+            task.cancel(true);
 
         if (enterLeaveTask != null)
             enterLeaveTask.cancel(true);
