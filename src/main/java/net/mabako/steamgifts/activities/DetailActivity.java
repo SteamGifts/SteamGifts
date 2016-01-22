@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -183,7 +183,7 @@ public class DetailActivity extends CommonActivity {
     /**
      * Simple fragment adapter that basically just holds a list of... fragments, without any fancy schmuck.
      */
-    private class SimplePagerAdapter extends FragmentPagerAdapter implements ViewPager.OnPageChangeListener {
+    private class SimplePagerAdapter extends FragmentStatePagerAdapter implements ViewPager.OnPageChangeListener {
         private List<Fragment> fragments = new ArrayList<>();
         private Fragment transientFragment;
 
