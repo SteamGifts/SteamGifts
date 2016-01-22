@@ -30,8 +30,8 @@ public class DiscussionListFragment extends SearchableListFragment<DiscussionAda
 
 
     @Override
-    protected DiscussionAdapter createAdapter(RecyclerView listView) {
-        return new DiscussionAdapter(getActivity(), listView, new EndlessAdapter.OnLoadListener() {
+    protected DiscussionAdapter createAdapter() {
+        return new DiscussionAdapter(getActivity(), new EndlessAdapter.OnLoadListener() {
             @Override
             public void onLoad(int page) {
                 fetchItems(page);

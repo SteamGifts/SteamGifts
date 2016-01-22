@@ -3,7 +3,6 @@ package net.mabako.steamgifts.fragments;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -61,8 +60,8 @@ public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter
     }
 
     @Override
-    protected GiveawayAdapter createAdapter(RecyclerView listView) {
-        return new GiveawayAdapter(getActivity(), listView, new EndlessAdapter.OnLoadListener() {
+    protected GiveawayAdapter createAdapter() {
+        return new GiveawayAdapter(getActivity(), new EndlessAdapter.OnLoadListener() {
             @Override
             public void onLoad(int page) {
                 fetchItems(page);

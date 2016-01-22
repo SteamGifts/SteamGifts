@@ -19,8 +19,8 @@ public class HiddenGamesAdapter extends EndlessAdapter {
     private String xsrfToken;
     private final HiddenGamesFragment fragment;
 
-    public HiddenGamesAdapter(@NonNull RecyclerView view, HiddenGamesFragment fragment, @NonNull OnLoadListener listener) {
-        super(view, listener);
+    public HiddenGamesAdapter(HiddenGamesFragment fragment, @NonNull OnLoadListener listener) {
+        super(listener);
         this.alternativeEnd = true;
         this.fragment = fragment;
     }

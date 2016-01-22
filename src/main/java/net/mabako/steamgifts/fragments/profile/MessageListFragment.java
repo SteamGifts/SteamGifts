@@ -3,7 +3,6 @@ package net.mabako.steamgifts.fragments.profile;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -45,8 +44,8 @@ public class MessageListFragment extends ListFragment<MessageAdapter> implements
     }
 
     @Override
-    protected MessageAdapter createAdapter(RecyclerView listView) {
-        return new MessageAdapter(listView, this, new EndlessAdapter.OnLoadListener() {
+    protected MessageAdapter createAdapter() {
+        return new MessageAdapter(this, new EndlessAdapter.OnLoadListener() {
             @Override
             public void onLoad(int page) {
                 fetchItems(page);

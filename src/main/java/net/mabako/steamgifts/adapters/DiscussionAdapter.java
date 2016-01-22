@@ -21,8 +21,8 @@ public class DiscussionAdapter extends EndlessAdapter {
      */
     private final Activity context;
 
-    public DiscussionAdapter(Activity context, @NonNull RecyclerView view, @NonNull OnLoadListener listener) {
-        super(view, listener);
+    public DiscussionAdapter(Activity context, @NonNull OnLoadListener listener) {
+        super(listener);
         this.context = context;
     }
 

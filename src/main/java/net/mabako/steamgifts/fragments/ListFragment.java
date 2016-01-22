@@ -34,6 +34,15 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
     private AsyncTask<Void, Void, ?> taskToFetchItems = null;
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (savedInstanceState == null) {
+            adapter = createAdapter();
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         RelativeLayout layout = (RelativeLayout) inflater.inflate(getLayoutResource(), container, false);
 
@@ -44,8 +53,12 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
         setupListViewAdapter();
         setupSwipeContainer();
 
-        if (loadItemsInitially)
-            fetchItems(1);
+        if (loadItemsInitially) {
+            if (adapter.isEmpty())
+                fetchItems(1);
+            else
+                showNormalListView();
+        }
 
         return layout;
 
@@ -59,7 +72,7 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
 
     private void setupListViewAdapter() {
         listView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = createAdapter(listView);
+        listView.addOnScrollListener(adapter.getScrollListener());
         listView.setAdapter(adapter);
     }
 
@@ -101,11 +114,15 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
             showSnack("Failed to fetch items", Snackbar.LENGTH_LONG);
         }
 
+        showNormalListView();
+
+        taskToFetchItems = null;
+    }
+
+    private void showNormalListView() {
         progressBar.setVisibility(View.GONE);
         swipeContainer.setVisibility(View.VISIBLE);
         swipeContainer.setRefreshing(false);
-
-        taskToFetchItems = null;
     }
 
     /**
@@ -118,11 +135,15 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && !loadItemsInitially) {
             loadItemsInitially = true;
-            fetchItems(1);
+
+            if (adapter.isEmpty())
+                fetchItems(1);
+            else
+                showNormalListView();
         }
     }
 
-    protected abstract AdapterType createAdapter(RecyclerView listView);
+    protected abstract AdapterType createAdapter();
 
     /**
      * Load all items from a particular page.

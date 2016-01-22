@@ -3,7 +3,6 @@ package net.mabako.steamgifts.adapters;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,23 +13,65 @@ import net.mabako.steamgifts.R;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * An adapter for loading pseudo-endless lists of giveaways, discussions, games, comments and so forth.
+ */
 public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final String TAG = EndlessAdapter.class.getSimpleName();
 
+    /**
+     * First page to ever be seen on a list.
+     */
     public static final int FIRST_PAGE = 1;
+
+    /**
+     * Last page we should reasonably expect.
+     */
     public static final int LAST_PAGE = 11223344;
 
+    /**
+     * View ID for "Loading..."
+     */
     private static final int PROGRESS_VIEW = -1;
+
+    /**
+     * View ID for "This is the end."
+     */
     private static final int END_VIEW = -2;
 
+    /**
+     * Sticky items, for example when using cards.
+     */
     private IEndlessAdaptable stickyItem = null;
+
+    /**
+     * The list of items this adapter holds.
+     */
     private final List<IEndlessAdaptable> items = new ArrayList<>();
 
+    /**
+     * Are we currently loading?
+     */
     private boolean loading = false;
+
+    /**
+     * Upon reaching the end of the current list, we'd want to execute the listener.
+     */
     private OnLoadListener loadListener;
+
+    /**
+     * Are we at the end of the list yet?
+     */
     private boolean reachedTheEnd;
 
+    /**
+     * What page are we currently on?
+     */
     private int page = FIRST_PAGE;
+
+    /**
+     * If set to true, we start from the bottom instead of the top.
+     */
     private boolean viewInReverse = false;
 
     /**
@@ -38,23 +79,23 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
      */
     protected boolean alternativeEnd = false;
 
-    public EndlessAdapter(@NonNull RecyclerView view, @NonNull OnLoadListener listener) {
-        final LinearLayoutManager layoutManager = (LinearLayoutManager) view.getLayoutManager();
-        if (layoutManager == null)
-            throw new IllegalStateException("No layout manager");
+    private RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+            if (layoutManager == null)
+                throw new IllegalStateException("Can't handle scrolling without a LayoutManager");
 
-        loadListener = listener;
+            int lastVisibleItem = layoutManager.findLastVisibleItemPosition();
 
-        view.addOnScrollListener(new OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                int lastVisibleItem = layoutManager.findLastVisibleItemPosition();
-
-                if (!loading && layoutManager.getItemCount() <= (lastVisibleItem + 5)) {
-                    startLoading();
-                }
+            if (!loading && layoutManager.getItemCount() <= (lastVisibleItem + 5)) {
+                startLoading();
             }
-        });
+        }
+    };
+
+    public EndlessAdapter(@NonNull OnLoadListener listener) {
+        loadListener = listener;
     }
 
     /**
@@ -112,6 +153,7 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
         reachedTheEnd = true;
 
         items.add(null);
+
         notifyItemInserted(getItemCount() - 1);
     }
 
@@ -119,7 +161,11 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
         return items;
     }
 
-    @Override
+    /**
+     * How many items do we currently show?
+     *
+     * @return
+     */
     public int getItemCount() {
         int itemCount = items.size();
         if (stickyItem != null)
@@ -127,6 +173,11 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
         return itemCount;
     }
 
+    /**
+     * Add a whole range of items to this adapter, and check if we've reached the end.
+     *
+     * @param items items to add.
+     */
     private void addAll(List<IEndlessAdaptable> items) {
         if (items.size() > 0) {
             boolean enoughItems = hasEnoughItems(items);
@@ -134,7 +185,8 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
             items.removeAll(this.items);
 
             this.items.addAll(items);
-            this.notifyItemRangeInserted(getItemCount() - items.size(), items.size());
+
+            notifyItemRangeInserted(getItemCount() - items.size(), items.size());
 
             if (enoughItems && items.size() == 0 && alternativeEnd) {
                 enoughItems = false;
@@ -158,6 +210,7 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
         items.clear();
         reachedTheEnd = false;
         page = viewInReverse ? LAST_PAGE : FIRST_PAGE;
+
         notifyDataSetChanged();
     }
 
@@ -183,12 +236,23 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
     }
 
-    @Override
+    /**
+     * Return the view type for the item at a specific position.
+     *
+     * @param position position of the item
+     * @return the layout if it's an actual item, {@link #PROGRESS_VIEW} or {@link #END_VIEW} if it's a progress spinner or the end.
+     */
     public int getItemViewType(int position) {
         return position < getItemCount() && getItem(position) != null ? getItem(position).getLayout() : reachedTheEnd ? END_VIEW : PROGRESS_VIEW;
     }
 
-    @Override
+    /**
+     * Create the ViewHolder for the item
+     *
+     * @param parent
+     * @param viewType type of the view
+     * @return
+     */
     public final RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == PROGRESS_VIEW || viewType == END_VIEW) {
             View view = LayoutInflater.from(parent.getContext()).inflate(viewType == PROGRESS_VIEW ? R.layout.endless_progress_bar : R.layout.endless_scroll_end, parent, false);
@@ -209,7 +273,6 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
      * @param holder   view holder instance
      * @param position position of the item
      */
-    @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder != null && !(holder instanceof EmptyViewHolder)) {
             onBindActualViewHolder(holder, position);
@@ -273,10 +336,32 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
         page = LAST_PAGE;
     }
 
+    /**
+     * Is this list viewed in reverse?
+     *
+     * @return true if the list is viewed in reverse, false otherwise
+     */
     public boolean isViewInReverse() {
         return viewInReverse;
     }
 
+    /**
+     * Get the scroll listener associated with this adapter.
+     *
+     * @return scroll listener to bind the view to
+     */
+    public RecyclerView.OnScrollListener getScrollListener() {
+        return scrollListener;
+    }
+
+    /**
+     * Does this item have any items loaded yet?
+     *
+     * @return true if any items are loaded, false otherwise
+     */
+    public boolean isEmpty() {
+        return stickyItem == null && items.isEmpty();
+    }
 
     /**
      * View holder with no interactions.

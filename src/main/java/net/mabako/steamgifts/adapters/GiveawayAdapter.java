@@ -30,8 +30,8 @@ public class GiveawayAdapter extends EndlessAdapter {
 
     private String xsrfToken;
 
-    public GiveawayAdapter(Activity context, RecyclerView view, OnLoadListener listener, IHasEnterableGiveaways fragment, int itemsPerPage) {
-        super(view, listener);
+    public GiveawayAdapter(Activity context, OnLoadListener listener, IHasEnterableGiveaways fragment, int itemsPerPage) {
+        super(listener);
         this.context = context;
         this.fragment = fragment;
         this.itemsPerPage = itemsPerPage;

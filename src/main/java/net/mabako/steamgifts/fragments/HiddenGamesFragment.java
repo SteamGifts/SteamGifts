@@ -1,17 +1,11 @@
 package net.mabako.steamgifts.fragments;
 
-import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import net.mabako.steamgifts.R;
-import net.mabako.steamgifts.activities.settings.ViewHiddenGamesActivity;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.adapters.HiddenGamesAdapter;
 import net.mabako.steamgifts.data.Game;
@@ -35,8 +29,8 @@ public class HiddenGamesFragment extends SearchableListFragment<HiddenGamesAdapt
     }
 
     @Override
-    protected HiddenGamesAdapter createAdapter(RecyclerView listView) {
-        return new HiddenGamesAdapter(listView, this, new EndlessAdapter.OnLoadListener() {
+    protected HiddenGamesAdapter createAdapter() {
+        return new HiddenGamesAdapter(this, new EndlessAdapter.OnLoadListener() {
             @Override
             public void onLoad(int page) {
                 fetchItems(page);

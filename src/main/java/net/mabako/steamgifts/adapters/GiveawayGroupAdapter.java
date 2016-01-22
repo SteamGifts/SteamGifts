@@ -20,8 +20,8 @@ public class GiveawayGroupAdapter extends EndlessAdapter {
      */
     private final Context context;
 
-    public GiveawayGroupAdapter(Context context, RecyclerView view, OnLoadListener listener) {
-        super(view, listener);
+    public GiveawayGroupAdapter(Context context, OnLoadListener listener) {
+        super(listener);
         this.context = context;
         this.alternativeEnd = true;
     }

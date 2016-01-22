@@ -14,7 +14,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -185,8 +184,8 @@ public class UserDetailFragment extends Fragment implements IUserNotifications {
         }
 
         @Override
-        protected GiveawayAdapter createAdapter(RecyclerView listView) {
-            return new GiveawayAdapter(getActivity(), listView, new EndlessAdapter.OnLoadListener() {
+        protected GiveawayAdapter createAdapter() {
+            return new GiveawayAdapter(getActivity(), new EndlessAdapter.OnLoadListener() {
                 @Override
                 public void onLoad(int page) {
                     fetchItems(page);

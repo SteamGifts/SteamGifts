@@ -15,8 +15,8 @@ import java.util.List;
 public class MessageAdapter extends EndlessAdapter {
     private final MessageListFragment fragment;
 
-    public MessageAdapter(@NonNull RecyclerView view, MessageListFragment fragment, @NonNull OnLoadListener listener) {
-        super(view, listener);
+    public MessageAdapter(MessageListFragment fragment, @NonNull OnLoadListener listener) {
+        super(listener);
         this.fragment = fragment;
     }
 

@@ -36,8 +36,8 @@ public class CommentAdapter<FragmentType extends Fragment> extends EndlessAdapte
      */
     private final FragmentType fragment;
 
-    public CommentAdapter(FragmentType fragment, RecyclerView view, EndlessAdapter.OnLoadListener loadListener) {
-        super(view, loadListener);
+    public CommentAdapter(FragmentType fragment, EndlessAdapter.OnLoadListener loadListener) {
+        super(loadListener);
 
         this.fragment = fragment;
         this.alternativeEnd = true;

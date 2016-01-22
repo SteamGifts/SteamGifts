@@ -62,12 +62,13 @@ public class DiscussionDetailFragment extends Fragment implements ICommentableFr
 
         listView = (RecyclerView) layout.findViewById(R.id.list);
         listView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new CommentAdapter<>(this, listView, new EndlessAdapter.OnLoadListener() {
+        adapter = new CommentAdapter<>(this, new EndlessAdapter.OnLoadListener() {
             @Override
             public void onLoad(int page) {
                 fetchItems(page);
             }
         });
+        listView.addOnScrollListener(adapter.getScrollListener());
         listView.setAdapter(adapter);
 
         // Add the cardview for the Giveaway details
