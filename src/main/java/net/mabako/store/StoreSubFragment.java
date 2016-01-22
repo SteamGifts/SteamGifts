@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import net.mabako.steamgifts.R;
+import net.mabako.steamgifts.activities.DetailActivity;
 import net.mabako.steamgifts.data.Game;
 
 import org.json.JSONArray;
@@ -23,6 +24,11 @@ public class StoreSubFragment extends StoreFragment {
     @Override
     public LoadStoreTask getTaskToStart() {
         return new LoadSubTask();
+    }
+
+    public void showDetails(int gameId) {
+        DetailActivity activity = (DetailActivity) getActivity();
+        activity.setTransientFragment(StoreAppFragment.newInstance(gameId, this));
     }
 
     private class LoadSubTask extends LoadStoreTask {

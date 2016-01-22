@@ -29,6 +29,7 @@ import java.util.UUID;
 public class DetailActivity extends CommonActivity {
     public static final String ARG_NOTIFICATIONS = "notifications";
 
+    private ViewPager pager = null;
     private SimplePagerAdapter pagerAdapter = null;
     private TabLayout tabLayout = null;
 
@@ -137,10 +138,11 @@ public class DetailActivity extends CommonActivity {
      * @param fragments
      */
     private void loadPagedFragments(Fragment... fragments) {
-        ViewPager pager = (ViewPager) findViewById(R.id.viewPager);
+        pager = (ViewPager) findViewById(R.id.viewPager);
 
         pagerAdapter = new SimplePagerAdapter(getSupportFragmentManager(), fragments);
         pager.setAdapter(pagerAdapter);
+        pager.addOnPageChangeListener(pagerAdapter);
 
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         if (tabLayout != null) {
@@ -166,10 +168,24 @@ public class DetailActivity extends CommonActivity {
     }
 
     /**
+     * Adds a fragment that is removed as soon as it is swiped away.
+     *
+     * @param transientFragment
+     */
+    public void setTransientFragment(Fragment transientFragment) {
+        if (pagerAdapter == null)
+            throw new IllegalStateException("not a paged view");
+
+        pagerAdapter.setTransientFragment(transientFragment);
+        pager.setCurrentItem(pagerAdapter.getCount() - 1, true);
+    }
+
+    /**
      * Simple fragment adapter that basically just holds a list of... fragments, without any fancy schmuck.
      */
-    private class SimplePagerAdapter extends FragmentPagerAdapter {
+    private class SimplePagerAdapter extends FragmentPagerAdapter implements ViewPager.OnPageChangeListener {
         private List<Fragment> fragments = new ArrayList<>();
+        private Fragment transientFragment;
 
         public SimplePagerAdapter(FragmentManager fm, Fragment... fragments) {
             super(fm);
@@ -178,12 +194,32 @@ public class DetailActivity extends CommonActivity {
 
         @Override
         public Fragment getItem(int position) {
-            return fragments.get(position);
+            if (position < fragments.size())
+                return fragments.get(position);
+            if (position == fragments.size() && transientFragment != null)
+                return transientFragment;
+
+            return null;
+        }
+
+        @Override
+        public int getItemPosition(Object object) {
+            if (fragments.contains(object))
+                return fragments.indexOf(object);
+
+            if (transientFragment != null && object == transientFragment)
+                return fragments.size();
+
+            return POSITION_NONE;
         }
 
         @Override
         public int getCount() {
-            return fragments.size();
+            int size = fragments.size();
+            if (transientFragment != null)
+                ++size;
+
+            return size;
         }
 
         @Override
@@ -195,5 +231,33 @@ public class DetailActivity extends CommonActivity {
             fragments.add(fragment);
             notifyDataSetChanged();
         }
+
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+            if (state == ViewPager.SCROLL_STATE_IDLE) {
+                int position = pager.getCurrentItem();
+
+                // Remove the fragment as soon as it is swiped away.
+                if (position < fragments.size() && transientFragment != null) {
+                    transientFragment = null;
+                    notifyDataSetChanged();
+                }
+            }
+        }
+
+        public void setTransientFragment(Fragment transientFragment) {
+            this.transientFragment = transientFragment;
+            notifyDataSetChanged();
+        }
+
     }
 }

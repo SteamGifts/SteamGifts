@@ -50,6 +50,8 @@ public class GiveawayDetailFragment extends Fragment implements ICommentableFrag
     public static final String ENTRY_DELETE = "entry_delete";
     private static final String TAG = GiveawayDetailFragment.class.getSimpleName();
 
+    private boolean fragmentAdded = false;
+
     /**
      * Content to show for the giveaway details.
      */
@@ -214,8 +216,10 @@ public class GiveawayDetailFragment extends Fragment implements ICommentableFrag
         // Re-build the options menu, which may not be created if no giveaway was present.
         getActivity().supportInvalidateOptionsMenu();
 
-        if (getActivity() instanceof DetailActivity && giveaway.getGameId() != Game.NO_APP_ID)
+        if (getActivity() instanceof DetailActivity && giveaway.getGameId() != Game.NO_APP_ID && !fragmentAdded) {
             ((DetailActivity) getActivity()).addFragment(giveaway.getType() == Game.Type.APP ? StoreAppFragment.newInstance(giveaway.getGameId(), this) : StoreSubFragment.newInstance(giveaway.getGameId(), this));
+            fragmentAdded = true;
+        }
     }
 
     public void onPostGiveawayLoaded(Giveaway giveaway) {

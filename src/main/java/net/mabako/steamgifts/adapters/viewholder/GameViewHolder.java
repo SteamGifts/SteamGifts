@@ -13,6 +13,7 @@ import com.squareup.picasso.Picasso;
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.data.Game;
 import net.mabako.steamgifts.fragments.HiddenGamesFragment;
+import net.mabako.store.StoreSubFragment;
 
 public class GameViewHolder extends RecyclerView.ViewHolder {
     private final TextView gameName;
@@ -33,16 +34,22 @@ public class GameViewHolder extends RecyclerView.ViewHolder {
     public void setFrom(final Game game) {
         gameName.setText(game.getName());
 
-        if (fragment instanceof HiddenGamesFragment) {
-            if (game.getInternalGameId() != Game.NO_APP_ID) {
-                itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View v) {
-                        ((HiddenGamesFragment) fragment).requestShowGame(game.getInternalGameId());
-                        return true;
-                    }
-                });
-            }
+        if (fragment instanceof HiddenGamesFragment && game.getInternalGameId() != Game.NO_APP_ID) {
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    ((HiddenGamesFragment) fragment).requestShowGame(game.getInternalGameId());
+                    return true;
+
+                }
+            });
+        } else if (fragment instanceof StoreSubFragment && game.getGameId() != Game.NO_APP_ID) {
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((StoreSubFragment) fragment).showDetails(game.getGameId());
+                }
+            });
         }
 
         // giveaway_image
