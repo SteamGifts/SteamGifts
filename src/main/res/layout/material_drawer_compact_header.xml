@@ -80,6 +80,7 @@
                 android:gravity="right"
                 android:lines="1"
                 android:singleLine="true"
+                android:textColor="@color/material_drawer_header_selection_text"
                 android:textSize="@dimen/material_drawer_account_header_text"
                 tools:text="Notifications" />
 

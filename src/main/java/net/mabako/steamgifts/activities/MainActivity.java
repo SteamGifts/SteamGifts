@@ -35,6 +35,7 @@ import net.mabako.steamgifts.activities.settings.SettingsActivity;
 import net.mabako.steamgifts.fragments.DiscussionListFragment;
 import net.mabako.steamgifts.fragments.GiveawayListFragment;
 import net.mabako.steamgifts.fragments.SearchableListFragment;
+import net.mabako.steamgifts.fragments.UserDetailFragment;
 import net.mabako.steamgifts.intro.Intro;
 import net.mabako.steamgifts.tasks.LogoutTask;
 import net.mabako.steamgifts.web.IPointUpdateNotification;
@@ -135,7 +136,7 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
                     public boolean onProfileImageClick(View view, IProfile profile, boolean current) {
                         if (SteamGiftsUserData.getCurrent().isLoggedIn()) {
                             Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-                            intent.putExtra(DetailActivity.ARG_NOTIFICATIONS, true);
+                            intent.putExtra(UserDetailFragment.ARG_USER, SteamGiftsUserData.getCurrent().getName());
                             startActivity(intent);
                             return true;
                         }
@@ -148,6 +149,17 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
                     }
                 })
                 .build();
+
+        accountHeader.getView().findViewById(R.id.material_drawer_account_header_notifications).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (SteamGiftsUserData.getCurrent().isLoggedIn()) {
+                    Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+                    intent.putExtra(DetailActivity.ARG_NOTIFICATIONS, true);
+                    startActivity(intent);
+                }
+            }
+        });
 
         drawer = new DrawerBuilder()
                 .withActivity(this)
@@ -247,8 +259,10 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
 
                                 notifications.setText(sb.toString());
                                 notifications.setVisibility(View.VISIBLE);
-                            } else
-                                notifications.setVisibility(View.GONE);
+                            } else {
+                                notifications.setText("{faw-envelope}");
+                                notifications.setVisibility(View.VISIBLE);
+                            }
                         } else {
                             notifications.setVisibility(View.GONE);
                         }
