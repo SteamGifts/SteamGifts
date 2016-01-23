@@ -287,7 +287,7 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
 
         SteamGiftsUserData account = SteamGiftsUserData.getCurrent();
         if (account.isLoggedIn()) {
-            profile = new ProfileDrawerItem().withName(account.getName()).withEmail(account.getSessionId()).withIdentifier(1);
+            profile = new ProfileDrawerItem().withName(account.getName()).withEmail("...").withIdentifier(1);
 
             if (account.getImageUrl() != null && !account.getImageUrl().isEmpty())
                 profile.withIcon(account.getImageUrl());
