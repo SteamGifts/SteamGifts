@@ -105,6 +105,11 @@
     <string name="preference_theme_nightmode">Night Mode</string>
     <string name="preference_theme_nightmode_sub">Use a dark background for the application</string>
 
+    <string name="preferences_giveaways">Giveaways</string>
+    <string name="preference_giveaway_show_pinned">Pinned Giveaways</string>
+    <string name="preference_giveaway_show_pinned_on">Always showing at the top</string>
+    <string name="preference_giveaway_show_pinned_off">Not highlighted in a special way</string>
+
     <string name="preferences_discussions">Discussions</string>
     <string name="preference_discussion_comments_reversed">Inverse Comment Order</string>
     <string name="preference_discussion_comments_reversed_sub_off">Show oldest comments first</string>

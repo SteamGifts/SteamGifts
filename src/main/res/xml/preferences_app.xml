@@ -8,6 +8,15 @@
             android:title="@string/preference_theme_nightmode" />
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/preferences_giveaways">
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="preference_giveaway_show_pinned"
+            android:summaryOff="@string/preference_giveaway_show_pinned_off"
+            android:summaryOn="@string/preference_giveaway_show_pinned_on"
+            android:title="@string/preference_giveaway_show_pinned" />
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="@string/preferences_discussions">
         <CheckBoxPreference
             android:defaultValue="false"

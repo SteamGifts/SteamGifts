@@ -2,6 +2,7 @@ package net.mabako.steamgifts.fragments;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,7 +12,6 @@ import android.view.ViewGroup;
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.adapters.GiveawayAdapter;
-import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.fragments.interfaces.IActivityTitle;
 import net.mabako.steamgifts.fragments.interfaces.IHasEnterableGiveaways;
@@ -20,8 +20,6 @@ import net.mabako.steamgifts.fragments.util.GiveawayListFragmentStack;
 import net.mabako.steamgifts.tasks.EnterLeaveGiveawayTask;
 import net.mabako.steamgifts.tasks.LoadGiveawayListTask;
 import net.mabako.steamgifts.tasks.UpdateGiveawayFilterTask;
-
-import java.util.List;
 
 /**
  * List of all giveaways.
@@ -71,7 +69,7 @@ public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter
 
     @Override
     protected AsyncTask<Void, Void, ?> getFetchItemsTask(int page) {
-        return new LoadGiveawayListTask(this, page, type, searchQuery);
+        return new LoadGiveawayListTask(this, page, type, searchQuery, PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("preference_giveaway_show_pinned", false));
     }
 
     /**

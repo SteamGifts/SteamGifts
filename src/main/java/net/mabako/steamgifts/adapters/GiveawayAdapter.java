@@ -52,7 +52,7 @@ public class GiveawayAdapter extends EndlessAdapter {
 
     @Override
     protected boolean hasEnoughItems(List<IEndlessAdaptable> items) {
-        return items.size() == itemsPerPage;
+        return items.size() >= itemsPerPage;
     }
 
     public Giveaway findItem(@NonNull String giveawayId) {
