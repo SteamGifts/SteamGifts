@@ -20,6 +20,10 @@ import java.io.Serializable;
 import java.util.List;
 
 public class CreatedListFragment extends ListFragment<GiveawayAdapter> implements IActivityTitle {
+    public CreatedListFragment() {
+        loadItemsInitially = false;
+    }
+
     @Override
     public int getTitleResource() {
         return R.string.user_tab_created;
