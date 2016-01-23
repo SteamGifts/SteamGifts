@@ -1,11 +1,10 @@
 package net.mabako.steamgifts.tasks;
 
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import net.mabako.steamgifts.data.Game;
-import net.mabako.steamgifts.fragments.HiddenGamesFragment;
+import net.mabako.steamgifts.adapters.IEndlessAdaptable;
+import net.mabako.steamgifts.fragments.ListFragment;
 import net.mabako.steamgifts.web.SteamGiftsUserData;
 
 import org.jsoup.Connection;
@@ -20,26 +19,28 @@ import java.util.List;
 /**
  * Loads all games you have currently filtered.
  */
-public class LoadHiddenGamesTask extends AsyncTask<Void, Void, List<Game>> {
+public abstract class LoadGameListTask extends AsyncTask<Void, Void, List<IEndlessAdaptable>> {
     private static final String TAG = LoadGiveawayListTask.class.getSimpleName();
 
-    private final HiddenGamesFragment fragment;
+    private final ListFragment fragment;
     private final int page;
     private final String searchQuery;
+    private final String pathSegment;
     private String foundXsrfToken;
 
-    public LoadHiddenGamesTask(HiddenGamesFragment fragment, int page, String searchQuery) {
+    public LoadGameListTask(ListFragment fragment, String pathSegment, int page, String searchQuery) {
         this.fragment = fragment;
+        this.pathSegment = pathSegment;
         this.page = page;
         this.searchQuery = searchQuery;
     }
 
     @Override
-    protected List<Game> doInBackground(Void... params) {
+    protected List<IEndlessAdaptable> doInBackground(Void... params) {
         try {
             // Fetch the Giveaway page
 
-            Connection jsoup = Jsoup.connect("http://www.steamgifts.com/account/settings/giveaways/filters/search");
+            Connection jsoup = Jsoup.connect("http://www.steamgifts.com/" + pathSegment + "/search");
             jsoup.data("page", Integer.toString(page));
 
             if (searchQuery != null)
@@ -60,7 +61,7 @@ public class LoadHiddenGamesTask extends AsyncTask<Void, Void, List<Game>> {
             document.select(".pinned-giveaways__outer-wrap").html("");
 
             // Parse all rows of giveaways
-            return loadGames(document);
+            return loadAll(document);
         } catch (Exception e) {
             Log.e(TAG, "Error fetching URL", e);
             return null;
@@ -68,35 +69,20 @@ public class LoadHiddenGamesTask extends AsyncTask<Void, Void, List<Game>> {
     }
 
     @Override
-    protected void onPostExecute(List<Game> result) {
+    protected void onPostExecute(List<IEndlessAdaptable> result) {
         super.onPostExecute(result);
         fragment.addItems(result, page == 1, foundXsrfToken);
     }
 
-    private List<Game> loadGames(Document document) {
+    private List<IEndlessAdaptable> loadAll(Document document) {
         Elements games = document.select(".table__row-inner-wrap");
-        List<Game> gameList = new ArrayList<>();
+        List<IEndlessAdaptable> gameList = new ArrayList<>();
 
         for (Element element : games) {
-            Game game = new Game();
-            game.setName(element.select(".table__column__heading").text());
-            game.setInternalGameId(Integer.parseInt(element.select("input[name=game_id]").first().attr("value")));
-
-            Element link = element.select(".table__column--width-fill .table__column__secondary-link").first();
-            if (link != null) {
-                Uri steamUri = Uri.parse(link.attr("href"));
-
-                // Steam link
-                if (steamUri != null) {
-                    List<String> pathSegments = steamUri.getPathSegments();
-                    if (pathSegments.size() >= 2)
-                        game.setGameId(Integer.parseInt(pathSegments.get(1)));
-                    game.setType("app".equals(pathSegments.get(0)) ? Game.Type.APP : Game.Type.SUB);
-                }
-            }
-
-            gameList.add(game);
+            gameList.add(load(element));
         }
         return gameList;
     }
+
+    protected abstract IEndlessAdaptable load(Element element);
 }

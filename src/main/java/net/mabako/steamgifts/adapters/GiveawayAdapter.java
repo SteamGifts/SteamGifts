@@ -28,8 +28,6 @@ public class GiveawayAdapter extends EndlessAdapter {
      */
     private final IHasEnterableGiveaways fragment;
 
-    private String xsrfToken;
-
     public GiveawayAdapter(Activity context, OnLoadListener listener, IHasEnterableGiveaways fragment, int itemsPerPage) {
         super(listener);
         this.context = context;
@@ -72,6 +70,14 @@ public class GiveawayAdapter extends EndlessAdapter {
             notifyItemChanged(index);
     }
 
+    public void removeGiveaway(String giveawayId) {
+        for (int position = getItems().size() - 1; position >= 0; --position) {
+            if (giveawayId.equals(((Giveaway) getItem(position)).getGiveawayId())) {
+                removeItem(position);
+            }
+        }
+    }
+
     public void removeHiddenGame(int internalGameId) {
         if (internalGameId == Game.NO_APP_ID)
             throw new IllegalStateException();
@@ -83,13 +89,5 @@ public class GiveawayAdapter extends EndlessAdapter {
                 removeItem(position);
             }
         }
-    }
-
-    public String getXsrfToken() {
-        return xsrfToken;
-    }
-
-    public void setXsrfToken(String xsrfToken) {
-        this.xsrfToken = xsrfToken;
     }
 }
