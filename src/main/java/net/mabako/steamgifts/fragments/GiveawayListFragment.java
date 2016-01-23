@@ -3,6 +3,7 @@ package net.mabako.steamgifts.fragments;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,6 +22,8 @@ import net.mabako.steamgifts.tasks.EnterLeaveGiveawayTask;
 import net.mabako.steamgifts.tasks.LoadGiveawayListTask;
 import net.mabako.steamgifts.tasks.UpdateGiveawayFilterTask;
 
+import java.util.List;
+
 /**
  * List of all giveaways.
  */
@@ -34,6 +37,11 @@ public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter
      */
     private Type type = Type.ALL;
 
+    /**
+     * Any game we might have removed from the giveaway list.
+     */
+    private LastRemovedGame lastRemovedGame;
+
     public static GiveawayListFragment newInstance(Type type, String query) {
         GiveawayListFragment g = new GiveawayListFragment();
         g.type = type;
@@ -42,19 +50,29 @@ public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        GiveawayListFragmentStack.addFragment(this);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
-        GiveawayListFragmentStack.addFragment(this);
         return view;
     }
 
     @Override
     public void onDestroyView() {
-        GiveawayListFragmentStack.removeFragment(this);
         super.onDestroyView();
 
         if (enterLeaveTask != null)
             enterLeaveTask.cancel(true);
+    }
+
+    @Override
+    public void onDestroy() {
+        GiveawayListFragmentStack.removeFragment(this);
+        super.onDestroy();
     }
 
     @Override
@@ -123,16 +141,45 @@ public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter
             GiveawayListFragmentStack.onEnterLeaveResult(giveawayId, what, success);
     }
 
-    public void requestHideGame(int internalGameId) {
-        new UpdateGiveawayFilterTask<>(this, adapter.getXsrfToken(), UpdateGiveawayFilterTask.HIDE, internalGameId).execute();
+    public void requestHideGame(int internalGameId, String title) {
+        new UpdateGiveawayFilterTask<>(this, adapter.getXsrfToken(), UpdateGiveawayFilterTask.HIDE, internalGameId, title).execute();
     }
 
     @Override
-    public void onHideGame(int internalGameId, boolean propagate) {
-        adapter.removeHiddenGame(internalGameId);
-
-        if (propagate)
+    public void onHideGame(final int internalGameId, boolean propagate, final String gameTitle) {
+        Log.v(TAG, "onHideGame/" + this.toString() + " ~~ " + propagate);
+        if (propagate) {
             GiveawayListFragmentStack.onHideGame(internalGameId);
+        } else {
+            List<EndlessAdapter.RemovedElement> removedGiveaways = adapter.removeHiddenGame(internalGameId);
+            lastRemovedGame = new LastRemovedGame(removedGiveaways, internalGameId);
+        }
+
+        if (gameTitle != null) {
+            // If we're propagating, this means we're visible instance
+            Snackbar.make(swipeContainer, String.format(getString(R.string.game_was_hidden), gameTitle), Snackbar.LENGTH_LONG).setAction(R.string.game_was_hidden_undo, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new UpdateGiveawayFilterTask<>(GiveawayListFragment.this, adapter.getXsrfToken(), UpdateGiveawayFilterTask.UNHIDE, internalGameId, gameTitle).execute();
+                }
+            }).show();
+        }
+    }
+
+    public void onShowGame(int internalGameId, boolean propagate) {
+        Log.v(TAG, "onShowGame/" + this + " ~~ " + propagate);
+        if (propagate) {
+            GiveawayListFragmentStack.onShowGame(internalGameId);
+        } else if (lastRemovedGame != null) {
+            if (lastRemovedGame.internalGameId == internalGameId) {
+                adapter.restoreGiveaways(lastRemovedGame.removedGiveaways);
+                lastRemovedGame = null;
+            } else {
+                Log.w(TAG, "onShowGame(" + internalGameId + ") expected " + lastRemovedGame.internalGameId + ", not restoring game(s)");
+            }
+        } else {
+            Log.w(TAG, "onShowGame called without a lastRemovedGame");
+        }
     }
 
     @Override
@@ -186,6 +233,16 @@ public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter
 
         public int getNavbarResource() {
             return navbarResource;
+        }
+    }
+
+    private static class LastRemovedGame {
+        private final List<EndlessAdapter.RemovedElement> removedGiveaways;
+        private final int internalGameId;
+
+        private LastRemovedGame(List<EndlessAdapter.RemovedElement> removedGiveaways, int internalGameId) {
+            this.removedGiveaways = removedGiveaways;
+            this.internalGameId = internalGameId;
         }
     }
 }

@@ -188,7 +188,7 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
                 fragment.requestEnterLeave(giveaway.getGiveawayId(), GiveawayDetailFragment.ENTRY_INSERT, adapter.getXsrfToken());
                 return true;
             case 3:
-                ((GiveawayListFragment) fragment).requestHideGame(giveaway.getInternalGameId());
+                ((GiveawayListFragment) fragment).requestHideGame(giveaway.getInternalGameId(), giveaway.getTitle());
                 return true;
         }
         return false;

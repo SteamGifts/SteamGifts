@@ -291,7 +291,7 @@ public class GiveawayDetailFragment extends Fragment implements ICommentableFrag
                 return true;
 
             case R.id.hide_game:
-                new UpdateGiveawayFilterTask<GiveawayDetailFragment>(this, giveawayCard.getExtras().getXsrfToken(), UpdateGiveawayFilterTask.HIDE, ((Giveaway) giveaway).getInternalGameId()).execute();
+                new UpdateGiveawayFilterTask<>(this, giveawayCard.getExtras().getXsrfToken(), UpdateGiveawayFilterTask.HIDE, ((Giveaway) giveaway).getInternalGameId(), ((Giveaway) giveaway).getTitle()).execute();
                 return true;
 
             default:
@@ -304,9 +304,10 @@ public class GiveawayDetailFragment extends Fragment implements ICommentableFrag
      *
      * @param internalGameId
      * @param propagate
+     * @param title
      */
     @Override
-    public void onHideGame(int internalGameId, boolean propagate) {
+    public void onHideGame(int internalGameId, boolean propagate, String title) {
         activity.finish();
 
         if (propagate)

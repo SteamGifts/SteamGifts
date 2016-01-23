@@ -9,7 +9,8 @@ public final class GiveawayListFragmentStack {
     private static List<GiveawayListFragment> fragments = new ArrayList<>();
 
     public static void addFragment(GiveawayListFragment fragment) {
-        fragments.add(fragment);
+        if (!fragments.contains(fragment))
+            fragments.add(fragment);
     }
 
     public static void removeFragment(GiveawayListFragment fragment) {
@@ -18,7 +19,12 @@ public final class GiveawayListFragmentStack {
 
     public static void onHideGame(int internalGameId) {
         for (GiveawayListFragment fragment : fragments)
-            fragment.onHideGame(internalGameId, false);
+            fragment.onHideGame(internalGameId, false, null);
+    }
+
+    public static void onShowGame(int internalGameId) {
+        for (GiveawayListFragment fragment : fragments)
+            fragment.onShowGame(internalGameId, false);
     }
 
     public static void onEnterLeaveResult(String giveawayId, String what, Boolean success) {

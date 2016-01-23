@@ -74,8 +74,8 @@ public class HiddenGamesFragment extends SearchableListFragment<HiddenGamesAdapt
         return newInstance(query);
     }
 
-    public void requestShowGame(int internalGameId) {
-        new UpdateGiveawayFilterTask<>(this, adapter.getXsrfToken(), UpdateGiveawayFilterTask.UNHIDE, internalGameId).execute();
+    public void requestShowGame(int internalGameId, String title) {
+        new UpdateGiveawayFilterTask<>(this, adapter.getXsrfToken(), UpdateGiveawayFilterTask.UNHIDE, internalGameId, title).execute();
     }
 
     public void onShowGame(int internalGameId) {

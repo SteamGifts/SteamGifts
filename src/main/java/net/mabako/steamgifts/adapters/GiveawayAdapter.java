@@ -10,6 +10,8 @@ import net.mabako.steamgifts.data.Game;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.fragments.interfaces.IHasEnterableGiveaways;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class GiveawayAdapter extends EndlessAdapter {
@@ -78,16 +80,27 @@ public class GiveawayAdapter extends EndlessAdapter {
         }
     }
 
-    public void removeHiddenGame(int internalGameId) {
+    public List<RemovedElement> removeHiddenGame(int internalGameId) {
         if (internalGameId == Game.NO_APP_ID)
             throw new IllegalStateException();
 
+        List<EndlessAdapter.RemovedElement> removedElements = new ArrayList<>();
         for (int position = getItems().size() - 1; position >= 0; --position) {
             Giveaway giveaway = (Giveaway) getItem(position);
 
             if (giveaway != null && giveaway.getInternalGameId() == internalGameId) {
-                removeItem(position);
+                removedElements.add(removeItem(position));
             }
         }
+
+        // At this point, the first element in removedElements is actually the last element of the original adapter, since we went through it in reverse; so we ... reverse it.
+        // Since we store the element and the one before it, we can reasonably get rid of a series of successive giveaways and restore them in the original order.
+        Collections.reverse(removedElements);
+        return removedElements;
+    }
+
+    public void restoreGiveaways(List<RemovedElement> elements) {
+        for(RemovedElement e : elements)
+            restore(e);
     }
 }

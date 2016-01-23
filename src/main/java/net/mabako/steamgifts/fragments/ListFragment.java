@@ -28,7 +28,7 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
     protected AdapterType adapter;
     private RecyclerView listView;
 
-    private SwipeRefreshLayout swipeContainer;
+    protected SwipeRefreshLayout swipeContainer;
     private ProgressBar progressBar;
 
     private AsyncTask<Void, Void, ?> taskToFetchItems = null;

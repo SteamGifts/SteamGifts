@@ -310,9 +310,31 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
     protected abstract boolean hasEnoughItems(List<IEndlessAdaptable> items);
 
 
-    protected void removeItem(int position) {
+    protected RemovedElement removeItem(int position) {
+        IEndlessAdaptable current = items.get(position);
+        IEndlessAdaptable before = position > 0 ? items.get(position - 1) : null;
+
         items.remove(position);
-        notifyItemRemoved(position);
+        notifyItemRemoved(position + (stickyItem != null ? 1 : 0));
+
+        return new RemovedElement(before, current);
+    }
+
+    protected void restore(@NonNull RemovedElement element) {
+        int position = 0;
+        if (element.getElementBefore() != null) {
+            position = items.indexOf(element.getElementBefore());
+            if (position == -1) {
+                Log.w(TAG, "Could not restore element, index not found - " + element.getElement());
+                return;
+            }
+
+            // We want to place it after that element.
+            ++position;
+        }
+
+        items.add(position, element.getElement());
+        notifyItemInserted(position + (stickyItem != null ? 1 : 0));
     }
 
     /**
@@ -392,5 +414,30 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
      */
     public interface OnLoadListener {
         void onLoad(int page);
+    }
+
+    public static class RemovedElement {
+        /**
+         * The item that was in place before the current removable.
+         */
+        private final IEndlessAdaptable elementBefore;
+
+        /**
+         * The element that was removed.
+         */
+        private final IEndlessAdaptable element;
+
+        public RemovedElement(IEndlessAdaptable elementBefore, IEndlessAdaptable element) {
+            this.elementBefore = elementBefore;
+            this.element = element;
+        }
+
+        public IEndlessAdaptable getElement() {
+            return element;
+        }
+
+        public IEndlessAdaptable getElementBefore() {
+            return elementBefore;
+        }
     }
 }

@@ -2,6 +2,7 @@ package net.mabako.steamgifts.tasks;
 
 import android.support.v4.app.Fragment;
 
+import net.mabako.steamgifts.fragments.GiveawayListFragment;
 import net.mabako.steamgifts.fragments.HiddenGamesFragment;
 import net.mabako.steamgifts.fragments.interfaces.IHasHideableGiveaways;
 
@@ -17,8 +18,9 @@ public class UpdateGiveawayFilterTask<FragmentType extends Fragment> extends Aja
     public static final String UNHIDE = "remove_filter";
 
     private final int internalGameId;
+    private final String gameTitle;
 
-    public UpdateGiveawayFilterTask(FragmentType fragment, String xsrfToken, String what, int internalGameId) {
+    public UpdateGiveawayFilterTask(FragmentType fragment, String xsrfToken, String what, int internalGameId, String gameTitle) {
         super(fragment, xsrfToken, what);
 
         // We only use the normal ajax.php if we remove a game
@@ -28,6 +30,7 @@ public class UpdateGiveawayFilterTask<FragmentType extends Fragment> extends Aja
 
 
         this.internalGameId = internalGameId;
+        this.gameTitle = gameTitle;
     }
 
     @Override
@@ -43,10 +46,20 @@ public class UpdateGiveawayFilterTask<FragmentType extends Fragment> extends Aja
         }
 
         FragmentType fragment = getFragment();
-        if (fragment instanceof IHasHideableGiveaways) {
-            if (response.statusCode() == 301)
-                ((IHasHideableGiveaways) fragment).onHideGame(internalGameId, true);
-        } else if (fragment instanceof HiddenGamesFragment) {
+        if (fragment instanceof IHasHideableGiveaways && HIDE.equals(getWhat())) {
+            if (response.statusCode() == 301) {
+                ((IHasHideableGiveaways) fragment).onHideGame(internalGameId, true, gameTitle);
+                return;
+            }
+        }
+
+        if (fragment instanceof GiveawayListFragment && UNHIDE.equals(getWhat())) {
+            if (response.statusCode() == 200) {
+                ((GiveawayListFragment) fragment).onShowGame(internalGameId, true);
+            }
+        }
+
+        if (fragment instanceof HiddenGamesFragment && UNHIDE.equals(getWhat())) {
             if (response.statusCode() == 200)
                 ((HiddenGamesFragment) fragment).onShowGame(internalGameId);
         }

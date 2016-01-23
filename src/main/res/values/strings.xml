@@ -75,9 +75,11 @@
     <string name="loading">Loading</string>
 
     <string name="hide_game">Hide Game</string>
+    <string name="game_was_hidden">%s is hidden</string>
+    <string name="game_was_hidden_undo">Undo</string>
 
     <!-- Go to menu -->
-    <string name="go_to">Go to...</string>
+    <string name="go_to">Go to&#8230;</string>
     <string name="go_to_giveaway">Giveaway</string>
     <string name="go_to_discussion">Discussion</string>
     <string name="go_to_user">User</string>

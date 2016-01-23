@@ -38,7 +38,7 @@ public class GameViewHolder extends RecyclerView.ViewHolder {
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    ((HiddenGamesFragment) fragment).requestShowGame(game.getInternalGameId());
+                    ((HiddenGamesFragment) fragment).requestShowGame(game.getInternalGameId(), game.getName());
                     return true;
 
                 }
