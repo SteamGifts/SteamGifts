@@ -2,38 +2,27 @@ package net.mabako.steamgifts.fragments.profile;
 
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.adapters.GiveawayAdapter;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.data.Game;
-import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
 import net.mabako.steamgifts.fragments.ListFragment;
 import net.mabako.steamgifts.fragments.interfaces.IActivityTitle;
-import net.mabako.steamgifts.fragments.interfaces.IHasEnterableGiveaways;
-import net.mabako.steamgifts.fragments.util.GiveawayListFragmentStack;
-import net.mabako.steamgifts.tasks.EnterLeaveGiveawayTask;
 import net.mabako.steamgifts.tasks.LoadGameListTask;
 import net.mabako.steamgifts.tasks.Utils;
 
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.Serializable;
 import java.util.List;
 
-public class EnteredListFragment extends ListFragment<GiveawayAdapter> implements IHasEnterableGiveaways, IActivityTitle {
-    private final static String TAG = EnteredListFragment.class.getSimpleName();
-    private EnterLeaveGiveawayTask enterLeaveTask;
-
-    public EnteredListFragment() {
-        loadItemsInitially = false;
-    }
-
+public class CreatedListFragment extends ListFragment<GiveawayAdapter> implements IActivityTitle {
     @Override
     public int getTitleResource() {
-        return R.string.user_tab_entered;
+        return R.string.user_tab_created;
     }
 
     @Override
@@ -46,14 +35,14 @@ public class EnteredListFragment extends ListFragment<GiveawayAdapter> implement
         return new GiveawayAdapter(getActivity(), new EndlessAdapter.OnLoadListener() {
             @Override
             public void onLoad(int page) {
-                fetchItems(page);
+
             }
-        }, this, 50);
+        }, null, 50);
     }
 
     @Override
     protected AsyncTask<Void, Void, ?> getFetchItemsTask(int page) {
-        return new LoadGameListTask(this, "giveaways/entered", page, null) {
+        return new LoadGameListTask(this, "giveaways/created", page, null) {
             @Override
             protected IEndlessAdaptable load(Element element) {
                 Element firstColumn = element.select(".table__column--width-fill").first();
@@ -78,11 +67,14 @@ public class EnteredListFragment extends ListFragment<GiveawayAdapter> implement
                     }
                 }
 
-                giveaway.setPoints(-1);
-                giveaway.setEntries(Integer.parseInt(element.select(".table__column--width-small").first().text().replace(",", "")));
-                giveaway.setTimeRemaining(firstColumn.select("span").text());
 
-                giveaway.setEntered(giveaway.isOpen());
+                Elements columns = element.select(".table__column--width-small.text-center");
+
+                giveaway.setPoints(-1);
+                giveaway.setEntries(Integer.parseInt(columns.first().text().replace(",", "")));
+                giveaway.setTimeRemaining(firstColumn.select("span > span").text());
+
+                giveaway.setEntered("Unsent".equals(columns.get(1).text()));
                 giveaway.setDeleted(!element.select(".table__column__deleted").isEmpty());
 
                 return giveaway;
@@ -93,35 +85,5 @@ public class EnteredListFragment extends ListFragment<GiveawayAdapter> implement
     @Override
     protected Serializable getType() {
         return null;
-    }
-
-    @Override
-    public void requestEnterLeave(String giveawayId, String what, String xsrfToken) {
-        // Probably not...
-        // if (enterLeaveTask != null)
-        // enterLeaveTask.cancel(true);
-
-        enterLeaveTask = new EnterLeaveGiveawayTask(this, giveawayId, xsrfToken, what);
-        enterLeaveTask.execute();
-    }
-
-    @Override
-    public void onEnterLeaveResult(String giveawayId, String what, Boolean success, boolean propagate) {
-        if (success == Boolean.TRUE && GiveawayDetailFragment.ENTRY_DELETE.equals(what)) {
-            adapter.removeGiveaway(giveawayId);
-        } else {
-            Log.e(TAG, "Probably an error catching the result...");
-        }
-
-        if (propagate)
-            GiveawayListFragmentStack.onEnterLeaveResult(giveawayId, what, success);
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-
-        if (enterLeaveTask != null)
-            enterLeaveTask.cancel(true);
     }
 }

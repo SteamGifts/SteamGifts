@@ -18,6 +18,7 @@ import net.mabako.steamgifts.data.BasicGiveaway;
 import net.mabako.steamgifts.fragments.DiscussionDetailFragment;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
 import net.mabako.steamgifts.fragments.UserDetailFragment;
+import net.mabako.steamgifts.fragments.profile.CreatedListFragment;
 import net.mabako.steamgifts.fragments.profile.EnteredListFragment;
 import net.mabako.steamgifts.fragments.profile.MessageListFragment;
 import net.mabako.steamgifts.fragments.profile.WonListFragment;
@@ -81,7 +82,7 @@ public class DetailActivity extends CommonActivity {
 
             if (getIntent().hasExtra(ARG_NOTIFICATIONS)) {
                 setContentView(R.layout.activity_paged_fragments);
-                loadPagedFragments(new MessageListFragment(), new WonListFragment(), new EnteredListFragment());
+                loadPagedFragments(new MessageListFragment(), new WonListFragment(), new EnteredListFragment(), new CreatedListFragment());
                 return;
             }
 
