@@ -15,12 +15,18 @@ import net.mabako.steamgifts.fragments.UserDetailFragment;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Handle all URL related shenanigans.
  */
 public class UrlHandlingActivity extends CommonActivity {
     private static final String TAG = UrlHandlingActivity.class.getSimpleName();
+
+    private static final Pattern
+            youtubePattern = Pattern.compile("^https?://[\\.\\w]*youtube\\.\\w+/.*"),
+            youtu_bePattern = Pattern.compile("^https?://[\\.\\w]*youtu\\.be/([A-Za-z0-9\\-_]+)(\\?.*|).*");
 
     public static Intent getIntentForUri(Context context, Uri uri) {
         Log.v(TAG, uri.toString());
@@ -72,6 +78,12 @@ public class UrlHandlingActivity extends CommonActivity {
                         return null;
                     }
                 }
+            }
+        } else {
+            if(youtubePattern.matcher(uri.toString()).matches() || youtu_bePattern.matcher(uri.toString()).matches()){
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(uri);
+                return intent;
             }
         }
         return null;
