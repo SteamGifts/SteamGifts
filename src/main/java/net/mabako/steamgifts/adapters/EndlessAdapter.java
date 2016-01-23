@@ -79,6 +79,11 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
      */
     protected boolean alternativeEnd = false;
 
+    /**
+     * XSRF-Token to use for calls upon this adapter.
+     */
+    private String xsrfToken = null;
+
     private RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -361,6 +366,14 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
      */
     public boolean isEmpty() {
         return items.isEmpty();
+    }
+
+    public String getXsrfToken() {
+        return xsrfToken;
+    }
+
+    public void setXsrfToken(String xsrfToken) {
+        this.xsrfToken = xsrfToken;
     }
 
     /**

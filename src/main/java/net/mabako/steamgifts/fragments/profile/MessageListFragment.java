@@ -28,8 +28,6 @@ import java.io.Serializable;
 import java.util.List;
 
 public class MessageListFragment extends ListFragment<MessageAdapter> implements IActivityTitle, ICommentableFragment {
-    private String xsrfToken = null;
-
     public MessageListFragment() {
         loadItemsInitially = false;
     }
@@ -89,7 +87,7 @@ public class MessageListFragment extends ListFragment<MessageAdapter> implements
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.messages_menu, menu);
 
-        menu.findItem(R.id.mark_read).setVisible(xsrfToken != null);
+        menu.findItem(R.id.mark_read).setVisible(adapter.getXsrfToken() != null);
     }
 
     @Override
@@ -100,7 +98,7 @@ public class MessageListFragment extends ListFragment<MessageAdapter> implements
                 return true;
 
             case R.id.mark_read:
-                new MarkMessagesReadTask(this, xsrfToken).execute();
+                new MarkMessagesReadTask(this, adapter.getXsrfToken()).execute();
                 return true;
 
             default:
@@ -108,10 +106,9 @@ public class MessageListFragment extends ListFragment<MessageAdapter> implements
         }
     }
 
-    public void addItems(List<IEndlessAdaptable> items, boolean clearExistingItems, String foundXsrfToken) {
-        addItems(items, clearExistingItems);
-
-        xsrfToken = foundXsrfToken;
+    @Override
+    public void addItems(List<? extends IEndlessAdaptable> items, boolean clearExistingItems, String foundXsrfToken) {
+        super.addItems(items, clearExistingItems, foundXsrfToken);
         getActivity().supportInvalidateOptionsMenu();
     }
 
@@ -129,7 +126,7 @@ public class MessageListFragment extends ListFragment<MessageAdapter> implements
             }
         }
 
-        xsrfToken = null;
+        adapter.setXsrfToken(null);
         getActivity().supportInvalidateOptionsMenu();
 
         // We no longer have any notifications

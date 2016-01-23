@@ -1,5 +1,6 @@
 package net.mabako.steamgifts.fragments;
 
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -8,10 +9,13 @@ import android.view.View;
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.adapters.HiddenGamesAdapter;
+import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.data.Game;
 import net.mabako.steamgifts.fragments.interfaces.IActivityTitle;
-import net.mabako.steamgifts.tasks.LoadHiddenGamesTask;
+import net.mabako.steamgifts.tasks.LoadGameListTask;
 import net.mabako.steamgifts.tasks.UpdateGiveawayFilterTask;
+
+import org.jsoup.nodes.Element;
 
 import java.io.Serializable;
 import java.util.List;
@@ -40,7 +44,29 @@ public class HiddenGamesFragment extends SearchableListFragment<HiddenGamesAdapt
 
     @Override
     protected AsyncTask<Void, Void, ?> getFetchItemsTask(int page) {
-        return new LoadHiddenGamesTask(this, page, searchQuery);
+        return new LoadGameListTask(this, "account/settings/giveaways/filters", page, searchQuery) {
+            @Override
+            protected Game load(Element element) {
+                Game game = new Game();
+                game.setName(element.select(".table__column__heading").text());
+                game.setInternalGameId(Integer.parseInt(element.select("input[name=game_id]").first().attr("value")));
+
+                Element link = element.select(".table__column--width-fill .table__column__secondary-link").first();
+                if (link != null) {
+                    Uri steamUri = Uri.parse(link.attr("href"));
+
+                    // Steam link
+                    if (steamUri != null) {
+                        List<String> pathSegments = steamUri.getPathSegments();
+                        if (pathSegments.size() >= 2)
+                            game.setGameId(Integer.parseInt(pathSegments.get(1)));
+                        game.setType("app".equals(pathSegments.get(0)) ? Game.Type.APP : Game.Type.SUB);
+                    }
+                }
+
+                return game;
+            }
+        };
     }
 
     @Override
@@ -71,9 +97,9 @@ public class HiddenGamesFragment extends SearchableListFragment<HiddenGamesAdapt
         return searchQuery;
     }
 
-    public void addItems(List<Game> result, boolean clearExistingItems, String xsrfToken) {
-        addItems(result, clearExistingItems);
-        adapter.setXsrfToken(xsrfToken);
+    @Override
+    public void addItems(List<? extends IEndlessAdaptable> result, boolean clearExistingItems, String xsrfToken) {
+        super.addItems(result, clearExistingItems, xsrfToken);
 
         if (showSnack) {
             showSnack = false;

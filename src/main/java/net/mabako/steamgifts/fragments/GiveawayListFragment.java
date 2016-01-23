@@ -125,11 +125,6 @@ public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter
             GiveawayListFragmentStack.onEnterLeaveResult(giveawayId, what, success);
     }
 
-    public void addItems(List<? extends IEndlessAdaptable> items, boolean clearExistingItems, String xsrfToken) {
-        adapter.setXsrfToken(xsrfToken);
-        addItems(items, clearExistingItems);
-    }
-
     public void requestHideGame(int internalGameId) {
         new UpdateGiveawayFilterTask<>(this, adapter.getXsrfToken(), UpdateGiveawayFilterTask.HIDE, internalGameId).execute();
     }

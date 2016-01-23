@@ -19,7 +19,8 @@ import com.squareup.picasso.Picasso;
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.activities.DetailActivity;
 import net.mabako.steamgifts.activities.MainActivity;
-import net.mabako.steamgifts.adapters.GiveawayAdapter;
+import net.mabako.steamgifts.adapters.EndlessAdapter;
+import net.mabako.steamgifts.data.BasicGiveaway;
 import net.mabako.steamgifts.data.Game;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
@@ -36,7 +37,7 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
     private final TextView giveawayTime;
     private final ImageView giveawayImage;
 
-    private final GiveawayAdapter adapter;
+    private final EndlessAdapter adapter;
     private final Activity activity;
     private final IHasEnterableGiveaways fragment;
 
@@ -44,7 +45,7 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
 
     private static int measuredHeight = 0;
 
-    public GiveawayListItemViewHolder(View v, Activity activity, GiveawayAdapter adapter, IHasEnterableGiveaways fragment) {
+    public GiveawayListItemViewHolder(View v, Activity activity, EndlessAdapter adapter, IHasEnterableGiveaways fragment) {
         super(v);
         itemContainer = v.findViewById(R.id.list_item);
         giveawayName = (TextView) v.findViewById(R.id.giveaway_name);
@@ -73,10 +74,15 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
         StringBuilder sb = new StringBuilder();
         if (giveaway.getCopies() > 1)
             sb.append(giveaway.getCopies()).append(" copies | ");
-        sb.append(giveaway.getPoints()).append("P | ");
+
+        if (giveaway.getPoints() >= 0)
+            sb.append(giveaway.getPoints()).append("P | ");
+
         if (giveaway.getLevel() > 0)
             sb.append("L").append(giveaway.getLevel()).append(" | ");
-        sb.append(giveaway.getEntries()).append(" entries");
+
+        if (giveaway.getEntries() >= 0)
+            sb.append(giveaway.getEntries()).append(" entries");
 
         giveawayDetails.setText(sb);
 
@@ -119,7 +125,12 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
         Giveaway giveaway = (Giveaway) adapter.getItem(getAdapterPosition());
         if (giveaway.getGiveawayId() != null && giveaway.getName() != null) {
             Intent intent = new Intent(activity, DetailActivity.class);
-            intent.putExtra(GiveawayDetailFragment.ARG_GIVEAWAY, giveaway);
+
+            if (giveaway.getInternalGameId() != Game.NO_APP_ID) {
+                intent.putExtra(GiveawayDetailFragment.ARG_GIVEAWAY, giveaway);
+            } else {
+                intent.putExtra(GiveawayDetailFragment.ARG_GIVEAWAY, new BasicGiveaway(giveaway.getGiveawayId()));
+            }
 
             activity.startActivityForResult(intent, MainActivity.REQUEST_LOGIN_PASSIVE);
         } else {
@@ -141,10 +152,21 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
             // Header
             menu.setHeaderTitle(giveaway.getTitle());
 
+            // Text for Entering or Leaving the giveaway
+            String enterText = activity.getString(R.string.enter_giveaway);
+            String leaveText = activity.getString(R.string.leave_giveaway);
+
+            // Include the points if we know
+            if (giveaway.getPoints() >= 0) {
+                enterText = String.format(activity.getString(R.string.enter_giveaway_with_points), giveaway.getPoints());
+                leaveText = String.format(activity.getString(R.string.leave_giveaway_with_points), giveaway.getPoints());
+            }
+
+            // Show the relevant menu item.
             if (giveaway.isEntered()) {
-                menu.add(Menu.NONE, 1, Menu.NONE, String.format(activity.getString(R.string.leave_giveaway_with_points), giveaway.getPoints())).setOnMenuItemClickListener(this);
+                menu.add(Menu.NONE, 1, Menu.NONE, leaveText).setOnMenuItemClickListener(this);
             } else {
-                menu.add(Menu.NONE, 2, Menu.NONE, String.format(activity.getString(R.string.enter_giveaway_with_points), giveaway.getPoints())).setOnMenuItemClickListener(this).setEnabled(giveaway.getPoints() <= SteamGiftsUserData.getCurrent().getPoints() && giveaway.getLevel() <= SteamGiftsUserData.getCurrent().getLevel() && !SteamGiftsUserData.getCurrent().getName().equals(giveaway.getCreator()));
+                menu.add(Menu.NONE, 2, Menu.NONE, enterText).setOnMenuItemClickListener(this).setEnabled(giveaway.getPoints() <= SteamGiftsUserData.getCurrent().getPoints() && giveaway.getLevel() <= SteamGiftsUserData.getCurrent().getLevel() && !SteamGiftsUserData.getCurrent().getName().equals(giveaway.getCreator()));
             }
 
             if (giveaway.getInternalGameId() > 0 && fragment instanceof GiveawayListFragment) {

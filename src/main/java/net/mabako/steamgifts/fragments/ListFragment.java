@@ -119,6 +119,13 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
         taskToFetchItems = null;
     }
 
+    public void addItems(List<? extends IEndlessAdaptable> items, boolean clearExistingItems, String xsrfToken) {
+        addItems(items, clearExistingItems);
+
+        if (xsrfToken != null)
+            adapter.setXsrfToken(xsrfToken);
+    }
+
     private void showNormalListView() {
         progressBar.setVisibility(View.GONE);
         swipeContainer.setVisibility(View.VISIBLE);

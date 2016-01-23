@@ -52,8 +52,10 @@
     <string name="about_source_code">Source Code</string>
 
     <!-- Details: Enter/Leave/Comment -->
+    <string name="enter_giveaway">Enter</string>
     <string name="enter_giveaway_with_points">Enter (%dP)</string>
     <string name="login_to_enter_giveaway">Login to Enter</string>
+    <string name="leave_giveaway">Leave</string>
     <string name="leave_giveaway_with_points">Leave (%dP)</string>
 
     <!-- Contextual menus -->
@@ -89,6 +91,9 @@
     <string name="private_giveaway">This giveaway is private.</string>
 
     <string name="user_tab_notifications">Messages</string>
+    <string name="user_tab_won">Won</string>
+    <string name="user_tab_entered">Entered</string>
+    <string name="user_tab_created">Created</string>
 
     <!-- sgtools.info -->
     <string name="sgtools_loading">Loading SGTools</string>

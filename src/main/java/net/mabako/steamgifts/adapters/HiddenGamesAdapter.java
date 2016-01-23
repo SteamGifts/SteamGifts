@@ -16,7 +16,6 @@ public class HiddenGamesAdapter extends EndlessAdapter {
      */
     private static final int ITEMS_PER_PAGE = 25;
 
-    private String xsrfToken;
     private final HiddenGamesFragment fragment;
 
     public HiddenGamesAdapter(HiddenGamesFragment fragment, @NonNull OnLoadListener listener) {
@@ -43,14 +42,6 @@ public class HiddenGamesAdapter extends EndlessAdapter {
     @Override
     protected boolean hasEnoughItems(List<IEndlessAdaptable> items) {
         return items.size() == ITEMS_PER_PAGE;
-    }
-
-    public String getXsrfToken() {
-        return xsrfToken;
-    }
-
-    public void setXsrfToken(String xsrfToken) {
-        this.xsrfToken = xsrfToken;
     }
 
     public void removeShownGame(int internalGameId) {
