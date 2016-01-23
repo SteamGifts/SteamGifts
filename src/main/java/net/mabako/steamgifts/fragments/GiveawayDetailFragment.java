@@ -1,5 +1,6 @@
 package net.mabako.steamgifts.fragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -61,6 +62,7 @@ public class GiveawayDetailFragment extends Fragment implements ICommentableFrag
     private EnterLeaveGiveawayTask enterLeaveTask;
     private RecyclerView listView;
     private CommentAdapter<GiveawayDetailFragment> adapter;
+    private Activity activity;
 
     public static Fragment newInstance(BasicGiveaway giveaway) {
         GiveawayDetailFragment fragment = new GiveawayDetailFragment();
@@ -84,6 +86,12 @@ public class GiveawayDetailFragment extends Fragment implements ICommentableFrag
             // Add the cardview for the Giveaway details
             adapter.setStickyItem(giveawayCard);
         }
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        this.activity = activity;
     }
 
     @Nullable
@@ -276,9 +284,9 @@ public class GiveawayDetailFragment extends Fragment implements ICommentableFrag
                     Giveaway giveaway = (Giveaway) this.giveaway;
                     Log.i(TAG, "Opening Steam Store entry for game " + giveaway.getGameId());
 
-                    Intent intent = new Intent(getContext(), WebViewActivity.class);
+                    Intent intent = new Intent(activity, WebViewActivity.class);
                     intent.putExtra(WebViewActivity.ARG_URL, "http://store.steampowered.com/" + giveaway.getType().name().toLowerCase() + "/" + giveaway.getGameId() + "/");
-                    startActivity(intent);
+                    activity.startActivity(intent);
                 }
                 return true;
 
@@ -299,7 +307,7 @@ public class GiveawayDetailFragment extends Fragment implements ICommentableFrag
      */
     @Override
     public void onHideGame(int internalGameId, boolean propagate) {
-        getActivity().finish();
+        activity.finish();
 
         if (propagate)
             GiveawayListFragmentStack.onHideGame(internalGameId);
