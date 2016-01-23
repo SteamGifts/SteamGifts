@@ -30,7 +30,7 @@ public class LoadGiveawayListTask extends AsyncTask<Void, Void, List<Giveaway>> 
         this.page = page;
         this.type = type;
         this.searchQuery = searchQuery;
-        this.showPinnedGiveaways = showPinnedGiveaways;
+        this.showPinnedGiveaways = showPinnedGiveaways && type == GiveawayListFragment.Type.ALL;
     }
 
     @Override
