@@ -12,6 +12,7 @@ import java.io.Serializable;
  * us no real content outside of the Giveaway Id.
  */
 public class BasicGiveaway implements Serializable {
+    private static final long serialVersionUID = 8330168808371401692L;
     private final String giveawayId;
 
     public BasicGiveaway(String giveawayId) {
@@ -31,13 +32,9 @@ public class BasicGiveaway implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || !(o instanceof BasicGiveaway))
+        if (o == null || !(o instanceof BasicGiveaway) || giveawayId == null)
             return false;
 
-        if (giveawayId == null)
-            // Implement this in Giveaway to compare more attributes, but there's no real way to have "unique" GAs.
-            return false;
-        else
-            return giveawayId.equals(((BasicGiveaway) o).giveawayId);
+        return giveawayId.equals(((BasicGiveaway) o).giveawayId);
     }
 }

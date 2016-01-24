@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GiveawayExtras implements Serializable, ICommentHolder {
+    private static final long serialVersionUID = 2559783080850462760L;
     private String description;
     private String xsrfToken;
     private boolean entered;

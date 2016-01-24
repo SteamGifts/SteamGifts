@@ -3,11 +3,11 @@ package net.mabako.steamgifts.data;
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 
-/**
- * Created by mabako on 05.01.2016.
- */
-public class GiveawayGroup implements IEndlessAdaptable {
+import java.io.Serializable;
+
+public class GiveawayGroup implements IEndlessAdaptable, Serializable {
     public static final int VIEW_LAYOUT = R.layout.giveaway_group_item;
+    private static final long serialVersionUID = 6889558816716859611L;
 
     private final String id;
     private final String title;

@@ -9,6 +9,7 @@ import java.io.Serializable;
  * Comment on a giveaway or discussion.
  */
 public class Comment implements Serializable, IEndlessAdaptable {
+    private static final long serialVersionUID = -7333245576601696951L;
     public static final int VIEW_LAYOUT = R.layout.comment;
 
     private final int id;

@@ -6,6 +6,7 @@ import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import java.io.Serializable;
 
 public class Game implements Serializable, IEndlessAdaptable {
+    private static final long serialVersionUID = -4047245968975766647L;
     public static final int NO_APP_ID = 0;
     public static final int VIEW_LAYOUT = R.layout.hidden_game_item;
 

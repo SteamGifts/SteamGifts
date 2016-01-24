@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DiscussionExtras implements Serializable, ICommentHolder {
+    private static final long serialVersionUID = 5303211073144498554L;
     private String description;
     private String xsrfToken;
     private final List<Comment> loadedComments;

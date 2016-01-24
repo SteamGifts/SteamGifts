@@ -3,6 +3,7 @@ package net.mabako.steamgifts.data;
 import java.io.Serializable;
 
 public class User implements Serializable {
+    private static final long serialVersionUID = -313348528668961481L;
     private String name, avatar, url;
 
     private int level, created, won, comments;

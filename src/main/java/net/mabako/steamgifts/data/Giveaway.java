@@ -5,6 +5,7 @@ import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
 
 public class Giveaway extends BasicGiveaway implements IEndlessAdaptable {
+    private static final long serialVersionUID = 1356878822345232771L;
     public static final int VIEW_LAYOUT = R.layout.giveaway_item;
 
     private String title;
