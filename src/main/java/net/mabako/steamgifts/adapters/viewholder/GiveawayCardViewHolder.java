@@ -128,16 +128,20 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
             enterGiveaway.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    enterGiveaway.setEnabled(false);
-                    fragment.requestEnterLeave(giveaway.getGiveawayId(), GiveawayDetailFragment.ENTRY_INSERT, extras.getXsrfToken());
+                    if (extras != null) {
+                        enterGiveaway.setEnabled(false);
+                        fragment.requestEnterLeave(giveaway.getGiveawayId(), GiveawayDetailFragment.ENTRY_INSERT, extras.getXsrfToken());
+                    }
                 }
             });
 
             leaveGiveaway.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    leaveGiveaway.setEnabled(false);
-                    fragment.requestEnterLeave(giveaway.getGiveawayId(), GiveawayDetailFragment.ENTRY_DELETE, extras.getXsrfToken());
+                    if (extras != null) {
+                        leaveGiveaway.setEnabled(false);
+                        fragment.requestEnterLeave(giveaway.getGiveawayId(), GiveawayDetailFragment.ENTRY_DELETE, extras.getXsrfToken());
+                    }
                 }
             });
 
@@ -161,6 +165,9 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
 
         if (giveaway.isGroup())
             spans.add(new SpannableString("{faw-users} "));
+
+        if (giveaway.isRegionRestricted())
+            spans.add(new SpannableString("{faw-globe} "));
 
         if (giveaway.isLevelPositive())
             spans.add(new SpannableString("L" + giveaway.getLevel()));

@@ -21,7 +21,7 @@ public class Giveaway extends BasicGiveaway implements IEndlessAdaptable {
 
     private boolean whitelist, group;
     private int level;
-    private boolean isPrivate;
+    private boolean isPrivate, regionRestricted;
 
     /**
      * Id used (exclusively?) for filtering games.
@@ -154,6 +154,14 @@ public class Giveaway extends BasicGiveaway implements IEndlessAdaptable {
 
     public boolean isLevelNegative() {
         return level > 0 && !isLevelPositive();
+    }
+
+    public boolean isRegionRestricted() {
+        return regionRestricted;
+    }
+
+    public void setRegionRestricted(boolean regionRestricted) {
+        this.regionRestricted = regionRestricted;
     }
 
     @Override

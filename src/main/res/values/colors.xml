@@ -11,4 +11,5 @@
     <color name="giveawayIndicatorColorLevelOkay">@color/md_green_600</color>
     <color name="giveawayIndicatorColorLevelTooHigh">@color/md_red_600</color>
     <color name="giveawayIndicatorColorPrivate">@color/md_purple_600</color>
+    <color name="giveawayIndicatorColorRegionRestricted">@color/md_grey_500</color>
 </resources>

@@ -122,6 +122,7 @@ public final class Utils {
         giveaway.setWhitelist(!element.select("." + cssNode + "__column--whitelist").isEmpty());
         giveaway.setGroup(!element.select("." + cssNode + "__column--group").isEmpty());
         giveaway.setPrivate(!element.select("." + cssNode + "__column--invite-only").isEmpty());
+        giveaway.setRegionRestricted(!element.select("." + cssNode + "__column--region-restricted").isEmpty());
 
         Element level = element.select("." + cssNode + "__column--contributor-level").first();
         if (level != null)

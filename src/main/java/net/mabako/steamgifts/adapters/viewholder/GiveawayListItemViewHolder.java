@@ -41,7 +41,7 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
     private final Activity activity;
     private final IHasEnterableGiveaways fragment;
 
-    private final View indicatorWhitelist, indicatorGroup, indicatorLevelPositive, indicatorLevelNegative, indicatorPrivate;
+    private final View indicatorWhitelist, indicatorGroup, indicatorLevelPositive, indicatorLevelNegative, indicatorPrivate, indicatorRegionRestricted;
 
     private static int measuredHeight = 0;
 
@@ -58,6 +58,7 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
         indicatorLevelPositive = v.findViewById(R.id.giveaway_list_indicator_level_positive);
         indicatorLevelNegative = v.findViewById(R.id.giveaway_list_indicator_level_negative);
         indicatorPrivate = v.findViewById(R.id.giveaway_list_indicator_private);
+        indicatorRegionRestricted = v.findViewById(R.id.giveaway_list_indicator_region_restricted);
 
         this.activity = activity;
         this.fragment = fragment;
@@ -118,6 +119,7 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
         indicatorLevelPositive.setVisibility(giveaway.isLevelPositive() ? View.VISIBLE : View.GONE);
         indicatorLevelNegative.setVisibility(giveaway.isLevelNegative() ? View.VISIBLE : View.GONE);
         indicatorPrivate.setVisibility(giveaway.isPrivate() ? View.VISIBLE : View.GONE);
+        indicatorRegionRestricted.setVisibility(giveaway.isRegionRestricted() ? View.VISIBLE : View.GONE);
     }
 
     @Override

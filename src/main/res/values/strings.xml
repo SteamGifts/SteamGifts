@@ -147,8 +147,11 @@
     <string name="intro_giveaway_indicators_level_positive">At or below your Level</string>
     <string name="intro_giveaway_indicators_level_negative">Above your Level</string>
     <string name="intro_giveaway_indicators_private">Private Giveaway</string>
+    <string name="intro_giveaway_indicators_region_restricted">Region Restricted</string>
     <string name="intro_giveaway_welcome">Press \"Next\" for a few quick hints.</string>
     <string name="intro_giveaway_welcome_header">Welcome to\nSteamGifts</string>
+
+    <!-- Filters -->
     <string name="filter">Filter Giveaways</string>
     <string name="ok">OK</string>
     <string name="reset">Clear Filter</string>
