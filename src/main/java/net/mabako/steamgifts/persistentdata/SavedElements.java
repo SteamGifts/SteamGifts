@@ -24,7 +24,7 @@ public abstract class SavedElements<T> {
     private static final String KEY_ID = "id";
     private static final String KEY_VALUE = "value";
 
-    protected final GiveawayOpenHelper helper;
+    protected final GiveawayOpenHelper<T> helper;
 
     public SavedElements(Context context, String table) {
         helper = new GiveawayOpenHelper<T>(context, this);
@@ -52,15 +52,21 @@ public abstract class SavedElements<T> {
         return helper.add(element, elementId);
     }
 
+    /**
+     * Removes an element.
+     *
+     * @param elementId the id of the element
+     * @return true if the element was deleted, false otherwise
+     */
     public boolean remove(@NonNull String elementId) {
-        return false;
+        return helper.remove(elementId);
     }
 
     /**
      * Is the element with the given id saved?
      *
-     * @param elementId
-     * @return
+     * @param elementId the id of the element
+     * @return true if the element is saved, false otherwise
      */
     public boolean isSaved(@NonNull String elementId) {
         return helper.isSaved(elementId);
@@ -112,6 +118,10 @@ public abstract class SavedElements<T> {
             cursor.close();
 
             return exists;
+        }
+
+        public boolean remove(String elementId) {
+            return getWritableDatabase().delete(parent.table, KEY_ID + " = ?", new String[]{elementId}) > 0;
         }
 
         @Override

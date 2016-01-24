@@ -37,9 +37,9 @@ import net.mabako.steamgifts.fragments.GiveawayListFragment;
 import net.mabako.steamgifts.fragments.SearchableListFragment;
 import net.mabako.steamgifts.fragments.UserDetailFragment;
 import net.mabako.steamgifts.intro.Intro;
-import net.mabako.steamgifts.tasks.LogoutTask;
 import net.mabako.steamgifts.persistentdata.IPointUpdateNotification;
 import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
+import net.mabako.steamgifts.tasks.LogoutTask;
 
 import java.io.Serializable;
 
@@ -318,6 +318,7 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
                     new PrimaryDrawerItem().withName(R.string.navigation_giveaways_wishlist).withIdentifier(R.string.navigation_giveaways_wishlist).withIcon(FontAwesome.Icon.faw_heart));
         }
         drawer.addItems(new PrimaryDrawerItem().withName(R.string.navigation_giveaways_new).withIdentifier(R.string.navigation_giveaways_new).withIcon(FontAwesome.Icon.faw_refresh));
+        drawer.addItems(new PrimaryDrawerItem().withName(R.string.navigation_giveaways_saved).withIdentifier(R.string.navigation_giveaways_saved).withIcon(FontAwesome.Icon.faw_star));
 
         // Discussions, some time
         drawer.addItem(new SectionDrawerItem().withName(R.string.navigation_discussions).withDivider(true));
