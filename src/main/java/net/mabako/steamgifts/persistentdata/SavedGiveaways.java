@@ -24,4 +24,9 @@ public class SavedGiveaways extends SavedElements<Giveaway> {
 
         return giveaway;
     }
+
+    @Override
+    public int compare(Giveaway lhs, Giveaway rhs) {
+        return lhs.getEndTime().compareTo(rhs.getEndTime());
+    }
 }

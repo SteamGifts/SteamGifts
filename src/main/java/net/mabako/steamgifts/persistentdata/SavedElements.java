@@ -11,12 +11,14 @@ import android.util.Log;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
  * Any giveaways the user wishes to save for a long(er) time.
  */
-public abstract class SavedElements<T> {
+public abstract class SavedElements<T> implements Comparator<T> {
     private static final String TAG = SavedElements.class.getSimpleName();
 
     private final String table;
@@ -108,6 +110,8 @@ public abstract class SavedElements<T> {
             } finally {
                 cursor.close();
             }
+
+            Collections.sort(elements, parent);
 
             return elements;
         }
