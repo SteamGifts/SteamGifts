@@ -6,7 +6,7 @@ import android.util.Log;
 
 import net.mabako.steamgifts.data.Discussion;
 import net.mabako.steamgifts.fragments.DiscussionListFragment;
-import net.mabako.steamgifts.web.SteamGiftsUserData;
+import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;

@@ -20,7 +20,7 @@ import net.mabako.steamgifts.fragments.DiscussionDetailFragment;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
 import net.mabako.steamgifts.fragments.UserDetailFragment;
 import net.mabako.steamgifts.fragments.interfaces.IActivityTitle;
-import net.mabako.steamgifts.web.SteamGiftsUserData;
+import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
 
 public class CommonActivity extends BaseActivity {
     private static final String TAG = CommonActivity.class.getSimpleName();

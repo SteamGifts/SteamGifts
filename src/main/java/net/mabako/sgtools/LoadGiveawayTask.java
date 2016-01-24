@@ -7,7 +7,7 @@ import android.util.Log;
 import android.view.View;
 
 import net.mabako.steamgifts.data.Game;
-import net.mabako.steamgifts.web.SGToolsUserData;
+import net.mabako.steamgifts.persistentdata.SGToolsUserData;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;

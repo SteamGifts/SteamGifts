@@ -1,9 +1,7 @@
 package net.mabako.sgtools;
 
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -28,7 +26,6 @@ import net.mabako.steamgifts.activities.CommonActivity;
 import net.mabako.steamgifts.activities.DetailActivity;
 import net.mabako.steamgifts.data.BasicGiveaway;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
-import net.mabako.steamgifts.web.SGToolsUserData;
 
 import java.util.List;
 import java.util.UUID;

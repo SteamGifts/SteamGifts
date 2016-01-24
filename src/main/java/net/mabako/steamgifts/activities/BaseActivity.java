@@ -13,8 +13,8 @@ import android.view.MenuItem;
 
 import net.mabako.sgtools.SGToolsLoginActivity;
 import net.mabako.steamgifts.R;
-import net.mabako.steamgifts.web.SGToolsUserData;
-import net.mabako.steamgifts.web.SteamGiftsUserData;
+import net.mabako.steamgifts.persistentdata.SGToolsUserData;
+import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
 
 public class BaseActivity extends AppCompatActivity {
     public static final String CLOSE_NESTED = "close-nested";

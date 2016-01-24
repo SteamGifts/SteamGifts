@@ -10,7 +10,7 @@ import net.mabako.steamgifts.activities.WebViewActivity;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.data.MessageHeader;
 import net.mabako.steamgifts.fragments.profile.MessageListFragment;
-import net.mabako.steamgifts.web.SteamGiftsUserData;
+import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;

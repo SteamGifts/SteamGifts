@@ -1,4 +1,4 @@
-package net.mabako.steamgifts.web;
+package net.mabako.steamgifts.persistentdata;
 
 public class SGToolsUserData {
     private static SGToolsUserData current = new SGToolsUserData();

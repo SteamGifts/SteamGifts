@@ -5,7 +5,7 @@ import android.util.Log;
 
 import net.mabako.steamgifts.data.GiveawayGroup;
 import net.mabako.steamgifts.fragments.GiveawayGroupListFragment;
-import net.mabako.steamgifts.web.SteamGiftsUserData;
+import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;

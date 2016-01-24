@@ -1,4 +1,4 @@
-package net.mabako.steamgifts.web;
+package net.mabako.steamgifts.persistentdata;
 
 import android.app.Activity;
 import android.text.TextUtils;

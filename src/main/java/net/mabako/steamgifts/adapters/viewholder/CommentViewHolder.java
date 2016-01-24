@@ -16,7 +16,7 @@ import com.squareup.picasso.Picasso;
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.data.Comment;
 import net.mabako.steamgifts.fragments.interfaces.ICommentableFragment;
-import net.mabako.steamgifts.web.SteamGiftsUserData;
+import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
 
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 

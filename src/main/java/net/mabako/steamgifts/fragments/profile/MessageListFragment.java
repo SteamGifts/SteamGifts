@@ -22,7 +22,7 @@ import net.mabako.steamgifts.fragments.interfaces.IActivityTitle;
 import net.mabako.steamgifts.fragments.interfaces.ICommentableFragment;
 import net.mabako.steamgifts.tasks.LoadMessagesTask;
 import net.mabako.steamgifts.tasks.MarkMessagesReadTask;
-import net.mabako.steamgifts.web.SteamGiftsUserData;
+import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
 
 import java.io.Serializable;
 import java.util.List;

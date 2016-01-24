@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 import net.mabako.common.SteamLoginActivity;
 import net.mabako.steamgifts.activities.CommonActivity;
-import net.mabako.steamgifts.web.SGToolsUserData;
+import net.mabako.steamgifts.persistentdata.SGToolsUserData;
 
 public class SGToolsLoginActivity extends SteamLoginActivity {
     private static final String LOGIN_URL = "https://steamcommunity.com/openid/login?openid.ns=http://specs.openid.net/auth/2.0&openid.mode=checkid_setup&openid.return_to=http://www.sgtools.info/login&openid.realm=http://www.sgtools.info&openid.identity=http://specs.openid.net/auth/2.0/identifier_select&openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select";

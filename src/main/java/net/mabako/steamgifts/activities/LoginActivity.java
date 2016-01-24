@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.webkit.JavascriptInterface;
 
 import net.mabako.common.SteamLoginActivity;
-import net.mabako.steamgifts.web.SteamGiftsUserData;
+import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
 
 import org.jsoup.Jsoup;
 

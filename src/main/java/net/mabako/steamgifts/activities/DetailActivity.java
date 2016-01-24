@@ -22,7 +22,7 @@ import net.mabako.steamgifts.fragments.profile.CreatedListFragment;
 import net.mabako.steamgifts.fragments.profile.EnteredListFragment;
 import net.mabako.steamgifts.fragments.profile.MessageListFragment;
 import net.mabako.steamgifts.fragments.profile.WonListFragment;
-import net.mabako.steamgifts.web.SteamGiftsUserData;
+import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
 
 import java.io.Serializable;
 import java.util.ArrayList;

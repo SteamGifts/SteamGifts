@@ -3,7 +3,7 @@ package net.mabako.steamgifts.tasks;
 import android.util.Log;
 
 import net.mabako.steamgifts.fragments.interfaces.IHasEnterableGiveaways;
-import net.mabako.steamgifts.web.SteamGiftsUserData;
+import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
 
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -2,7 +2,7 @@ package net.mabako.steamgifts.data;
 
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
-import net.mabako.steamgifts.web.SteamGiftsUserData;
+import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
 
 public class Giveaway extends BasicGiveaway implements IEndlessAdaptable {
     public static final int VIEW_LAYOUT = R.layout.giveaway_item;

@@ -38,8 +38,8 @@ import net.mabako.steamgifts.fragments.SearchableListFragment;
 import net.mabako.steamgifts.fragments.UserDetailFragment;
 import net.mabako.steamgifts.intro.Intro;
 import net.mabako.steamgifts.tasks.LogoutTask;
-import net.mabako.steamgifts.web.IPointUpdateNotification;
-import net.mabako.steamgifts.web.SteamGiftsUserData;
+import net.mabako.steamgifts.persistentdata.IPointUpdateNotification;
+import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
 
 import java.io.Serializable;
 

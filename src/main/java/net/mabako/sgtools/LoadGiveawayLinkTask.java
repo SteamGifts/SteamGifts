@@ -3,7 +3,7 @@ package net.mabako.sgtools;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import net.mabako.steamgifts.web.SGToolsUserData;
+import net.mabako.steamgifts.persistentdata.SGToolsUserData;
 
 import org.json.JSONException;
 import org.json.JSONObject;
