@@ -5,8 +5,12 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -185,6 +189,27 @@ public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter
     @Override
     public Fragment newSearchingInstance(String query) {
         return newInstance(type, query);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
+        MenuItem filterMenu = menu.findItem(R.id.filter);
+        filterMenu.setVisible(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.filter) {
+            FragmentManager fm = getActivity().getSupportFragmentManager();
+
+            FilterGiveawayDialogFragment dialog = new FilterGiveawayDialogFragment();
+            dialog.show(fm, dialog.getClass().getSimpleName());
+
+            return true;
+        } else
+            return super.onOptionsItemSelected(item);
     }
 
     /**
