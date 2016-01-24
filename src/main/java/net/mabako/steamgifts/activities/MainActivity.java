@@ -198,6 +198,7 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
 
                             case R.string.navigation_giveaways_saved:
                                 loadFragment(new SavedGiveawaysFragment());
+                                getSupportActionBar().setSubtitle(null);
                                 break;
 
                             default:
