@@ -132,6 +132,17 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
         swipeContainer.setRefreshing(false);
     }
 
+    protected void refresh() {
+        adapter.cancelLoading();
+        adapter.clear();
+        progressBar.setVisibility(View.VISIBLE);
+        swipeContainer.setVisibility(View.GONE);
+        swipeContainer.setRefreshing(false);
+
+        // TODO reverse pages?
+        fetchItems(1);
+    }
+
     /**
      * Load a tab's items only if the user is on that tab.
      *

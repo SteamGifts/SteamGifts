@@ -5,8 +5,12 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -15,6 +19,7 @@ import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.adapters.GiveawayAdapter;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.fragments.interfaces.IActivityTitle;
+import net.mabako.steamgifts.fragments.interfaces.IFilterUpdatedListener;
 import net.mabako.steamgifts.fragments.interfaces.IHasEnterableGiveaways;
 import net.mabako.steamgifts.fragments.interfaces.IHasHideableGiveaways;
 import net.mabako.steamgifts.fragments.util.GiveawayListFragmentStack;
@@ -27,7 +32,7 @@ import java.util.List;
 /**
  * List of all giveaways.
  */
-public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter> implements IHasEnterableGiveaways, IHasHideableGiveaways, IActivityTitle {
+public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter> implements IHasEnterableGiveaways, IHasHideableGiveaways, IActivityTitle, IFilterUpdatedListener {
     private static final String TAG = GiveawayListFragment.class.getSimpleName();
 
     private EnterLeaveGiveawayTask enterLeaveTask;
@@ -82,7 +87,7 @@ public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter
             public void onLoad(int page) {
                 fetchItems(page);
             }
-        }, this, 50);
+        }, this, 50, true);
     }
 
     @Override
@@ -185,6 +190,34 @@ public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter
     @Override
     public Fragment newSearchingInstance(String query) {
         return newInstance(type, query);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
+        MenuItem filterMenu = menu.findItem(R.id.filter);
+        filterMenu.setVisible(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.filter) {
+            FragmentManager fm = getActivity().getSupportFragmentManager();
+
+            FilterGiveawayDialogFragment dialog = new FilterGiveawayDialogFragment();
+            dialog.setListener(this);
+            dialog.show(fm, dialog.getClass().getSimpleName());
+
+            return true;
+        } else
+            return super.onOptionsItemSelected(item);
+    }
+
+    // TODO This does not handle propagation up the call stack.
+    @Override
+    public void onFilterUpdated() {
+        refresh();
     }
 
     /**

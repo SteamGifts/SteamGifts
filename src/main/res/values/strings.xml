@@ -149,4 +149,12 @@
     <string name="intro_giveaway_indicators_private">Private Giveaway</string>
     <string name="intro_giveaway_welcome">Press \"Next\" for a few quick hints.</string>
     <string name="intro_giveaway_welcome_header">Welcome to\nSteamGifts</string>
+    <string name="filter">Filter Giveaways</string>
+    <string name="ok">OK</string>
+    <string name="reset">Clear Filter</string>
+    <string name="filter_min">(min)</string>
+    <string name="filter_max">(max)</string>
+    <string name="filter_entries">Entries</string>
+    <string name="filter_level">Level</string>
+    <string name="filter_points">Points</string>
 </resources>
