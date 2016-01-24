@@ -34,6 +34,7 @@ import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.activities.settings.SettingsActivity;
 import net.mabako.steamgifts.fragments.DiscussionListFragment;
 import net.mabako.steamgifts.fragments.GiveawayListFragment;
+import net.mabako.steamgifts.fragments.SavedGiveawaysFragment;
 import net.mabako.steamgifts.fragments.SearchableListFragment;
 import net.mabako.steamgifts.fragments.UserDetailFragment;
 import net.mabako.steamgifts.intro.Intro;
@@ -193,6 +194,10 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
 
                             case R.string.preferences:
                                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                                break;
+
+                            case R.string.navigation_giveaways_saved:
+                                loadFragment(new SavedGiveawaysFragment());
                                 break;
 
                             default:

@@ -149,6 +149,9 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     public void reachedTheEnd() {
+        if(reachedTheEnd)
+            return;
+
         Log.d(TAG, "Reached the end");
 
         // Make sure we're not loading anymore...

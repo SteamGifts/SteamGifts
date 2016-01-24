@@ -166,6 +166,6 @@
     <!-- Saving Giveaways -->
     <string name="add_saved_giveaway">Save Giveaway</string>
     <string name="remove_saved_giveaway">Remove Giveaway</string>
-    <string name="added_saved_giveaway"><![CDATA[Giveaway was saved and can be found under main menu > saved.]]></string>
+    <string name="added_saved_giveaway"><![CDATA[Giveaway was saved and can be found under Giveaways > Saved.]]></string>
     <string name="removed_saved_giveaway">Giveaway is no longer saved.</string>
 </resources>

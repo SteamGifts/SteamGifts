@@ -116,7 +116,7 @@ public class Giveaway extends BasicGiveaway implements IEndlessAdaptable {
     }
 
     public void setTimeRemaining(String timeRemaining) {
-        this.timeRemaining = timeRemaining.replace(" remaining", "");
+        this.timeRemaining = timeRemaining != null ? timeRemaining.replace(" remaining", "") : null;
     }
 
     public boolean isOpen() {
