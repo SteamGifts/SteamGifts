@@ -1,8 +1,16 @@
 package net.mabako.steamgifts.data;
 
+import android.util.Log;
+
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class Giveaway extends BasicGiveaway implements IEndlessAdaptable {
     private static final long serialVersionUID = 1356878822345232771L;
@@ -18,6 +26,7 @@ public class Giveaway extends BasicGiveaway implements IEndlessAdaptable {
     private int points;
     private String timeRemaining;
     private String timeCreated;
+    private Calendar endTime;
     private boolean entered = false;
 
     private boolean whitelist, group;
@@ -167,6 +176,48 @@ public class Giveaway extends BasicGiveaway implements IEndlessAdaptable {
 
     public void setRegionRestricted(boolean regionRestricted) {
         this.regionRestricted = regionRestricted;
+    }
+
+    public Calendar getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Calendar endTime) {
+        this.endTime = endTime;
+    }
+
+    /**
+     * <p>We assume the string passed in fits either of the following:
+     * <ul>
+     * <li>"Today, 3:40pm"</li>
+     * <li>"Tomorrow, 3:40am"</li>
+     * <li>"January 26, 2016, 3:40am"</li>
+     * </ul>
+     *
+     * @param endTime when this giveaway presumably ends
+     */
+    public void setEndTime(final String endTime) {
+        String realTime = endTime;
+
+        int daysOffset = 0;
+        if (endTime.startsWith("Today, ")) {
+            Calendar calendar = Calendar.getInstance();
+            realTime = endTime.replace("Today", new SimpleDateFormat("MMMM d, yyyy", Locale.US).format(calendar.getTime()));
+
+        } else if (endTime.startsWith("Tomorrow, ")) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+            realTime = endTime.replace("Tomorrow", new SimpleDateFormat("MMMM d, yyyy", Locale.US).format(calendar.getTime()));
+        }
+
+        try {
+            Date date = new SimpleDateFormat("MMMM d, yyyy, h:mma", Locale.US).parse(realTime);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            this.endTime = calendar;
+        } catch (ParseException e) {
+            Log.w(Giveaway.class.getSimpleName(), "Unable to handle date " + endTime + " // " + realTime, e);
+        }
     }
 
     @Override

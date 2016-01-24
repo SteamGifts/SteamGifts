@@ -115,7 +115,9 @@ public final class Utils {
         }
 
         // Time remaining
-        giveaway.setTimeRemaining(element.select("." + cssNode + "__columns > div span").first().text());
+        Element endTime = element.select("." + cssNode + "__columns > div span").first();
+        giveaway.setTimeRemaining(endTime.text());
+        giveaway.setEndTime(endTime.attr("title"));
         giveaway.setTimeCreated(element.select("." + cssNode + "__columns > div span").last().text());
 
         // Flags
