@@ -220,6 +220,12 @@ public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter
         refresh();
     }
 
+    @Override
+    protected void refresh() {
+        super.refresh();
+        lastRemovedGame = null;
+    }
+
     /**
      * Different types of Giveaway lists.
      */
