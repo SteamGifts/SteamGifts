@@ -24,26 +24,26 @@
         style="@style/NormalText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:hint="@string/filter_min"
+        android:imeOptions="actionNext"
         android:inputType="numberSigned"
         android:maxLength="2"
-        android:gravity="center"
         app:layout_columnWeight="1"
-        app:layout_rowWeight="1"
-        android:imeOptions="actionNext"/>
+        app:layout_rowWeight="1" />
 
     <EditText
         android:id="@+id/filter_level_max"
         style="@style/NormalText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:hint="@string/filter_max"
+        android:imeOptions="actionNext"
         android:inputType="numberSigned"
         android:maxLength="2"
-        android:gravity="center"
         app:layout_columnWeight="1"
-        app:layout_rowWeight="1"
-        android:imeOptions="actionNext"/>
+        app:layout_rowWeight="1" />
 
 
     <!-- Entries -->
@@ -62,26 +62,26 @@
         style="@style/NormalText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:hint="@string/filter_min"
+        android:imeOptions="actionNext"
         android:inputType="numberSigned"
         android:maxLength="5"
-        android:gravity="center"
         app:layout_columnWeight="1"
-        app:layout_rowWeight="1"
-        android:imeOptions="actionNext"/>
+        app:layout_rowWeight="1" />
 
     <EditText
         android:id="@+id/filter_entries_max"
         style="@style/NormalText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:hint="@string/filter_max"
+        android:imeOptions="actionNext"
         android:inputType="numberSigned"
         android:maxLength="5"
-        android:gravity="center"
         app:layout_columnWeight="1"
-        app:layout_rowWeight="1"
-        android:imeOptions="actionNext"/>
+        app:layout_rowWeight="1" />
 
     <!-- Points -->
     <TextView
@@ -99,23 +99,24 @@
         style="@style/NormalText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:hint="@string/filter_min"
+        android:imeOptions="actionNext"
         android:inputType="numberSigned"
         android:maxLength="3"
-        android:gravity="center"
         app:layout_columnWeight="1"
-        app:layout_rowWeight="1"
-        android:imeOptions="actionNext"/>
+        app:layout_rowWeight="1" />
 
     <EditText
         android:id="@+id/filter_points_max"
         style="@style/NormalText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:hint="@string/filter_max"
+        android:imeOptions="actionNone"
         android:inputType="numberSigned"
         android:maxLength="3"
-        android:gravity="center"
         app:layout_columnWeight="1"
         app:layout_rowWeight="1" />
 </android.support.v7.widget.GridLayout>
