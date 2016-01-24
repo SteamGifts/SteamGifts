@@ -29,6 +29,10 @@ public class Giveaway extends BasicGiveaway implements IEndlessAdaptable {
      */
     private int internalGameId;
 
+    public Giveaway() {
+        super(null);
+    }
+
     public Giveaway(String giveawayId) {
         super(giveawayId);
     }
