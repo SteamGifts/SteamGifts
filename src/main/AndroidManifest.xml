@@ -14,7 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.Light">
         <activity android:name=".activities.LoginActivity" />
-        <activity android:name=".activities.MainActivity">
+        <activity
+            android:name=".activities.MainActivity"
+            android:configChanges="orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -22,6 +24,7 @@
         </activity>
         <activity
             android:name=".activities.DetailActivity"
+            android:configChanges="orientation|screenSize"
             android:parentActivityName=".activities.DetailActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -32,12 +35,16 @@
             android:windowSoftInputMode="adjustResize|stateAlwaysVisible" />
         <activity
             android:name=".activities.ViewGroupsActivity"
+            android:configChanges="orientation|screenSize"
             android:parentActivityName=".activities.DetailActivity" />
         <activity
             android:name=".activities.AboutActivity"
             android:parentActivityName=".activities.MainActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Dark" />
-        <activity android:name=".activities.WebViewActivity" />
+        <activity
+            android:name=".activities.WebViewActivity"
+            android:configChanges="orientation|screenSize" />
 
         <!-- handle all urls... or at least some -->
         <activity android:name=".activities.UrlHandlingActivity">

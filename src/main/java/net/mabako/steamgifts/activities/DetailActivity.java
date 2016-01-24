@@ -41,12 +41,14 @@ public class DetailActivity extends CommonActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        initLayout(savedInstanceState);
+        if (savedInstanceState == null) {
+            initLayout(savedInstanceState);
 
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
+            setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+            ActionBar actionBar = getSupportActionBar();
+            if (actionBar != null) {
+                actionBar.setDisplayHomeAsUpEnabled(true);
+            }
         }
     }
 
