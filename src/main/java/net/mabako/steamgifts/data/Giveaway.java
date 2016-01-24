@@ -14,6 +14,7 @@ import java.util.Locale;
 
 public class Giveaway extends BasicGiveaway implements IEndlessAdaptable {
     private static final long serialVersionUID = 1356878822345232771L;
+    private static final String[] relativeDates = new String[]{"Yesterday", "Today", "Tomorrow"};
     public static final int VIEW_LAYOUT = R.layout.giveaway_item;
 
     private String title;
@@ -199,22 +200,20 @@ public class Giveaway extends BasicGiveaway implements IEndlessAdaptable {
     public void setEndTime(final String endTime) {
         String realTime = endTime;
 
-        int daysOffset = 0;
-        if (endTime.startsWith("Today, ")) {
-            Calendar calendar = Calendar.getInstance();
-            realTime = endTime.replace("Today", new SimpleDateFormat("MMMM d, yyyy", Locale.US).format(calendar.getTime()));
-
-        } else if (endTime.startsWith("Tomorrow, ")) {
-            Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.DAY_OF_MONTH, 1);
-            realTime = endTime.replace("Tomorrow", new SimpleDateFormat("MMMM d, yyyy", Locale.US).format(calendar.getTime()));
+        for (int daysOffset = 0; daysOffset < relativeDates.length; ++daysOffset) {
+            if (endTime.startsWith(relativeDates[daysOffset] + ", ")) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.add(Calendar.DAY_OF_MONTH, daysOffset - 1);
+                realTime = endTime.replace(relativeDates[daysOffset], new SimpleDateFormat("MMMM d, yyyy", Locale.US).format(calendar.getTime()));
+                break;
+            }
         }
 
         try {
             Date date = new SimpleDateFormat("MMMM d, yyyy, h:mma", Locale.US).parse(realTime);
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(date);
-            this.endTime = calendar;
+            setEndTime(calendar);
         } catch (ParseException e) {
             Log.w(Giveaway.class.getSimpleName(), "Unable to handle date " + endTime + " // " + realTime, e);
         }
