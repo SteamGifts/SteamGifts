@@ -3,6 +3,7 @@ package net.mabako.steamgifts.adapters.viewholder;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -70,7 +71,14 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
 
     public void setFrom(Giveaway giveaway) {
         giveawayName.setText(giveaway.getTitle());
-        giveawayTime.setText(giveaway.getTimeRemaining());
+
+        if (giveaway.getTimeRemaining() != null) {
+            giveawayTime.setText(giveaway.getTimeRemaining());
+        } else if (giveaway.getEndTime() != null) {
+            giveawayTime.setText(DateUtils.formatDateTime(activity, giveaway.getEndTime().getTimeInMillis(), DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE));
+        } else {
+            giveawayTime.setVisibility(View.GONE);
+        }
 
         StringBuilder sb = new StringBuilder();
         if (giveaway.getCopies() > 1)
