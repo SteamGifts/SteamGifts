@@ -104,7 +104,9 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
 
                 @Override
                 public void onError() {
-
+                    ViewGroup.LayoutParams params = giveawayImage.getLayoutParams();
+                    params.width = 0;
+                    params.height = 0;
                 }
             });
         } else {
