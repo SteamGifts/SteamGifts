@@ -318,6 +318,8 @@ public class GiveawayDetailFragment extends ListFragment<CommentAdapter> impleme
                     if (savedGiveaways.remove(giveaway.getGiveawayId())) {
                         getActivity().supportInvalidateOptionsMenu();
                         Toast.makeText(getContext(), R.string.removed_saved_giveaway, Toast.LENGTH_SHORT).show();
+
+                        GiveawayListFragmentStack.onRemoveSavedGiveaway(giveaway.getGiveawayId());
                     }
                 }
                 return true;

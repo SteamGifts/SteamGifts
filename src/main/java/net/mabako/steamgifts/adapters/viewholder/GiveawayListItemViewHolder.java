@@ -2,6 +2,7 @@ package net.mabako.steamgifts.adapters.viewholder;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -26,7 +27,9 @@ import net.mabako.steamgifts.data.Game;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
 import net.mabako.steamgifts.fragments.GiveawayListFragment;
+import net.mabako.steamgifts.fragments.SavedGiveawaysFragment;
 import net.mabako.steamgifts.fragments.interfaces.IHasEnterableGiveaways;
+import net.mabako.steamgifts.persistentdata.SavedGiveaways;
 import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
 
 public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnCreateContextMenuListener, MenuItem.OnMenuItemClickListener {
@@ -40,13 +43,14 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
 
     private final EndlessAdapter adapter;
     private final Activity activity;
-    private final IHasEnterableGiveaways fragment;
+    private final Fragment fragment;
+    private SavedGiveaways savedGiveaways;
 
     private final View indicatorWhitelist, indicatorGroup, indicatorLevelPositive, indicatorLevelNegative, indicatorPrivate, indicatorRegionRestricted;
 
     private static int measuredHeight = 0;
 
-    public GiveawayListItemViewHolder(View v, Activity activity, EndlessAdapter adapter, IHasEnterableGiveaways fragment) {
+    public GiveawayListItemViewHolder(View v, Activity activity, EndlessAdapter adapter, Fragment fragment, SavedGiveaways savedGiveaways) {
         super(v);
         itemContainer = v.findViewById(R.id.list_item);
         giveawayName = (TextView) v.findViewById(R.id.giveaway_name);
@@ -64,6 +68,7 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
         this.activity = activity;
         this.fragment = fragment;
         this.adapter = adapter;
+        this.savedGiveaways = savedGiveaways;
 
         v.setOnClickListener(this);
         v.setOnCreateContextMenuListener(this);
@@ -151,35 +156,50 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         // Are we logged in & do we have a token to submit with our "form"?
-        if (SteamGiftsUserData.getCurrent().isLoggedIn() && adapter.getXsrfToken() != null) {
+        if (SteamGiftsUserData.getCurrent().isLoggedIn() && fragment != null && (adapter.getXsrfToken() != null || savedGiveaways != null)) {
+
             // Which giveaway is this even for?
             final Giveaway giveaway = (Giveaway) adapter.getItem(getAdapterPosition());
 
             // We only know this giveaway exists, not the link to it.
-            if (giveaway.getGiveawayId() == null || giveaway.getName() == null || !giveaway.isOpen())
+            if (giveaway.getGiveawayId() == null || giveaway.getName() == null)
                 return;
+
+            boolean xsrfEvents = adapter.getXsrfToken() != null && giveaway.isOpen();
 
             // Header
             menu.setHeaderTitle(giveaway.getTitle());
 
-            // Text for Entering or Leaving the giveaway
-            String enterText = activity.getString(R.string.enter_giveaway);
-            String leaveText = activity.getString(R.string.leave_giveaway);
+            if (xsrfEvents && fragment instanceof IHasEnterableGiveaways) {
+                // Text for Entering or Leaving the giveaway
+                String enterText = activity.getString(R.string.enter_giveaway);
+                String leaveText = activity.getString(R.string.leave_giveaway);
 
-            // Include the points if we know
-            if (giveaway.getPoints() >= 0) {
-                enterText = String.format(activity.getString(R.string.enter_giveaway_with_points), giveaway.getPoints());
-                leaveText = String.format(activity.getString(R.string.leave_giveaway_with_points), giveaway.getPoints());
+                // Include the points if we know
+                if (giveaway.getPoints() >= 0) {
+                    enterText = String.format(activity.getString(R.string.enter_giveaway_with_points), giveaway.getPoints());
+                    leaveText = String.format(activity.getString(R.string.leave_giveaway_with_points), giveaway.getPoints());
+                }
+
+                // Show the relevant menu item.
+                if (giveaway.isEntered()) {
+                    menu.add(Menu.NONE, 1, Menu.NONE, leaveText).setOnMenuItemClickListener(this);
+                } else {
+                    menu.add(Menu.NONE, 2, Menu.NONE, enterText).setOnMenuItemClickListener(this).setEnabled(giveaway.getPoints() <= SteamGiftsUserData.getCurrent().getPoints() && giveaway.getLevel() <= SteamGiftsUserData.getCurrent().getLevel() && !SteamGiftsUserData.getCurrent().getName().equals(giveaway.getCreator()));
+                }
             }
 
-            // Show the relevant menu item.
-            if (giveaway.isEntered()) {
-                menu.add(Menu.NONE, 1, Menu.NONE, leaveText).setOnMenuItemClickListener(this);
-            } else {
-                menu.add(Menu.NONE, 2, Menu.NONE, enterText).setOnMenuItemClickListener(this).setEnabled(giveaway.getPoints() <= SteamGiftsUserData.getCurrent().getPoints() && giveaway.getLevel() <= SteamGiftsUserData.getCurrent().getLevel() && !SteamGiftsUserData.getCurrent().getName().equals(giveaway.getCreator()));
+            // Save/Un-save a game
+            if (savedGiveaways != null && giveaway.getEndTime() != null) {
+                if (!savedGiveaways.isSaved(giveaway.getGiveawayId())) {
+                    menu.add(Menu.NONE, 4, Menu.NONE, R.string.add_saved_giveaway).setOnMenuItemClickListener(this);
+                } else {
+                    menu.add(Menu.NONE, 5, Menu.NONE, R.string.remove_saved_giveaway).setOnMenuItemClickListener(this);
+                }
             }
 
-            if (giveaway.getInternalGameId() > 0 && fragment instanceof GiveawayListFragment) {
+            // Hide a game... forever
+            if (xsrfEvents && giveaway.getInternalGameId() > 0 && fragment instanceof GiveawayListFragment) {
                 menu.add(Menu.NONE, 3, Menu.NONE, R.string.hide_game).setOnMenuItemClickListener(this);
             }
         } else {
@@ -190,15 +210,28 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         Giveaway giveaway = (Giveaway) adapter.getItem(getAdapterPosition());
+        Log.d(TAG, "onMenuItemClick(" + item.getItemId() + ")");
         switch (item.getItemId()) {
             case 1:
-                fragment.requestEnterLeave(giveaway.getGiveawayId(), GiveawayDetailFragment.ENTRY_DELETE, adapter.getXsrfToken());
+                ((IHasEnterableGiveaways) fragment).requestEnterLeave(giveaway.getGiveawayId(), GiveawayDetailFragment.ENTRY_DELETE, adapter.getXsrfToken());
                 return true;
             case 2:
-                fragment.requestEnterLeave(giveaway.getGiveawayId(), GiveawayDetailFragment.ENTRY_INSERT, adapter.getXsrfToken());
+                ((IHasEnterableGiveaways) fragment).requestEnterLeave(giveaway.getGiveawayId(), GiveawayDetailFragment.ENTRY_INSERT, adapter.getXsrfToken());
                 return true;
             case 3:
                 ((GiveawayListFragment) fragment).requestHideGame(giveaway.getInternalGameId(), giveaway.getTitle());
+                return true;
+            case 4:
+                if (savedGiveaways.add(giveaway, giveaway.getGiveawayId())) {
+                    Toast.makeText(fragment.getContext(), R.string.added_saved_giveaway, Toast.LENGTH_SHORT).show();
+                }
+                return true;
+            case 5:
+                if (savedGiveaways.remove(giveaway.getGiveawayId())) {
+                    Toast.makeText(fragment.getContext(), R.string.removed_saved_giveaway, Toast.LENGTH_SHORT).show();
+                    if (fragment instanceof SavedGiveawaysFragment)
+                        ((SavedGiveawaysFragment) fragment).onRemoveSavedGiveaway(giveaway.getGiveawayId());
+                }
                 return true;
         }
         return false;

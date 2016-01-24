@@ -45,7 +45,7 @@ public class SavedGiveawaysFragment extends ListFragment<GiveawayAdapter> implem
             public void onLoad(int page) {
                 fetchItems(page);
             }
-        }, null, -1);
+        }, this, -1, false, savedGiveaways);
     }
 
     @Override
@@ -75,5 +75,9 @@ public class SavedGiveawaysFragment extends ListFragment<GiveawayAdapter> implem
     @Override
     public String getExtraTitle() {
         return null;
+    }
+
+    public void onRemoveSavedGiveaway(String giveawayId) {
+        adapter.removeGiveaway(giveawayId);
     }
 }

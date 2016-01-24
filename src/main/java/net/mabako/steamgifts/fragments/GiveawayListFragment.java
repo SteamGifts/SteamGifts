@@ -23,6 +23,7 @@ import net.mabako.steamgifts.fragments.interfaces.IFilterUpdatedListener;
 import net.mabako.steamgifts.fragments.interfaces.IHasEnterableGiveaways;
 import net.mabako.steamgifts.fragments.interfaces.IHasHideableGiveaways;
 import net.mabako.steamgifts.fragments.util.GiveawayListFragmentStack;
+import net.mabako.steamgifts.persistentdata.SavedGiveaways;
 import net.mabako.steamgifts.tasks.EnterLeaveGiveawayTask;
 import net.mabako.steamgifts.tasks.LoadGiveawayListTask;
 import net.mabako.steamgifts.tasks.UpdateGiveawayFilterTask;
@@ -87,7 +88,7 @@ public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter
             public void onLoad(int page) {
                 fetchItems(page);
             }
-        }, this, 50, true);
+        }, this, 50, true, new SavedGiveaways(getContext()));
     }
 
     @Override

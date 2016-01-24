@@ -3,6 +3,7 @@ package net.mabako.steamgifts.fragments.util;
 import android.support.v4.app.Fragment;
 
 import net.mabako.steamgifts.fragments.GiveawayListFragment;
+import net.mabako.steamgifts.fragments.SavedGiveawaysFragment;
 import net.mabako.steamgifts.fragments.interfaces.IHasEnterableGiveaways;
 import net.mabako.steamgifts.fragments.interfaces.IHasHideableGiveaways;
 
@@ -37,5 +38,11 @@ public final class GiveawayListFragmentStack {
         for (Fragment fragment : fragments)
             if (fragment instanceof IHasEnterableGiveaways)
                 ((IHasEnterableGiveaways) fragment).onEnterLeaveResult(giveawayId, what, success, false);
+    }
+
+    public static void onRemoveSavedGiveaway(String giveawayId) {
+        for (Fragment fragment : fragments)
+            if (fragment instanceof SavedGiveawaysFragment)
+                ((SavedGiveawaysFragment) fragment).onRemoveSavedGiveaway(giveawayId);
     }
 }
