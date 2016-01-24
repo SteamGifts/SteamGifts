@@ -158,7 +158,7 @@ public class LoadGiveawayDetailsTask extends AsyncTask<Void, Void, GiveawayExtra
             if (loadDetails)
                 fragment.onPostGiveawayLoaded(loadedDetails);
 
-            fragment.addDetails(giveawayDetails, page);
+            fragment.addItems(giveawayDetails, page);
         } else {
             Toast.makeText(fragment.getContext(), error, Toast.LENGTH_LONG).show();
             fragment.getActivity().finish();

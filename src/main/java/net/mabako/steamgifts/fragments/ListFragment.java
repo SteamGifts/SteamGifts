@@ -22,6 +22,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO make EndlessAdapter's viewInReverse more easily handled within here.
 public abstract class ListFragment<AdapterType extends EndlessAdapter> extends Fragment {
     protected boolean loadItemsInitially = true;
 

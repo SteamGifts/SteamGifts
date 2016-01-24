@@ -1,13 +1,13 @@
 package net.mabako.steamgifts.fragments;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -43,9 +43,10 @@ import net.mabako.steamgifts.tasks.UpdateGiveawayFilterTask;
 import net.mabako.store.StoreAppFragment;
 import net.mabako.store.StoreSubFragment;
 
-import java.util.ArrayList;
+import java.io.Serializable;
+import java.util.List;
 
-public class GiveawayDetailFragment extends Fragment implements ICommentableFragment, IHasEnterableGiveaways, IHasHideableGiveaways {
+public class GiveawayDetailFragment extends ListFragment<CommentAdapter> implements ICommentableFragment, IHasEnterableGiveaways, IHasHideableGiveaways {
     public static final String ARG_GIVEAWAY = "giveaway";
     public static final String ENTRY_INSERT = "entry_insert";
     public static final String ENTRY_DELETE = "entry_delete";
@@ -58,10 +59,7 @@ public class GiveawayDetailFragment extends Fragment implements ICommentableFrag
      */
     private BasicGiveaway giveaway;
     private GiveawayDetailsCard giveawayCard;
-    private LoadGiveawayDetailsTask task;
     private EnterLeaveGiveawayTask enterLeaveTask;
-    private RecyclerView listView;
-    private CommentAdapter<GiveawayDetailFragment> adapter;
     private Activity activity;
 
     public static Fragment newInstance(BasicGiveaway giveaway) {
@@ -76,12 +74,7 @@ public class GiveawayDetailFragment extends Fragment implements ICommentableFrag
 
         if (savedInstanceState == null) {
             giveawayCard = new GiveawayDetailsCard();
-            adapter = new CommentAdapter<>(this, new EndlessAdapter.OnLoadListener() {
-                @Override
-                public void onLoad(int page) {
-                    fetchItems(page);
-                }
-            });
+
 
             // Add the cardview for the Giveaway details
             adapter.setStickyItem(giveawayCard);
@@ -89,29 +82,32 @@ public class GiveawayDetailFragment extends Fragment implements ICommentableFrag
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        this.activity = activity;
+    protected CommentAdapter createAdapter() {
+        return new CommentAdapter<>(this, new EndlessAdapter.OnLoadListener() {
+            @Override
+            public void onLoad(int page) {
+                fetchItems(page);
+            }
+        });
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof Activity)
+            this.activity = (Activity) context;
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_giveaway_detail, container, false);
+        View layout = super.onCreateView(inflater, container, savedInstanceState);
 
         if (giveaway instanceof Giveaway) {
             onPostGiveawayLoaded((Giveaway) giveaway, true);
         } else {
             Log.d(TAG, "Loading activity for basic giveaway " + giveaway.getGiveawayId());
         }
-
-        listView = (RecyclerView) layout.findViewById(R.id.list);
-        listView.setLayoutManager(new LinearLayoutManager(getContext()));
-        listView.addOnScrollListener(adapter.getScrollListener());
-        listView.setAdapter(adapter);
-
-        if (adapter.isEmpty())
-            fetchItems(1);
 
         setHasOptionsMenu(true);
 
@@ -126,28 +122,25 @@ public class GiveawayDetailFragment extends Fragment implements ICommentableFrag
     public void onDestroyView() {
         super.onDestroyView();
 
-        if (task != null)
-            task.cancel(true);
-
         if (enterLeaveTask != null)
             enterLeaveTask.cancel(true);
     }
 
-    private void fetchItems(int page) {
-        Log.d(TAG, "Fetching giveaways on page " + page + " for giveaway " + giveaway.getGiveawayId());
-
-        if (task != null)
-            task.cancel(true);
-
+    @Override
+    protected AsyncTask<Void, Void, ?> getFetchItemsTask(int page) {
         String url = giveaway.getGiveawayId();
         if (giveaway instanceof Giveaway)
             url += "/" + ((Giveaway) giveaway).getName();
 
-        task = new LoadGiveawayDetailsTask(this, url, page, !(giveaway instanceof Giveaway));
-        task.execute();
+        return new LoadGiveawayDetailsTask(this, url, page, !(giveaway instanceof Giveaway));
     }
 
-    public void addDetails(GiveawayExtras extras, int page) {
+    @Override
+    protected Serializable getType() {
+        return null;
+    }
+
+    public void addItems(GiveawayExtras extras, int page) {
         if (extras == null)
             return;
 
@@ -161,9 +154,17 @@ public class GiveawayDetailFragment extends Fragment implements ICommentableFrag
         getActivity().supportInvalidateOptionsMenu();
         adapter.setStickyItem(giveawayCard);
 
-        if (page == 1)
-            adapter.clear();
-        adapter.finishLoading(new ArrayList<IEndlessAdaptable>(extras.getComments()));
+        super.addItems(extras.getComments(), page == 1);
+    }
+
+    @Override
+    public void addItems(List<? extends IEndlessAdaptable> items, boolean clearExistingItems) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void addItems(List<? extends IEndlessAdaptable> items, boolean clearExistingItems, String xsrfToken) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
