@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.activities.CommonActivity;
+import net.mabako.steamgifts.activities.SyncActivity;
 import net.mabako.steamgifts.activities.ViewGroupsActivity;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.data.GiveawayExtras;
@@ -126,6 +127,17 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
                 } else if (extras.getErrorMessage() != null) {
                     errorMessage.setText(extras.getErrorMessage());
                     errorMessage.setVisibility(View.VISIBLE);
+
+                    if ("Sync Required".equals(extras.getErrorMessage())) {
+                        errorMessage.setEnabled(true);
+                        errorMessage.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                fragment.getActivity().startActivityForResult(new Intent(fragment.getContext(), SyncActivity.class), SyncActivity.REQUEST_SYNC);
+                                errorMessage.setText("You already tried :(");
+                            }
+                        });
+                    }
                 } else if (!SteamGiftsUserData.getCurrent().isLoggedIn()) {
                     loginButton.setVisibility(View.VISIBLE);
                 }
