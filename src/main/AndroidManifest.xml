@@ -45,6 +45,10 @@
         <activity
             android:name=".activities.WebViewActivity"
             android:configChanges="orientation|screenSize" />
+        <activity
+            android:name=".activities.SyncActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Dark" />
 
         <!-- handle all urls... or at least some -->
         <activity android:name=".activities.UrlHandlingActivity">
