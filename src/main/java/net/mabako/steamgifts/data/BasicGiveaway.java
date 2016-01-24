@@ -13,7 +13,7 @@ import java.io.Serializable;
  */
 public class BasicGiveaway implements Serializable {
     private static final long serialVersionUID = 8330168808371401692L;
-    private final String giveawayId;
+    private String giveawayId;
 
     public BasicGiveaway(String giveawayId) {
         this.giveawayId = giveawayId;

@@ -4,10 +4,26 @@
     tools:context=".activities.DetailActivity">
 
     <item
+        android:id="@+id/add_saved_element"
+        android:icon="@drawable/ic_star_outline"
+        android:title="@string/add_saved_giveaway"
+        android:visible="false"
+        app:showAsAction="ifRoom"
+        tools:visible="true" />
+
+    <item
+        android:id="@+id/remove_saved_element"
+        android:icon="@drawable/ic_star"
+        android:title="@string/remove_saved_giveaway"
+        android:visible="false"
+        app:showAsAction="ifRoom"
+        tools:visible="true" />
+
+    <item
         android:id="@+id/open_steam_store"
         android:icon="@drawable/ic_steam"
         android:title="@string/open_steam_store"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/hide_game"

@@ -2,15 +2,15 @@ package net.mabako.steamgifts.adapters;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 
 import net.mabako.steamgifts.adapters.viewholder.GiveawayListItemViewHolder;
 import net.mabako.steamgifts.data.Game;
 import net.mabako.steamgifts.data.Giveaway;
-import net.mabako.steamgifts.fragments.interfaces.IHasEnterableGiveaways;
 import net.mabako.steamgifts.persistentdata.FilterData;
+import net.mabako.steamgifts.persistentdata.SavedGiveaways;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,28 +31,30 @@ public class GiveawayAdapter extends EndlessAdapter {
     /**
      * Fragment this is shown in.
      */
-    private final IHasEnterableGiveaways fragment;
+    private final Fragment fragment;
 
     /**
      * Should we filter the item for any criteria?
      */
     private final boolean filterItems;
+    private final SavedGiveaways savedGiveaways;
 
-    public GiveawayAdapter(Activity context, OnLoadListener listener, IHasEnterableGiveaways fragment, int itemsPerPage) {
-        this(context, listener, fragment, itemsPerPage, false);
+    public GiveawayAdapter(Activity context, OnLoadListener listener, Fragment fragment, int itemsPerPage) {
+        this(context, listener, fragment, itemsPerPage, false, null);
     }
 
-    public GiveawayAdapter(Activity context, OnLoadListener listener, IHasEnterableGiveaways fragment, int itemsPerPage, boolean filterItems) {
+    public GiveawayAdapter(Activity context, OnLoadListener listener, Fragment fragment, int itemsPerPage, boolean filterItems, SavedGiveaways savedGiveaways) {
         super(listener);
         this.context = context;
         this.fragment = fragment;
         this.itemsPerPage = itemsPerPage;
         this.filterItems = filterItems;
+        this.savedGiveaways = savedGiveaways;
     }
 
     @Override
     protected RecyclerView.ViewHolder onCreateActualViewHolder(View view, int viewType) {
-        return new GiveawayListItemViewHolder(view, context, this, fragment);
+        return new GiveawayListItemViewHolder(view, context, this, fragment, savedGiveaways);
     }
 
     @Override
@@ -87,7 +89,9 @@ public class GiveawayAdapter extends EndlessAdapter {
 
     public void removeGiveaway(String giveawayId) {
         for (int position = getItems().size() - 1; position >= 0; --position) {
-            if (giveawayId.equals(((Giveaway) getItem(position)).getGiveawayId())) {
+            Giveaway giveaway = (Giveaway) getItem(position);
+
+            if (giveaway != null && giveawayId.equals(giveaway.getGiveawayId())) {
                 removeItem(position);
             }
         }

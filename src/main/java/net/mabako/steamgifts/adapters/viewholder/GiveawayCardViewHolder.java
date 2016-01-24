@@ -6,6 +6,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
@@ -85,10 +86,23 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
                 }
             });
 
-            timeRemaining.setText("{faw-clock-o} " + giveaway.getTimeRemaining());
-            timeCreated.setText("{faw-calendar-o} " + giveaway.getTimeCreated());
             for (View view : new View[]{user, timeRemaining, timeCreated, separator})
                 view.setVisibility(View.VISIBLE);
+
+            if (giveaway.getTimeRemaining() != null) {
+                timeRemaining.setText("{faw-clock-o} " + giveaway.getTimeRemaining());
+
+                if (giveaway.getTimeCreated() != null)
+                    timeCreated.setText("{faw-calendar-o} " + giveaway.getTimeCreated());
+                else
+                    timeCreated.setVisibility(View.GONE);
+            } else if (giveaway.getEndTime() != null) {
+                timeRemaining.setText("{faw-clock-o} " + DateUtils.formatDateTime(fragment.getContext(), giveaway.getEndTime().getTimeInMillis(), DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE));
+                timeCreated.setVisibility(View.GONE);
+            } else {
+                timeRemaining.setVisibility(View.GONE);
+                timeCreated.setVisibility(View.GONE);
+            }
 
             enterGiveaway.setText(String.format(String.valueOf(itemView.getContext().getText(R.string.enter_giveaway_with_points)), giveaway.getPoints()));
             leaveGiveaway.setText(String.format(String.valueOf(itemView.getContext().getText(R.string.leave_giveaway_with_points)), giveaway.getPoints()));

@@ -1,11 +1,20 @@
 package net.mabako.steamgifts.data;
 
+import android.util.Log;
+
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
 public class Giveaway extends BasicGiveaway implements IEndlessAdaptable {
     private static final long serialVersionUID = 1356878822345232771L;
+    private static final String[] relativeDates = new String[]{"Yesterday", "Today", "Tomorrow"};
     public static final int VIEW_LAYOUT = R.layout.giveaway_item;
 
     private String title;
@@ -18,6 +27,7 @@ public class Giveaway extends BasicGiveaway implements IEndlessAdaptable {
     private int points;
     private String timeRemaining;
     private String timeCreated;
+    private Calendar endTime;
     private boolean entered = false;
 
     private boolean whitelist, group;
@@ -28,6 +38,10 @@ public class Giveaway extends BasicGiveaway implements IEndlessAdaptable {
      * Id used (exclusively?) for filtering games.
      */
     private int internalGameId;
+
+    public Giveaway() {
+        super(null);
+    }
 
     public Giveaway(String giveawayId) {
         super(giveawayId);
@@ -102,7 +116,7 @@ public class Giveaway extends BasicGiveaway implements IEndlessAdaptable {
     }
 
     public void setTimeRemaining(String timeRemaining) {
-        this.timeRemaining = timeRemaining.replace(" remaining", "");
+        this.timeRemaining = timeRemaining != null ? timeRemaining.replace(" remaining", "") : null;
     }
 
     public boolean isOpen() {
@@ -163,6 +177,46 @@ public class Giveaway extends BasicGiveaway implements IEndlessAdaptable {
 
     public void setRegionRestricted(boolean regionRestricted) {
         this.regionRestricted = regionRestricted;
+    }
+
+    public Calendar getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Calendar endTime) {
+        this.endTime = endTime;
+    }
+
+    /**
+     * <p>We assume the string passed in fits either of the following:
+     * <ul>
+     * <li>"Today, 3:40pm"</li>
+     * <li>"Tomorrow, 3:40am"</li>
+     * <li>"January 26, 2016, 3:40am"</li>
+     * </ul>
+     *
+     * @param endTime when this giveaway presumably ends
+     */
+    public void setEndTime(final String endTime) {
+        String realTime = endTime;
+
+        for (int daysOffset = 0; daysOffset < relativeDates.length; ++daysOffset) {
+            if (endTime.startsWith(relativeDates[daysOffset] + ", ")) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.add(Calendar.DAY_OF_MONTH, daysOffset - 1);
+                realTime = endTime.replace(relativeDates[daysOffset], new SimpleDateFormat("MMMM d, yyyy", Locale.US).format(calendar.getTime()));
+                break;
+            }
+        }
+
+        try {
+            Date date = new SimpleDateFormat("MMMM d, yyyy, h:mma", Locale.US).parse(realTime);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            setEndTime(calendar);
+        } catch (ParseException e) {
+            Log.w(Giveaway.class.getSimpleName(), "Unable to handle date " + endTime + " // " + realTime, e);
+        }
     }
 
     @Override

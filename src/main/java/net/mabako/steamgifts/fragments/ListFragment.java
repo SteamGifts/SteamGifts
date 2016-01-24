@@ -175,7 +175,7 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
      *
      * @param page page to load items from
      */
-    protected final void fetchItems(int page) {
+    protected void fetchItems(int page) {
         if (taskToFetchItems != null)
             taskToFetchItems.cancel(true);
 

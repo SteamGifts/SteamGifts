@@ -16,10 +16,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import net.mabako.steam.store.StoreAppFragment;
+import net.mabako.steam.store.StoreSubFragment;
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.activities.DetailActivity;
 import net.mabako.steamgifts.activities.WebViewActivity;
@@ -37,11 +40,10 @@ import net.mabako.steamgifts.fragments.interfaces.IHasEnterableGiveaways;
 import net.mabako.steamgifts.fragments.interfaces.IHasHideableGiveaways;
 import net.mabako.steamgifts.fragments.util.GiveawayDetailsCard;
 import net.mabako.steamgifts.fragments.util.GiveawayListFragmentStack;
+import net.mabako.steamgifts.persistentdata.SavedGiveaways;
 import net.mabako.steamgifts.tasks.EnterLeaveGiveawayTask;
 import net.mabako.steamgifts.tasks.LoadGiveawayDetailsTask;
 import net.mabako.steamgifts.tasks.UpdateGiveawayFilterTask;
-import net.mabako.steam.store.StoreAppFragment;
-import net.mabako.steam.store.StoreSubFragment;
 
 import java.io.Serializable;
 import java.util.List;
@@ -274,6 +276,11 @@ public class GiveawayDetailFragment extends ListFragment<CommentAdapter> impleme
             inflater.inflate(R.menu.giveaway_menu, menu);
             menu.findItem(R.id.open_steam_store).setVisible(((Giveaway) giveaway).getGameId() > 0);
             menu.findItem(R.id.hide_game).setVisible(((Giveaway) giveaway).getInternalGameId() > 0 && giveawayCard.getExtras() != null && giveawayCard.getExtras().getXsrfToken() != null);
+
+            SavedGiveaways savedGiveaways = new SavedGiveaways(getContext());
+            boolean isSaved = savedGiveaways.isSaved(giveaway.getGiveawayId());
+            menu.findItem(R.id.add_saved_element).setVisible(!isSaved);
+            menu.findItem(R.id.remove_saved_element).setVisible(isSaved);
         }
     }
 
@@ -293,6 +300,28 @@ public class GiveawayDetailFragment extends ListFragment<CommentAdapter> impleme
 
             case R.id.hide_game:
                 new UpdateGiveawayFilterTask<>(this, giveawayCard.getExtras().getXsrfToken(), UpdateGiveawayFilterTask.HIDE, ((Giveaway) giveaway).getInternalGameId(), ((Giveaway) giveaway).getTitle()).execute();
+                return true;
+
+            case R.id.add_saved_element:
+                if (giveaway instanceof Giveaway) {
+                    SavedGiveaways savedGiveaways = new SavedGiveaways(getContext());
+                    if (savedGiveaways.add((Giveaway) giveaway, giveaway.getGiveawayId())) {
+                        getActivity().supportInvalidateOptionsMenu();
+                        Toast.makeText(getContext(), R.string.added_saved_giveaway, Toast.LENGTH_SHORT).show();
+                    }
+                }
+                return true;
+
+            case R.id.remove_saved_element:
+                if (giveaway instanceof Giveaway) {
+                    SavedGiveaways savedGiveaways = new SavedGiveaways(getContext());
+                    if (savedGiveaways.remove(giveaway.getGiveawayId())) {
+                        getActivity().supportInvalidateOptionsMenu();
+                        Toast.makeText(getContext(), R.string.removed_saved_giveaway, Toast.LENGTH_SHORT).show();
+
+                        GiveawayListFragmentStack.onRemoveSavedGiveaway(giveaway.getGiveawayId());
+                    }
+                }
                 return true;
 
             default:

@@ -8,10 +8,12 @@
     <string name="navigation_giveaways_group">Group</string>
     <string name="navigation_giveaways_wishlist">Wishlist</string>
     <string name="navigation_giveaways_new">New</string>
+    <string name="navigation_giveaways_saved">Starred</string>
     <string name="navigation_giveaways_all_title">All Giveaways</string>
     <string name="navigation_giveaways_group_title">Group Giveaways</string>
     <string name="navigation_giveaways_wishlist_title">Wishlist Giveaways</string>
     <string name="navigation_giveaways_new_title">New Giveaways</string>
+    <string name="navigation_giveaways_saved_title">Starred Giveaways</string>
 
     <!-- Navigation for Discussions -->
     <string name="navigation_discussions">Discussions</string>
@@ -160,4 +162,10 @@
     <string name="filter_entries">Entries</string>
     <string name="filter_level">Level</string>
     <string name="filter_points">Points</string>
+
+    <!-- Saving Giveaways -->
+    <string name="add_saved_giveaway">Star Giveaway</string>
+    <string name="remove_saved_giveaway">Unstar Giveaway</string>
+    <string name="added_saved_giveaway"><![CDATA[Giveaway was starred and can be found under Giveaways > Starred.]]></string>
+    <string name="removed_saved_giveaway">Giveaway is no longer starred.</string>
 </resources>
