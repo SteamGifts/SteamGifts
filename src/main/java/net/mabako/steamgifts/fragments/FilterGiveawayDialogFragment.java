@@ -10,13 +10,14 @@ import android.view.View;
 import android.widget.EditText;
 
 import net.mabako.steamgifts.R;
+import net.mabako.steamgifts.fragments.interfaces.IFilterUpdatedListener;
 import net.mabako.steamgifts.persistentdata.FilterData;
 
 public class FilterGiveawayDialogFragment extends DialogFragment implements DialogInterface.OnClickListener {
     private boolean requireReload = false;
 
     private View view;
-    private FilterUpdatedListener listener;
+    private IFilterUpdatedListener listener;
 
     @NonNull
     @Override
@@ -89,7 +90,8 @@ public class FilterGiveawayDialogFragment extends DialogFragment implements Dial
         return newValue;
     }
 
-    public interface FilterUpdatedListener {
-        void onFilterUpdated();
+    public void setListener(IFilterUpdatedListener listener) {
+        this.listener = listener;
     }
+
 }

@@ -189,11 +189,15 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
             // remove all things we already have
             items.removeAll(this.items);
 
-            this.items.addAll(items);
+            // How many items were on the page?
+            int realItemCount = items.size();
 
-            notifyItemRangeInserted(getItemCount() - items.size(), items.size());
+            // And how many items did we add after filtering?
+            int insertedItems = addFiltered(items);
 
-            if (enoughItems && items.size() == 0 && alternativeEnd) {
+            notifyItemRangeInserted(getItemCount() - insertedItems, insertedItems);
+
+            if (enoughItems && realItemCount == 0 && alternativeEnd) {
                 enoughItems = false;
             }
 
@@ -207,6 +211,11 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
         } else {
             reachedTheEnd();
         }
+    }
+
+    protected int addFiltered(List<IEndlessAdaptable> items) {
+        this.items.addAll(items);
+        return items.size();
     }
 
     public void clear() {

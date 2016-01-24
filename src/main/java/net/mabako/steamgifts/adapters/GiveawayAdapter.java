@@ -3,16 +3,19 @@ package net.mabako.steamgifts.adapters;
 import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
 import net.mabako.steamgifts.adapters.viewholder.GiveawayListItemViewHolder;
 import net.mabako.steamgifts.data.Game;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.fragments.interfaces.IHasEnterableGiveaways;
+import net.mabako.steamgifts.persistentdata.FilterData;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.ListIterator;
 
 public class GiveawayAdapter extends EndlessAdapter {
     /**
@@ -30,11 +33,21 @@ public class GiveawayAdapter extends EndlessAdapter {
      */
     private final IHasEnterableGiveaways fragment;
 
+    /**
+     * Should we filter the item for any criteria?
+     */
+    private final boolean filterItems;
+
     public GiveawayAdapter(Activity context, OnLoadListener listener, IHasEnterableGiveaways fragment, int itemsPerPage) {
+        this(context, listener, fragment, itemsPerPage, false);
+    }
+
+    public GiveawayAdapter(Activity context, OnLoadListener listener, IHasEnterableGiveaways fragment, int itemsPerPage, boolean filterItems) {
         super(listener);
         this.context = context;
         this.fragment = fragment;
         this.itemsPerPage = itemsPerPage;
+        this.filterItems = filterItems;
     }
 
     @Override
@@ -100,7 +113,29 @@ public class GiveawayAdapter extends EndlessAdapter {
     }
 
     public void restoreGiveaways(List<RemovedElement> elements) {
-        for(RemovedElement e : elements)
+        for (RemovedElement e : elements)
             restore(e);
+    }
+
+    @Override
+    protected int addFiltered(List<IEndlessAdaptable> items) {
+        if (filterItems) {
+            FilterData fd = FilterData.getCurrent();
+
+            int minPoints = fd.getMinPoints();
+            int maxPoints = fd.getMaxPoints();
+
+            if (minPoints >= 0 || maxPoints >= 0) {
+                // Let's actually perform filtering if we have any options set.
+                for (ListIterator<IEndlessAdaptable> iter = items.listIterator(items.size()); iter.hasPrevious(); ) {
+                    Giveaway giveaway = (Giveaway) iter.previous();
+                    int points = giveaway.getPoints();
+
+                    if (points >= 0 && ((minPoints >= 0 && points < minPoints) || (maxPoints >= 0 && points > maxPoints)))
+                        iter.remove();
+                }
+            }
+        }
+        return super.addFiltered(items);
     }
 }

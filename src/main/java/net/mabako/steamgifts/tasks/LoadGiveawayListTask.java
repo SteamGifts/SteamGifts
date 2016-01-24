@@ -5,6 +5,7 @@ import android.util.Log;
 
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.fragments.GiveawayListFragment;
+import net.mabako.steamgifts.persistentdata.FilterData;
 import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
 
 import org.jsoup.Connection;
@@ -46,6 +47,12 @@ public class LoadGiveawayListTask extends AsyncTask<Void, Void, List<Giveaway>> 
             if (searchQuery != null)
                 jsoup.data("q", searchQuery);
 
+            FilterData filterData = FilterData.getCurrent();
+            addFilterParameter(jsoup, "entry_max", filterData.getMaxEntries());
+            addFilterParameter(jsoup, "level_max", filterData.getMaxLevel());
+            addFilterParameter(jsoup, "entry_min", filterData.getMinEntries());
+            addFilterParameter(jsoup, "level_min", filterData.getMinLevel());
+
             if (type != GiveawayListFragment.Type.ALL)
                 jsoup.data("type", type.name().toLowerCase());
 
@@ -76,5 +83,10 @@ public class LoadGiveawayListTask extends AsyncTask<Void, Void, List<Giveaway>> 
     protected void onPostExecute(List<Giveaway> result) {
         super.onPostExecute(result);
         fragment.addItems(result, page == 1, foundXsrfToken);
+    }
+
+    private void addFilterParameter(Connection jsoup, String parameterName, int value) {
+        if (value >= 0)
+            jsoup.data(parameterName, String.valueOf(value));
     }
 }
