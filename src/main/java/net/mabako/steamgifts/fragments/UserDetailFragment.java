@@ -77,19 +77,30 @@ public class UserDetailFragment extends Fragment implements IUserNotifications {
 
     @Override
     public void onUserUpdated(User user) {
-        final ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        actionBar.setTitle(user.getName());
-        actionBar.setSubtitle(getString(R.string.user_level, user.getLevel()));
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        if (activity != null) {
+            ActionBar actionBar = activity.getSupportActionBar();
+            if (actionBar != null) {
+                actionBar.setTitle(user.getName());
+                actionBar.setSubtitle(getString(R.string.user_level, user.getLevel()));
+            }
+        }
 
         // Avatar?
         Picasso.with(getContext()).load(user.getAvatar()).placeholder(R.drawable.default_avatar_mask).transform(new RoundedCornersTransformation(20, 0)).into(new Target() {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                Drawable drawable = new BitmapDrawable(getResources(), bitmap);
-                actionBar.setIcon(drawable);
-                actionBar.setHomeButtonEnabled(false);
-                actionBar.setDisplayShowHomeEnabled(true);
-                actionBar.setDisplayHomeAsUpEnabled(false);
+                AppCompatActivity activity = (AppCompatActivity) getActivity();
+                if (activity != null) {
+                    ActionBar actionBar = activity.getSupportActionBar();
+                    if (actionBar != null) {
+                        Drawable drawable = new BitmapDrawable(getResources(), bitmap);
+                        actionBar.setIcon(drawable);
+                        actionBar.setHomeButtonEnabled(false);
+                        actionBar.setDisplayShowHomeEnabled(true);
+                        actionBar.setDisplayHomeAsUpEnabled(false);
+                    }
+                }
             }
 
             @Override
