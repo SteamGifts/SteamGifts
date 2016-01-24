@@ -1,4 +1,4 @@
-package net.mabako.store;
+package net.mabako.steam.store;
 
 import android.support.v4.app.Fragment;
 import android.view.View;

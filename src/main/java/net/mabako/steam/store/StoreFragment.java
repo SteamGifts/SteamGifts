@@ -1,4 +1,4 @@
-package net.mabako.store;
+package net.mabako.steam.store;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,10 +16,10 @@ import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.adapters.viewholder.GameViewHolder;
 import net.mabako.steamgifts.data.Game;
-import net.mabako.store.data.Picture;
-import net.mabako.store.data.Text;
-import net.mabako.store.viewholder.PictureViewHolder;
-import net.mabako.store.viewholder.TextViewHolder;
+import net.mabako.steam.store.data.Picture;
+import net.mabako.steam.store.data.Text;
+import net.mabako.steam.store.viewholder.PictureViewHolder;
+import net.mabako.steam.store.viewholder.TextViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;

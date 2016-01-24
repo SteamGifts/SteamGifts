@@ -40,8 +40,8 @@ import net.mabako.steamgifts.fragments.util.GiveawayListFragmentStack;
 import net.mabako.steamgifts.tasks.EnterLeaveGiveawayTask;
 import net.mabako.steamgifts.tasks.LoadGiveawayDetailsTask;
 import net.mabako.steamgifts.tasks.UpdateGiveawayFilterTask;
-import net.mabako.store.StoreAppFragment;
-import net.mabako.store.StoreSubFragment;
+import net.mabako.steam.store.StoreAppFragment;
+import net.mabako.steam.store.StoreSubFragment;
 
 import java.io.Serializable;
 import java.util.List;

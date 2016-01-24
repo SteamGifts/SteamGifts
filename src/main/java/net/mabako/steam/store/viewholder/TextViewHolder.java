@@ -1,4 +1,4 @@
-package net.mabako.store.viewholder;
+package net.mabako.steam.store.viewholder;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.adapters.viewholder.Utils;
-import net.mabako.store.data.Text;
+import net.mabako.steam.store.data.Text;
 
 public class TextViewHolder extends RecyclerView.ViewHolder {
     private final Context context;

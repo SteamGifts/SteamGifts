@@ -13,7 +13,7 @@ import com.squareup.picasso.Picasso;
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.data.Game;
 import net.mabako.steamgifts.fragments.HiddenGamesFragment;
-import net.mabako.store.StoreSubFragment;
+import net.mabako.steam.store.StoreSubFragment;
 
 public class GameViewHolder extends RecyclerView.ViewHolder {
     private final TextView gameName;

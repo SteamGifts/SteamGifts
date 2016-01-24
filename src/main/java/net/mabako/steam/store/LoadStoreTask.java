@@ -1,4 +1,4 @@
-package net.mabako.store;
+package net.mabako.steam.store;
 
 import android.os.AsyncTask;
 import android.util.Log;

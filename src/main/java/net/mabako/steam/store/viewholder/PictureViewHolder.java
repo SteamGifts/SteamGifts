@@ -1,4 +1,4 @@
-package net.mabako.store.viewholder;
+package net.mabako.steam.store.viewholder;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -8,7 +8,7 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 
 import net.mabako.steamgifts.R;
-import net.mabako.store.data.Picture;
+import net.mabako.steam.store.data.Picture;
 
 public class PictureViewHolder extends RecyclerView.ViewHolder {
     private final Context context;

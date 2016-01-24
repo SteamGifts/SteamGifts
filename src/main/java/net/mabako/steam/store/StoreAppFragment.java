@@ -1,4 +1,4 @@
-package net.mabako.store;
+package net.mabako.steam.store;
 
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -6,8 +6,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import net.mabako.steamgifts.R;
-import net.mabako.store.data.Picture;
-import net.mabako.store.data.Text;
+import net.mabako.steam.store.data.Picture;
+import net.mabako.steam.store.data.Text;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

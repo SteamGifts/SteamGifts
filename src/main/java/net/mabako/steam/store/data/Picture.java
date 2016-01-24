@@ -1,4 +1,4 @@
-package net.mabako.store.data;
+package net.mabako.steam.store.data;
 
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
