@@ -91,9 +91,9 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
             sb.append("L").append(giveaway.getLevel()).append(" | ");
 
         if (giveaway.getEntries() >= 0)
-            sb.append(giveaway.getEntries()).append(" entries");
+            sb.append(giveaway.getEntries()).append(" entries | ");
 
-        giveawayDetails.setText(sb);
+        giveawayDetails.setText(sb.length() > 3 ? sb.substring(0, sb.length() - 3) : sb.toString());
 
         // giveaway_image
         if (giveaway.getGameId() != Game.NO_APP_ID) {

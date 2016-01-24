@@ -14,8 +14,9 @@ import net.mabako.steamgifts.persistentdata.SavedGiveaways;
 import java.io.Serializable;
 
 /**
- * Created by mabako on 24.01.2016.
+ * Show a list of saved giveaways.
  */
+// TODO implements IHasEnterableGiveaways?
 public class SavedGiveawaysFragment extends ListFragment<GiveawayAdapter> implements IActivityTitle {
     private SavedGiveaways savedGiveaways;
 
