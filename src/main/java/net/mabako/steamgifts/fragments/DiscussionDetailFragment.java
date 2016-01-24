@@ -2,13 +2,13 @@ package net.mabako.steamgifts.fragments;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,9 +28,11 @@ import net.mabako.steamgifts.fragments.interfaces.ICommentableFragment;
 import net.mabako.steamgifts.fragments.util.DiscussionDetailsCard;
 import net.mabako.steamgifts.tasks.LoadDiscussionDetailsTask;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
-public class DiscussionDetailFragment extends Fragment implements ICommentableFragment {
+public class DiscussionDetailFragment extends ListFragment<CommentAdapter> implements ICommentableFragment {
     public static final String ARG_DISCUSSION = "discussion";
     private static final String TAG = DiscussionDetailFragment.class.getSimpleName();
     /**
@@ -38,9 +40,6 @@ public class DiscussionDetailFragment extends Fragment implements ICommentableFr
      */
     private BasicDiscussion discussion;
     private DiscussionDetailsCard discussionCard;
-    private LoadDiscussionDetailsTask task;
-    private RecyclerView listView;
-    private CommentAdapter<DiscussionDetailFragment> adapter;
 
     public static Fragment newInstance(BasicDiscussion discussion) {
         DiscussionDetailFragment d = new DiscussionDetailFragment();
@@ -51,7 +50,7 @@ public class DiscussionDetailFragment extends Fragment implements ICommentableFr
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_discussion_detail, container, false);
+        View layout = super.onCreateView(inflater, container, savedInstanceState);
 
         discussionCard = new DiscussionDetailsCard();
         if (discussion instanceof Discussion) {
@@ -59,17 +58,6 @@ public class DiscussionDetailFragment extends Fragment implements ICommentableFr
         } else {
             Log.d(TAG, "Loading activity for basic discussion " + discussion.getDiscussionId());
         }
-
-        listView = (RecyclerView) layout.findViewById(R.id.list);
-        listView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new CommentAdapter<>(this, new EndlessAdapter.OnLoadListener() {
-            @Override
-            public void onLoad(int page) {
-                fetchItems(page);
-            }
-        });
-        listView.addOnScrollListener(adapter.getScrollListener());
-        listView.setAdapter(adapter);
 
         // Add the cardview for the Giveaway details
         adapter.setStickyItem(discussionCard);
@@ -88,25 +76,29 @@ public class DiscussionDetailFragment extends Fragment implements ICommentableFr
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        task.cancel(true);
+    protected CommentAdapter createAdapter() {
+        return new CommentAdapter<>(this, new EndlessAdapter.OnLoadListener() {
+            @Override
+            public void onLoad(int page) {
+                fetchItems(page);
+            }
+        });
     }
 
-    private void fetchItems(int page) {
-        Log.d(TAG, "Fetching discussions on page " + page + " for discussion " + discussion.getDiscussionId());
-
-        if (task != null)
-            task.cancel(true);
-
+    @Override
+    protected AsyncTask<Void, Void, ?> getFetchItemsTask(int page) {
         String url = discussion.getDiscussionId();
         if (discussion instanceof Discussion)
             url += "/" + ((Discussion) discussion).getName();
         else
             url += "/sgforandroid";
 
-        task = new LoadDiscussionDetailsTask(this, url, page, !(discussion instanceof Discussion));
-        task.execute();
+        return new LoadDiscussionDetailsTask(this, url, page, !(discussion instanceof Discussion));
+    }
+
+    @Override
+    protected Serializable getType() {
+        return null;
     }
 
     public void onPostDiscussionLoaded(Discussion discussion, boolean ignoreExisting) {
@@ -117,14 +109,20 @@ public class DiscussionDetailFragment extends Fragment implements ICommentableFr
         this.discussion = discussion;
         discussionCard.setDiscussion(discussion);
 
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(discussion.getTitle());
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        if (activity != null) {
+            ActionBar actionBar = activity.getSupportActionBar();
+            if (actionBar != null) {
+                actionBar.setTitle(discussion.getTitle());
+            }
+        }
     }
 
     public void onPostDiscussionLoaded(Discussion discussion) {
         onPostDiscussionLoaded(discussion, false);
     }
 
-    public void addDetails(DiscussionExtras extras, int page, boolean lastPage) {
+    public void addItems(DiscussionExtras extras, int page, boolean lastPage) {
         if (extras == null)
             return;
 
@@ -132,7 +130,17 @@ public class DiscussionDetailFragment extends Fragment implements ICommentableFr
         adapter.setStickyItem(discussionCard);
 
         adapter.notifyPage(page, lastPage);
-        adapter.finishLoading(new ArrayList<IEndlessAdaptable>(extras.getComments()));
+        super.addItems(extras.getComments(), false);
+    }
+
+    @Override
+    public void addItems(List<? extends IEndlessAdaptable> items, boolean clearExistingItems) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void addItems(List<? extends IEndlessAdaptable> items, boolean clearExistingItems, String xsrfToken) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -153,9 +161,5 @@ public class DiscussionDetailFragment extends Fragment implements ICommentableFr
             getActivity().startActivityForResult(intent, WriteCommentActivity.REQUEST_COMMENT);
         } else
             throw new IllegalStateException("Commenting on a not fully loaded Giveaway");
-    }
-
-    public CommentAdapter<DiscussionDetailFragment> getAdapter() {
-        return adapter;
     }
 }

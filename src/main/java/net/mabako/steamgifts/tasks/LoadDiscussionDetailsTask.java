@@ -150,7 +150,7 @@ public class LoadDiscussionDetailsTask extends AsyncTask<Void, Void, DiscussionE
             if (loadDetails)
                 fragment.onPostDiscussionLoaded(loadedDetails);
 
-            fragment.addDetails(discussionExtras, page, lastPage);
+            fragment.addItems(discussionExtras, page, lastPage);
         } else {
             Toast.makeText(fragment.getContext(), "Discussion does not exist or could not be loaded", Toast.LENGTH_LONG).show();
             fragment.getActivity().finish();

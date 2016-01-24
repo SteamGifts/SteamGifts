@@ -85,7 +85,13 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
             public void onRefresh() {
                 // Make sure you call swipeContainer.setRefreshing(false)
                 // once the network request has completed successfully.
-                fetchItems(1);
+                if (adapter.isViewInReverse()) {
+                    // We'd basically want to clear out the whole view, since view in reverse is a bit different to handle
+                    // TODO can we just call fetchItems(EndlessAdapter.LAST_PAGE)?
+                    refresh();
+                } else {
+                    fetchItems(EndlessAdapter.FIRST_PAGE);
+                }
             }
         });
         // Configure the refreshing colors
@@ -140,7 +146,7 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
         swipeContainer.setRefreshing(false);
 
         // TODO reverse pages?
-        fetchItems(1);
+        fetchItems(adapter.isViewInReverse() ? EndlessAdapter.LAST_PAGE : EndlessAdapter.FIRST_PAGE);
     }
 
     /**
@@ -183,6 +189,10 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
         taskToFetchItems = null;
         adapter.cancelLoading();
         swipeContainer.setRefreshing(false);
+    }
+
+    public AdapterType getAdapter() {
+        return adapter;
     }
 
     protected abstract AsyncTask<Void, Void, ?> getFetchItemsTask(int page);
