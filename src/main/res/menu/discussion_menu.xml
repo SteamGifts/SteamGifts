@@ -1,0 +1,13 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activities.DetailActivity">
+
+    <item
+        android:id="@+id/comment"
+        android:icon="@android:drawable/ic_menu_send"
+        android:title="@string/add_comment"
+        android:visible="false"
+        app:showAsAction="ifRoom"
+        tools:visible="true" />
+</menu>

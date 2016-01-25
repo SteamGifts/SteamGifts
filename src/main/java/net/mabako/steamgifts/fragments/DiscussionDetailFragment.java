@@ -11,6 +11,9 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -29,7 +32,6 @@ import net.mabako.steamgifts.fragments.util.DiscussionDetailsCard;
 import net.mabako.steamgifts.tasks.LoadDiscussionDetailsTask;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 public class DiscussionDetailFragment extends ListFragment<CommentAdapter> implements ICommentableFragment {
@@ -111,6 +113,8 @@ public class DiscussionDetailFragment extends ListFragment<CommentAdapter> imple
 
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         if (activity != null) {
+            activity.supportInvalidateOptionsMenu();
+
             ActionBar actionBar = activity.getSupportActionBar();
             if (actionBar != null) {
                 actionBar.setTitle(discussion.getTitle());
@@ -141,6 +145,21 @@ public class DiscussionDetailFragment extends ListFragment<CommentAdapter> imple
     @Override
     public void addItems(List<? extends IEndlessAdaptable> items, boolean clearExistingItems, String xsrfToken) {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.discussion_menu, menu);
+
+        MenuItem commentMenu = menu.findItem(R.id.comment);
+        commentMenu.setVisible(discussion instanceof Discussion);
+        commentMenu.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                requestComment(null);
+                return true;
+            }
+        });
     }
 
     @Override
