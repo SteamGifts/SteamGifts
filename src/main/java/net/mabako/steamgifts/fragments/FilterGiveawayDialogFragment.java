@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 import net.mabako.steamgifts.R;
@@ -48,6 +49,7 @@ public class FilterGiveawayDialogFragment extends DialogFragment implements Dial
         setValue(view.findViewById(R.id.filter_entries_min), f.getMinEntries());
         setValue(view.findViewById(R.id.filter_level_min), f.getMinLevel());
         setValue(view.findViewById(R.id.filter_points_min), f.getMinPoints());
+        ((CheckBox) view.findViewById(R.id.filter_entered)).setChecked(f.isHideEntered());
 
         return dialog;
     }
@@ -64,6 +66,11 @@ public class FilterGiveawayDialogFragment extends DialogFragment implements Dial
         newFilterData.setMinEntries(getValueAndUpdateFlags(R.id.filter_entries_min, oldFilterData.getMinEntries()));
         newFilterData.setMinLevel(getValueAndUpdateFlags(R.id.filter_level_min, oldFilterData.getMinLevel()));
         newFilterData.setMinPoints(getValueAndUpdateFlags(R.id.filter_points_min, oldFilterData.getMinPoints()));
+
+        boolean hideEntered = ((CheckBox) view.findViewById(R.id.filter_entered)).isChecked();
+        newFilterData.setHideEntered(hideEntered);
+        if (hideEntered != oldFilterData.isHideEntered())
+            requireReload = true;
 
         if (listener != null && requireReload)
             listener.onFilterUpdated();

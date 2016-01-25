@@ -139,15 +139,19 @@ public class GiveawayAdapter extends EndlessAdapter {
 
             int minPoints = fd.getMinPoints();
             int maxPoints = fd.getMaxPoints();
+            boolean hideEntered = fd.isHideEntered();
 
-            if (minPoints >= 0 || maxPoints >= 0) {
+            if (minPoints >= 0 || maxPoints >= 0 || hideEntered) {
                 // Let's actually perform filtering if we have any options set.
                 for (ListIterator<IEndlessAdaptable> iter = items.listIterator(items.size()); iter.hasPrevious(); ) {
                     Giveaway giveaway = (Giveaway) iter.previous();
                     int points = giveaway.getPoints();
 
-                    if (points >= 0 && ((minPoints >= 0 && points < minPoints) || (maxPoints >= 0 && points > maxPoints)))
+                    if (hideEntered && giveaway.isEntered()) {
                         iter.remove();
+                    } else if (points >= 0 && ((minPoints >= 0 && points < minPoints) || (maxPoints >= 0 && points > maxPoints))) {
+                        iter.remove();
+                    }
                 }
             }
         }

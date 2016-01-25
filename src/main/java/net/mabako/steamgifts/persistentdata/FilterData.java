@@ -1,12 +1,16 @@
 package net.mabako.steamgifts.persistentdata;
 
+import java.io.Serializable;
+
 /**
  * Giveaway filters.
  */
-public class FilterData {
+public class FilterData implements Serializable {
+    private static final long serialVersionUID = 924136599147980741L;
     private static FilterData current = new FilterData();
 
     private int minEntries = -1, maxEntries = -1, minPoints = -1, maxPoints = -1, minLevel = -1, maxLevel = -1;
+    private boolean hideEntered;
 
     public static FilterData getCurrent() {
         return current;
@@ -64,7 +68,15 @@ public class FilterData {
         this.minPoints = minPoints;
     }
 
+    public boolean isHideEntered() {
+        return hideEntered;
+    }
+
+    public void setHideEntered(boolean hideEntered) {
+        this.hideEntered = hideEntered;
+    }
+
     public boolean isAnyActive() {
-        return minEntries > -1 || maxEntries > -1 || minPoints > -1 || maxPoints > -1 || minLevel > -1 || maxLevel > -1;
+        return minEntries > -1 || maxEntries > -1 || minPoints > -1 || maxPoints > -1 || minLevel > -1 || maxLevel > -1 || hideEntered;
     }
 }

@@ -111,6 +111,7 @@
     <string name="preference_theme_nightmode_sub">Use a dark background for the application</string>
 
     <string name="preferences_giveaways">Giveaways</string>
+    <string name="preference_giveaway_load_images">Load Images</string>
     <string name="preference_giveaway_show_pinned">Pinned Giveaways</string>
     <string name="preference_giveaway_show_pinned_on">Always showing at the top</string>
     <string name="preference_giveaway_show_pinned_off">Not highlighted in a special way</string>
@@ -164,6 +165,7 @@
     <string name="filter_entries">Entries</string>
     <string name="filter_level">Level</string>
     <string name="filter_points">Points</string>
+    <string name="filter_entered_checkbox">Hide entered Giveaways</string>
 
     <!-- Saving Giveaways -->
     <string name="add_saved_giveaway">Star Giveaway</string>
@@ -176,5 +178,4 @@
     <string name="sync_now">Sync Account</string>
     <string name="sync_profile">Steam Privacy Settings</string>
     <string name="sync_title">Sync Account with Steam</string>
-    <string name="preference_giveaway_load_images">Load Images</string>
 </resources>
