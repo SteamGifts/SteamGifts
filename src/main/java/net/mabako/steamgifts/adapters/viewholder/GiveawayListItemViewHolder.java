@@ -74,7 +74,7 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
         v.setOnCreateContextMenuListener(this);
     }
 
-    public void setFrom(Giveaway giveaway) {
+    public void setFrom(Giveaway giveaway, boolean showImage) {
         giveawayName.setText(giveaway.getTitle());
 
         if (giveaway.getTimeRemaining() != null) {
@@ -101,7 +101,7 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
         giveawayDetails.setText(sb.length() > 3 ? sb.substring(0, sb.length() - 3) : sb.toString());
 
         // giveaway_image
-        if (giveaway.getGameId() != Game.NO_APP_ID) {
+        if (giveaway.getGameId() != Game.NO_APP_ID && showImage) {
             Picasso.with(activity).load("http://cdn.akamai.steamstatic.com/steam/" + giveaway.getType().name().toLowerCase() + "s/" + giveaway.getGameId() + "/capsule_184x69.jpg").into(giveawayImage, new Callback() {
                 /**
                  * We manually set the height of this image to fit the container.
@@ -118,12 +118,13 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
                 @Override
                 public void onError() {
                     ViewGroup.LayoutParams params = giveawayImage.getLayoutParams();
-                    params.width = 0;
                     params.height = 0;
                 }
             });
         } else {
             giveawayImage.setImageResource(android.R.color.transparent);
+            ViewGroup.LayoutParams params = giveawayImage.getLayoutParams();
+            params.height = 0;
         }
 
         Utils.setBackgroundDrawable(activity, itemContainer, giveaway.isEntered());

@@ -1,6 +1,7 @@
 package net.mabako.steamgifts.adapters;
 
 import android.app.Activity;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
@@ -63,7 +64,8 @@ public class GiveawayAdapter extends EndlessAdapter {
             GiveawayListItemViewHolder holder = (GiveawayListItemViewHolder) h;
             Giveaway giveaway = (Giveaway) getItem(position);
 
-            holder.setFrom(giveaway);
+            String pref = PreferenceManager.getDefaultSharedPreferences(fragment.getContext()).getString("preference_giveaway_load_images", "details;list");
+            holder.setFrom(giveaway, pref.contains("list"));
         }
     }
 

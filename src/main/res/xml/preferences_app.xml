@@ -9,6 +9,14 @@
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/preferences_giveaways">
+        <ListPreference
+            android:defaultValue="details;list"
+            android:summary="%s"
+            android:entries="@array/preference_giveaway_load_images_entries"
+            android:entryValues="@array/preference_giveaway_load_images_entry_values"
+            android:key="preference_giveaway_load_images"
+            android:title="@string/preference_giveaway_load_images" />
+
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="preference_giveaway_show_pinned"
