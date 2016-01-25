@@ -41,7 +41,7 @@ public class Slide extends Fragment {
             case MAIN_GIVEAWAY_1:
                 // Giveaway
                 View giveawayView = view.findViewById(R.id.giveaway);
-                for (int id : new int[]{R.id.separator, R.id.giveaway_list_indicator_group, R.id.giveaway_list_indicator_level_negative, R.id.giveaway_list_indicator_level_positive, R.id.giveaway_list_indicator_private, R.id.giveaway_list_indicator_whitelist})
+                for (int id : new int[]{R.id.separator, R.id.giveaway_list_indicator_group, R.id.giveaway_list_indicator_level_negative, R.id.giveaway_list_indicator_level_positive, R.id.giveaway_list_indicator_private, R.id.giveaway_list_indicator_whitelist, R.id.giveaway_list_indicator_region_restricted})
                     giveawayView.findViewById(id).setVisibility(View.GONE);
 
                 // Comment
@@ -52,6 +52,12 @@ public class Slide extends Fragment {
 
             case MAIN_GIVEAWAY_2:
                 view.findViewById(R.id.separator).setVisibility(View.GONE);
+                break;
+
+            case MAIN_GIVEAWAY_3:
+                view.findViewById(R.id.enter).setVisibility(View.VISIBLE);
+                view.findViewById(R.id.login).setVisibility(View.GONE);
+                view.findViewById(R.id.comment).setVisibility(View.VISIBLE);
                 break;
         }
     }

@@ -37,7 +37,7 @@ import net.mabako.steamgifts.fragments.GiveawayListFragment;
 import net.mabako.steamgifts.fragments.SavedGiveawaysFragment;
 import net.mabako.steamgifts.fragments.SearchableListFragment;
 import net.mabako.steamgifts.fragments.UserDetailFragment;
-import net.mabako.steamgifts.intro.Intro;
+import net.mabako.steamgifts.intro.IntroActivity;
 import net.mabako.steamgifts.persistentdata.IPointUpdateNotification;
 import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
 import net.mabako.steamgifts.tasks.LogoutTask;
@@ -82,7 +82,7 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-            Intro.showIntroIfNeccessary(this, Intro.INTRO_MAIN, Intro.INTRO_MAIN_VERSION);
+            IntroActivity.showIntroIfNeccessary(this, IntroActivity.INTRO_MAIN, IntroActivity.INTRO_MAIN_VERSION);
     }
 
     @Override
@@ -189,7 +189,7 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
                                 break;
 
                             case R.string.navigation_help:
-                                Intro.showIntro(MainActivity.this, Intro.INTRO_MAIN);
+                                IntroActivity.showIntro(MainActivity.this, IntroActivity.INTRO_MAIN);
                                 break;
 
                             case R.string.navigation_about:

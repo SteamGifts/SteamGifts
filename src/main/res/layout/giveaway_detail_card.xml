@@ -1,5 +1,6 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -30,7 +31,8 @@
                 android:layout_toRightOf="@+id/created"
                 android:gravity="right"
                 android:padding="@dimen/card_margin_small"
-                android:text="Soon" />
+                android:text="@string/placeholder_giveaway_end"
+                tools:text="End" />
 
             <TextView
                 android:id="@+id/user"
@@ -38,8 +40,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/card_margin_small"
-                android:text="Creator"
-                android:textStyle="bold" />
+                android:text="@string/placeholder_giveaway_creator"
+                android:textStyle="bold"
+                tools:text="Creator" />
 
             <TextView
                 android:id="@+id/created"
@@ -48,7 +51,8 @@
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/user"
                 android:padding="@dimen/card_margin_small"
-                android:text="Started" />
+                android:text="@string/placeholder_giveaway_start"
+                tools:text="Started" />
 
             <View
                 android:id="@+id/separator"
@@ -66,7 +70,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/progressBar"
                 android:padding="@dimen/card_margin_small"
-                android:text="GA description"
+                android:text="@string/placeholder_giveaway_description"
                 android:visibility="visible" />
 
             <ProgressBar
@@ -109,7 +113,7 @@
                 style="@style/MediumButton.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/enter_giveaway_with_points"
+                android:text="@string/enter_giveaway"
                 android:visibility="gone" />
 
             <Button
@@ -117,7 +121,7 @@
                 style="@style/MediumButton.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/leave_giveaway_with_points"
+                android:text="@string/leave_giveaway"
                 android:visibility="gone" />
 
             <Button
@@ -138,7 +142,8 @@
                 style="@style/MediumButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="L10+" />
+                android:text="L1"
+                tools:text="L10+" />
         </LinearLayout>
     </LinearLayout>
 </android.support.v7.widget.CardView>

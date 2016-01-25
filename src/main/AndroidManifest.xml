@@ -92,7 +92,7 @@
 
         <!-- intro -->
         <activity
-            android:name=".intro.Intro"
+            android:name=".intro.IntroActivity"
             android:theme="@style/AppTheme.Light" />
     </application>
 </manifest>

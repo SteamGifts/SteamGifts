@@ -154,6 +154,8 @@
     <string name="intro_giveaway_indicators_level_negative">Above your Level</string>
     <string name="intro_giveaway_indicators_private">Private Giveaway</string>
     <string name="intro_giveaway_indicators_region_restricted">Region Restricted</string>
+    <string name="intro_giveaway_store_info_header">Steam Store Info</string>
+    <string name="intro_giveaway_store_info">Swipe Right for a quick overview of the Steam Store entry.</string>
     <string name="intro_giveaway_welcome">Press \"Next\" for a few quick hints.</string>
     <string name="intro_giveaway_welcome_header">Welcome to\nSteamGifts</string>
 
@@ -179,4 +181,10 @@
     <string name="sync_now">Sync Account</string>
     <string name="sync_profile">Steam Privacy Settings</string>
     <string name="sync_title">Sync Account with Steam</string>
+
+    <!-- Placeholders, mostly used for intro text localization -->
+    <string name="placeholder_giveaway_creator">{faw-user} Creator</string>
+    <string name="placeholder_giveaway_start">{faw-calendar} Start</string>
+    <string name="placeholder_giveaway_end">{faw-clock-o} End</string>
+    <string name="placeholder_giveaway_description">Description of the Giveaway you\'re about to enter</string>
 </resources>
