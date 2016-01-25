@@ -134,7 +134,6 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
                             @Override
                             public void onClick(View v) {
                                 fragment.getActivity().startActivityForResult(new Intent(fragment.getContext(), SyncActivity.class), SyncActivity.REQUEST_SYNC);
-                                errorMessage.setText("You already tried :(");
                             }
                         });
                     }
