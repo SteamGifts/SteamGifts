@@ -1,7 +1,7 @@
 package net.mabako.steamgifts.adapters;
 
 import android.app.Activity;
-import android.preference.PreferenceManager;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
@@ -38,19 +38,29 @@ public class GiveawayAdapter extends EndlessAdapter {
      * Should we filter the item for any criteria?
      */
     private final boolean filterItems;
+
+    /**
+     * Instance of SavedGiveaways to save/unsave giveaways.
+     */
     private final SavedGiveaways savedGiveaways;
 
-    public GiveawayAdapter(Activity context, OnLoadListener listener, Fragment fragment, int itemsPerPage) {
-        this(context, listener, fragment, itemsPerPage, false, null);
+    /**
+     * Should we load images for this list?
+     */
+    private final boolean loadImages;
+
+    public GiveawayAdapter(Activity context, OnLoadListener listener, Fragment fragment, int itemsPerPage, SharedPreferences sharedPreferences) {
+        this(context, listener, fragment, itemsPerPage, false, null, sharedPreferences);
     }
 
-    public GiveawayAdapter(Activity context, OnLoadListener listener, Fragment fragment, int itemsPerPage, boolean filterItems, SavedGiveaways savedGiveaways) {
+    public GiveawayAdapter(Activity context, OnLoadListener listener, Fragment fragment, int itemsPerPage, boolean filterItems, SavedGiveaways savedGiveaways, SharedPreferences sharedPreferences) {
         super(listener);
         this.context = context;
         this.fragment = fragment;
         this.itemsPerPage = itemsPerPage;
         this.filterItems = filterItems;
         this.savedGiveaways = savedGiveaways;
+        this.loadImages = sharedPreferences.getString("preference_giveaway_load_images", "details;list").contains("list");
     }
 
     @Override
@@ -64,8 +74,7 @@ public class GiveawayAdapter extends EndlessAdapter {
             GiveawayListItemViewHolder holder = (GiveawayListItemViewHolder) h;
             Giveaway giveaway = (Giveaway) getItem(position);
 
-            String pref = PreferenceManager.getDefaultSharedPreferences(fragment.getContext()).getString("preference_giveaway_load_images", "details;list");
-            holder.setFrom(giveaway, pref.contains("list"));
+            holder.setFrom(giveaway, loadImages);
         }
     }
 

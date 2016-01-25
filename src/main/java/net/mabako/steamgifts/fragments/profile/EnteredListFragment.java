@@ -2,6 +2,7 @@ package net.mabako.steamgifts.fragments.profile;
 
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import net.mabako.steamgifts.R;
@@ -48,7 +49,7 @@ public class EnteredListFragment extends ListFragment<GiveawayAdapter> implement
             public void onLoad(int page) {
                 fetchItems(page);
             }
-        }, this, 50);
+        }, this, 50, PreferenceManager.getDefaultSharedPreferences(getContext()));
     }
 
     @Override

@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -219,22 +221,29 @@ public class GiveawayDetailFragment extends ListFragment<CommentAdapter> impleme
         giveawayCard.setGiveaway(giveaway);
 
         final CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) getActivity().findViewById(R.id.toolbar_layout);
-        appBarLayout.setTitle(giveaway.getTitle());
+        if (appBarLayout != null) {
+            appBarLayout.setTitle(giveaway.getTitle());
 
-        ImageView toolbarImage = (ImageView) getActivity().findViewById(R.id.toolbar_image);
-        if (toolbarImage != null) {
-            Picasso.with(getContext()).load("http://cdn.akamai.steamstatic.com/steam/" + giveaway.getType().name().toLowerCase() + "s/" + giveaway.getGameId() + "/header.jpg").into(toolbarImage, new Callback() {
-                @Override
-                public void onSuccess() {
-                    appBarLayout.setExpandedTitleTextAppearance(R.style.TransparentText);
-                }
+            ImageView toolbarImage = (ImageView) getActivity().findViewById(R.id.toolbar_image);
+            if (toolbarImage != null) {
+                Picasso.with(getContext()).load("http://cdn.akamai.steamstatic.com/steam/" + giveaway.getType().name().toLowerCase() + "s/" + giveaway.getGameId() + "/header.jpg").into(toolbarImage, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        appBarLayout.setExpandedTitleTextAppearance(R.style.TransparentText);
+                    }
 
-                @Override
-                public void onError() {
+                    @Override
+                    public void onError() {
 
-                }
-            });
+                    }
+                });
+            }
+        } else {
+            ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+            if (actionBar != null)
+                actionBar.setTitle(giveaway.getTitle());
         }
+
 
         // Re-build the options menu, which may not be created if no giveaway was present.
         getActivity().supportInvalidateOptionsMenu();

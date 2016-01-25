@@ -86,7 +86,7 @@ public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter
             public void onLoad(int page) {
                 fetchItems(page);
             }
-        }, this, 50, true, new SavedGiveaways(getContext()));
+        }, this, 50, true, new SavedGiveaways(getContext()), PreferenceManager.getDefaultSharedPreferences(getContext()));
     }
 
     @Override

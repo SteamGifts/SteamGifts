@@ -6,6 +6,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -201,7 +202,7 @@ public class UserDetailFragment extends Fragment implements IUserNotifications {
                 public void onLoad(int page) {
                     fetchItems(page);
                 }
-            }, null, 25);
+            }, null, 25, PreferenceManager.getDefaultSharedPreferences(getContext()));
         }
 
         @Override

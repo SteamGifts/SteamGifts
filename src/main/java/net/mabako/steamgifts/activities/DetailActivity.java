@@ -2,6 +2,7 @@ package net.mabako.steamgifts.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -22,7 +23,6 @@ import net.mabako.steamgifts.fragments.profile.CreatedListFragment;
 import net.mabako.steamgifts.fragments.profile.EnteredListFragment;
 import net.mabako.steamgifts.fragments.profile.MessageListFragment;
 import net.mabako.steamgifts.fragments.profile.WonListFragment;
-import net.mabako.steamgifts.fragments.util.GiveawayDetailsCard;
 import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
 
 import java.io.Serializable;
@@ -58,7 +58,8 @@ public class DetailActivity extends CommonActivity {
         if (savedInstanceState == null) {
             Serializable serializable = getIntent().getSerializableExtra(GiveawayDetailFragment.ARG_GIVEAWAY);
             if (serializable != null) {
-                setContentView(R.layout.activity_giveaway_detail);
+                String pref = PreferenceManager.getDefaultSharedPreferences(this).getString("preference_giveaway_load_images", "details;list");
+                setContentView(pref.contains("details") ? R.layout.fragment_giveaway_detail : R.layout.activity_paged_fragments_no_tabs);
                 loadPagedFragments(GiveawayDetailFragment.newInstance((BasicGiveaway) serializable));
                 return;
             }
@@ -146,8 +147,8 @@ public class DetailActivity extends CommonActivity {
             }
         }
 
-        if(requestCode == REQUEST_SYNC && getCurrentFragment() instanceof GiveawayDetailFragment) {
-            if(resultCode == RESPONSE_SYNC_SUCCESSFUL) {
+        if (requestCode == REQUEST_SYNC && getCurrentFragment() instanceof GiveawayDetailFragment) {
+            if (resultCode == RESPONSE_SYNC_SUCCESSFUL) {
                 // let's reload
                 ((GiveawayDetailFragment) getCurrentFragment()).reload();
             }
