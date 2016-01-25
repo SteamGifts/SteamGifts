@@ -1,18 +1,21 @@
 package net.mabako.steamgifts.fragments;
 
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
+
+import com.mikepenz.actionitembadge.library.ActionItemBadge;
+import com.mikepenz.actionitembadge.library.utils.BadgeStyle;
 
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
@@ -23,6 +26,7 @@ import net.mabako.steamgifts.fragments.interfaces.IFilterUpdatedListener;
 import net.mabako.steamgifts.fragments.interfaces.IHasEnterableGiveaways;
 import net.mabako.steamgifts.fragments.interfaces.IHasHideableGiveaways;
 import net.mabako.steamgifts.fragments.util.GiveawayListFragmentStack;
+import net.mabako.steamgifts.persistentdata.FilterData;
 import net.mabako.steamgifts.persistentdata.SavedGiveaways;
 import net.mabako.steamgifts.tasks.EnterLeaveGiveawayTask;
 import net.mabako.steamgifts.tasks.LoadGiveawayListTask;
@@ -59,12 +63,6 @@ public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         GiveawayListFragmentStack.addFragment(this);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
-        return view;
     }
 
     @Override
@@ -199,6 +197,10 @@ public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter
 
         MenuItem filterMenu = menu.findItem(R.id.filter);
         filterMenu.setVisible(true);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            ActionItemBadge.update(getActivity(), filterMenu, getResources().getDrawable(R.drawable.ic_filter_variant), (BadgeStyle) null, FilterData.getCurrent().isAnyActive() ? "\n\n{faw-check-circle}" : null);
+        }
     }
 
     @Override
@@ -219,6 +221,10 @@ public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter
     @Override
     public void onFilterUpdated() {
         refresh();
+
+        FragmentActivity activity = getActivity();
+        if (activity != null)
+            activity.supportInvalidateOptionsMenu();
     }
 
     @Override

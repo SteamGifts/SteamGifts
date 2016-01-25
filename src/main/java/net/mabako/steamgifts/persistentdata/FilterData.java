@@ -1,7 +1,7 @@
 package net.mabako.steamgifts.persistentdata;
 
 /**
- * Created by mabako on 24.01.2016.
+ * Giveaway filters.
  */
 public class FilterData {
     private static FilterData current = new FilterData();
@@ -62,5 +62,9 @@ public class FilterData {
 
     public void setMinPoints(int minPoints) {
         this.minPoints = minPoints;
+    }
+
+    public boolean isAnyActive() {
+        return minEntries > -1 || maxEntries > -1 || minPoints > -1 || maxPoints > -1 || minLevel > -1 || maxLevel > -1;
     }
 }

@@ -32,10 +32,12 @@ public class FilterGiveawayDialogFragment extends DialogFragment implements Dial
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // Clear all filter settings
-                        FilterData.clear();
+                        if (FilterData.getCurrent().isAnyActive()) {
+                            FilterData.clear();
 
-                        if (listener != null)
-                            listener.onFilterUpdated();
+                            if (listener != null)
+                                listener.onFilterUpdated();
+                        }
                     }
                 }).create();
 
