@@ -59,6 +59,7 @@ public class SyncFragment extends Fragment {
                 public void onClick(View v) {
                     Intent intent = new Intent(getContext(), WebViewActivity.class);
                     intent.putExtra(WebViewActivity.ARG_URL, "http://steamcommunity.com/my/edit/settings");
+                    intent.putExtra(WebViewActivity.ARG_NO_BACK_STACK, true);
 
                     getActivity().startActivity(intent);
                 }
