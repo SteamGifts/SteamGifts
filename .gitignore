@@ -1,9 +1,18 @@
+# intellij iml files
 *.iml
-.gradle/
-gradle/
-local.properties
 .idea
+
+# gradle private files wrappers
+.gradle/
+
+# Local configuration for gradle
+local.properties
+local.gradle
+
+# local configuration
 .DS_Store
+
+# build files
 build/
-/captures
+captures/
 *.apk
