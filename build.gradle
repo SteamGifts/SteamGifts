@@ -21,7 +21,7 @@ android {
         applicationId "net.mabako.steamgifts"
         minSdkVersion 10
         targetSdkVersion 23
-        versionCode 40
+        versionCode 41
         versionName "1.0"
     }
     buildTypes {
