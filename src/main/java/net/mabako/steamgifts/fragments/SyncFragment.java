@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import net.mabako.steamgifts.R;
@@ -70,10 +71,15 @@ public class SyncFragment extends Fragment {
         }
     }
 
-    public void setXsrfToken(String xsrfToken) {
+    public void onSyncDetailsLoaded(String xsrfToken, String lastSyncTime) {
         this.xsrfToken = xsrfToken;
 
         getView().findViewById(R.id.sync_now).setEnabled(true);
+
+        TextView lastSyncView = (TextView) getView().findViewById(R.id.sync_time);
+        lastSyncView.setVisibility(lastSyncTime == null ? View.GONE : View.VISIBLE);
+        lastSyncView.setText(lastSyncTime);
+
     }
 
     @Override
@@ -94,7 +100,7 @@ public class SyncFragment extends Fragment {
     /**
      * Fetch the XSRF token needed to sync.
      */
-    private static class LoadSyncDetailsTask extends AsyncTask<Void, Void, String> {
+    private static class LoadSyncDetailsTask extends AsyncTask<Void, Void, String[]> {
         private static final String TAG = LoadSyncDetailsTask.class.getSimpleName();
         private final SyncFragment fragment;
 
@@ -103,7 +109,7 @@ public class SyncFragment extends Fragment {
         }
 
         @Override
-        protected String doInBackground(Void... params) {
+        protected String[] doInBackground(Void... params) {
             Log.d(TAG, "Fetching sync details");
 
             try {
@@ -117,8 +123,10 @@ public class SyncFragment extends Fragment {
 
                 // Fetch the xsrf token
                 Element xsrfToken = document.select("input[name=xsrf_token]").first();
-                if (xsrfToken != null)
-                    return xsrfToken.attr("value");
+                Element lastSyncTime = document.select(".form__sync-data .notification").first();
+                if (xsrfToken != null) {
+                    return new String[]{xsrfToken.attr("value"), lastSyncTime == null ? null : lastSyncTime.text()};
+                }
             } catch (Exception e) {
                 Log.e(TAG, "Error fetching URL", e);
             }
@@ -126,9 +134,9 @@ public class SyncFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(String s) {
+        protected void onPostExecute(String[] s) {
             if (s != null) {
-                fragment.setXsrfToken(s);
+                fragment.onSyncDetailsLoaded(s[0], s[1]);
             } else {
                 Toast.makeText(fragment.getContext(), "Error fetching xsrf token?", Toast.LENGTH_SHORT).show();
             }
