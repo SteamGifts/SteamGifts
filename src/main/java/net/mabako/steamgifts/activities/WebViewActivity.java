@@ -60,6 +60,15 @@ public class WebViewActivity extends CommonActivity {
     }
 
     @Override
+    protected void onDestroy() {
+        if (webView != null) {
+            webView.destroy();
+            webView = null;
+        }
+        super.onDestroy();
+    }
+
+    @Override
     public void onBackPressed() {
         if (webView.canGoBack() && !getIntent().hasExtra(ARG_NO_BACK_STACK))
             webView.goBack();
