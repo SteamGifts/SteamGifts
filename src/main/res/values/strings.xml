@@ -169,6 +169,7 @@
     <string name="filter_level">Level</string>
     <string name="filter_points">Points</string>
     <string name="filter_entered_checkbox">Hide entered Giveaways</string>
+    <string name="filter_whitelist_or_group_checkbox">Show group and whitelist giveaways regardless of level</string>
 
     <!-- Saving Giveaways -->
     <string name="add_saved_giveaway">Star Giveaway</string>

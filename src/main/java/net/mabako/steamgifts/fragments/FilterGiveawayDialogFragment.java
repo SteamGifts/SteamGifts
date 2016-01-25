@@ -50,6 +50,7 @@ public class FilterGiveawayDialogFragment extends DialogFragment implements Dial
         setValue(view.findViewById(R.id.filter_level_min), f.getMinLevel());
         setValue(view.findViewById(R.id.filter_points_min), f.getMinPoints());
         ((CheckBox) view.findViewById(R.id.filter_entered)).setChecked(f.isHideEntered());
+        ((CheckBox) view.findViewById(R.id.filter_whitelist_or_group)).setChecked(f.isRestrictLevelOnlyOnPublicGiveaways());
 
         return dialog;
     }
@@ -66,11 +67,8 @@ public class FilterGiveawayDialogFragment extends DialogFragment implements Dial
         newFilterData.setMinEntries(getValueAndUpdateFlags(R.id.filter_entries_min, oldFilterData.getMinEntries()));
         newFilterData.setMinLevel(getValueAndUpdateFlags(R.id.filter_level_min, oldFilterData.getMinLevel()));
         newFilterData.setMinPoints(getValueAndUpdateFlags(R.id.filter_points_min, oldFilterData.getMinPoints()));
-
-        boolean hideEntered = ((CheckBox) view.findViewById(R.id.filter_entered)).isChecked();
-        newFilterData.setHideEntered(hideEntered);
-        if (hideEntered != oldFilterData.isHideEntered())
-            requireReload = true;
+        newFilterData.setHideEntered(getValueAndUpdateFlags(R.id.filter_entered, oldFilterData.isHideEntered()));
+        newFilterData.setRestrictLevelOnlyOnPublicGiveaways(getValueAndUpdateFlags(R.id.filter_whitelist_or_group, oldFilterData.isRestrictLevelOnlyOnPublicGiveaways()));
 
         if (listener != null && requireReload)
             listener.onFilterUpdated();
@@ -92,6 +90,15 @@ public class FilterGiveawayDialogFragment extends DialogFragment implements Dial
         } catch (NumberFormatException e) {
             newValue = -1;
         }
+
+        if (oldValue != newValue)
+            requireReload = true;
+
+        return newValue;
+    }
+
+    private boolean getValueAndUpdateFlags(int checkboxResource, boolean oldValue) {
+        boolean newValue = ((CheckBox) view.findViewById(checkboxResource)).isChecked();
 
         if (oldValue != newValue)
             requireReload = true;

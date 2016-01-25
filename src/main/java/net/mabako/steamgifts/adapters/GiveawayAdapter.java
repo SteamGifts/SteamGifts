@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
 import net.mabako.steamgifts.adapters.viewholder.GiveawayListItemViewHolder;
@@ -139,17 +140,25 @@ public class GiveawayAdapter extends EndlessAdapter {
 
             int minPoints = fd.getMinPoints();
             int maxPoints = fd.getMaxPoints();
+
             boolean hideEntered = fd.isHideEntered();
 
-            if (minPoints >= 0 || maxPoints >= 0 || hideEntered) {
+            boolean checkLevelOnlyOnPublicGiveaway = fd.isRestrictLevelOnlyOnPublicGiveaways();
+            int minLevel = fd.getMinLevel();
+            int maxLevel = fd.getMaxLevel();
+
+            if (minPoints >= 0 || maxPoints >= 0 || hideEntered || (checkLevelOnlyOnPublicGiveaway && (minLevel >= 0 || maxLevel >= 0))) {
                 // Let's actually perform filtering if we have any options set.
                 for (ListIterator<IEndlessAdaptable> iter = items.listIterator(items.size()); iter.hasPrevious(); ) {
                     Giveaway giveaway = (Giveaway) iter.previous();
                     int points = giveaway.getPoints();
+                    int level = giveaway.getLevel();
 
                     if (hideEntered && giveaway.isEntered()) {
                         iter.remove();
                     } else if (points >= 0 && ((minPoints >= 0 && points < minPoints) || (maxPoints >= 0 && points > maxPoints))) {
+                        iter.remove();
+                    } else if (checkLevelOnlyOnPublicGiveaway && !giveaway.isGroup() && !giveaway.isWhitelist() && ((minLevel >= 0 && level < minLevel) || (maxLevel >= 0 && level > maxLevel))) {
                         iter.remove();
                     }
                 }

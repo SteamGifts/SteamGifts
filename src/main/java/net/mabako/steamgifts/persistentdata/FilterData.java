@@ -10,7 +10,7 @@ public class FilterData implements Serializable {
     private static FilterData current = new FilterData();
 
     private int minEntries = -1, maxEntries = -1, minPoints = -1, maxPoints = -1, minLevel = -1, maxLevel = -1;
-    private boolean hideEntered;
+    private boolean hideEntered, restrictLevelOnlyOnPublicGiveaways;
 
     public static FilterData getCurrent() {
         return current;
@@ -74,6 +74,14 @@ public class FilterData implements Serializable {
 
     public void setHideEntered(boolean hideEntered) {
         this.hideEntered = hideEntered;
+    }
+
+    public boolean isRestrictLevelOnlyOnPublicGiveaways() {
+        return restrictLevelOnlyOnPublicGiveaways;
+    }
+
+    public void setRestrictLevelOnlyOnPublicGiveaways(boolean restrictLevelOnlyOnPublicGiveaways) {
+        this.restrictLevelOnlyOnPublicGiveaways = restrictLevelOnlyOnPublicGiveaways;
     }
 
     public boolean isAnyActive() {
