@@ -377,10 +377,12 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
     @Override
     public void onUpdatePoints(final int newPoints) {
         ActionBar actionBar = getSupportActionBar();
-        if (SteamGiftsUserData.getCurrent().isLoggedIn() && getCurrentFragment() instanceof GiveawayListFragment) {
-            actionBar.setSubtitle(String.format("%dP", newPoints));
-        } else {
-            actionBar.setSubtitle(null);
+        if (actionBar != null) {
+            if (SteamGiftsUserData.getCurrent().isLoggedIn() && getCurrentFragment() instanceof GiveawayListFragment) {
+                actionBar.setSubtitle(String.format("%dP", newPoints));
+            } else {
+                actionBar.setSubtitle(null);
+            }
         }
     }
 }
