@@ -52,10 +52,11 @@ public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter
      */
     private LastRemovedGame lastRemovedGame;
 
-    public static GiveawayListFragment newInstance(Type type, String query) {
+    public static GiveawayListFragment newInstance(Type type, String query, boolean finishActivityOnSearchStopped) {
         GiveawayListFragment g = new GiveawayListFragment();
         g.type = type;
         g.searchQuery = query;
+        g.finishActivityOnSearchStopped = finishActivityOnSearchStopped;
         return g;
     }
 
@@ -188,7 +189,7 @@ public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter
 
     @Override
     public Fragment newSearchingInstance(String query) {
-        return newInstance(type, query);
+        return newInstance(type, query, false);
     }
 
     @Override

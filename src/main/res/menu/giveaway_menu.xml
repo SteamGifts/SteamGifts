@@ -29,4 +29,9 @@
         android:id="@+id/hide_game"
         android:title="@string/hide_game"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/more_like_this"
+        android:title="@string/more_like_this"
+        app:showAsAction="never" />
 </menu>

@@ -26,7 +26,9 @@ import com.squareup.picasso.Picasso;
 import net.mabako.steam.store.StoreAppFragment;
 import net.mabako.steam.store.StoreSubFragment;
 import net.mabako.steamgifts.R;
+import net.mabako.steamgifts.activities.CommonActivity;
 import net.mabako.steamgifts.activities.DetailActivity;
+import net.mabako.steamgifts.activities.MainActivity;
 import net.mabako.steamgifts.activities.WebViewActivity;
 import net.mabako.steamgifts.activities.WriteCommentActivity;
 import net.mabako.steamgifts.adapters.CommentAdapter;
@@ -294,6 +296,8 @@ public class GiveawayDetailFragment extends ListFragment<CommentAdapter> impleme
                 menu.findItem(R.id.add_saved_element).setVisible(!isSaved);
                 menu.findItem(R.id.remove_saved_element).setVisible(isSaved);
             }
+
+            menu.findItem(R.id.more_like_this).setVisible(((Giveaway) giveaway).getTitle() != null);
         }
     }
 
@@ -329,6 +333,13 @@ public class GiveawayDetailFragment extends ListFragment<CommentAdapter> impleme
 
                     GiveawayListFragmentStack.onRemoveSavedGiveaway(giveaway.getGiveawayId());
                 }
+                return true;
+
+            case R.id.more_like_this:
+                Intent intent = new Intent(getContext(), MainActivity.class);
+                intent.putExtra(MainActivity.ARG_TYPE, GiveawayListFragment.Type.ALL);
+                intent.putExtra(MainActivity.ARG_QUERY, ((Giveaway) giveaway).getTitle());
+                getActivity().startActivityForResult(intent, CommonActivity.REQUEST_LOGIN);
                 return true;
 
             default:

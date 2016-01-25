@@ -46,6 +46,7 @@ import java.io.Serializable;
 
 public class MainActivity extends CommonActivity implements IPointUpdateNotification {
     public static final String ARG_TYPE = "type";
+    public static final String ARG_QUERY = "query";
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -72,8 +73,10 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
             if (type == null)
                 type = GiveawayListFragment.Type.ALL;
 
+            String query = getIntent().getStringExtra(ARG_QUERY);
+
             if (type instanceof GiveawayListFragment.Type) {
-                loadFragment(GiveawayListFragment.newInstance((GiveawayListFragment.Type) type, null));
+                loadFragment(GiveawayListFragment.newInstance((GiveawayListFragment.Type) type, query, true));
                 drawer.setSelection(((GiveawayListFragment.Type) type).getNavbarResource(), false);
             } else if (type instanceof DiscussionListFragment.Type) {
                 loadFragment(DiscussionListFragment.newInstance((DiscussionListFragment.Type) type, null));
@@ -100,7 +103,7 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
 
         super.onAccountChange();
 
-        loadFragment(GiveawayListFragment.newInstance(GiveawayListFragment.Type.ALL, null));
+        loadFragment(GiveawayListFragment.newInstance(GiveawayListFragment.Type.ALL, null, false));
         drawer.setSelection(R.string.navigation_giveaways_all, false);
     }
 
@@ -210,7 +213,7 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
                             default:
                                 for (GiveawayListFragment.Type type : GiveawayListFragment.Type.values()) {
                                     if (type.getNavbarResource() == drawerItem.getIdentifier()) {
-                                        loadFragment(GiveawayListFragment.newInstance(type, null));
+                                        loadFragment(GiveawayListFragment.newInstance(type, null, false));
                                         break;
                                     }
                                 }
@@ -368,7 +371,7 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
 
                 // force an entire fragment reload if this is something giveaway reloaded
                 if (fragment instanceof GiveawayListFragment) {
-                    loadFragment(GiveawayListFragment.newInstance(((GiveawayListFragment) fragment).getType(), null));
+                    loadFragment(GiveawayListFragment.newInstance(((GiveawayListFragment) fragment).getType(), null, false));
                 } else if (fragment instanceof SavedGiveawaysFragment) {
                     loadFragment(new SavedGiveawaysFragment());
                 }

@@ -16,7 +16,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.activities.CommonActivity;
@@ -32,6 +31,8 @@ public abstract class SearchableListFragment<AdapterType extends EndlessAdapter>
      * What are we searching for?
      */
     protected String searchQuery = null;
+
+    protected boolean finishActivityOnSearchStopped = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -108,8 +109,12 @@ public abstract class SearchableListFragment<AdapterType extends EndlessAdapter>
         if (searchQuery != null) {
             Log.d(TAG, "Stopping Search");
 
-            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-            fragmentManager.popBackStack(TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            if (finishActivityOnSearchStopped) {
+                getActivity().finish();
+            } else {
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                fragmentManager.popBackStack(TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            }
         }
     }
 
