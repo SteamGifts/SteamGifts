@@ -23,6 +23,7 @@ import net.mabako.steamgifts.R;
  */
 public class WebViewActivity extends CommonActivity {
     public static final String ARG_URL = "url";
+    public static final String ARG_NO_BACK_STACK = "no-back-stack";
 
     private WebView webView;
     private ActionBar toolbar;
@@ -60,7 +61,7 @@ public class WebViewActivity extends CommonActivity {
 
     @Override
     public void onBackPressed() {
-        if (webView.canGoBack())
+        if (webView.canGoBack() && !getIntent().hasExtra(ARG_NO_BACK_STACK))
             webView.goBack();
         else
             super.onBackPressed();

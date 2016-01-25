@@ -40,6 +40,7 @@
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="drawer_profile_info">Level %1$d - %2$dP</string>
+    <string name="navigation_sync">Sync</string>
 
     <!-- Login/Logout/bye -->
     <string name="guest">Guest</string>
@@ -120,6 +121,7 @@
     <string name="preference_discussion_comments_reversed_sub_on">Show newest comments first</string>
 
     <string name="preferences_sg_header">SteamGifts Account</string>
+    <string name="preference_sg_sync">Sync Account</string>
     <string name="preference_sg_hidden_games">Hidden Games</string>
     <string name="preference_sg_hidden_games_sub">Un-hide games from your account</string>
 
@@ -168,4 +170,10 @@
     <string name="remove_saved_giveaway">Unstar Giveaway</string>
     <string name="added_saved_giveaway"><![CDATA[Giveaway was starred and can be found under Giveaways > Starred.]]></string>
     <string name="removed_saved_giveaway">Giveaway is no longer starred.</string>
+
+    <!-- Sync -->
+    <string name="sync_details">Public Steam data is automatically synced every few days. You can however use the option below to sync your profile.</string>
+    <string name="sync_now">Sync Account</string>
+    <string name="sync_profile">Steam Privacy Settings</string>
+    <string name="sync_title">Sync Account with Steam</string>
 </resources>

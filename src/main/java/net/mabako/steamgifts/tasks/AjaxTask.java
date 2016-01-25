@@ -11,7 +11,7 @@ import org.jsoup.Jsoup;
 
 import java.io.IOException;
 
-abstract class AjaxTask<FragmentType> extends AsyncTask<Void, Void, Connection.Response> {
+public abstract class AjaxTask<FragmentType> extends AsyncTask<Void, Void, Connection.Response> {
     private static final String TAG = AjaxTask.class.getSimpleName();
 
     private String url = "http://www.steamgifts.com/ajax.php";
@@ -21,7 +21,7 @@ abstract class AjaxTask<FragmentType> extends AsyncTask<Void, Void, Connection.R
 
     private final FragmentType fragment;
 
-    AjaxTask(FragmentType fragment, String xsrfToken, String what) {
+    public AjaxTask(FragmentType fragment, String xsrfToken, String what) {
         this.fragment = fragment;
         this.xsrfToken = xsrfToken;
         this.what = what;
@@ -59,7 +59,7 @@ abstract class AjaxTask<FragmentType> extends AsyncTask<Void, Void, Connection.R
 
     protected abstract void addExtraParameters(Connection connection);
 
-    FragmentType getFragment() {
+    protected FragmentType getFragment() {
         return fragment;
     }
 

@@ -22,6 +22,7 @@ import net.mabako.steamgifts.fragments.profile.CreatedListFragment;
 import net.mabako.steamgifts.fragments.profile.EnteredListFragment;
 import net.mabako.steamgifts.fragments.profile.MessageListFragment;
 import net.mabako.steamgifts.fragments.profile.WonListFragment;
+import net.mabako.steamgifts.fragments.util.GiveawayDetailsCard;
 import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
 
 import java.io.Serializable;
@@ -142,6 +143,13 @@ public class DetailActivity extends CommonActivity {
             } else {
                 Toast.makeText(this, "Could not log in to sgtools.info", Toast.LENGTH_LONG).show();
                 finish();
+            }
+        }
+
+        if(requestCode == REQUEST_SYNC && getCurrentFragment() instanceof GiveawayDetailFragment) {
+            if(resultCode == RESPONSE_SYNC_SUCCESSFUL) {
+                // let's reload
+                ((GiveawayDetailFragment) getCurrentFragment()).reload();
             }
         }
 

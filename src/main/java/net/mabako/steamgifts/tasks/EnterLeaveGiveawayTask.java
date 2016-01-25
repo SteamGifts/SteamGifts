@@ -1,7 +1,10 @@
 package net.mabako.steamgifts.tasks;
 
+import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 
+import net.mabako.steamgifts.activities.SyncActivity;
 import net.mabako.steamgifts.fragments.interfaces.IHasEnterableGiveaways;
 import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
 
@@ -30,15 +33,22 @@ public class EnterLeaveGiveawayTask extends AjaxTask<IHasEnterableGiveaways> {
     protected void onPostExecute(Connection.Response response) {
         if (response != null && response.statusCode() == 200) {
             try {
+                Log.v(TAG, "Response to JSON request: " + response.body());
                 JSONObject root = new JSONObject(response.body());
 
                 boolean success = "success".equals(root.getString("type"));
                 int points = root.getInt("points");
 
-                getFragment().onEnterLeaveResult(giveawayId, getWhat(), success, true);
+                IHasEnterableGiveaways fragment = getFragment();
+                fragment.onEnterLeaveResult(giveawayId, getWhat(), success, true);
 
                 // Update the points we have.
                 SteamGiftsUserData.getCurrent().setPoints(points);
+
+                if (fragment instanceof Fragment && "error".equals(root.getString("type")) && "Sync Required".equals(root.getString("msg"))) {
+                    ((Fragment) fragment).getActivity().startActivity(new Intent(((Fragment) fragment).getContext(), SyncActivity.class));
+                }
+
                 return;
             } catch (JSONException e) {
                 Log.e(TAG, "Failed to parse JSON object", e);
