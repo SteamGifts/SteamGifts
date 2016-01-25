@@ -65,6 +65,7 @@ public class GiveawayDetailFragment extends ListFragment<CommentAdapter> impleme
     private GiveawayDetailsCard giveawayCard;
     private EnterLeaveGiveawayTask enterLeaveTask;
     private Activity activity;
+    private SavedGiveaways savedGiveaways;
 
     public static Fragment newInstance(BasicGiveaway giveaway) {
         GiveawayDetailFragment fragment = new GiveawayDetailFragment();
@@ -100,6 +101,8 @@ public class GiveawayDetailFragment extends ListFragment<CommentAdapter> impleme
         super.onAttach(context);
         if (context instanceof Activity)
             this.activity = (Activity) context;
+
+        savedGiveaways = new SavedGiveaways(getContext());
     }
 
     @Nullable
@@ -286,10 +289,11 @@ public class GiveawayDetailFragment extends ListFragment<CommentAdapter> impleme
             menu.findItem(R.id.open_steam_store).setVisible(((Giveaway) giveaway).getGameId() > 0);
             menu.findItem(R.id.hide_game).setVisible(((Giveaway) giveaway).getInternalGameId() > 0 && giveawayCard.getExtras() != null && giveawayCard.getExtras().getXsrfToken() != null);
 
-            SavedGiveaways savedGiveaways = new SavedGiveaways(getContext());
-            boolean isSaved = savedGiveaways.isSaved(giveaway.getGiveawayId());
-            menu.findItem(R.id.add_saved_element).setVisible(!isSaved);
-            menu.findItem(R.id.remove_saved_element).setVisible(isSaved);
+            if (savedGiveaways != null) {
+                boolean isSaved = savedGiveaways.isSaved(giveaway.getGiveawayId());
+                menu.findItem(R.id.add_saved_element).setVisible(!isSaved);
+                menu.findItem(R.id.remove_saved_element).setVisible(isSaved);
+            }
         }
     }
 
@@ -312,24 +316,18 @@ public class GiveawayDetailFragment extends ListFragment<CommentAdapter> impleme
                 return true;
 
             case R.id.add_saved_element:
-                if (giveaway instanceof Giveaway) {
-                    SavedGiveaways savedGiveaways = new SavedGiveaways(getContext());
-                    if (savedGiveaways.add((Giveaway) giveaway, giveaway.getGiveawayId())) {
-                        getActivity().supportInvalidateOptionsMenu();
-                        Toast.makeText(getContext(), R.string.added_saved_giveaway, Toast.LENGTH_SHORT).show();
-                    }
+                if (giveaway instanceof Giveaway && savedGiveaways.add((Giveaway) giveaway, giveaway.getGiveawayId())) {
+                    getActivity().supportInvalidateOptionsMenu();
+                    Toast.makeText(getContext(), R.string.added_saved_giveaway, Toast.LENGTH_SHORT).show();
                 }
                 return true;
 
             case R.id.remove_saved_element:
-                if (giveaway instanceof Giveaway) {
-                    SavedGiveaways savedGiveaways = new SavedGiveaways(getContext());
-                    if (savedGiveaways.remove(giveaway.getGiveawayId())) {
-                        getActivity().supportInvalidateOptionsMenu();
-                        Toast.makeText(getContext(), R.string.removed_saved_giveaway, Toast.LENGTH_SHORT).show();
+                if (giveaway instanceof Giveaway && savedGiveaways.remove(giveaway.getGiveawayId())) {
+                    getActivity().supportInvalidateOptionsMenu();
+                    Toast.makeText(getContext(), R.string.removed_saved_giveaway, Toast.LENGTH_SHORT).show();
 
-                        GiveawayListFragmentStack.onRemoveSavedGiveaway(giveaway.getGiveawayId());
-                    }
+                    GiveawayListFragmentStack.onRemoveSavedGiveaway(giveaway.getGiveawayId());
                 }
                 return true;
 
