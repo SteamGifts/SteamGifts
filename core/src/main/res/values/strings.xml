@@ -50,6 +50,7 @@
     <string name="logged_out">Goodbye!</string>
 
     <!-- About dialog -->
+    <string name="app_name_long">SteamGifts for Android</string>
     <string name="about_made_with_love">made with {faw-heart} by kt</string>
     <string name="about_forum_thread">Discuss on SteamGifts.com</string>
     <string name="about_mail">Contact via Mail</string>
@@ -159,7 +160,7 @@
     <string name="intro_giveaway_store_info_header">Steam Store Info</string>
     <string name="intro_giveaway_store_info">Swipe Right for a quick overview of the Steam Store entry.</string>
     <string name="intro_giveaway_welcome">Press \"Next\" for a few quick hints.</string>
-    <string name="intro_giveaway_welcome_header">Welcome to\nSteamGifts</string>
+    <string name="intro_giveaway_welcome_header">Welcome to\n%s</string>
 
     <!-- Filters -->
     <string name="filter">Filter Giveaways</string>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,6 +9,7 @@
     android:orientation="vertical">
 
     <TextView
+        android:id="@+id/welcome_text"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_gravity="center"
@@ -15,9 +17,9 @@
         android:gravity="center"
         android:paddingLeft="32dp"
         android:paddingRight="32dp"
-        android:text="@string/intro_giveaway_welcome_header"
         android:textColor="#ffffff"
-        android:textSize="28sp" />
+        android:textSize="28sp"
+        tools:text="Welcome!" />
 
     <LinearLayout
         android:id="@+id/intro_container"
@@ -30,7 +32,7 @@
         <ImageView
             android:layout_width="128dp"
             android:layout_height="128dp"
-            android:background="@drawable/sgwhite"/>
+            android:background="@drawable/sgwhite" />
 
     </LinearLayout>
 

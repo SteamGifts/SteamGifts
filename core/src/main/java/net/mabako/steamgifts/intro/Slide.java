@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
@@ -30,6 +31,8 @@ public class Slide extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         subview = (SubView) getArguments().getSerializable("subview");
+        if (subview == null)
+            throw new IllegalStateException("Not a slide given?");
 
         View view = inflater.inflate(subview.getLayout(), container, false);
         onCreateSubView(view.findViewById(R.id.intro_container));
@@ -38,6 +41,9 @@ public class Slide extends Fragment {
 
     public void onCreateSubView(View view) {
         switch (subview) {
+            case MAIN_WELCOME:
+                ((TextView) view.getRootView().findViewById(R.id.welcome_text)).setText(String.format(getText(R.string.intro_giveaway_welcome_header).toString(), getText(R.string.app_name).toString()));
+                break;
             case MAIN_GIVEAWAY_1:
                 // Giveaway
                 View giveawayView = view.findViewById(R.id.giveaway);
