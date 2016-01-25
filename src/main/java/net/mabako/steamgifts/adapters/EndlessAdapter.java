@@ -121,7 +121,9 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     public void finishLoading(List<IEndlessAdaptable> addedItems) {
-        Log.d(TAG, "Finished loading - " + loading);
+        boolean loadNextPage = false;
+
+        Log.v(TAG, "Finished loading - " + loading);
         if (loading) {
             // remove loading item for the progress bar
             if (items.size() > 0) {
@@ -130,9 +132,13 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
             }
 
             loading = false;
-            addAll(addedItems);
+            loadNextPage = addAll(addedItems);
         } else {
-            addAll(addedItems);
+            boolean wasEmpty = items.size() == 0;
+            loadNextPage = addAll(addedItems);
+
+            if (!wasEmpty)
+                loadNextPage = false;
         }
 
         // Have we reached the last page yet?
@@ -142,6 +148,11 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
                 reachedTheEnd();
         } else
             ++page;
+
+        if (loadNextPage) {
+            // We presume to have filtered some items, and automatically load more since the onScrollListener doesn't quite handle this edge case yet.
+            startLoading();
+        }
     }
 
     public void cancelLoading() {
@@ -149,7 +160,7 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     public void reachedTheEnd() {
-        if(reachedTheEnd)
+        if (reachedTheEnd)
             return;
 
         Log.d(TAG, "Reached the end");
@@ -185,8 +196,9 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
      * Add a whole range of items to this adapter, and check if we've reached the end.
      *
      * @param items items to add.
+     * @return true if any items were filtered and we should just try to load another page, false otherwise
      */
-    private void addAll(List<IEndlessAdaptable> items) {
+    private boolean addAll(List<IEndlessAdaptable> items) {
         if (items.size() > 0) {
             boolean enoughItems = hasEnoughItems(items);
             // remove all things we already have
@@ -202,17 +214,34 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
 
             if (enoughItems && realItemCount == 0 && alternativeEnd) {
                 enoughItems = false;
+                Log.v(TAG, "Not Enough items for the next page [1]");
             }
 
             if (viewInReverse && page > FIRST_PAGE) {
                 enoughItems = true;
+                Log.v(TAG, "Not Enough items for the next page [2]");
             }
 
             // Did we have enough items and have not reached the end?
-            if (!enoughItems && !reachedTheEnd)
+            if (!enoughItems && !reachedTheEnd) {
                 reachedTheEnd();
+                return false;
+            }
+
+            // Have we filtered out all items, while we should have had some items?
+            if (realItemCount > 0) {
+                // We didn't even get a single item out of this
+                if (insertedItems == 0)
+                    return true;
+
+                // Have we filtered any items, and are we still at the start of reasonable suspicion of this view not being fully filled?
+                return this.items.size() <= 25 && insertedItems != realItemCount;
+            }
+            return false;
         } else {
+            Log.v(TAG, "Got no items on the current page");
             reachedTheEnd();
+            return false;
         }
     }
 
