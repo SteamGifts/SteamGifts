@@ -28,6 +28,12 @@ public class Intro extends AppIntro2 {
         }
     }
 
+    public static void showIntro(Activity parentActivity, final String type) {
+        Intent intent = new Intent(parentActivity, Intro.class);
+        intent.putExtra("type", type);
+        parentActivity.startActivity(intent);
+    }
+
     @Override
     public void init(Bundle savedInstanceState) {
         switch (getIntent().getStringExtra("type")) {

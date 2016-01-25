@@ -188,6 +188,10 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
                                 onAccountChange();
                                 break;
 
+                            case R.string.navigation_help:
+                                Intro.showIntro(MainActivity.this, Intro.INTRO_MAIN);
+                                break;
+
                             case R.string.navigation_about:
                                 startActivity(new Intent(MainActivity.this, AboutActivity.class));
                                 break;
@@ -342,6 +346,7 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
             drawer.addItem(new PrimaryDrawerItem().withName(R.string.logout).withIdentifier(R.string.logout).withSelectable(false).withIcon(FontAwesome.Icon.faw_sign_out));
         }
 
+        drawer.addItem(new PrimaryDrawerItem().withName(R.string.navigation_help).withIdentifier(R.string.navigation_help).withSelectable(false).withIcon(FontAwesome.Icon.faw_question));
         drawer.addItem(new PrimaryDrawerItem().withName(R.string.navigation_about).withIdentifier(R.string.navigation_about).withSelectable(false).withIcon(FontAwesome.Icon.faw_info));
     }
 
