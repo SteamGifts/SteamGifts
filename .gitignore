@@ -1,9 +1,9 @@
 *.iml
-/.gradle
-/gradle
-/local.properties
-/.idea
+.gradle/
+gradle/
+local.properties
+.idea
 .DS_Store
-/build
+build/
 /captures
 *.apk
