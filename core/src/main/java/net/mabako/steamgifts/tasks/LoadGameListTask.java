@@ -22,7 +22,7 @@ import java.util.List;
 public abstract class LoadGameListTask extends AsyncTask<Void, Void, List<IEndlessAdaptable>> {
     private static final String TAG = LoadGiveawayListTask.class.getSimpleName();
 
-    private final ListFragment fragment;
+    private final ListFragment<?> fragment;
     private final int page;
     private final String searchQuery;
     private final String pathSegment;
