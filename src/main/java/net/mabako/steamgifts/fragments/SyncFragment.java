@@ -161,7 +161,7 @@ public class SyncFragment extends Fragment {
 
         @Override
         protected void onPostExecute(Connection.Response response) {
-            if (response.statusCode() == 200) {
+            if (response != null && response.statusCode() == 200) {
                 try {
                     Log.v(TAG, "Response to JSON request: " + response.body());
                     JSONObject root = new JSONObject(response.body());
@@ -174,16 +174,15 @@ public class SyncFragment extends Fragment {
                         String message = root.getString("msg");
                         if (message != null) {
                             Toast.makeText(getFragment().getContext(), message, Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(getFragment().getContext(), "Could not sync.", Toast.LENGTH_SHORT).show();
+                            return;
                         }
                     }
 
-                    return;
                 } catch (JSONException e) {
                     Log.e(TAG, "Failed to parse JSON object", e);
                 }
             }
+            Toast.makeText(getFragment().getContext(), "Could not sync.", Toast.LENGTH_SHORT).show();
         }
     }
 }

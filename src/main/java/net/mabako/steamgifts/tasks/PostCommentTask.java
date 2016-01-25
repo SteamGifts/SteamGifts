@@ -2,13 +2,10 @@ package net.mabako.steamgifts.tasks;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.util.Log;
 
 import net.mabako.steamgifts.activities.WriteCommentActivity;
 
 import org.jsoup.Connection;
-
-import java.util.Map;
 
 public class PostCommentTask extends AjaxTask<Activity> {
     private final String description;
@@ -31,16 +28,12 @@ public class PostCommentTask extends AjaxTask<Activity> {
     @Override
     protected void onPostExecute(Connection.Response response) {
         Activity activity = getFragment();
-        if (response.statusCode() == 301) {
+        if (response != null && response.statusCode() == 301) {
             Intent data = new Intent();
             data.putExtra("parent", parentId);
             activity.setResult(WriteCommentActivity.COMMENT_SENT, data);
         } else {
             activity.setResult(WriteCommentActivity.COMMENT_NOT_SENT);
-            Log.d("Status", "" + response.statusCode());
-            for (Map.Entry<String, String> header : response.headers().entrySet()) {
-                Log.d("Status", header.getKey() + "=" + header.getValue());
-            }
         }
         activity.finish();
     }
