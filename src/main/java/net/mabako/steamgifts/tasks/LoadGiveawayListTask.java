@@ -1,6 +1,7 @@
 package net.mabako.steamgifts.tasks;
 
 import android.os.AsyncTask;
+import android.text.TextUtils;
 import android.util.Log;
 
 import net.mabako.steamgifts.data.Giveaway;
@@ -31,7 +32,7 @@ public class LoadGiveawayListTask extends AsyncTask<Void, Void, List<Giveaway>> 
         this.page = page;
         this.type = type;
         this.searchQuery = searchQuery;
-        this.showPinnedGiveaways = showPinnedGiveaways && type == GiveawayListFragment.Type.ALL;
+        this.showPinnedGiveaways = showPinnedGiveaways && type == GiveawayListFragment.Type.ALL && TextUtils.isEmpty(searchQuery);
     }
 
     @Override
