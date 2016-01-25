@@ -47,7 +47,7 @@ public class LoadGiveawayListTask extends AsyncTask<Void, Void, List<Giveaway>> 
             if (searchQuery != null)
                 jsoup.data("q", searchQuery);
 
-            FilterData filterData = FilterData.getCurrent();
+            FilterData filterData = FilterData.getCurrent(fragment.getContext());
             addFilterParameter(jsoup, "entry_max", filterData.getMaxEntries());
             addFilterParameter(jsoup, "entry_min", filterData.getMinEntries());
             if (!filterData.isRestrictLevelOnlyOnPublicGiveaways()) {

@@ -1,5 +1,11 @@
 package net.mabako.steamgifts.persistentdata;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+
 import java.io.Serializable;
 
 /**
@@ -7,17 +13,34 @@ import java.io.Serializable;
  */
 public class FilterData implements Serializable {
     private static final long serialVersionUID = 924136599147980741L;
-    private static FilterData current = new FilterData();
+
+    public static final String PREF_FILTER = "giveaway.filter";
+    public static final String PREF_KEY_CONFIG = "filter-config";
+
+    private static FilterData current = null;
 
     private int minEntries = -1, maxEntries = -1, minPoints = -1, maxPoints = -1, minLevel = -1, maxLevel = -1;
     private boolean hideEntered, restrictLevelOnlyOnPublicGiveaways;
 
-    public static FilterData getCurrent() {
+    public static synchronized FilterData getCurrent(Context context) {
+        if (current == null) {
+            // Load from preferences if possible
+            SharedPreferences sp = context.getSharedPreferences(PREF_FILTER, Context.MODE_PRIVATE);
+
+            String config = sp.getString(PREF_KEY_CONFIG, null);
+            try {
+                current = new Gson().fromJson(config, FilterData.class);
+            } catch (JsonSyntaxException e) {
+            }
+
+            if (current == null)
+                current = new FilterData();
+        }
         return current;
     }
 
-    public static void clear() {
-        current = new FilterData();
+    public static void setCurrent(FilterData current) {
+        FilterData.current = current;
     }
 
     public int getMaxEntries() {

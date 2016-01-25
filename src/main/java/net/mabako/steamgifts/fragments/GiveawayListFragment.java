@@ -199,7 +199,7 @@ public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter
         filterMenu.setVisible(true);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            ActionItemBadge.update(getActivity(), filterMenu, getResources().getDrawable(R.drawable.ic_filter_variant), (BadgeStyle) null, FilterData.getCurrent().isAnyActive() ? "\n\n{faw-check-circle}" : null);
+            ActionItemBadge.update(getActivity(), filterMenu, getResources().getDrawable(R.drawable.ic_filter_variant), (BadgeStyle) null, FilterData.getCurrent(getContext()).isAnyActive() ? "\n\n{faw-check-circle}" : null);
         }
     }
 

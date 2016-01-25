@@ -1,7 +1,9 @@
 package net.mabako.steamgifts.fragments;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -9,6 +11,8 @@ import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
+
+import com.google.gson.Gson;
 
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.fragments.interfaces.IFilterUpdatedListener;
@@ -23,7 +27,7 @@ public class FilterGiveawayDialogFragment extends DialogFragment implements Dial
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        FilterData f = FilterData.getCurrent();
+        FilterData f = FilterData.getCurrent(getContext());
         view = getActivity().getLayoutInflater().inflate(R.layout.fragment_filter, null, false);
 
         AlertDialog dialog = new AlertDialog.Builder(getActivity())
@@ -33,8 +37,12 @@ public class FilterGiveawayDialogFragment extends DialogFragment implements Dial
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // Clear all filter settings
-                        if (FilterData.getCurrent().isAnyActive()) {
-                            FilterData.clear();
+                        SharedPreferences.Editor spe = getContext().getSharedPreferences(FilterData.PREF_FILTER, Context.MODE_PRIVATE).edit();
+                        spe.remove(FilterData.PREF_KEY_CONFIG);
+                        spe.apply();
+
+                        if (FilterData.getCurrent(getContext()).isAnyActive()) {
+                            FilterData.setCurrent(new FilterData());
 
                             if (listener != null)
                                 listener.onFilterUpdated();
@@ -57,9 +65,8 @@ public class FilterGiveawayDialogFragment extends DialogFragment implements Dial
 
     @Override
     public void onClick(DialogInterface dialog, int which) {
-        FilterData oldFilterData = FilterData.getCurrent();
-        FilterData.clear();
-        FilterData newFilterData = FilterData.getCurrent();
+        FilterData oldFilterData = FilterData.getCurrent(getContext());
+        FilterData newFilterData = new FilterData();
 
         newFilterData.setMaxEntries(getValueAndUpdateFlags(R.id.filter_entries_max, oldFilterData.getMaxEntries()));
         newFilterData.setMaxLevel(getValueAndUpdateFlags(R.id.filter_level_max, oldFilterData.getMaxLevel()));
@@ -69,6 +76,12 @@ public class FilterGiveawayDialogFragment extends DialogFragment implements Dial
         newFilterData.setMinPoints(getValueAndUpdateFlags(R.id.filter_points_min, oldFilterData.getMinPoints()));
         newFilterData.setHideEntered(getValueAndUpdateFlags(R.id.filter_entered, oldFilterData.isHideEntered()));
         newFilterData.setRestrictLevelOnlyOnPublicGiveaways(getValueAndUpdateFlags(R.id.filter_whitelist_or_group, oldFilterData.isRestrictLevelOnlyOnPublicGiveaways()));
+
+        FilterData.setCurrent(newFilterData);
+
+        SharedPreferences.Editor spe = getContext().getSharedPreferences(FilterData.PREF_FILTER, Context.MODE_PRIVATE).edit();
+        spe.putString(FilterData.PREF_KEY_CONFIG, new Gson().toJson(newFilterData));
+        spe.apply();
 
         if (listener != null && requireReload)
             listener.onFilterUpdated();

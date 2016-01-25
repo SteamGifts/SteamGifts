@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 
 import net.mabako.steamgifts.adapters.viewholder.GiveawayListItemViewHolder;
@@ -135,8 +134,8 @@ public class GiveawayAdapter extends EndlessAdapter {
 
     @Override
     protected int addFiltered(List<IEndlessAdaptable> items) {
-        if (filterItems) {
-            FilterData fd = FilterData.getCurrent();
+        if (filterItems && fragment != null) {
+            FilterData fd = FilterData.getCurrent(fragment.getContext());
 
             int minPoints = fd.getMinPoints();
             int maxPoints = fd.getMaxPoints();
