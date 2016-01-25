@@ -47,6 +47,7 @@ import java.io.Serializable;
 public class MainActivity extends CommonActivity implements IPointUpdateNotification {
     public static final String ARG_TYPE = "type";
     public static final String ARG_QUERY = "query";
+    public static final String ARG_NO_DRAWER = "no-drawer";
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -64,7 +65,9 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
         SteamGiftsUserData.addUpdateHandler(this);
         onUpdatePoints(SteamGiftsUserData.getCurrent().getPoints());
 
-        setupNavBar();
+        boolean noDrawer = getIntent().getBooleanExtra(ARG_NO_DRAWER, false);
+        if (!noDrawer)
+            setupNavBar();
 
         // savedInstanceState is non-null if a fragment state is saved from a previous configuration.
         if (savedInstanceState == null) {
@@ -75,12 +78,15 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
 
             String query = getIntent().getStringExtra(ARG_QUERY);
 
+
             if (type instanceof GiveawayListFragment.Type) {
-                loadFragment(GiveawayListFragment.newInstance((GiveawayListFragment.Type) type, query, true));
-                drawer.setSelection(((GiveawayListFragment.Type) type).getNavbarResource(), false);
+                loadFragment(GiveawayListFragment.newInstance((GiveawayListFragment.Type) type, query, drawer == null));
+                if (!noDrawer)
+                    drawer.setSelection(((GiveawayListFragment.Type) type).getNavbarResource(), false);
             } else if (type instanceof DiscussionListFragment.Type) {
                 loadFragment(DiscussionListFragment.newInstance((DiscussionListFragment.Type) type, null));
-                drawer.setSelection(((DiscussionListFragment.Type) type).getNavbarResource(), false);
+                if (!noDrawer)
+                    drawer.setSelection(((DiscussionListFragment.Type) type).getNavbarResource(), false);
             }
         }
 
@@ -103,8 +109,10 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
 
         super.onAccountChange();
 
-        loadFragment(GiveawayListFragment.newInstance(GiveawayListFragment.Type.ALL, null, false));
-        drawer.setSelection(R.string.navigation_giveaways_all, false);
+        loadFragment(GiveawayListFragment.newInstance(GiveawayListFragment.Type.ALL, null, drawer == null));
+
+        if (drawer != null)
+            drawer.setSelection(R.string.navigation_giveaways_all, false);
     }
 
     @Override
@@ -297,6 +305,9 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
      * </ol>
      */
     private void reconfigureNavBarItems() {
+        if (drawer == null)
+            return;
+
         // Rebuild the header.
         accountHeader.clear();
 

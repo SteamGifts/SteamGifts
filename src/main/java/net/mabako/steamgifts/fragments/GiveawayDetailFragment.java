@@ -339,6 +339,7 @@ public class GiveawayDetailFragment extends ListFragment<CommentAdapter> impleme
                 Intent intent = new Intent(getContext(), MainActivity.class);
                 intent.putExtra(MainActivity.ARG_TYPE, GiveawayListFragment.Type.ALL);
                 intent.putExtra(MainActivity.ARG_QUERY, ((Giveaway) giveaway).getTitle());
+                intent.putExtra(MainActivity.ARG_NO_DRAWER, true);
                 getActivity().startActivityForResult(intent, CommonActivity.REQUEST_LOGIN);
                 return true;
 
