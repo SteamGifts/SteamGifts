@@ -36,6 +36,8 @@ public class CommonActivity extends BaseActivity {
     public static final int REQUEST_SYNC = 8;
     public static final int RESPONSE_SYNC_SUCCESSFUL = 9;
 
+    public static final int REQUEST_SETTINGS = 10;
+
     public void requestLogin() {
         startActivityForResult(new Intent(this, LoginActivity.class), REQUEST_LOGIN);
     }

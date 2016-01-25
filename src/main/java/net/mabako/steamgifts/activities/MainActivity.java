@@ -193,12 +193,14 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
                                 break;
 
                             case R.string.preferences:
-                                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                                startActivityForResult(new Intent(MainActivity.this, SettingsActivity.class), REQUEST_SETTINGS);
                                 break;
 
                             case R.string.navigation_giveaways_saved:
                                 loadFragment(new SavedGiveawaysFragment());
-                                getSupportActionBar().setSubtitle(null);
+                                ActionBar actionBar = getSupportActionBar();
+                                if (actionBar != null)
+                                    actionBar.setSubtitle(null);
                                 break;
 
                             default:
@@ -354,6 +356,17 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
                     Snackbar.make(findViewById(R.id.swipeContainer), "Welcome, " + SteamGiftsUserData.getCurrent().getName() + "!", Snackbar.LENGTH_LONG).show();
                 } else
                     Snackbar.make(findViewById(R.id.swipeContainer), "Login failed", Snackbar.LENGTH_LONG).show();
+                break;
+
+            case REQUEST_SETTINGS:
+                Fragment fragment = getCurrentFragment();
+
+                // force an entire fragment reload if this is something giveaway reloaded
+                if (fragment instanceof GiveawayListFragment) {
+                    loadFragment(GiveawayListFragment.newInstance(((GiveawayListFragment) fragment).getType(), null));
+                } else if (fragment instanceof SavedGiveawaysFragment) {
+                    loadFragment(new SavedGiveawaysFragment());
+                }
                 break;
 
             default:

@@ -3,6 +3,7 @@ package net.mabako.steamgifts.fragments;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 
 import net.mabako.steamgifts.R;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
@@ -45,7 +46,7 @@ public class SavedGiveawaysFragment extends ListFragment<GiveawayAdapter> implem
             public void onLoad(int page) {
                 fetchItems(page);
             }
-        }, this, -1, false, savedGiveaways);
+        }, this, -1, false, savedGiveaways, PreferenceManager.getDefaultSharedPreferences(getContext()));
     }
 
     @Override
