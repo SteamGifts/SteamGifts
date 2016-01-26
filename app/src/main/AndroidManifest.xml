@@ -3,5 +3,7 @@
     package="net.mabako.steamgifts">
 
     <!-- We kinda just pull everything from the library's manifest -->
-    <application android:icon="@mipmap/ic_launcher" />
+    <application
+        android:name=".Application"
+        android:icon="@mipmap/ic_launcher" />
 </manifest>
