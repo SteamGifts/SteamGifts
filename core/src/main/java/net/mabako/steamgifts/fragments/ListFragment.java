@@ -38,6 +38,7 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
     private AsyncTask<Void, Void, ?> taskToFetchItems = null;
 
     @Override
+    @SuppressWarnings("unchecked")
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
