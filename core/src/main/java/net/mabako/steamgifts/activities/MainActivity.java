@@ -30,8 +30,8 @@ import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader;
 import com.mikepenz.materialdrawer.util.DrawerImageLoader;
 import com.squareup.picasso.Picasso;
 
-import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.activities.settings.SettingsActivity;
+import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.fragments.DiscussionListFragment;
 import net.mabako.steamgifts.fragments.GiveawayListFragment;
 import net.mabako.steamgifts.fragments.SavedGiveawaysFragment;

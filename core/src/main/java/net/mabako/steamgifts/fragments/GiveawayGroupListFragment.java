@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.view.Menu;
 import android.view.MenuInflater;
 
-import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.adapters.GiveawayGroupAdapter;
 import net.mabako.steamgifts.fragments.interfaces.IActivityTitle;
 import net.mabako.steamgifts.tasks.LoadGiveawayGroupsTask;
@@ -49,16 +48,13 @@ public class GiveawayGroupListFragment extends ListFragment<GiveawayGroupAdapter
             title = savedInstanceState.getString(SAVED_TITLE);
             path = savedInstanceState.getString(SAVED_PATH);
         }
+
+        adapter.setFragmentValues(this, getContext());
     }
 
     @Override
     protected GiveawayGroupAdapter createAdapter() {
-        return new GiveawayGroupAdapter(getActivity(), new EndlessAdapter.OnLoadListener() {
-            @Override
-            public void onLoad(int page) {
-                fetchItems(page);
-            }
-        });
+        return new GiveawayGroupAdapter();
     }
 
     @Override

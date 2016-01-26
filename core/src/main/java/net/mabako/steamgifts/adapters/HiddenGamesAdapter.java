@@ -11,21 +11,29 @@ import net.mabako.steamgifts.fragments.HiddenGamesFragment;
 import java.util.List;
 
 public class HiddenGamesAdapter extends EndlessAdapter {
+    private static final long serialVersionUID = 6766947242204190106L;
+
     /**
      * Discussions that are shown per page.
      */
     private static final int ITEMS_PER_PAGE = 25;
 
-    private final HiddenGamesFragment fragment;
+    private transient HiddenGamesFragment fragment;
 
-    public HiddenGamesAdapter(HiddenGamesFragment fragment, @NonNull OnLoadListener listener) {
-        super(listener);
+    public HiddenGamesAdapter() {
         this.alternativeEnd = true;
+    }
+
+    public void setFragmentValues(HiddenGamesFragment fragment) {
+        setLoadListener(fragment);
         this.fragment = fragment;
     }
 
     @Override
     protected RecyclerView.ViewHolder onCreateActualViewHolder(View view, int viewType) {
+        if (fragment == null)
+            throw new IllegalStateException("no fragment");
+
         return new GameViewHolder(view, fragment);
     }
 

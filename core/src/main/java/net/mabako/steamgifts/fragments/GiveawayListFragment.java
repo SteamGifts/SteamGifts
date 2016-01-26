@@ -79,6 +79,8 @@ public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter
             type = (Type) savedInstanceState.getSerializable(SAVED_TYPE);
             lastRemovedGame = (LastRemovedGame) savedInstanceState.getSerializable(SAVED_LAST_REMOVED);
         }
+
+        adapter.setFragmentValues(getActivity(), this, new SavedGiveaways(getContext()));
     }
 
     @Override
@@ -105,12 +107,7 @@ public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter
 
     @Override
     protected GiveawayAdapter createAdapter() {
-        return new GiveawayAdapter(getActivity(), new EndlessAdapter.OnLoadListener() {
-            @Override
-            public void onLoad(int page) {
-                fetchItems(page);
-            }
-        }, this, 50, true, new SavedGiveaways(getContext()), PreferenceManager.getDefaultSharedPreferences(getContext()));
+        return new GiveawayAdapter(50, true, PreferenceManager.getDefaultSharedPreferences(getContext()));
     }
 
     @Override

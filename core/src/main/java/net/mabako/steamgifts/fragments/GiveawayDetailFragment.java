@@ -95,6 +95,8 @@ public class GiveawayDetailFragment extends ListFragment<CommentAdapter> impleme
             giveaway = (BasicGiveaway) savedInstanceState.getSerializable(SAVED_GIVEAWAY);
             giveawayCard = (GiveawayDetailsCard) adapter.getStickyItem();
         }
+
+        adapter.setFragmentValues(this);
     }
 
     @Override
@@ -105,21 +107,16 @@ public class GiveawayDetailFragment extends ListFragment<CommentAdapter> impleme
 
     @Override
     protected CommentAdapter createAdapter() {
-        return new CommentAdapter<>(this, new EndlessAdapter.OnLoadListener() {
-            @Override
-            public void onLoad(int page) {
-                fetchItems(page);
-            }
-        });
+        return new CommentAdapter();
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        savedGiveaways = new SavedGiveaways(context);
+
         if (context instanceof Activity)
             this.activity = (Activity) context;
-
-        savedGiveaways = new SavedGiveaways(getContext());
     }
 
     @Nullable

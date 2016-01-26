@@ -58,6 +58,8 @@ public class DiscussionDetailFragment extends ListFragment<CommentAdapter> imple
             discussion = (BasicDiscussion) savedInstanceState.getSerializable(SAVED_DISCUSSION);
             discussionCard = (DiscussionDetailsCard) savedInstanceState.getSerializable(SAVED_CARD);
         }
+
+        adapter.setFragmentValues(this);
     }
 
     @Override
@@ -106,12 +108,7 @@ public class DiscussionDetailFragment extends ListFragment<CommentAdapter> imple
 
     @Override
     protected CommentAdapter createAdapter() {
-        return new CommentAdapter<>(this, new EndlessAdapter.OnLoadListener() {
-            @Override
-            public void onLoad(int page) {
-                fetchItems(page);
-            }
-        });
+        return new CommentAdapter();
     }
 
     @Override

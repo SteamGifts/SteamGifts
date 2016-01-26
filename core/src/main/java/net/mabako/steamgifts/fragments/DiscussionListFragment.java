@@ -1,5 +1,7 @@
 package net.mabako.steamgifts.fragments;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -43,6 +45,8 @@ public class DiscussionListFragment extends SearchableListFragment<DiscussionAda
         } else {
             type = (Type) savedInstanceState.getSerializable(SAVED_TYPE);
         }
+
+        adapter.setFragmentValues(this, getActivity());
     }
 
     @Override
@@ -53,12 +57,7 @@ public class DiscussionListFragment extends SearchableListFragment<DiscussionAda
 
     @Override
     protected DiscussionAdapter createAdapter() {
-        return new DiscussionAdapter(getActivity(), new EndlessAdapter.OnLoadListener() {
-            @Override
-            public void onLoad(int page) {
-                fetchItems(page);
-            }
-        });
+        return new DiscussionAdapter();
     }
 
     @Override

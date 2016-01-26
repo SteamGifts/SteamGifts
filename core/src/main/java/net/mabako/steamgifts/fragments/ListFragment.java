@@ -23,7 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 // TODO make EndlessAdapter's viewInReverse more easily handled within here.
-public abstract class ListFragment<AdapterType extends EndlessAdapter> extends Fragment {
+public abstract class ListFragment<AdapterType extends EndlessAdapter> extends Fragment implements EndlessAdapter.OnLoadListener {
+    private static final long serialVersionUID = -1489654549912777189L;
     private static final String SAVED_ADAPTER = "listadapter";
 
     protected boolean loadItemsInitially = true;
@@ -200,6 +201,11 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
         taskToFetchItems = null;
         adapter.cancelLoading();
         swipeContainer.setRefreshing(false);
+    }
+
+    @Override
+    public final void onLoad(int page) {
+        fetchItems(page);
     }
 
     public AdapterType getAdapter() {

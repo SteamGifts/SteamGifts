@@ -33,6 +33,12 @@ public class MessageListFragment extends ListFragment<MessageAdapter> implements
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        adapter.setFragmentValues(this);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
@@ -43,12 +49,7 @@ public class MessageListFragment extends ListFragment<MessageAdapter> implements
 
     @Override
     protected MessageAdapter createAdapter() {
-        return new MessageAdapter(this, new EndlessAdapter.OnLoadListener() {
-            @Override
-            public void onLoad(int page) {
-                fetchItems(page);
-            }
-        });
+        return new MessageAdapter();
     }
 
     @Override

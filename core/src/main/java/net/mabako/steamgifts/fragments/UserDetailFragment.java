@@ -27,7 +27,6 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import net.mabako.steamgifts.activities.WebViewActivity;
-import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.adapters.GiveawayAdapter;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.core.R;
@@ -210,13 +209,14 @@ public class UserDetailFragment extends Fragment implements IUserNotifications {
         }
 
         @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            adapter.setFragmentValues(getActivity(), this, null);
+        }
+
+        @Override
         protected GiveawayAdapter createAdapter() {
-            return new GiveawayAdapter(getActivity(), new EndlessAdapter.OnLoadListener() {
-                @Override
-                public void onLoad(int page) {
-                    fetchItems(page);
-                }
-            }, null, 25, PreferenceManager.getDefaultSharedPreferences(getContext()));
+            return new GiveawayAdapter(25, PreferenceManager.getDefaultSharedPreferences(getContext()));
         }
 
         @Override

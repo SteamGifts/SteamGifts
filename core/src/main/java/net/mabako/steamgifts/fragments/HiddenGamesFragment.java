@@ -38,13 +38,15 @@ public class HiddenGamesFragment extends SearchableListFragment<HiddenGamesAdapt
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        adapter.setFragmentValues(this);
+    }
+
+    @Override
     protected HiddenGamesAdapter createAdapter() {
-        return new HiddenGamesAdapter(this, new EndlessAdapter.OnLoadListener() {
-            @Override
-            public void onLoad(int page) {
-                fetchItems(page);
-            }
-        });
+        return new HiddenGamesAdapter();
     }
 
     @Override

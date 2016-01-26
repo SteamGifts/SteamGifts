@@ -10,6 +10,7 @@ import android.view.View;
 import net.mabako.steamgifts.adapters.viewholder.GiveawayListItemViewHolder;
 import net.mabako.steamgifts.data.Game;
 import net.mabako.steamgifts.data.Giveaway;
+import net.mabako.steamgifts.fragments.ListFragment;
 import net.mabako.steamgifts.persistentdata.FilterData;
 import net.mabako.steamgifts.persistentdata.SavedGiveaways;
 
@@ -19,6 +20,8 @@ import java.util.List;
 import java.util.ListIterator;
 
 public class GiveawayAdapter extends EndlessAdapter {
+    private static final long serialVersionUID = 4291118458389025091L;
+
     /**
      * Giveaways that are shown per page.
      */
@@ -27,12 +30,12 @@ public class GiveawayAdapter extends EndlessAdapter {
     /**
      * Context of this adapter.
      */
-    private final Activity context;
+    private transient Activity context;
 
     /**
      * Fragment this is shown in.
      */
-    private final Fragment fragment;
+    private transient Fragment fragment;
 
     /**
      * Should we filter the item for any criteria?
@@ -42,25 +45,28 @@ public class GiveawayAdapter extends EndlessAdapter {
     /**
      * Instance of SavedGiveaways to save/unsave giveaways.
      */
-    private final SavedGiveaways savedGiveaways;
+    private transient SavedGiveaways savedGiveaways;
 
     /**
      * Should we load images for this list?
      */
     private final boolean loadImages;
 
-    public GiveawayAdapter(Activity context, OnLoadListener listener, Fragment fragment, int itemsPerPage, SharedPreferences sharedPreferences) {
-        this(context, listener, fragment, itemsPerPage, false, null, sharedPreferences);
+    public GiveawayAdapter(int itemsPerPage, SharedPreferences sharedPreferences) {
+        this(itemsPerPage, false, sharedPreferences);
     }
 
-    public GiveawayAdapter(Activity context, OnLoadListener listener, Fragment fragment, int itemsPerPage, boolean filterItems, SavedGiveaways savedGiveaways, SharedPreferences sharedPreferences) {
-        super(listener);
-        this.context = context;
-        this.fragment = fragment;
+    public GiveawayAdapter(int itemsPerPage, boolean filterItems, SharedPreferences sharedPreferences) {
         this.itemsPerPage = itemsPerPage;
         this.filterItems = filterItems;
-        this.savedGiveaways = savedGiveaways;
         this.loadImages = sharedPreferences.getString("preference_giveaway_load_images", "details;list").contains("list");
+    }
+
+    public void setFragmentValues(@NonNull Activity activity, @NonNull ListFragment fragment, SavedGiveaways savedGiveaways) {
+        setLoadListener(fragment);
+        this.context = activity;
+        this.fragment = fragment;
+        this.savedGiveaways = savedGiveaways;
     }
 
     @Override

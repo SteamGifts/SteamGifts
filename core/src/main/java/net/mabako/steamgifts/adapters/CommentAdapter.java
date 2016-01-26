@@ -1,7 +1,6 @@
 package net.mabako.steamgifts.adapters;
 
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -11,6 +10,7 @@ import net.mabako.steamgifts.adapters.viewholder.GiveawayCardViewHolder;
 import net.mabako.steamgifts.data.Comment;
 import net.mabako.steamgifts.fragments.DiscussionDetailFragment;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
+import net.mabako.steamgifts.fragments.ListFragment;
 import net.mabako.steamgifts.fragments.interfaces.ICommentableFragment;
 import net.mabako.steamgifts.fragments.util.DiscussionDetailsCard;
 import net.mabako.steamgifts.fragments.util.GiveawayDetailsCard;
@@ -20,38 +20,33 @@ import java.util.List;
 /**
  * Adapter to hold comments for a giveaway/discussion.
  */
-public class CommentAdapter<FragmentType extends Fragment> extends EndlessAdapter {
+public class CommentAdapter extends EndlessAdapter {
+    private static final long serialVersionUID = 5961119226634909060L;
+
     /**
      * Amount of top-level items on a full comments page.
      */
     private static final int ITEMS_PER_PAGE = 25;
 
     /**
-     * Colors, reinitialized in {@link #setColors()}.
-     */
-    private int[] colors = {android.R.color.holo_blue_dark, android.R.color.holo_green_dark, android.R.color.holo_orange_dark, android.R.color.holo_red_dark};
-
-    /**
      * Fragment this all is shown in.
      */
-    private final FragmentType fragment;
+    private transient Fragment fragment;
 
-    public CommentAdapter(FragmentType fragment, EndlessAdapter.OnLoadListener loadListener) {
-        super(loadListener);
-
-        this.fragment = fragment;
+    public CommentAdapter() {
         this.alternativeEnd = true;
-
-        setColors();
     }
 
-    private void setColors() {
-        for (int i = 0; i < colors.length; ++i)
-            colors[i] = ContextCompat.getColor(fragment.getContext(), colors[i]);
+    public void setFragmentValues(ListFragment fragment) {
+        setLoadListener(fragment);
+        this.fragment = fragment;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateActualViewHolder(View view, int viewType) {
+        if (fragment == null)
+            throw new IllegalStateException("Ain't got no fragment");
+
         if (viewType == Comment.VIEW_LAYOUT) {
             return new CommentViewHolder(view, fragment.getActivity(), (ICommentableFragment) fragment);
         } else if (viewType == GiveawayDetailsCard.VIEW_LAYOUT) {

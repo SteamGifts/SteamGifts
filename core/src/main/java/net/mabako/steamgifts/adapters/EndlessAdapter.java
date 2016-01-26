@@ -40,6 +40,8 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
      */
     private static final int END_VIEW = -2;
 
+    private static final long serialVersionUID = 95216226584860610L;
+
     /**
      * Sticky items, for example when using cards.
      */
@@ -58,7 +60,7 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
     /**
      * Upon reaching the end of the current list, we'd want to execute the listener.
      */
-    private OnLoadListener loadListener;
+    private transient OnLoadListener loadListener;
 
     /**
      * Are we at the end of the list yet?
@@ -85,23 +87,10 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
      */
     private String xsrfToken = null;
 
-    private RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
-        @Override
-        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-            LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-            if (layoutManager == null)
-                throw new IllegalStateException("Can't handle scrolling without a LayoutManager");
+    private RecyclerView.OnScrollListener scrollListener = new ScrollListener();
 
-            int lastVisibleItem = layoutManager.findLastVisibleItemPosition();
+    public EndlessAdapter() {
 
-            if (!loading && layoutManager.getItemCount() <= (lastVisibleItem + 5)) {
-                startLoading();
-            }
-        }
-    };
-
-    public EndlessAdapter(@NonNull OnLoadListener listener) {
-        loadListener = listener;
     }
 
     /**
@@ -117,8 +106,12 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
         items.add(null);
         notifyItemInserted(getItemCount() - 1);
 
-        Log.d(TAG, "Starting to load more content on page " + page);
-        loadListener.onLoad(page);
+        if (loadListener != null) {
+            Log.d(TAG, "Starting to load more content on page " + page);
+            loadListener.onLoad(page);
+        } else {
+            Log.w(TAG, "want to scroll more, but no load listener found");
+        }
     }
 
     public void finishLoading(List<IEndlessAdaptable> addedItems) {
@@ -454,8 +447,30 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
     /**
      * Listener called upon scrolling down to load "more" items.
      */
-    public interface OnLoadListener extends Serializable {
+    protected void setLoadListener(OnLoadListener loadListener) {
+        this.loadListener = loadListener;
+    }
+
+    public interface OnLoadListener {
+
         void onLoad(int page);
+    }
+
+    private class ScrollListener extends RecyclerView.OnScrollListener implements Serializable {
+        private static final long serialVersionUID = -9087960089493875144L;
+
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+            if (layoutManager == null)
+                throw new IllegalStateException("Can't handle scrolling without a LayoutManager");
+
+            int lastVisibleItem = layoutManager.findLastVisibleItemPosition();
+
+            if (!loading && layoutManager.getItemCount() <= (lastVisibleItem + 5)) {
+                startLoading();
+            }
+        }
     }
 
     public static class RemovedElement implements Serializable {
