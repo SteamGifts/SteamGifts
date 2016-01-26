@@ -71,6 +71,8 @@
     <string name="comment_sent">Comment sent, please reload to see.</string>
     <string name="comment_not_sent">Comment could not be sent</string>
 
+    <string name="discussion_locked">This discussion is locked.</string>
+
     <!-- -->
     <string name="open_steam_store">Steam Store</string>
     <string name="open_steam_profile">Steam Profile</string>

@@ -16,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import net.mabako.steamgifts.activities.DetailActivity;
 import net.mabako.steamgifts.activities.WriteCommentActivity;
@@ -143,6 +144,7 @@ public class DiscussionDetailFragment extends ListFragment<CommentAdapter> imple
             if (actionBar != null) {
                 actionBar.setTitle(discussion.getTitle());
             }
+            activity.supportInvalidateOptionsMenu();
         }
     }
 
@@ -176,14 +178,30 @@ public class DiscussionDetailFragment extends ListFragment<CommentAdapter> imple
         inflater.inflate(R.menu.discussion_menu, menu);
 
         MenuItem commentMenu = menu.findItem(R.id.comment);
-        commentMenu.setVisible(discussion instanceof Discussion);
-        commentMenu.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                requestComment(null);
-                return true;
+        if (discussion instanceof Discussion) {
+            if (!((Discussion) discussion).isLocked()) {
+                commentMenu.setVisible(true);
+                commentMenu.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        requestComment(null);
+
+                        return true;
+                    }
+                });
+            } else {
+                MenuItem lockedMenu = menu.findItem(R.id.locked);
+
+                lockedMenu.setVisible(true);
+                lockedMenu.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        Toast.makeText(getContext(), R.string.discussion_locked, Toast.LENGTH_SHORT).show();
+                        return true;
+                    }
+                });
             }
-        });
+        }
     }
 
     @Override
