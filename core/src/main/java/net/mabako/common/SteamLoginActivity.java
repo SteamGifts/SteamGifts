@@ -1,9 +1,7 @@
 package net.mabako.common;
 
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -33,10 +31,6 @@ public abstract class SteamLoginActivity extends AppCompatActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean nightMode = prefs.getBoolean("preference_theme_nightmode", false);
-        setTheme(nightMode ? R.style.AppTheme_Dark : R.style.AppTheme_Light);
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
