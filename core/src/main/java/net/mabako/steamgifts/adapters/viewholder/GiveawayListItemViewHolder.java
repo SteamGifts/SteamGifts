@@ -18,10 +18,10 @@ import android.widget.Toast;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.activities.DetailActivity;
 import net.mabako.steamgifts.activities.MainActivity;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
+import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.BasicGiveaway;
 import net.mabako.steamgifts.data.Game;
 import net.mabako.steamgifts.data.Giveaway;
@@ -213,6 +213,11 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         Giveaway giveaway = (Giveaway) adapter.getItem(getAdapterPosition());
+        if (giveaway == null) {
+            Toast.makeText(fragment.getContext(), "Error, please try again.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
         Log.d(TAG, "onMenuItemClick(" + item.getItemId() + ")");
         switch (item.getItemId()) {
             case 1:

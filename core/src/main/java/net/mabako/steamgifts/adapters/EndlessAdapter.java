@@ -255,6 +255,9 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     public IEndlessAdaptable getItem(int position) {
+        if (position == RecyclerView.NO_POSITION)
+            return null;
+
         if (stickyItem != null) {
             return position == 0 ? stickyItem : items.get(position - 1);
         } else {
