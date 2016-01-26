@@ -49,6 +49,12 @@ public abstract class SteamLoginActivity extends AppCompatActivity {
 
     protected abstract void onLoginCancelled();
 
+    @Override
+    protected void onDestroy() {
+        webView.destroy();
+        super.onDestroy();
+    }
+
     private class SteamWebViewClient extends WebViewClient {
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
