@@ -112,7 +112,7 @@ public class GiveawayDetailFragment extends ListFragment<CommentAdapter> impleme
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        savedGiveaways = new SavedGiveaways(context);
+        // savedGiveaways = new SavedGiveaways(context);
 
         if (context instanceof Activity)
             this.activity = (Activity) context;

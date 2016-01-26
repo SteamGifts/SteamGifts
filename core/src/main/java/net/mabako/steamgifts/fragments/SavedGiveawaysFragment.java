@@ -31,7 +31,7 @@ public class SavedGiveawaysFragment extends ListFragment<GiveawayAdapter> implem
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        savedGiveaways = new SavedGiveaways(getContext());
+        // savedGiveaways = new SavedGiveaways(getContext());
     }
 
     @Override

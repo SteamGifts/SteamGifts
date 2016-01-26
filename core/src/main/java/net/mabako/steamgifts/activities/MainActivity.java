@@ -346,7 +346,7 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
                     new PrimaryDrawerItem().withName(R.string.navigation_giveaways_wishlist).withIdentifier(R.string.navigation_giveaways_wishlist).withIcon(FontAwesome.Icon.faw_heart));
         }
         drawer.addItems(new PrimaryDrawerItem().withName(R.string.navigation_giveaways_new).withIdentifier(R.string.navigation_giveaways_new).withIcon(FontAwesome.Icon.faw_refresh));
-        drawer.addItems(new PrimaryDrawerItem().withName(R.string.navigation_giveaways_saved).withIdentifier(R.string.navigation_giveaways_saved).withIcon(FontAwesome.Icon.faw_star));
+        // drawer.addItems(new PrimaryDrawerItem().withName(R.string.navigation_giveaways_saved).withIdentifier(R.string.navigation_giveaways_saved).withIcon(FontAwesome.Icon.faw_star));
 
         // Discussions, some time
         drawer.addItem(new SectionDrawerItem().withName(R.string.navigation_discussions).withDivider(true));
