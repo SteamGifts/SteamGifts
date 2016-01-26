@@ -15,6 +15,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,11 +27,10 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
-import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.activities.WebViewActivity;
-import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.adapters.GiveawayAdapter;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
+import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.User;
 import net.mabako.steamgifts.fragments.interfaces.IUserNotifications;
 import net.mabako.steamgifts.tasks.LoadUserDetailsTask;
@@ -43,6 +43,7 @@ import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 public class UserDetailFragment extends Fragment implements IUserNotifications {
     private static final String TAG = UserDetailFragment.class.getSimpleName();
     public static final String ARG_USER = "user";
+    private static final String SAVED_USER = "user";
 
     private User user;
 
@@ -52,8 +53,29 @@ public class UserDetailFragment extends Fragment implements IUserNotifications {
 
     public static UserDetailFragment newInstance(String userName) {
         UserDetailFragment fragment = new UserDetailFragment();
-        fragment.user = new User(userName);
+
+        Bundle args = new Bundle();
+        args.putSerializable(SAVED_USER, new User(userName));
+        fragment.setArguments(args);
+
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (savedInstanceState == null) {
+            user = (User) getArguments().getSerializable(SAVED_USER);
+        } else {
+            user = (User) savedInstanceState.getSerializable(SAVED_USER);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(SAVED_USER, user);
     }
 
     @Nullable
@@ -62,7 +84,8 @@ public class UserDetailFragment extends Fragment implements IUserNotifications {
         View layout = inflater.inflate(R.layout.fragment_user, container, false);
 
         ActionBar toolbar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        toolbar.setTitle(user.getName());
+        if (toolbar != null)
+            toolbar.setTitle(user.getName());
 
         viewPagerAdapter = new CustomPagerAdapter(getActivity().getSupportFragmentManager());
         viewPager = (ViewPager) layout.findViewById(R.id.viewPager);
@@ -147,10 +170,16 @@ public class UserDetailFragment extends Fragment implements IUserNotifications {
         @Override
         public Fragment getItem(int position) {
             switch (position) {
-                case 0:
-                    return UserGiveawayListFragment.newInstance(user, "", true, UserDetailFragment.this);
-                case 1:
-                    return UserGiveawayListFragment.newInstance(user, "/giveaways/won", false, UserDetailFragment.this);
+                case 0: {
+                    UserGiveawayListFragment fragment = UserGiveawayListFragment.newInstance(user, "", true);
+                    fragment.setiUserNotification(UserDetailFragment.this);
+                    return fragment;
+                }
+                case 1: {
+                    UserGiveawayListFragment fragment = UserGiveawayListFragment.newInstance(user, "/giveaways/won", false);
+                    fragment.setiUserNotification(UserDetailFragment.this);
+                    return fragment;
+                }
             }
             return null;
         }
@@ -182,27 +211,52 @@ public class UserDetailFragment extends Fragment implements IUserNotifications {
     }
 
     public static class UserGiveawayListFragment extends ListFragment<GiveawayAdapter> implements IUserNotifications {
+        private static final String SAVED_LOAD_INITIALLY = "load-initially";
+        private static final String SAVED_PATH = "path";
+
         private User user;
         private String path;
         private IUserNotifications iUserNotification;
 
-        public static UserGiveawayListFragment newInstance(User user, String path, boolean loadItemsInitially, IUserNotifications iUserNotification) {
+        public static UserGiveawayListFragment newInstance(User user, String path, boolean loadItemsInitially) {
             UserGiveawayListFragment fragment = new UserGiveawayListFragment();
-            fragment.user = user;
-            fragment.path = user.getName() + path;
-            fragment.loadItemsInitially = loadItemsInitially;
-            fragment.iUserNotification = iUserNotification;
+
+            Bundle args = new Bundle();
+            args.putSerializable(SAVED_USER, user);
+            args.putString(SAVED_PATH, path);
+            args.putBoolean(SAVED_LOAD_INITIALLY, loadItemsInitially);
+            fragment.setArguments(args);
+
             return fragment;
         }
 
         @Override
+        public void onCreate(Bundle savedInstanceState) {
+            if (savedInstanceState == null) {
+                user = (User) getArguments().getSerializable(SAVED_USER);
+                path = getArguments().getString(SAVED_PATH);
+                loadItemsInitially = getArguments().getBoolean(SAVED_LOAD_INITIALLY, false);
+            } else {
+                user = (User) savedInstanceState.getSerializable(SAVED_USER);
+                path = savedInstanceState.getString(SAVED_PATH);
+                loadItemsInitially = savedInstanceState.getBoolean(SAVED_LOAD_INITIALLY, false);
+            }
+
+            super.onCreate(savedInstanceState);
+            adapter.setFragmentValues(getActivity(), this, null);
+        }
+
+        @Override
+        public void onSaveInstanceState(Bundle outState) {
+            super.onSaveInstanceState(outState);
+            outState.putSerializable(SAVED_USER, user);
+            outState.putString(SAVED_PATH, path);
+            outState.putBoolean(SAVED_LOAD_INITIALLY, loadItemsInitially);
+        }
+
+        @Override
         protected GiveawayAdapter createAdapter() {
-            return new GiveawayAdapter(getActivity(), new EndlessAdapter.OnLoadListener() {
-                @Override
-                public void onLoad(int page) {
-                    fetchItems(page);
-                }
-            }, null, 25, PreferenceManager.getDefaultSharedPreferences(getContext()));
+            return new GiveawayAdapter(25, PreferenceManager.getDefaultSharedPreferences(getContext()));
         }
 
         @Override
@@ -217,7 +271,7 @@ public class UserDetailFragment extends Fragment implements IUserNotifications {
 
         @Override
         protected AsyncTask<Void, Void, ?> getFetchItemsTask(int page) {
-            return new LoadUserDetailsTask(this, path, page, user);
+            return new LoadUserDetailsTask(this, user.getName() + path, page, user);
         }
 
         @Override
@@ -225,9 +279,17 @@ public class UserDetailFragment extends Fragment implements IUserNotifications {
             throw new UnsupportedOperationException();
         }
 
+        // TODO should we care more about this not being properly reset after e.g. orientation is changed? Right now, there's not a whole lot of information we display in the first place.
+        public void setiUserNotification(IUserNotifications iUserNotification) {
+            this.iUserNotification = iUserNotification;
+        }
+
         @Override
         public void onUserUpdated(User user) {
-            iUserNotification.onUserUpdated(user);
+            if (iUserNotification != null)
+                iUserNotification.onUserUpdated(user);
+            else
+                Log.d(TAG, "no iUserUpdateNotification");
         }
     }
 }

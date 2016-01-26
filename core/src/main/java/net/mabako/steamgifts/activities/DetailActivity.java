@@ -42,67 +42,64 @@ public class DetailActivity extends CommonActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (savedInstanceState == null) {
-            initLayout(savedInstanceState);
+        initLayout(savedInstanceState);
 
-            setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-            ActionBar actionBar = getSupportActionBar();
-            if (actionBar != null) {
-                actionBar.setDisplayHomeAsUpEnabled(true);
-            }
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
 
     private void initLayout(Bundle savedInstanceState) {
-        // savedInstanceState is non-null if a fragment state is saved from a previous configuration.
-        if (savedInstanceState == null) {
-            Serializable serializable = getIntent().getSerializableExtra(GiveawayDetailFragment.ARG_GIVEAWAY);
-            if (serializable != null) {
-                String pref = PreferenceManager.getDefaultSharedPreferences(this).getString("preference_giveaway_load_images", "details;list");
-                setContentView(pref.contains("details") ? R.layout.fragment_giveaway_detail : R.layout.activity_paged_fragments_no_tabs);
-                loadPagedFragments(GiveawayDetailFragment.newInstance((BasicGiveaway) serializable));
-                return;
-            }
-
-            serializable = getIntent().getSerializableExtra(DiscussionDetailFragment.ARG_DISCUSSION);
-            if (serializable != null) {
-                setContentView(R.layout.activity_one_fragment);
-                loadFragment(DiscussionDetailFragment.newInstance((BasicDiscussion) serializable));
-                return;
-            }
-
-            String user = getIntent().getStringExtra(UserDetailFragment.ARG_USER);
-            if (user != null) {
-                setContentView(R.layout.activity_one_fragment);
-                loadFragment(UserDetailFragment.newInstance(user));
-                return;
-            }
-
-            serializable = getIntent().getSerializableExtra(SGToolsDetailFragment.ARG_UUID);
-            if (serializable != null) {
-                setContentView(R.layout.activity_detail_expanding_toolbar);
-                loadFragment(SGToolsDetailFragment.newInstance((UUID) serializable));
-                return;
-            }
-
-            if (getIntent().hasExtra(ARG_NOTIFICATIONS)) {
-                setContentView(R.layout.activity_paged_fragments);
-                loadPagedFragments(new MessageListFragment(), new WonListFragment(), new EnteredListFragment(), new CreatedListFragment());
-
-                // Depending on what notifications are currently shown, bring the relevant tab up first.
-                SteamGiftsUserData u = SteamGiftsUserData.getCurrent();
-                if (u.getWonNotification() > 0)
-                    pager.setCurrentItem(1);
-                else if (u.getMessageNotification() > 0)
-                    pager.setCurrentItem(0);
-                else if (u.getCreatedNotification() > 0)
-                    pager.setCurrentItem(3);
-
-                return;
-            }
-
-            throw new IllegalStateException("no detail activity");
+        Serializable serializable = getIntent().getSerializableExtra(GiveawayDetailFragment.ARG_GIVEAWAY);
+        if (serializable != null) {
+            String pref = PreferenceManager.getDefaultSharedPreferences(this).getString("preference_giveaway_load_images", "details;list");
+            setContentView(pref.contains("details") ? R.layout.fragment_giveaway_detail : R.layout.activity_paged_fragments_no_tabs);
+            loadPagedFragments(GiveawayDetailFragment.newInstance((BasicGiveaway) serializable));
+            return;
         }
+
+        serializable = getIntent().getSerializableExtra(DiscussionDetailFragment.ARG_DISCUSSION);
+        if (serializable != null) {
+            setContentView(R.layout.activity_one_fragment);
+            if (savedInstanceState == null)
+                loadFragment(DiscussionDetailFragment.newInstance((BasicDiscussion) serializable));
+            return;
+        }
+
+        String user = getIntent().getStringExtra(UserDetailFragment.ARG_USER);
+        if (user != null) {
+            setContentView(R.layout.activity_one_fragment);
+            if (savedInstanceState == null)
+                loadFragment(UserDetailFragment.newInstance(user));
+            return;
+        }
+
+        serializable = getIntent().getSerializableExtra(SGToolsDetailFragment.ARG_UUID);
+        if (serializable != null) {
+            setContentView(R.layout.activity_detail_expanding_toolbar);
+            if (savedInstanceState == null)
+                loadFragment(SGToolsDetailFragment.newInstance((UUID) serializable));
+            return;
+        }
+
+        if (getIntent().hasExtra(ARG_NOTIFICATIONS)) {
+            setContentView(R.layout.activity_paged_fragments);
+            loadPagedFragments(new MessageListFragment(), new WonListFragment(), new EnteredListFragment(), new CreatedListFragment());
+
+            // Depending on what notifications are currently shown, bring the relevant tab up first.
+            SteamGiftsUserData u = SteamGiftsUserData.getCurrent();
+            if (u.getWonNotification() > 0)
+                pager.setCurrentItem(1);
+            else if (u.getMessageNotification() > 0)
+                pager.setCurrentItem(0);
+            else if (u.getCreatedNotification() > 0)
+                pager.setCurrentItem(3);
+            return;
+        }
+
+        throw new IllegalStateException("no detail activity");
     }
 
     @Override
@@ -203,6 +200,17 @@ public class DetailActivity extends CommonActivity {
 
         pagerAdapter.setTransientFragment(transientFragment);
         pager.setCurrentItem(pagerAdapter.getCount() - 1, true);
+    }
+
+    public void addFragmentUnlessExists(Fragment fragment) {
+        if (pagerAdapter == null)
+            throw new IllegalStateException("not a paged view");
+
+        for (Fragment f : pagerAdapter.fragments)
+            if (fragment.getClass().equals(f.getClass()))
+                return;
+
+        addFragment(fragment);
     }
 
     /**

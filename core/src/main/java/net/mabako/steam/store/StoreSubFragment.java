@@ -1,11 +1,12 @@
 package net.mabako.steam.store;
 
-import android.support.v4.app.Fragment;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Toast;
 
-import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.activities.DetailActivity;
+import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.Game;
 
 import org.json.JSONArray;
@@ -14,11 +15,36 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 
 public class StoreSubFragment extends StoreFragment {
-    public static StoreSubFragment newInstance(int appId, Fragment primaryFragment) {
+    private static final String STATE_ADAPTER = "adapter";
+    private static final String STATE_LOADED = "loaded";
+
+    public static StoreSubFragment newInstance(int appId) {
         StoreSubFragment fragment = new StoreSubFragment();
-        fragment.appId = appId;
-        fragment.primaryFragment = primaryFragment;
+
+        Bundle args = new Bundle();
+        args.putString("sub", String.valueOf(appId));
+        fragment.setArguments(args);
+
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        if (savedInstanceState == null) {
+            adapter = new Adapter();
+        } else {
+            adapter = (Adapter) savedInstanceState.getSerializable(STATE_ADAPTER);
+            loaded = savedInstanceState.getBoolean(STATE_LOADED);
+        }
+
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(STATE_ADAPTER, adapter);
+        outState.putBoolean(STATE_LOADED, loaded);
     }
 
     @Override
@@ -28,7 +54,7 @@ public class StoreSubFragment extends StoreFragment {
 
     public void showDetails(int appId) {
         DetailActivity activity = (DetailActivity) getActivity();
-        activity.setTransientFragment(StoreAppFragment.newInstance(appId, this));
+        activity.setTransientFragment(StoreAppFragment.newInstance(appId));
     }
 
     private class LoadSubTask extends LoadStoreTask {
@@ -36,7 +62,7 @@ public class StoreSubFragment extends StoreFragment {
         protected Connection getConnection() {
             return Jsoup
                     .connect("http://store.steampowered.com/api/packagedetails/")
-                    .data("packageids", String.valueOf(appId))
+                    .data("packageids", getArguments().getString("sub"))
                     .data("l", "en");
         }
 
@@ -44,7 +70,7 @@ public class StoreSubFragment extends StoreFragment {
         protected void onPostExecute(JSONObject jsonObject) {
             if (jsonObject != null) {
                 try {
-                    JSONObject sub = jsonObject.getJSONObject(String.valueOf(appId));
+                    JSONObject sub = jsonObject.getJSONObject(getArguments().getString("sub"));
 
                     // Were we successful in fetching the details?
                     if (sub.getBoolean("success")) {

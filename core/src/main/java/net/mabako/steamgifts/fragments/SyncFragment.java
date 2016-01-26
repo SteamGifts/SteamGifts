@@ -13,9 +13,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.activities.CommonActivity;
 import net.mabako.steamgifts.activities.WebViewActivity;
+import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
 import net.mabako.steamgifts.tasks.AjaxTask;
 
@@ -27,11 +27,28 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 public class SyncFragment extends Fragment {
-    private static final String TAG = SyncFragment.class.getSimpleName();
+    private static final String SAVED_XSRF = "xsrf";
 
     private SyncTask syncTask;
     private LoadSyncDetailsTask loadSyncDetailsTask;
+
     private String xsrfToken;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            xsrfToken = savedInstanceState.getString(SAVED_XSRF);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putSerializable(SAVED_XSRF, xsrfToken);
+    }
 
     @Nullable
     @Override

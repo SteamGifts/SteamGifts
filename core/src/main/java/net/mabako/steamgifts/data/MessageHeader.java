@@ -5,27 +5,23 @@ import android.content.Intent;
 import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MessageHeader implements IEndlessAdaptable, ICommentHolder {
+public class MessageHeader implements IEndlessAdaptable, ICommentHolder, Serializable {
+    private static final long serialVersionUID = -4026179915503324775L;
     public static final int VIEW_LAYOUT = R.layout.message_header_item;
 
     private final String title;
-    private final Intent intent;
     private List<Comment> comments = new ArrayList<>();
 
-    public MessageHeader(String title, Intent intent) {
+    public MessageHeader(String title) {
         this.title = title;
-        this.intent = intent;
     }
 
     public String getTitle() {
         return title;
-    }
-
-    public Intent getIntent() {
-        return intent;
     }
 
     @Override

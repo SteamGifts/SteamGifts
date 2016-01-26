@@ -44,30 +44,30 @@ public class CommonActivity extends BaseActivity {
 
     protected void loadFragment(Fragment fragment) {
         super.loadFragment(R.id.fragment_container, fragment, FRAGMENT_TAG);
+        updateTitle(fragment);
+    }
 
-        // Update the title.
+    protected void updateTitle(Fragment fragment) {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            if (fragment instanceof IActivityTitle) {
+            if (fragment instanceof IActivityTitle)
                 actionBar.setTitle(getFragmentTitle(fragment));
-            } else
+            else
                 actionBar.setTitle(R.string.app_name);
         }
     }
 
     protected String getFragmentTitle(Fragment fragment) {
-        String title = null;
+        String title = getString(R.string.app_name);
         if (fragment instanceof IActivityTitle) {
             int resource = ((IActivityTitle) fragment).getTitleResource();
-            String extra = ((IActivityTitle) fragment).getExtraTitle();
+            String extraTitle = ((IActivityTitle) fragment).getExtraTitle();
 
             if (resource != 0) {
-                if (extra != null && !extra.isEmpty())
-                    title = String.format("%s: %s", extra, getString(resource));
-                else
-                    title = getString(resource);
-            } else
-                title = extra;
+                title = getString(resource);
+            } else if (extraTitle != null) {
+                title = extraTitle;
+            }
         }
         return title;
     }

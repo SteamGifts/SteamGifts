@@ -16,40 +16,45 @@ import net.mabako.steam.store.data.Picture;
 import net.mabako.steam.store.data.Text;
 import net.mabako.steam.store.viewholder.PictureViewHolder;
 import net.mabako.steam.store.viewholder.TextViewHolder;
+import net.mabako.steamgifts.activities.DetailActivity;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.adapters.viewholder.GameViewHolder;
 import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.Game;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class StoreFragment extends Fragment {
-    protected int appId;
     protected boolean loaded;
 
-    /**
-     * Fragment in which the giveaway is shown.
-     */
-    protected Fragment primaryFragment;
-
     private LoadStoreTask task;
-    private View layout;
 
-    private RecyclerView listView;
     protected Adapter adapter;
 
-    @Nullable
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (adapter == null)
+            adapter = new Adapter();
+
+        adapter.setFragmentValues(this);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        layout = inflater.inflate(R.layout.fragment_simple_list, container, false);
+        View layout = inflater.inflate(R.layout.fragment_simple_list, container, false);
 
         setHasOptionsMenu(true);
 
-        listView = (RecyclerView) layout.findViewById(R.id.list);
-        adapter = new Adapter();
+        RecyclerView listView = (RecyclerView) layout.findViewById(R.id.list);
         listView.setAdapter(adapter);
         listView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        if (loaded)
+            layout.findViewById(R.id.progressBar).setVisibility(View.GONE);
 
         return layout;
     }
@@ -77,23 +82,29 @@ public abstract class StoreFragment extends Fragment {
         }
     }
 
-    public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    public static class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Serializable {
+        private static final long serialVersionUID = 4108707366169852332L;
         private List<IEndlessAdaptable> items = new ArrayList<>();
+
+        private transient StoreFragment fragment;
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            if (fragment == null)
+                throw new IllegalStateException("no fragment");
+
             if (viewType == 0) {
-                View view = LayoutInflater.from(getContext()).inflate(R.layout.endless_spacer, parent, false);
+                View view = LayoutInflater.from(fragment.getContext()).inflate(R.layout.endless_spacer, parent, false);
                 return new RecyclerView.ViewHolder(view) {
                 };
             } else {
-                View view = LayoutInflater.from(getContext()).inflate(viewType, parent, false);
+                View view = LayoutInflater.from(fragment.getContext()).inflate(viewType, parent, false);
                 if (viewType == Game.VIEW_LAYOUT) {
-                    return new GameViewHolder(view, StoreFragment.this);
+                    return new GameViewHolder(view, fragment);
                 } else if (viewType == Picture.VIEW_LAYOUT) {
-                    return new PictureViewHolder(view, getContext());
+                    return new PictureViewHolder(view, fragment.getContext());
                 } else if (viewType == Text.VIEW_LAYOUT) {
-                    return new TextViewHolder(view, getContext());
+                    return new TextViewHolder(view, fragment.getContext());
                 }
 
                 throw new IllegalStateException("No View");
@@ -130,15 +141,19 @@ public abstract class StoreFragment extends Fragment {
             notifyItemInserted(items.size() - 1);
         }
 
+        public void setFragmentValues(StoreFragment fragment) {
+            this.fragment = fragment;
+        }
     }
 
+    // FIXME this isn't properly reset on device rotations; while the main giveaway page has an options menu afterwards, the store pages do not unless they're opened again.
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        primaryFragment.onCreateOptionsMenu(menu, inflater);
+        ((DetailActivity) getActivity()).getCurrentFragment().onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return primaryFragment.onOptionsItemSelected(item);
+        return ((DetailActivity) getActivity()).getCurrentFragment().onOptionsItemSelected(item);
     }
 }

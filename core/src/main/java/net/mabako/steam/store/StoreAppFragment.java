@@ -1,13 +1,14 @@
 package net.mabako.steam.store;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
-import net.mabako.steamgifts.core.R;
 import net.mabako.steam.store.data.Picture;
 import net.mabako.steam.store.data.Text;
+import net.mabako.steamgifts.core.R;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -15,10 +16,13 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 
 public class StoreAppFragment extends StoreFragment {
-    public static StoreAppFragment newInstance(int appId, Fragment primaryFragment) {
+    public static StoreAppFragment newInstance(int appId) {
         StoreAppFragment fragment = new StoreAppFragment();
-        fragment.appId = appId;
-        fragment.primaryFragment = primaryFragment;
+
+        Bundle args = new Bundle();
+        args.putString("app", String.valueOf(appId));
+        fragment.setArguments(args);
+
         return fragment;
     }
 
@@ -32,7 +36,7 @@ public class StoreAppFragment extends StoreFragment {
         protected Connection getConnection() {
             return Jsoup
                     .connect("http://store.steampowered.com/api/appdetails/")
-                    .data("appids", String.valueOf(appId))
+                    .data("appids", getArguments().getString("app"))
                     .data("l", "en");
 
         }
@@ -41,7 +45,7 @@ public class StoreAppFragment extends StoreFragment {
         protected void onPostExecute(JSONObject jsonObject) {
             if (jsonObject != null) {
                 try {
-                    JSONObject sub = jsonObject.getJSONObject(String.valueOf(appId));
+                    JSONObject sub = jsonObject.getJSONObject(getArguments().getString("app"));
 
                     // Were we successful in fetching the details?
                     if (sub.getBoolean("success")) {

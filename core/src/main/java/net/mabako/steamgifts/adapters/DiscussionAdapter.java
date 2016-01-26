@@ -11,6 +11,8 @@ import net.mabako.steamgifts.data.Discussion;
 import java.util.List;
 
 public class DiscussionAdapter extends EndlessAdapter {
+    private static final long serialVersionUID = 8932865507723121067L;
+
     /**
      * Discussions that are shown per page.
      */
@@ -19,15 +21,18 @@ public class DiscussionAdapter extends EndlessAdapter {
     /**
      * Context of this adapter.
      */
-    private final Activity context;
+    private transient Activity context;
 
-    public DiscussionAdapter(Activity context, @NonNull OnLoadListener listener) {
-        super(listener);
+    public void setFragmentValues(OnLoadListener listener, @NonNull Activity context) {
+        setLoadListener(listener);
         this.context = context;
     }
 
     @Override
     protected RecyclerView.ViewHolder onCreateActualViewHolder(View view, int viewType) {
+        if (context == null)
+            throw new IllegalStateException("Got no context");
+
         return new DiscussionListItemViewHolder(view, context, this);
     }
 

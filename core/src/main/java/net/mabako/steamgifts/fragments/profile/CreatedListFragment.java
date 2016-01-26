@@ -2,12 +2,12 @@ package net.mabako.steamgifts.fragments.profile;
 
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 
-import net.mabako.steamgifts.core.R;
-import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.adapters.GiveawayAdapter;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
+import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.Game;
 import net.mabako.steamgifts.fragments.ListFragment;
 import net.mabako.steamgifts.fragments.interfaces.IActivityTitle;
@@ -36,13 +36,14 @@ public class CreatedListFragment extends ListFragment<GiveawayAdapter> implement
     }
 
     @Override
-    protected GiveawayAdapter createAdapter() {
-        return new GiveawayAdapter(getActivity(), new EndlessAdapter.OnLoadListener() {
-            @Override
-            public void onLoad(int page) {
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        adapter.setFragmentValues(getActivity(), this, null);
+    }
 
-            }
-        }, null, 50, PreferenceManager.getDefaultSharedPreferences(getContext()));
+    @Override
+    protected GiveawayAdapter createAdapter() {
+        return new GiveawayAdapter(50, PreferenceManager.getDefaultSharedPreferences(getContext()));
     }
 
     @Override

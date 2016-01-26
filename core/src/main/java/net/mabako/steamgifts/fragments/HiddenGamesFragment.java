@@ -2,14 +2,15 @@ package net.mabako.steamgifts.fragments;
 
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
-import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.adapters.HiddenGamesAdapter;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
+import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.Game;
 import net.mabako.steamgifts.fragments.interfaces.IActivityTitle;
 import net.mabako.steamgifts.tasks.LoadGameListTask;
@@ -28,23 +29,29 @@ public class HiddenGamesFragment extends SearchableListFragment<HiddenGamesAdapt
 
     public static HiddenGamesFragment newInstance(String query) {
         HiddenGamesFragment fragment = new HiddenGamesFragment();
-        fragment.searchQuery = query;
+
+        Bundle args = new Bundle();
+        args.putString(SAVED_QUERY, query);
+        fragment.setArguments(args);
+
         return fragment;
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        adapter.setFragmentValues(this);
+    }
+
+    @Override
     protected HiddenGamesAdapter createAdapter() {
-        return new HiddenGamesAdapter(this, new EndlessAdapter.OnLoadListener() {
-            @Override
-            public void onLoad(int page) {
-                fetchItems(page);
-            }
-        });
+        return new HiddenGamesAdapter();
     }
 
     @Override
     protected AsyncTask<Void, Void, ?> getFetchItemsTask(int page) {
-        return new LoadGameListTask(this, "account/settings/giveaways/filters", page, searchQuery) {
+        return new LoadGameListTask(this, "account/settings/giveaways/filters", page, getSearchQuery()) {
             @Override
             protected Game load(Element element) {
                 Game game = new Game();
@@ -94,7 +101,7 @@ public class HiddenGamesFragment extends SearchableListFragment<HiddenGamesAdapt
 
     @Override
     public String getExtraTitle() {
-        return searchQuery;
+        return null;
     }
 
     @Override

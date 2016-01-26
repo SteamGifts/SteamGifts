@@ -17,9 +17,9 @@ import android.view.View;
 import com.mikepenz.actionitembadge.library.ActionItemBadge;
 import com.mikepenz.actionitembadge.library.utils.BadgeStyle;
 
-import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.adapters.GiveawayAdapter;
+import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.fragments.interfaces.IActivityTitle;
 import net.mabako.steamgifts.fragments.interfaces.IFilterUpdatedListener;
@@ -32,6 +32,7 @@ import net.mabako.steamgifts.tasks.EnterLeaveGiveawayTask;
 import net.mabako.steamgifts.tasks.LoadGiveawayListTask;
 import net.mabako.steamgifts.tasks.UpdateGiveawayFilterTask;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -39,6 +40,8 @@ import java.util.List;
  */
 public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter> implements IHasEnterableGiveaways, IHasHideableGiveaways, IActivityTitle, IFilterUpdatedListener {
     private static final String TAG = GiveawayListFragment.class.getSimpleName();
+    private static final String SAVED_TYPE = "type";
+    private static final String SAVED_LAST_REMOVED = "last-removed-game";
 
     private EnterLeaveGiveawayTask enterLeaveTask;
 
@@ -54,9 +57,15 @@ public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter
 
     public static GiveawayListFragment newInstance(Type type, String query, boolean finishActivityOnSearchStopped) {
         GiveawayListFragment g = new GiveawayListFragment();
+
+        Bundle args = new Bundle();
+        args.putSerializable(SAVED_TYPE, type);
+        args.putString(SAVED_QUERY, query);
+        args.putBoolean(SAVED_FINISH_ON_STOP, finishActivityOnSearchStopped);
+        g.setArguments(args);
+
         g.type = type;
-        g.searchQuery = query;
-        g.finishActivityOnSearchStopped = finishActivityOnSearchStopped;
+
         return g;
     }
 
@@ -64,6 +73,24 @@ public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         GiveawayListFragmentStack.addFragment(this);
+
+        if (savedInstanceState == null) {
+            type = (Type) getArguments().getSerializable(SAVED_TYPE);
+            lastRemovedGame = null;
+        } else {
+            type = (Type) savedInstanceState.getSerializable(SAVED_TYPE);
+            lastRemovedGame = (LastRemovedGame) savedInstanceState.getSerializable(SAVED_LAST_REMOVED);
+        }
+
+        adapter.setFragmentValues(getActivity(), this, new SavedGiveaways(getContext()));
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putSerializable(SAVED_TYPE, type);
+        outState.putSerializable(SAVED_LAST_REMOVED, lastRemovedGame);
     }
 
     @Override
@@ -82,17 +109,12 @@ public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter
 
     @Override
     protected GiveawayAdapter createAdapter() {
-        return new GiveawayAdapter(getActivity(), new EndlessAdapter.OnLoadListener() {
-            @Override
-            public void onLoad(int page) {
-                fetchItems(page);
-            }
-        }, this, 50, true, new SavedGiveaways(getContext()), PreferenceManager.getDefaultSharedPreferences(getContext()));
+        return new GiveawayAdapter(50, true, PreferenceManager.getDefaultSharedPreferences(getContext()));
     }
 
     @Override
     protected AsyncTask<Void, Void, ?> getFetchItemsTask(int page) {
-        return new LoadGiveawayListTask(this, page, type, searchQuery, PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("preference_giveaway_show_pinned", false));
+        return new LoadGiveawayListTask(this, page, type, getSearchQuery(), PreferenceManager.getDefaultSharedPreferences(getContext()).getBoolean("preference_giveaway_show_pinned", false));
     }
 
     /**
@@ -112,7 +134,7 @@ public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter
      */
     @Override
     public String getExtraTitle() {
-        return searchQuery;
+        return null;
     }
 
     @Override
@@ -266,14 +288,6 @@ public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter
             this.titleResource = titleResource;
         }
 
-        public static Type find(int identifier) {
-            for (Type t : values())
-                if (identifier == t.getNavbarResource())
-                    return t;
-
-            throw new IllegalStateException();
-        }
-
         public int getTitleResource() {
             return titleResource;
         }
@@ -283,7 +297,9 @@ public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter
         }
     }
 
-    private static class LastRemovedGame {
+    private static class LastRemovedGame implements Serializable {
+        private static final long serialVersionUID = -7112241651196581480L;
+
         private final List<EndlessAdapter.RemovedElement> removedGiveaways;
         private final int internalGameId;
 

@@ -16,14 +16,14 @@ public class BasicDiscussion implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || !(o instanceof BasicDiscussion))
+        if (o == null || !(o instanceof BasicDiscussion) || discussionId == null)
             return false;
 
-        return ((BasicDiscussion) o).discussionId == discussionId;
+        return discussionId.equals(((BasicDiscussion) o).discussionId);
     }
 
     @Override
     public int hashCode() {
-        return discussionId.hashCode();
+        return discussionId == null ? 0 : discussionId.hashCode();
     }
 }

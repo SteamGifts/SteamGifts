@@ -10,6 +10,8 @@ import net.mabako.steamgifts.data.GiveawayGroup;
 import java.util.List;
 
 public class GiveawayGroupAdapter extends EndlessAdapter {
+    private static final long serialVersionUID = -7332179308183390985L;
+
     /**
      * Groups that are shown per page.
      */
@@ -18,16 +20,22 @@ public class GiveawayGroupAdapter extends EndlessAdapter {
     /**
      * Context of this adapter.
      */
-    private final Context context;
+    private transient Context context;
 
-    public GiveawayGroupAdapter(Context context, OnLoadListener listener) {
-        super(listener);
-        this.context = context;
+    public GiveawayGroupAdapter() {
         this.alternativeEnd = true;
+    }
+
+    public void setFragmentValues(OnLoadListener listener, Context context) {
+        setLoadListener(listener);
+        this.context = context;
     }
 
     @Override
     protected RecyclerView.ViewHolder onCreateActualViewHolder(View view, int viewType) {
+        if (context == null)
+            throw new IllegalStateException("no context");
+
         return new GiveawayGroupViewHolder(view, context);
     }
 

@@ -68,12 +68,7 @@ public class LoadMessagesTask extends AsyncTask<Void, Void, List<IEndlessAdaptab
             if (link != null) {
                 // Click action for the header
                 String linkText = "http://www.steamgifts.com" + link.attr("href");
-                Intent intent = UrlHandlingActivity.getIntentForUri(fragment.getContext(), Uri.parse(linkText));
-                if (intent == null) {
-                    intent = new Intent(fragment.getContext(), WebViewActivity.class);
-                    intent.putExtra(WebViewActivity.ARG_URL, linkText);
-                }
-                MessageHeader message = new MessageHeader(link.text(), intent);
+                MessageHeader message = new MessageHeader(link.text());
 
                 Element commentElement = element.nextElementSibling();
                 if (commentElement != null)
