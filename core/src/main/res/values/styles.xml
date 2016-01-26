@@ -49,12 +49,13 @@
     <style name="MediumButton" parent="@style/Widget.AppCompat.Button.Borderless">
         <item name="android:textSize">12sp</item>
         <item name="android:minWidth">0dp</item>
-        <item name="android:textColor">?attr/lightTextColor</item>
+        <item name="android:minHeight">8dp</item>
     </style>
 
     <style name="MediumButton.Colored" parent="@style/Widget.AppCompat.Button.Borderless.Colored">
         <item name="android:textSize">12sp</item>
         <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">8dp</item>
     </style>
 
     <!-- Use rather rectangular image. -->
