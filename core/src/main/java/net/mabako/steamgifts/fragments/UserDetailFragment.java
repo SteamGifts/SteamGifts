@@ -26,11 +26,11 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
-import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.activities.WebViewActivity;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.adapters.GiveawayAdapter;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
+import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.User;
 import net.mabako.steamgifts.fragments.interfaces.IUserNotifications;
 import net.mabako.steamgifts.tasks.LoadUserDetailsTask;
@@ -43,6 +43,7 @@ import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 public class UserDetailFragment extends Fragment implements IUserNotifications {
     private static final String TAG = UserDetailFragment.class.getSimpleName();
     public static final String ARG_USER = "user";
+    private static final String SAVED_USER = "user";
 
     private User user;
 
@@ -52,8 +53,20 @@ public class UserDetailFragment extends Fragment implements IUserNotifications {
 
     public static UserDetailFragment newInstance(String userName) {
         UserDetailFragment fragment = new UserDetailFragment();
-        fragment.user = new User(userName);
+
+        Bundle args = new Bundle();
+        args.putSerializable(SAVED_USER, new User(userName));
+        fragment.setArguments(args);
+
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // TODO ideally restore instance state
+        user = (User) getArguments().getSerializable(SAVED_USER);
     }
 
     @Nullable
@@ -62,7 +75,8 @@ public class UserDetailFragment extends Fragment implements IUserNotifications {
         View layout = inflater.inflate(R.layout.fragment_user, container, false);
 
         ActionBar toolbar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        toolbar.setTitle(user.getName());
+        if (toolbar != null)
+            toolbar.setTitle(user.getName());
 
         viewPagerAdapter = new CustomPagerAdapter(getActivity().getSupportFragmentManager());
         viewPager = (ViewPager) layout.findViewById(R.id.viewPager);

@@ -25,7 +25,6 @@ import com.squareup.picasso.Picasso;
 
 import net.mabako.steam.store.StoreAppFragment;
 import net.mabako.steam.store.StoreSubFragment;
-import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.activities.CommonActivity;
 import net.mabako.steamgifts.activities.DetailActivity;
 import net.mabako.steamgifts.activities.MainActivity;
@@ -34,6 +33,7 @@ import net.mabako.steamgifts.activities.WriteCommentActivity;
 import net.mabako.steamgifts.adapters.CommentAdapter;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
+import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.BasicGiveaway;
 import net.mabako.steamgifts.data.Comment;
 import net.mabako.steamgifts.data.Game;
@@ -56,7 +56,9 @@ public class GiveawayDetailFragment extends ListFragment<CommentAdapter> impleme
     public static final String ARG_GIVEAWAY = "giveaway";
     public static final String ENTRY_INSERT = "entry_insert";
     public static final String ENTRY_DELETE = "entry_delete";
+
     private static final String TAG = GiveawayDetailFragment.class.getSimpleName();
+    private static final String SAVED_GIVEAWAY = "giveaway";
 
     private boolean fragmentAdded = false;
 
@@ -71,7 +73,11 @@ public class GiveawayDetailFragment extends ListFragment<CommentAdapter> impleme
 
     public static Fragment newInstance(BasicGiveaway giveaway) {
         GiveawayDetailFragment fragment = new GiveawayDetailFragment();
-        fragment.giveaway = giveaway;
+
+        Bundle args = new Bundle();
+        args.putSerializable(SAVED_GIVEAWAY, giveaway);
+        fragment.setArguments(args);
+
         return fragment;
     }
 
@@ -80,12 +86,21 @@ public class GiveawayDetailFragment extends ListFragment<CommentAdapter> impleme
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState == null) {
+            giveaway = (BasicGiveaway) getArguments().getSerializable(SAVED_GIVEAWAY);
             giveawayCard = new GiveawayDetailsCard();
-
 
             // Add the cardview for the Giveaway details
             adapter.setStickyItem(giveawayCard);
+        } else {
+            giveaway = (BasicGiveaway) savedInstanceState.getSerializable(SAVED_GIVEAWAY);
+            giveawayCard = (GiveawayDetailsCard) adapter.getStickyItem();
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(SAVED_GIVEAWAY, giveaway);
     }
 
     @Override

@@ -1,12 +1,16 @@
 package net.mabako.steamgifts.fragments.util;
 
-import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
+import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.Discussion;
 import net.mabako.steamgifts.data.DiscussionExtras;
 
-public class DiscussionDetailsCard implements IEndlessAdaptable {
+import java.io.Serializable;
+
+public class DiscussionDetailsCard implements IEndlessAdaptable, Serializable {
     public static final int VIEW_LAYOUT = R.layout.discussion_detail_card;
+
+    private static final long serialVersionUID = -6316766705848863209L;
 
     private Discussion discussion;
     private DiscussionExtras extras;

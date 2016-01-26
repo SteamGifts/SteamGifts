@@ -17,12 +17,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.activities.DetailActivity;
 import net.mabako.steamgifts.activities.WriteCommentActivity;
 import net.mabako.steamgifts.adapters.CommentAdapter;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
+import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.BasicDiscussion;
 import net.mabako.steamgifts.data.Comment;
 import net.mabako.steamgifts.data.Discussion;
@@ -37,15 +37,43 @@ import java.util.List;
 public class DiscussionDetailFragment extends ListFragment<CommentAdapter> implements ICommentableFragment {
     public static final String ARG_DISCUSSION = "discussion";
     private static final String TAG = DiscussionDetailFragment.class.getSimpleName();
+
+    private static final String SAVED_DISCUSSION = "discussion";
+    private static final String SAVED_CARD = "discussion-card";
+
     /**
      * Content to show for the giveaway details.
      */
     private BasicDiscussion discussion;
     private DiscussionDetailsCard discussionCard;
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (savedInstanceState == null) {
+            discussion = (BasicDiscussion) getArguments().getSerializable(SAVED_DISCUSSION);
+            discussionCard = new DiscussionDetailsCard();
+        } else {
+            discussion = (BasicDiscussion) savedInstanceState.getSerializable(SAVED_DISCUSSION);
+            discussionCard = (DiscussionDetailsCard) savedInstanceState.getSerializable(SAVED_CARD);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(SAVED_DISCUSSION, discussion);
+        outState.putSerializable(SAVED_CARD, discussionCard);
+    }
+
     public static Fragment newInstance(BasicDiscussion discussion) {
         DiscussionDetailFragment d = new DiscussionDetailFragment();
-        d.discussion = discussion;
+
+        Bundle args = new Bundle();
+        args.putSerializable(SAVED_DISCUSSION, discussion);
+        d.setArguments(args);
+
         return d;
     }
 
@@ -54,7 +82,6 @@ public class DiscussionDetailFragment extends ListFragment<CommentAdapter> imple
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = super.onCreateView(inflater, container, savedInstanceState);
 
-        discussionCard = new DiscussionDetailsCard();
         if (discussion instanceof Discussion) {
             onPostDiscussionLoaded((Discussion) discussion, true);
         } else {

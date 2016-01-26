@@ -1,14 +1,14 @@
 package net.mabako.steamgifts.fragments;
 
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.RecyclerView;
 
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 
-import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.adapters.DiscussionAdapter;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
+import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.fragments.interfaces.IActivityTitle;
 import net.mabako.steamgifts.tasks.LoadDiscussionListTask;
 
@@ -16,6 +16,8 @@ import net.mabako.steamgifts.tasks.LoadDiscussionListTask;
  * List of all discussions.
  */
 public class DiscussionListFragment extends SearchableListFragment<DiscussionAdapter> implements IActivityTitle {
+    private static final String SAVED_TYPE = "type";
+
     /**
      * Type of items to show.
      */
@@ -23,11 +25,31 @@ public class DiscussionListFragment extends SearchableListFragment<DiscussionAda
 
     public static Fragment newInstance(Type type, String query) {
         DiscussionListFragment f = new DiscussionListFragment();
-        f.type = type;
-        f.searchQuery = query;
+
+        Bundle args = new Bundle();
+        args.putSerializable(SAVED_TYPE, type);
+        args.putSerializable(SAVED_QUERY, query);
+        f.setArguments(args);
+
         return f;
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (savedInstanceState == null) {
+            type = (Type) getArguments().getSerializable(SAVED_TYPE);
+        } else {
+            type = (Type) savedInstanceState.getSerializable(SAVED_TYPE);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(SAVED_TYPE, type);
+    }
 
     @Override
     protected DiscussionAdapter createAdapter() {
@@ -41,7 +63,7 @@ public class DiscussionListFragment extends SearchableListFragment<DiscussionAda
 
     @Override
     protected AsyncTask<Void, Void, ?> getFetchItemsTask(int page) {
-        return new LoadDiscussionListTask(this, page, type, searchQuery);
+        return new LoadDiscussionListTask(this, page, type, getSearchQuery());
     }
 
     @Override
@@ -51,7 +73,7 @@ public class DiscussionListFragment extends SearchableListFragment<DiscussionAda
 
     @Override
     public String getExtraTitle() {
-        return searchQuery;
+        return getSearchQuery();
     }
 
     @Override
@@ -86,14 +108,6 @@ public class DiscussionListFragment extends SearchableListFragment<DiscussionAda
             this.navbarResource = navbarResource;
             this.titleResource = titleResource;
             this.icon = icon;
-        }
-
-        public static Type find(int identifier) {
-            for (Type t : values())
-                if (identifier == t.getNavbarResource())
-                    return t;
-
-            throw new IllegalStateException();
         }
 
         public int getTitleResource() {

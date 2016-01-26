@@ -17,22 +17,44 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.activities.CommonActivity;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
+import net.mabako.steamgifts.core.R;
 
 /**
  * Searchable Discussion or Giveaway List fragment.
  */
 public abstract class SearchableListFragment<AdapterType extends EndlessAdapter> extends ListFragment<AdapterType> {
     private static final String TAG = SearchableListFragment.class.getSimpleName();
+    protected static final String SAVED_QUERY = "query";
+    protected static final String SAVED_FINISH_ON_STOP = "finish-on-stop";
 
     /**
      * What are we searching for?
      */
-    protected String searchQuery = null;
+    private String searchQuery = null;
 
-    protected boolean finishActivityOnSearchStopped = false;
+    private boolean finishActivityOnSearchStopped = false;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (savedInstanceState == null) {
+            searchQuery = getArguments().getString(SAVED_QUERY);
+            finishActivityOnSearchStopped = getArguments().getBoolean(SAVED_FINISH_ON_STOP, false);
+        } else {
+            searchQuery = savedInstanceState.getString(SAVED_QUERY);
+            finishActivityOnSearchStopped = savedInstanceState.getBoolean(SAVED_FINISH_ON_STOP, false);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(SAVED_QUERY, searchQuery);
+        outState.putBoolean(SAVED_FINISH_ON_STOP, finishActivityOnSearchStopped);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -116,6 +138,10 @@ public abstract class SearchableListFragment<AdapterType extends EndlessAdapter>
                 fragmentManager.popBackStack(TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             }
         }
+    }
+
+    public String getSearchQuery() {
+        return searchQuery;
     }
 
     /**

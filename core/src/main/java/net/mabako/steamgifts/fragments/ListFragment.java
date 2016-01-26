@@ -14,9 +14,9 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
-import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
+import net.mabako.steamgifts.core.R;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -24,6 +24,8 @@ import java.util.List;
 
 // TODO make EndlessAdapter's viewInReverse more easily handled within here.
 public abstract class ListFragment<AdapterType extends EndlessAdapter> extends Fragment {
+    private static final String SAVED_ADAPTER = "listadapter";
+
     protected boolean loadItemsInitially = true;
 
     protected AdapterType adapter;
@@ -40,6 +42,8 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
 
         if (savedInstanceState == null) {
             adapter = createAdapter();
+        } else {
+            adapter = (AdapterType) savedInstanceState.getSerializable(SAVED_ADAPTER);
         }
     }
 
@@ -97,6 +101,12 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
         });
         // Configure the refreshing colors
         swipeContainer.setColorSchemeResources(R.color.colorPrimary);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(SAVED_ADAPTER, adapter);
     }
 
     protected void showSnack(String message, int length) {

@@ -1,6 +1,7 @@
 package net.mabako.steamgifts.fragments;
 
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,6 +14,9 @@ import net.mabako.steamgifts.tasks.LoadGiveawayGroupsTask;
 import java.io.Serializable;
 
 public class GiveawayGroupListFragment extends ListFragment<GiveawayGroupAdapter> implements IActivityTitle {
+    private static final String SAVED_PATH = "path";
+    private static final String SAVED_TITLE = "title";
+
     /**
      * Path to the giveaway
      */
@@ -25,9 +29,26 @@ public class GiveawayGroupListFragment extends ListFragment<GiveawayGroupAdapter
 
     public static Fragment newInstance(String title, String path) {
         GiveawayGroupListFragment g = new GiveawayGroupListFragment();
-        g.path = path;
-        g.title = title;
+
+        Bundle args = new Bundle();
+        args.putString(SAVED_TITLE, title);
+        args.putString(SAVED_PATH, path);
+        g.setArguments(args);
+
         return g;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (savedInstanceState == null) {
+            title = getArguments().getString(SAVED_TITLE);
+            path = getArguments().getString(SAVED_PATH);
+        } else {
+            title = savedInstanceState.getString(SAVED_TITLE);
+            path = savedInstanceState.getString(SAVED_PATH);
+        }
     }
 
     @Override

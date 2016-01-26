@@ -21,9 +21,9 @@ import android.widget.TextView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.activities.CommonActivity;
 import net.mabako.steamgifts.activities.DetailActivity;
+import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.BasicGiveaway;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
 
@@ -35,8 +35,11 @@ import java.util.UUID;
  */
 public class SGToolsDetailFragment extends Fragment implements View.OnClickListener {
     public static final String ARG_UUID = "uuid";
+    private static final String SAVED_UUID = "uuid";
+    private static final String SAVED_GIVEAWAY = "uuid";
 
     private UUID uuid;
+    private Giveaway giveaway;
 
     private CollapsingToolbarLayout appBarLayout;
     private View layout;
@@ -45,8 +48,32 @@ public class SGToolsDetailFragment extends Fragment implements View.OnClickListe
 
     public static SGToolsDetailFragment newInstance(UUID uuid) {
         SGToolsDetailFragment fragment = new SGToolsDetailFragment();
-        fragment.uuid = uuid;
+
+        Bundle args = new Bundle();
+        args.putSerializable(SAVED_UUID, uuid);
+        fragment.setArguments(args);
+
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (savedInstanceState == null) {
+            uuid = (UUID) getArguments().getSerializable(SAVED_UUID);
+        } else {
+            uuid = (UUID) savedInstanceState.getSerializable(SAVED_UUID);
+            giveaway = (Giveaway) savedInstanceState.getSerializable(SAVED_GIVEAWAY);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putSerializable(SAVED_UUID, uuid);
+        outState.putSerializable(SAVED_GIVEAWAY, giveaway);
     }
 
     @Nullable
@@ -57,8 +84,12 @@ public class SGToolsDetailFragment extends Fragment implements View.OnClickListe
         appBarLayout = (CollapsingToolbarLayout) getActivity().findViewById(R.id.toolbar_layout);
         appBarLayout.setTitle("Loading SGTools...");
 
-        task = new LoadGiveawayTask(this, uuid);
-        task.execute();
+        if (giveaway != null) {
+            onGiveawayLoaded(giveaway);
+        } else {
+            task = new LoadGiveawayTask(this, uuid);
+            task.execute();
+        }
 
         return layout;
     }
@@ -66,11 +97,14 @@ public class SGToolsDetailFragment extends Fragment implements View.OnClickListe
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (task != null)
+        if (task != null) {
             task.cancel(true);
+            task = null;
+        }
     }
 
     public void onGiveawayLoaded(Giveaway giveaway) {
+        this.giveaway = giveaway;
         appBarLayout.setTitle(giveaway.getName());
 
         ImageView toolbarImage = (ImageView) getActivity().findViewById(R.id.toolbar_image);

@@ -10,13 +10,14 @@ import android.view.ViewGroup;
 
 import net.mabako.steamgifts.core.R;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * An adapter for loading pseudo-endless lists of giveaways, discussions, games, comments and so forth.
  */
-public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Serializable {
     private static final String TAG = EndlessAdapter.class.getSimpleName();
 
     /**
@@ -121,7 +122,7 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     public void finishLoading(List<IEndlessAdaptable> addedItems) {
-        boolean loadNextPage = false;
+        boolean loadNextPage;
 
         Log.v(TAG, "Finished loading - " + loading);
         if (loading) {
@@ -183,7 +184,7 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
     /**
      * How many items do we currently show?
      *
-     * @return
+     * @return number of items currently shown
      */
     public int getItemCount() {
         int itemCount = items.size();
@@ -453,11 +454,13 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
     /**
      * Listener called upon scrolling down to load "more" items.
      */
-    public interface OnLoadListener {
+    public interface OnLoadListener extends Serializable {
         void onLoad(int page);
     }
 
-    public static class RemovedElement {
+    public static class RemovedElement implements Serializable {
+        private static final long serialVersionUID = -4246240052789998135L;
+
         /**
          * The item that was in place before the current removable.
          */
