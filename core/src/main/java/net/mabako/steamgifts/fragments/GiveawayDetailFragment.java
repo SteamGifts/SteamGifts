@@ -131,9 +131,6 @@ public class GiveawayDetailFragment extends ListFragment<CommentAdapter> impleme
 
         setHasOptionsMenu(true);
 
-        if(savedInstanceState != null)
-            ((DetailActivity) getActivity()).setTransientFragment(null);
-
         return layout;
     }
 
@@ -268,7 +265,7 @@ public class GiveawayDetailFragment extends ListFragment<CommentAdapter> impleme
         getActivity().supportInvalidateOptionsMenu();
 
         if (getActivity() instanceof DetailActivity && giveaway.getGameId() != Game.NO_APP_ID && !fragmentAdded) {
-            ((DetailActivity) getActivity()).addFragment(giveaway.getType() == Game.Type.APP ? StoreAppFragment.newInstance(giveaway.getGameId()) : StoreSubFragment.newInstance(giveaway.getGameId()));
+            ((DetailActivity) getActivity()).addFragmentUnlessExists(giveaway.getType() == Game.Type.APP ? StoreAppFragment.newInstance(giveaway.getGameId()) : StoreSubFragment.newInstance(giveaway.getGameId()));
             fragmentAdded = true;
         }
     }

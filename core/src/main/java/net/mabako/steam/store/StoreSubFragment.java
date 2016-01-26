@@ -1,6 +1,7 @@
 package net.mabako.steam.store;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Toast;
 
@@ -14,6 +15,9 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 
 public class StoreSubFragment extends StoreFragment {
+    private static final String STATE_ADAPTER = "adapter";
+    private static final String STATE_LOADED = "loaded";
+
     public static StoreSubFragment newInstance(int appId) {
         StoreSubFragment fragment = new StoreSubFragment();
 
@@ -22,6 +26,25 @@ public class StoreSubFragment extends StoreFragment {
         fragment.setArguments(args);
 
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        if (savedInstanceState == null) {
+            adapter = new Adapter();
+        } else {
+            adapter = (Adapter) savedInstanceState.getSerializable(STATE_ADAPTER);
+            loaded = savedInstanceState.getBoolean(STATE_LOADED);
+        }
+
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(STATE_ADAPTER, adapter);
+        outState.putBoolean(STATE_LOADED, loaded);
     }
 
     @Override

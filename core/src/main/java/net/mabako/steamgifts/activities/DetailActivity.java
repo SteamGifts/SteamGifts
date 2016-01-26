@@ -172,19 +172,6 @@ public class DetailActivity extends CommonActivity {
         }
     }
 
-    private void restorePager(Bundle savedInstanceState) {
-        pager = (ViewPager) findViewById(R.id.viewPager);
-
-        pagerAdapter = new SimplePagerAdapter(getSupportFragmentManager());
-        pager.clearOnPageChangeListeners();
-        pager.addOnPageChangeListener(pagerAdapter);
-
-        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
-        if (tabLayout != null) {
-            tabLayout.setupWithViewPager(pager);
-        }
-    }
-
     /**
      * Returns the first fragment if this is page-able, otherwise the only fragment.
      *
@@ -213,6 +200,17 @@ public class DetailActivity extends CommonActivity {
 
         pagerAdapter.setTransientFragment(transientFragment);
         pager.setCurrentItem(pagerAdapter.getCount() - 1, true);
+    }
+
+    public void addFragmentUnlessExists(Fragment fragment) {
+        if (pagerAdapter == null)
+            throw new IllegalStateException("not a paged view");
+
+        for (Fragment f : pagerAdapter.fragments)
+            if (fragment.getClass().equals(f.getClass()))
+                return;
+
+        addFragment(fragment);
     }
 
     /**
