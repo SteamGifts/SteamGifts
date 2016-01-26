@@ -22,6 +22,7 @@ public class DiscussionCardViewHolder extends RecyclerView.ViewHolder {
     private final TextView user;
     private final TextView description;
     private final View separator;
+    private final View actionSeparator;
 
     private final Button commentDiscussion;
 
@@ -35,6 +36,7 @@ public class DiscussionCardViewHolder extends RecyclerView.ViewHolder {
         description = (TextView) v.findViewById(R.id.description);
         description.setMovementMethod(LinkMovementMethod.getInstance());
         separator = v.findViewById(R.id.separator);
+        actionSeparator = v.findViewById(R.id.action_separator);
 
         commentDiscussion = (Button) v.findViewById(R.id.comment);
     }
@@ -43,7 +45,7 @@ public class DiscussionCardViewHolder extends RecyclerView.ViewHolder {
         final Discussion discussion = card.getDiscussion();
         DiscussionExtras extras = card.getExtras();
 
-        for (View view : new View[]{commentDiscussion, description, discussionTime, user, separator})
+        for (View view : new View[]{commentDiscussion, description, discussionTime, user, separator, actionSeparator})
             view.setVisibility(View.GONE);
 
         if (discussion == null) {
@@ -70,6 +72,7 @@ public class DiscussionCardViewHolder extends RecyclerView.ViewHolder {
                 if (extras.getDescription() != null) {
                     description.setText(Utils.fromHtml(((Fragment) fragment).getActivity(), extras.getDescription()));
                     description.setVisibility(View.VISIBLE);
+                    actionSeparator.setVisibility(View.VISIBLE);
                 }
 
                 if (extras.getXsrfToken() != null)

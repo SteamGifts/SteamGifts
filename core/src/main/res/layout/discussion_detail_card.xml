@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?attr/colorBehindCardBackground">
@@ -27,22 +28,24 @@
 
                 <TextView
                     android:id="@+id/time"
-                    style="@style/MediumText"
+                    style="@style/SmallText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_toRightOf="@+id/user"
                     android:gravity="right"
                     android:padding="@dimen/card_margin_small"
-                    android:text="Time" />
+                    android:text="Time"
+                    android:textColor="?attr/lightTextColor" />
 
                 <TextView
                     android:id="@+id/user"
-                    style="@style/MediumText"
+                    style="@style/SmallText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/card_margin_small"
                     android:text="Creator"
+                    android:textColor="?attr/lightTextColor"
                     android:textStyle="bold" />
 
                 <View
@@ -75,10 +78,18 @@
                     android:paddingBottom="@dimen/card_margin_outer"
                     android:paddingTop="@dimen/card_margin_outer"
                     android:visibility="gone" />
+
+                <View
+                    android:id="@+id/action_separator"
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_below="@+id/description"
+                    android:layout_margin="4dp"
+                    android:background="?attr/colorLightSeparatorBackground" />
             </RelativeLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
                 <Button
@@ -87,7 +98,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/add_comment"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    tools:visibility="visible" />
             </LinearLayout>
         </LinearLayout>
     </android.support.v7.widget.CardView>

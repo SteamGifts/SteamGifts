@@ -13,10 +13,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.activities.CommonActivity;
 import net.mabako.steamgifts.activities.SyncActivity;
 import net.mabako.steamgifts.activities.ViewGroupsActivity;
+import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.data.GiveawayExtras;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
@@ -41,7 +41,7 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
     private final Button loginButton;
     private final Button errorMessage;
     private final Button indicator;
-    private final View separator;
+    private final View separator, actionSeparator;
 
     public GiveawayCardViewHolder(View v, final GiveawayDetailFragment fragment) {
         super(v);
@@ -54,6 +54,7 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
         description = (TextView) v.findViewById(R.id.description);
         description.setMovementMethod(LinkMovementMethod.getInstance());
         separator = v.findViewById(R.id.separator);
+        actionSeparator = v.findViewById(R.id.action_separator);
 
         enterGiveaway = (Button) v.findViewById(R.id.enter);
         leaveGiveaway = (Button) v.findViewById(R.id.leave);
@@ -73,7 +74,7 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
         final Giveaway giveaway = card.getGiveaway();
         final GiveawayExtras extras = card.getExtras();
 
-        for (View view : new View[]{enterGiveaway, leaveGiveaway, commentGiveaway, loginButton, errorMessage, description, indicator, user, timeRemaining, timeCreated, separator})
+        for (View view : new View[]{enterGiveaway, leaveGiveaway, commentGiveaway, loginButton, errorMessage, description, indicator, user, timeRemaining, timeCreated, separator, actionSeparator})
             view.setVisibility(View.GONE);
 
         if (giveaway == null) {
@@ -117,6 +118,7 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
                 if (extras.getDescription() != null) {
                     description.setText(Utils.fromHtml(fragment.getActivity(), extras.getDescription()));
                     description.setVisibility(View.VISIBLE);
+                    actionSeparator.setVisibility(View.VISIBLE);
                 }
 
                 if (extras.getXsrfToken() != null && extras.getErrorMessage() == null && extras.isEnterable()) {

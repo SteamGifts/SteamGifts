@@ -43,6 +43,7 @@
             android:paddingRight="4dp"
             android:paddingTop="2dp"
             android:text="Author"
+            android:textColor="?attr/lightTextColor"
             android:textStyle="bold" />
 
         <TextView
@@ -51,9 +52,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/user"
-            android:enabled="false"
             android:padding="4dp"
-            android:text="Time" />
+            android:text="Time"
+            android:textColor="?attr/lightTextColor" />
 
         <TextView
             android:id="@+id/content"

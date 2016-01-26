@@ -29,7 +29,7 @@
 
                 <TextView
                     android:id="@+id/remaining"
-                    style="@style/MediumText"
+                    style="@style/SmallText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -37,26 +37,29 @@
                     android:gravity="right"
                     android:padding="@dimen/card_margin_small"
                     android:text="@string/placeholder_giveaway_end"
+                    android:textColor="?attr/lightTextColor"
                     tools:text="End" />
 
                 <TextView
                     android:id="@+id/user"
-                    style="@style/MediumText"
+                    style="@style/SmallText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/card_margin_small"
                     android:text="@string/placeholder_giveaway_creator"
+                    android:textColor="?attr/lightTextColor"
                     android:textStyle="bold"
                     tools:text="Creator" />
 
                 <TextView
                     android:id="@+id/created"
-                    style="@style/MediumText"
+                    style="@style/SmallText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@+id/user"
                     android:padding="@dimen/card_margin_small"
                     android:text="@string/placeholder_giveaway_start"
+                    android:textColor="?attr/lightTextColor"
                     tools:text="Started" />
 
                 <View
@@ -89,6 +92,14 @@
                     android:paddingBottom="@dimen/card_margin_outer"
                     android:paddingTop="@dimen/card_margin_outer"
                     android:visibility="gone" />
+
+                <View
+                    android:id="@+id/action_separator"
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_below="@+id/description"
+                    android:layout_margin="4dp"
+                    android:background="?attr/colorLightSeparatorBackground" />
             </RelativeLayout>
 
             <LinearLayout
