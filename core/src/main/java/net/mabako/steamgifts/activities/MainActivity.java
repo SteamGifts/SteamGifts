@@ -93,7 +93,7 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
             }
         } else {
             Fragment fragment = getCurrentFragment();
-            if(fragment instanceof IActivityTitle) {
+            if (fragment instanceof IActivityTitle) {
                 updateTitle(fragment);
             }
         }
@@ -198,12 +198,6 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
                         int identifier = drawerItem.getIdentifier();
                         if (identifier == R.string.login) {
                             requestLogin();
-
-                        } else if (identifier == R.string.logout) {
-                            new LogoutTask(MainActivity.this, SteamGiftsUserData.getCurrent().getSessionId()).execute();
-
-                            SteamGiftsUserData.clear();
-                            onAccountChange();
 
                         } else if (identifier == R.string.navigation_help) {
                             IntroActivity.showIntro(MainActivity.this, IntroActivity.INTRO_MAIN);
@@ -351,7 +345,7 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
         // Discussions, some time
         drawer.addItem(new SectionDrawerItem().withName(R.string.navigation_discussions).withDivider(true));
         for (DiscussionListFragment.Type type : DiscussionListFragment.Type.values()) {
-            if(type == DiscussionListFragment.Type.CREATED && !account.isLoggedIn())
+            if (type == DiscussionListFragment.Type.CREATED && !account.isLoggedIn())
                 continue;
 
             drawer.addItem(new PrimaryDrawerItem().withName(type.getNavbarResource()).withIdentifier(type.getNavbarResource()).withIcon(type.getIcon()));
@@ -359,12 +353,6 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
 
         drawer.addItems(new DividerDrawerItem());
         drawer.addItem(new PrimaryDrawerItem().withName(R.string.preferences).withIdentifier(R.string.preferences).withSelectable(false).withIcon(FontAwesome.Icon.faw_cog));
-
-        // Provide a way to log out.
-        if (account.isLoggedIn()) {
-            drawer.addItem(new PrimaryDrawerItem().withName(R.string.logout).withIdentifier(R.string.logout).withSelectable(false).withIcon(FontAwesome.Icon.faw_sign_out));
-        }
-
         drawer.addItem(new PrimaryDrawerItem().withName(R.string.navigation_help).withIdentifier(R.string.navigation_help).withSelectable(false).withIcon(FontAwesome.Icon.faw_question));
         drawer.addItem(new PrimaryDrawerItem().withName(R.string.navigation_about).withIdentifier(R.string.navigation_about).withSelectable(false).withIcon(FontAwesome.Icon.faw_info));
     }
@@ -383,13 +371,20 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
                 break;
 
             case REQUEST_SETTINGS:
-                Fragment fragment = getCurrentFragment();
+                if (resultCode == RESPONSE_LOGOUT) {
+                    new LogoutTask(MainActivity.this, SteamGiftsUserData.getCurrent().getSessionId()).execute();
 
-                // force an entire fragment reload if this is something giveaway reloaded
-                if (fragment instanceof GiveawayListFragment) {
-                    loadFragment(GiveawayListFragment.newInstance(((GiveawayListFragment) fragment).getType(), null, false));
-                } else if (fragment instanceof SavedGiveawaysFragment) {
-                    loadFragment(new SavedGiveawaysFragment());
+                    SteamGiftsUserData.clear();
+                    onAccountChange();
+                } else {
+                    Fragment fragment = getCurrentFragment();
+
+                    // force an entire fragment reload if this is something giveaway reloaded
+                    if (fragment instanceof GiveawayListFragment) {
+                        loadFragment(GiveawayListFragment.newInstance(((GiveawayListFragment) fragment).getType(), null, false));
+                    } else if (fragment instanceof SavedGiveawaysFragment) {
+                        loadFragment(new SavedGiveawaysFragment());
+                    }
                 }
                 break;
 

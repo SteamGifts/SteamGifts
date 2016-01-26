@@ -8,9 +8,10 @@ import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
 import net.mabako.sgtools.SGToolsLoginActivity;
-import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.activities.BaseActivity;
+import net.mabako.steamgifts.activities.CommonActivity;
 import net.mabako.steamgifts.compat.PreferenceFragment;
+import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.persistentdata.SGToolsUserData;
 import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
 
@@ -23,6 +24,17 @@ public class SettingsActivity extends BaseActivity {
 
             if (SteamGiftsUserData.getCurrent().isLoggedIn()) {
                 addPreferencesFromResource(R.xml.preferences_sg);
+
+                final PreferenceCategory category = (PreferenceCategory) findPreference("preferences_sg_header");
+
+                findPreference("preference_sg_logout").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        getActivity().setResult(CommonActivity.RESPONSE_LOGOUT);
+                        getActivity().finish();
+                        return true;
+                    }
+                });
             }
 
             if (SGToolsUserData.getCurrent().isLoggedIn()) {

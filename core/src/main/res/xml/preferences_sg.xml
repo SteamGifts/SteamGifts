@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="@string/preferences_sg_header">
+    <PreferenceCategory
+        android:key="preferences_sg_header"
+        android:title="@string/preferences_sg_header">
         <Preference android:title="@string/preference_sg_sync">
             <intent
                 android:targetClass="net.mabako.steamgifts.activities.SyncActivity"
@@ -15,5 +17,9 @@
                 android:targetClass="net.mabako.steamgifts.activities.settings.ViewHiddenGamesActivity"
                 android:targetPackage="net.mabako.steamgifts" />
         </Preference>
+
+        <Preference
+            android:key="preference_sg_logout"
+            android:title="@string/logout" />
     </PreferenceCategory>
 </PreferenceScreen>
