@@ -9,6 +9,8 @@
 local.properties
 local.gradle
 
+fabric.properties
+
 # local configuration
 .DS_Store
 
