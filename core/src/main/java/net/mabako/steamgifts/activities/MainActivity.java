@@ -37,6 +37,7 @@ import net.mabako.steamgifts.fragments.GiveawayListFragment;
 import net.mabako.steamgifts.fragments.SavedGiveawaysFragment;
 import net.mabako.steamgifts.fragments.SearchableListFragment;
 import net.mabako.steamgifts.fragments.UserDetailFragment;
+import net.mabako.steamgifts.fragments.interfaces.IActivityTitle;
 import net.mabako.steamgifts.intro.IntroActivity;
 import net.mabako.steamgifts.persistentdata.IPointUpdateNotification;
 import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
@@ -81,12 +82,19 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
 
             if (type instanceof GiveawayListFragment.Type) {
                 loadFragment(GiveawayListFragment.newInstance((GiveawayListFragment.Type) type, query, drawer == null));
+
                 if (!noDrawer)
                     drawer.setSelection(((GiveawayListFragment.Type) type).getNavbarResource(), false);
             } else if (type instanceof DiscussionListFragment.Type) {
                 loadFragment(DiscussionListFragment.newInstance((DiscussionListFragment.Type) type, null));
+
                 if (!noDrawer)
                     drawer.setSelection(((DiscussionListFragment.Type) type).getNavbarResource(), false);
+            }
+        } else {
+            Fragment fragment = getCurrentFragment();
+            if(fragment instanceof IActivityTitle) {
+                updateTitle(fragment);
             }
         }
 

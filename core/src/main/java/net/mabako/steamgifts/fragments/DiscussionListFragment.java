@@ -33,6 +33,8 @@ public class DiscussionListFragment extends SearchableListFragment<DiscussionAda
         args.putSerializable(SAVED_QUERY, query);
         f.setArguments(args);
 
+        f.type = type;
+
         return f;
     }
 
@@ -72,7 +74,7 @@ public class DiscussionListFragment extends SearchableListFragment<DiscussionAda
 
     @Override
     public String getExtraTitle() {
-        return getSearchQuery();
+        return null;
     }
 
     @Override

@@ -64,6 +64,8 @@ public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter
         args.putBoolean(SAVED_FINISH_ON_STOP, finishActivityOnSearchStopped);
         g.setArguments(args);
 
+        g.type = type;
+
         return g;
     }
 
@@ -132,7 +134,7 @@ public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter
      */
     @Override
     public String getExtraTitle() {
-        return getSearchQuery();
+        return null;
     }
 
     @Override

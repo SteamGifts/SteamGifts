@@ -101,7 +101,7 @@ public class HiddenGamesFragment extends SearchableListFragment<HiddenGamesAdapt
 
     @Override
     public String getExtraTitle() {
-        return getSearchQuery();
+        return null;
     }
 
     @Override
