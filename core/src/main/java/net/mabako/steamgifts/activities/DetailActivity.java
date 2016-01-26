@@ -42,9 +42,7 @@ public class DetailActivity extends CommonActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (savedInstanceState == null) {
-            initLayout();
-        }
+        initLayout(savedInstanceState);
 
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         ActionBar actionBar = getSupportActionBar();
@@ -53,7 +51,7 @@ public class DetailActivity extends CommonActivity {
         }
     }
 
-    private void initLayout() {
+    private void initLayout(Bundle savedInstanceState) {
         Serializable serializable = getIntent().getSerializableExtra(GiveawayDetailFragment.ARG_GIVEAWAY);
         if (serializable != null) {
             String pref = PreferenceManager.getDefaultSharedPreferences(this).getString("preference_giveaway_load_images", "details;list");
@@ -65,21 +63,24 @@ public class DetailActivity extends CommonActivity {
         serializable = getIntent().getSerializableExtra(DiscussionDetailFragment.ARG_DISCUSSION);
         if (serializable != null) {
             setContentView(R.layout.activity_one_fragment);
-            loadFragment(DiscussionDetailFragment.newInstance((BasicDiscussion) serializable));
+            if (savedInstanceState == null)
+                loadFragment(DiscussionDetailFragment.newInstance((BasicDiscussion) serializable));
             return;
         }
 
         String user = getIntent().getStringExtra(UserDetailFragment.ARG_USER);
         if (user != null) {
             setContentView(R.layout.activity_one_fragment);
-            loadFragment(UserDetailFragment.newInstance(user));
+            if (savedInstanceState == null)
+                loadFragment(UserDetailFragment.newInstance(user));
             return;
         }
 
         serializable = getIntent().getSerializableExtra(SGToolsDetailFragment.ARG_UUID);
         if (serializable != null) {
             setContentView(R.layout.activity_detail_expanding_toolbar);
-            loadFragment(SGToolsDetailFragment.newInstance((UUID) serializable));
+            if (savedInstanceState == null)
+                loadFragment(SGToolsDetailFragment.newInstance((UUID) serializable));
             return;
         }
 
@@ -95,7 +96,6 @@ public class DetailActivity extends CommonActivity {
                 pager.setCurrentItem(0);
             else if (u.getCreatedNotification() > 0)
                 pager.setCurrentItem(3);
-
             return;
         }
 
@@ -164,6 +164,19 @@ public class DetailActivity extends CommonActivity {
 
         pagerAdapter = new SimplePagerAdapter(getSupportFragmentManager(), fragments);
         pager.setAdapter(pagerAdapter);
+        pager.addOnPageChangeListener(pagerAdapter);
+
+        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        if (tabLayout != null) {
+            tabLayout.setupWithViewPager(pager);
+        }
+    }
+
+    private void restorePager(Bundle savedInstanceState) {
+        pager = (ViewPager) findViewById(R.id.viewPager);
+
+        pagerAdapter = new SimplePagerAdapter(getSupportFragmentManager());
+        pager.clearOnPageChangeListeners();
         pager.addOnPageChangeListener(pagerAdapter);
 
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);

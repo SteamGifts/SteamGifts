@@ -5,7 +5,10 @@ import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.data.GiveawayExtras;
 
-public class GiveawayDetailsCard implements IEndlessAdaptable {
+import java.io.Serializable;
+
+public class GiveawayDetailsCard implements IEndlessAdaptable, Serializable {
+    private static final long serialVersionUID = -2605313593624182118L;
     public static final int VIEW_LAYOUT = R.layout.giveaway_detail_card;
 
     private Giveaway giveaway;

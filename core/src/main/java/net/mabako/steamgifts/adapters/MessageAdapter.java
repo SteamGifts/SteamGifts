@@ -14,7 +14,7 @@ import java.util.List;
 public class MessageAdapter extends EndlessAdapter {
     private static final long serialVersionUID = 5997941227817634662L;
 
-    private MessageListFragment fragment;
+    private transient MessageListFragment fragment;
 
     public void setFragmentValues(MessageListFragment fragment) {
         setLoadListener(fragment);

@@ -16,6 +16,7 @@ import net.mabako.steam.store.data.Picture;
 import net.mabako.steam.store.data.Text;
 import net.mabako.steam.store.viewholder.PictureViewHolder;
 import net.mabako.steam.store.viewholder.TextViewHolder;
+import net.mabako.steamgifts.activities.DetailActivity;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.adapters.viewholder.GameViewHolder;
 import net.mabako.steamgifts.core.R;
@@ -25,28 +26,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class StoreFragment extends Fragment {
-    protected int appId;
     protected boolean loaded;
 
-    /**
-     * Fragment in which the giveaway is shown.
-     */
-    protected Fragment primaryFragment;
-
     private LoadStoreTask task;
-    private View layout;
 
-    private RecyclerView listView;
     protected Adapter adapter;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        layout = inflater.inflate(R.layout.fragment_simple_list, container, false);
+        View layout = inflater.inflate(R.layout.fragment_simple_list, container, false);
 
         setHasOptionsMenu(true);
 
-        listView = (RecyclerView) layout.findViewById(R.id.list);
+        RecyclerView listView = (RecyclerView) layout.findViewById(R.id.list);
         adapter = new Adapter();
         listView.setAdapter(adapter);
         listView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -134,11 +127,11 @@ public abstract class StoreFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        primaryFragment.onCreateOptionsMenu(menu, inflater);
+        ((DetailActivity) getActivity()).getCurrentFragment().onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return primaryFragment.onOptionsItemSelected(item);
+        return ((DetailActivity) getActivity()).getCurrentFragment().onOptionsItemSelected(item);
     }
 }

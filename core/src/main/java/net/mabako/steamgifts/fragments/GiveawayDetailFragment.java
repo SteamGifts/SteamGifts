@@ -31,7 +31,6 @@ import net.mabako.steamgifts.activities.MainActivity;
 import net.mabako.steamgifts.activities.WebViewActivity;
 import net.mabako.steamgifts.activities.WriteCommentActivity;
 import net.mabako.steamgifts.adapters.CommentAdapter;
-import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.BasicGiveaway;
@@ -131,6 +130,9 @@ public class GiveawayDetailFragment extends ListFragment<CommentAdapter> impleme
         }
 
         setHasOptionsMenu(true);
+
+        if(savedInstanceState != null)
+            ((DetailActivity) getActivity()).setTransientFragment(null);
 
         return layout;
     }
@@ -266,7 +268,7 @@ public class GiveawayDetailFragment extends ListFragment<CommentAdapter> impleme
         getActivity().supportInvalidateOptionsMenu();
 
         if (getActivity() instanceof DetailActivity && giveaway.getGameId() != Game.NO_APP_ID && !fragmentAdded) {
-            ((DetailActivity) getActivity()).addFragment(giveaway.getType() == Game.Type.APP ? StoreAppFragment.newInstance(giveaway.getGameId(), this) : StoreSubFragment.newInstance(giveaway.getGameId(), this));
+            ((DetailActivity) getActivity()).addFragment(giveaway.getType() == Game.Type.APP ? StoreAppFragment.newInstance(giveaway.getGameId()) : StoreSubFragment.newInstance(giveaway.getGameId()));
             fragmentAdded = true;
         }
     }
