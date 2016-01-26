@@ -351,6 +351,9 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
         // Discussions, some time
         drawer.addItem(new SectionDrawerItem().withName(R.string.navigation_discussions).withDivider(true));
         for (DiscussionListFragment.Type type : DiscussionListFragment.Type.values()) {
+            if(type == DiscussionListFragment.Type.CREATED && !account.isLoggedIn())
+                continue;
+
             drawer.addItem(new PrimaryDrawerItem().withName(type.getNavbarResource()).withIdentifier(type.getNavbarResource()).withIcon(type.getIcon()));
         }
 

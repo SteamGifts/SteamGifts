@@ -1,7 +1,5 @@
 package net.mabako.steamgifts.fragments;
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,7 +7,6 @@ import android.support.v4.app.Fragment;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 
 import net.mabako.steamgifts.adapters.DiscussionAdapter;
-import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.fragments.interfaces.IActivityTitle;
 import net.mabako.steamgifts.tasks.LoadDiscussionListTask;
@@ -99,7 +96,8 @@ public class DiscussionListFragment extends SearchableListFragment<DiscussionAda
         GROUP_RECRUITMENT(R.string.navigation_discussions_group_recruitment, R.string.navigation_discussions_group_recruitment_title, FontAwesome.Icon.faw_users),
         LETS_PLAY_TOGETHER(R.string.navigation_discussions_lets_play_together, R.string.navigation_discussions_lets_play_together_title, FontAwesome.Icon.faw_play_circle),
         OFF_TOPIC(R.string.navigation_discussions_off_topic, R.string.navigation_discussions_off_topic_title, FontAwesome.Icon.faw_comments),
-        PUZZLES(R.string.navigation_discussions_puzzles, R.string.navigation_discussions_puzzles_title, FontAwesome.Icon.faw_puzzle_piece);
+        PUZZLES(R.string.navigation_discussions_puzzles, R.string.navigation_discussions_puzzles_title, FontAwesome.Icon.faw_puzzle_piece),
+        CREATED(R.string.navigation_discussions_created, R.string.navigation_discussions_created_title, FontAwesome.Icon.faw_plus_circle);
 
         private final int titleResource;
         private final int navbarResource;
