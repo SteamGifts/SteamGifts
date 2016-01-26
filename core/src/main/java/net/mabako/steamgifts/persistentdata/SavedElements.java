@@ -76,6 +76,10 @@ public abstract class SavedElements<T> implements Comparator<T> {
 
     protected abstract T getElement(Gson gson, String json);
 
+    public void close() {
+        helper.close();
+    }
+
     private static class GiveawayOpenHelper<T> extends SQLiteOpenHelper {
         private final SavedElements<T> parent;
 

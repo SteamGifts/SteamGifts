@@ -118,6 +118,16 @@ public class GiveawayDetailFragment extends ListFragment<CommentAdapter> impleme
             this.activity = (Activity) context;
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        if (savedGiveaways != null) {
+            savedGiveaways.close();
+            savedGiveaways = null;
+        }
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

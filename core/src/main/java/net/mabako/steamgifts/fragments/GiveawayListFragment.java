@@ -1,5 +1,6 @@
 package net.mabako.steamgifts.fragments;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -44,6 +45,7 @@ public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter
     private static final String SAVED_LAST_REMOVED = "last-removed-game";
 
     private EnterLeaveGiveawayTask enterLeaveTask;
+    private SavedGiveaways savedGiveaways;
 
     /**
      * Type of items to show.
@@ -82,7 +84,7 @@ public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter
             lastRemovedGame = (LastRemovedGame) savedInstanceState.getSerializable(SAVED_LAST_REMOVED);
         }
 
-        adapter.setFragmentValues(getActivity(), this, new SavedGiveaways(getContext()));
+        adapter.setFragmentValues(getActivity(), this, savedGiveaways);
     }
 
     @Override
@@ -91,6 +93,22 @@ public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter
 
         outState.putSerializable(SAVED_TYPE, type);
         outState.putSerializable(SAVED_LAST_REMOVED, lastRemovedGame);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        savedGiveaways = new SavedGiveaways(getContext());
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        if (savedGiveaways != null) {
+            savedGiveaways.close();
+            savedGiveaways = null;
+        }
     }
 
     @Override

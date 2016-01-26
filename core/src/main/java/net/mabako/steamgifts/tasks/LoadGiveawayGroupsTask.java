@@ -59,8 +59,6 @@ public class LoadGiveawayGroupsTask extends AsyncTask<Void, Void, List<GiveawayG
                 String title = link.text();
                 String id = link.attr("href").substring(7, 12);
 
-                Log.e(TAG, "group " + title + ", " + id);
-
                 String avatar = null;
                 Element avatarNode = element.select(".global__image-inner-wrap").first();
                 if (avatarNode != null)
