@@ -1,90 +1,94 @@
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/card_view"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/card_margin_outer"
-    card_view:cardBackgroundColor="?attr/colorCardBackground"
-    card_view:cardCornerRadius="1dp">
+    android:background="?attr/colorBehindCardBackground">
 
-    <LinearLayout
+    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingBottom="0dp"
-            android:paddingLeft="@dimen/card_margin_outer"
-            android:paddingRight="@dimen/card_margin_outer"
-            android:paddingTop="@dimen/card_margin_outer">
-
-            <TextView
-                android:id="@+id/time"
-                style="@style/MediumText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_toRightOf="@+id/user"
-                android:gravity="right"
-                android:padding="@dimen/card_margin_small"
-                android:text="Time" />
-
-            <TextView
-                android:id="@+id/user"
-                style="@style/MediumText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/card_margin_small"
-                android:text="Creator"
-                android:textStyle="bold" />
-
-            <View
-                android:id="@+id/separator"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@+id/user"
-                android:layout_margin="4dp"
-                android:background="@drawable/material_drawer_square_mask"
-                android:backgroundTint="?android:attr/textColorSecondary" />
-
-            <TextView
-                android:id="@+id/description"
-                style="@style/MediumText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/progressBar"
-                android:padding="@dimen/card_margin_small"
-                android:text="Discussion description"
-                android:visibility="visible" />
-
-            <ProgressBar
-                android:id="@+id/progressBar"
-                style="?android:attr/progressBarStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/separator"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:indeterminate="true"
-                android:paddingBottom="@dimen/card_margin_outer"
-                android:paddingTop="@dimen/card_margin_outer"
-                android:visibility="gone" />
-        </RelativeLayout>
+        android:layout_margin="@dimen/card_margin_outer"
+        card_view:cardBackgroundColor="?attr/colorCardBackground"
+        card_view:cardCornerRadius="1dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <Button
-                android:id="@+id/comment"
-                style="@style/MediumButton"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/add_comment"
-                android:visibility="gone" />
+                android:orientation="vertical"
+                android:paddingBottom="0dp"
+                android:paddingLeft="@dimen/card_margin_outer"
+                android:paddingRight="@dimen/card_margin_outer"
+                android:paddingTop="@dimen/card_margin_outer">
+
+                <TextView
+                    android:id="@+id/time"
+                    style="@style/MediumText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_toRightOf="@+id/user"
+                    android:gravity="right"
+                    android:padding="@dimen/card_margin_small"
+                    android:text="Time" />
+
+                <TextView
+                    android:id="@+id/user"
+                    style="@style/MediumText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/card_margin_small"
+                    android:text="Creator"
+                    android:textStyle="bold" />
+
+                <View
+                    android:id="@+id/separator"
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_below="@+id/user"
+                    android:layout_margin="4dp"
+                    android:background="?attr/colorLightSeparatorBackground" />
+
+                <TextView
+                    android:id="@+id/description"
+                    style="@style/MediumText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/progressBar"
+                    android:padding="@dimen/card_margin_small"
+                    android:text="Discussion description"
+                    android:visibility="visible" />
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/separator"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:indeterminate="true"
+                    android:paddingBottom="@dimen/card_margin_outer"
+                    android:paddingTop="@dimen/card_margin_outer"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/comment"
+                    style="@style/MediumButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/add_comment"
+                    android:visibility="gone" />
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
-</android.support.v7.widget.CardView>
+    </android.support.v7.widget.CardView>
+</LinearLayout>

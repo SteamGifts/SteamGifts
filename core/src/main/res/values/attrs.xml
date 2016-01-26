@@ -3,4 +3,7 @@
     <attr name="colorDefaultBackground" format="color" />
     <attr name="colorHighlightBackground" format="color" />
     <attr name="colorCardBackground" format="color" />
+    <attr name="colorBehindCardBackground" format="color" />
+    <attr name="colorLightSeparatorBackground" format="color" />
+    <attr name="colorLighterSeparatorBackground" format="color" />
 </resources>

@@ -30,8 +30,8 @@
     <View
         android:id="@+id/separator"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray" />
+        android:layout_height="1px"
+        android:background="?attr/colorLightSeparatorBackground" />
 
     <FrameLayout
         android:id="@+id/fragment_container2"

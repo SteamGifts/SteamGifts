@@ -6,7 +6,10 @@
         <item name="colorAccent">@color/colorAccent</item>
 
         <item name="colorDefaultBackground">@color/colorPrimary</item>
-        <item name="colorCardBackground">@color/colorTransparent</item>
+        <item name="colorCardBackground">#ffffff</item>
+        <item name="colorBehindCardBackground">#e4e4e4</item>
+        <item name="colorLightSeparatorBackground">#d8d8d8</item>
+        <item name="colorLighterSeparatorBackground">#cccccc</item>
         <item name="colorAccountHeader">@color/colorPrimary</item>
         <item name="colorHighlightBackground">@color/md_blue_100</item>
     </style>
@@ -18,6 +21,9 @@
 
         <item name="colorDefaultBackground">#222222</item>
         <item name="colorCardBackground">#222222</item>
+        <item name="colorBehindCardBackground">@color/colorTransparent</item>
+        <item name="colorLightSeparatorBackground">#666666</item>
+        <item name="colorLighterSeparatorBackground">#333333</item>
         <item name="colorAccountHeader">#000000</item>
         <item name="colorHighlightBackground">@color/md_blue_grey_700</item>
     </style>
