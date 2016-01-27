@@ -58,7 +58,19 @@
         <item name="android:minHeight">8dp</item>
     </style>
 
-    <!-- Use rather rectangular image. -->
+    <!-- Comment Styles -->
+    <style name="SmallText.NormalUser" parent="SmallText">
+        <item name="android:textColor">?attr/lightTextColor</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="SmallText.HighlightOp" parent="SmallText">
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:background">?attr/colorAccountHeader</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- Use rather rectangular image in the account header. -->
     <style name="BezelImageView">
         <item name="biv_maskDrawable">@drawable/material_drawer_square_mask</item>
         <item name="biv_drawCircularShadow">false</item>

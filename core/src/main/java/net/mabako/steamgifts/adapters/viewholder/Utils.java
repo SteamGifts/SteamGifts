@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.Build;
+import android.support.annotation.AttrRes;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -114,8 +115,12 @@ public final class Utils {
     }
 
     public static void setBackgroundDrawable(Context context, View view, boolean highlighted) {
+        setBackgroundDrawable(context, view, highlighted, R.attr.colorHighlightBackground);
+    }
+
+    public static void setBackgroundDrawable(Context context, View view, boolean highlighted, @AttrRes int attr) {
         if (highlighted) {
-            int attrs[] = new int[]{R.attr.colorHighlightBackground};
+            int attrs[] = new int[]{attr};
             TypedArray ta = context.getTheme().obtainStyledAttributes(attrs);
 
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
