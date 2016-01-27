@@ -50,6 +50,8 @@ public class WebViewActivity extends CommonActivity {
         webSettings.setJavaScriptEnabled(true);
         webSettings.setSupportZoom(true);
         webSettings.setBuiltInZoomControls(true);
+        webSettings.setLoadWithOverviewMode(true);
+        webSettings.setUseWideViewPort(true);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
             webSettings.setDisplayZoomControls(false);
