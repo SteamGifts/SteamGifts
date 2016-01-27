@@ -195,4 +195,7 @@
     <string name="placeholder_giveaway_start">{faw-calendar} Start</string>
     <string name="placeholder_giveaway_end">{faw-clock-o} End</string>
     <string name="placeholder_giveaway_description">Description of the Giveaway you\'re about to enter</string>
+    <string name="placeholder_comment_author">Author</string>
+    <string name="placeholder_comment_time">Time</string>
+    <string name="placeholder_comment_text">Comment</string>
 </resources>

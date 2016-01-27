@@ -1,7 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
     android:paddingBottom="4dp"
     android:paddingTop="4dp">
 
@@ -43,17 +42,16 @@
             android:paddingLeft="4dp"
             android:paddingRight="4dp"
             android:paddingTop="2dp"
-            tools:text="Author" />
+            android:text="@string/placeholder_comment_author" />
 
         <TextView
             android:id="@+id/time"
-            style="@style/SmallText"
+            style="@style/SmallText.Light"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/user"
             android:padding="4dp"
-            android:text="Time"
-            android:textColor="?attr/lightTextColor" />
+            android:text="@string/placeholder_comment_time" />
 
         <TextView
             android:id="@+id/content"
@@ -64,6 +62,6 @@
             android:paddingBottom="4dp"
             android:paddingLeft="4dp"
             android:paddingRight="4dp"
-            android:text="Comment" />
+            android:text="@string/placeholder_comment_text" />
     </RelativeLayout>
 </LinearLayout>

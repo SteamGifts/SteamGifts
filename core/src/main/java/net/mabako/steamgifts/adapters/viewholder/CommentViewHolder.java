@@ -57,10 +57,12 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
         Utils.setBackgroundDrawable(context, itemView, comment.isHighlighted());
 
         commentAuthor.setText(comment.getAuthor());
-        commentAuthor.setTextAppearance(context, comment.isOp() ? R.style.SmallText_HighlightOp : R.style.SmallText_NormalUser);
-        Utils.setBackgroundDrawable(context, commentAuthor, comment.isOp(), R.attr.colorAccountHeader);
+        commentAuthor.setTextAppearance(context, comment.isHighlighted() ? R.style.SmallText : comment.isOp() ? R.style.SmallText_HighlightOp : R.style.SmallText_NormalUser);
+        Utils.setBackgroundDrawable(context, commentAuthor, comment.isOp() && !comment.isHighlighted(), R.attr.colorAccountHeader);
 
         commentTime.setText(comment.getTimeAgo());
+        commentTime.setTextAppearance(context, comment.isHighlighted() ? R.style.SmallText : R.style.SmallText_Light);
+
         commentContent.setText(Utils.fromHtml(context, comment.getContent(), !comment.isDeleted()));
 
         // Space before the marker

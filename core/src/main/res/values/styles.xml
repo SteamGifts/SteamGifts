@@ -59,8 +59,12 @@
     </style>
 
     <!-- Comment Styles -->
-    <style name="SmallText.NormalUser" parent="SmallText">
+
+    <style name="SmallText.Light" parent="SmallText">
         <item name="android:textColor">?attr/lightTextColor</item>
+    </style>
+
+    <style name="SmallText.NormalUser" parent="SmallText.Light">
         <item name="android:textStyle">bold</item>
     </style>
 

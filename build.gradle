@@ -1,5 +1,5 @@
 ext {
-    versionCode = 47
+    versionCode = 48
     versionName = "1.0"
 
     compileSdkVersion = 23
