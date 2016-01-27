@@ -174,6 +174,8 @@ public class GiveawayDetailFragment extends ListFragment<CommentAdapter> impleme
         if (extras == null)
             return;
 
+        adapter.setXsrfToken(extras.getXsrfToken());
+
         // We should always have a giveaway instance at this point of time, as
         // #onPostGiveawayLoaded is called prior to this method.
         if (!(giveaway instanceof Giveaway))
@@ -293,6 +295,8 @@ public class GiveawayDetailFragment extends ListFragment<CommentAdapter> impleme
 
     @Override
     public void requestComment(Comment parentComment) {
+        Log.d(TAG, "request comment for " + parentComment);
+        Log.d(TAG, "xstf-token: " + adapter.getXsrfToken());
         if (giveaway instanceof Giveaway) {
             Intent intent = new Intent(getActivity(), WriteCommentActivity.class);
             intent.putExtra(WriteCommentActivity.XSRF_TOKEN, adapter.getXsrfToken());
