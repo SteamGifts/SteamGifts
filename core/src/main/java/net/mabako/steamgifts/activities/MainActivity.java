@@ -184,7 +184,7 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
         drawer = new DrawerBuilder()
                 .withActivity(this)
                 .withToolbar((Toolbar) findViewById(R.id.toolbar))
-                .withTranslucentStatusBar(false)
+                .withTranslucentStatusBar(true)
                 .withActionBarDrawerToggle(true)
                 .withAccountHeader(accountHeader)
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
