@@ -213,7 +213,7 @@ public class DiscussionDetailFragment extends ListFragment<CommentAdapter> imple
 
     @Override
     public void requestComment(Comment parentComment) {
-        if (discussion instanceof Discussion) {
+        if (discussion instanceof Discussion && discussionCard != null && discussionCard.getExtras() != null) {
             Intent intent = new Intent(getActivity(), WriteCommentActivity.class);
             intent.putExtra(WriteCommentActivity.XSRF_TOKEN, discussionCard.getExtras().getXsrfToken());
             intent.putExtra(WriteCommentActivity.PATH, "discussion/" + discussion.getDiscussionId() + "/" + ((Discussion) discussion).getName());
@@ -221,6 +221,6 @@ public class DiscussionDetailFragment extends ListFragment<CommentAdapter> imple
             intent.putExtra(WriteCommentActivity.TITLE, ((Discussion) discussion).getTitle());
             getActivity().startActivityForResult(intent, WriteCommentActivity.REQUEST_COMMENT);
         } else
-            throw new IllegalStateException("Commenting on a not fully loaded Giveaway");
+            Log.e(TAG, "Commenting on a not fully loaded Giveaway [" + discussion + ", " + discussionCard + "]");
     }
 }

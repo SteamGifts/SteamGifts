@@ -295,7 +295,7 @@ public class GiveawayDetailFragment extends ListFragment<CommentAdapter> impleme
     public void requestComment(Comment parentComment) {
         if (giveaway instanceof Giveaway) {
             Intent intent = new Intent(getActivity(), WriteCommentActivity.class);
-            intent.putExtra(WriteCommentActivity.XSRF_TOKEN, giveawayCard.getExtras().getXsrfToken());
+            intent.putExtra(WriteCommentActivity.XSRF_TOKEN, adapter.getXsrfToken());
             intent.putExtra(WriteCommentActivity.PATH, "giveaway/" + giveaway.getGiveawayId() + "/" + ((Giveaway) giveaway).getName());
             intent.putExtra(WriteCommentActivity.PARENT, parentComment);
             intent.putExtra(WriteCommentActivity.TITLE, ((Giveaway) giveaway).getTitle());
