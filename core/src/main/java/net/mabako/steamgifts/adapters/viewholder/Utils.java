@@ -14,12 +14,18 @@ import android.text.style.URLSpan;
 import android.util.Log;
 import android.view.View;
 
-import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.activities.CommonActivity;
 import net.mabako.steamgifts.activities.UrlHandlingActivity;
 import net.mabako.steamgifts.activities.WebViewActivity;
+import net.mabako.steamgifts.core.R;
+
+import java.util.regex.Pattern;
 
 public final class Utils {
+    private static final Pattern
+            tdPattern = Pattern.compile("</td>([\\s\\r\\n]+)<td"),
+            thPattern = Pattern.compile("</th>([\\s\\r\\n]+)<th");
+
     public static CharSequence fromHtml(Context context, String source) {
         return fromHtml(context, source, true);
     }
@@ -28,6 +34,10 @@ public final class Utils {
         if (TextUtils.isEmpty(source))
             return source;
 
+        source = source
+                .replace("\r\n", "\n")
+                .replace("</tr>", "</tr><br/>");
+        source = thPattern.matcher(tdPattern.matcher(source).replaceAll(" | </td><td")).replaceAll(" | </th><th");
         if (useCustomViewHandler) {
             try {
                 CharSequence cs = Html.fromHtml(source, null, new CustomHtmlTagHandler());

@@ -47,7 +47,8 @@ public class LoadDiscussionListTask extends AsyncTask<Void, Void, List<Discussio
 
             Log.d(TAG, "Fetching discussions for page " + page + " and URL " + url);
 
-            Connection jsoup = Jsoup.connect(url);
+            Connection jsoup = Jsoup.connect(url)
+                    .followRedirects(false);
             jsoup.data("page", Integer.toString(page));
 
             if (searchQuery != null)
