@@ -47,11 +47,28 @@
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/user2"
+            style="@style/SmallText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            android:layout_marginTop="2dp"
+            android:layout_toRightOf="@+id/user"
+            android:background="?attr/colorAccountHeader"
+            android:paddingBottom="2dp"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:paddingTop="2dp"
+            android:text="Author"
+            android:textColor="#ffffff"
+            android:textStyle="bold" />
+
+        <TextView
             android:id="@+id/time"
             style="@style/SmallText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/user"
+            android:layout_toRightOf="@id/user2"
             android:padding="4dp"
             android:text="Time"
             android:textColor="?attr/lightTextColor" />
@@ -61,7 +78,7 @@
             style="@style/MediumText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/user"
+            android:layout_below="@id/time"
             android:paddingBottom="4dp"
             android:paddingLeft="4dp"
             android:paddingRight="4dp"

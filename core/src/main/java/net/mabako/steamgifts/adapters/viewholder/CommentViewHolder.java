@@ -26,6 +26,7 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
     private final ICommentableFragment fragment;
 
     private final TextView commentAuthor;
+    private final TextView commentAuthor2;
     private final TextView commentTime;
     private final TextView commentContent;
     private final ImageView commentImage;
@@ -41,6 +42,7 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
         this.context = context;
 
         commentAuthor = (TextView) v.findViewById(R.id.user);
+        commentAuthor2 = (TextView) v.findViewById(R.id.user2);
         commentTime = (TextView) v.findViewById(R.id.time);
 
         commentContent = (TextView) v.findViewById(R.id.content);
@@ -57,7 +59,9 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
         Utils.setBackgroundDrawable(context, itemView, comment.isHighlighted());
 
         commentAuthor.setText(comment.getAuthor());
-        Utils.setBackgroundDrawable(context, commentAuthor, comment.isOp());
+        commentAuthor2.setText(comment.getAuthor());
+        commentAuthor.setVisibility(comment.isOp() ? View.GONE : View.VISIBLE);
+        commentAuthor2.setVisibility(comment.isOp() ? View.VISIBLE : View.GONE);
 
         commentTime.setText(comment.getTimeAgo());
         commentContent.setText(Utils.fromHtml(context, comment.getContent(), !comment.isDeleted()));
