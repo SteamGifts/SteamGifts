@@ -61,10 +61,7 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
         setupSwipeContainer();
 
         if (loadItemsInitially) {
-            if (adapter.isEmpty())
-                fetchItems(1);
-            else
-                showNormalListView();
+            initializeListView();
         }
 
         return layout;
@@ -122,7 +119,6 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
         }
     }
 
-
     public void addItems(List<? extends IEndlessAdaptable> items, boolean clearExistingItems) {
         if (items != null) {
             if (clearExistingItems)
@@ -137,6 +133,7 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
 
         taskToFetchItems = null;
     }
+
 
     public void addItems(List<? extends IEndlessAdaptable> items, boolean clearExistingItems, String xsrfToken) {
         addItems(items, clearExistingItems);
@@ -173,10 +170,19 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
         if (isVisibleToUser && !loadItemsInitially) {
             loadItemsInitially = true;
 
-            if (adapter.isEmpty())
-                fetchItems(1);
-            else
-                showNormalListView();
+            if (getView() == null) {
+                // Fallback for a rare circumstance in which setUserVisibleHint would be called before onCreateView,
+                // in which case getView() returns null.
+            } else
+                initializeListView();
+        }
+    }
+
+    private void initializeListView() {
+        if (adapter.isEmpty()) {
+            fetchItems(1);
+        } else {
+            showNormalListView();
         }
     }
 
