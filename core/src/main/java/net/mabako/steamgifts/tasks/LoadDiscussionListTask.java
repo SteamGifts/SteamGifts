@@ -47,12 +47,16 @@ public class LoadDiscussionListTask extends AsyncTask<Void, Void, List<Discussio
 
             Log.d(TAG, "Fetching discussions for page " + page + " and URL " + url);
 
-            Connection jsoup = Jsoup.connect(url)
-                    .followRedirects(false);
+            Connection jsoup = Jsoup.connect(url);
             jsoup.data("page", Integer.toString(page));
 
             if (searchQuery != null)
                 jsoup.data("q", searchQuery);
+
+            // We do not want to follow redirects here, because SteamGifts redirects to the main (giveaways) page if we're not logged in.
+            // For all other pages however, if we're not logged in, we're redirected once as well?
+            if (type == DiscussionListFragment.Type.CREATED)
+                jsoup.followRedirects(false);
 
             if (SteamGiftsUserData.getCurrent().isLoggedIn())
                 jsoup.cookie("PHPSESSID", SteamGiftsUserData.getCurrent().getSessionId());
