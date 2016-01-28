@@ -1,6 +1,6 @@
 ext {
-    versionCode = 48
-    versionName = "1.0"
+    versionCode = 49
+    versionName = "1.0.1"
 
     compileSdkVersion = 23
     buildToolsVersion = "23.0.2"
