@@ -5,6 +5,12 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!-- we check for network state in broadcast receivers -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- schedule tasks despite not running initially on the device (and before being started once) -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
     <uses-sdk tools:overrideLibrary="com.github.paolorotolo.appintro, com.mikepenz.actionitembadge.library" />
 
     <application
@@ -97,5 +103,13 @@
         <activity
             android:name="net.mabako.steamgifts.intro.IntroActivity"
             android:theme="@style/AppTheme.Light" />
+
+        <!-- start new message checking on boot -->
+        <receiver android:name="net.mabako.steamgifts.receivers.BootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+            </intent-filter>
+        </receiver>
     </application>
 </manifest>
