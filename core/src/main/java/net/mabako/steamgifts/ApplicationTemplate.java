@@ -41,4 +41,11 @@ public abstract class ApplicationTemplate extends Application {
      * @return current application version
      */
     public abstract String getAppVersionName();
+
+    /**
+     * Current version number of this application.
+     *
+     * @return current application version code
+     */
+    public abstract int getAppVersionCode();
 }

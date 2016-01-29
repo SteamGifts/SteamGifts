@@ -5,4 +5,9 @@ public class Application extends ApplicationTemplate {
     public String getAppVersionName() {
         return BuildConfig.VERSION_NAME;
     }
+
+    @Override
+    public int getAppVersionCode() {
+        return BuildConfig.VERSION_CODE;
+    }
 }

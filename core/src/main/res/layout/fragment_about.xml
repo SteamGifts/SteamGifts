@@ -35,7 +35,6 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:enabled="false"
                 android:gravity="center_horizontal"
                 android:paddingBottom="4dp"
                 android:text="@string/about_made_with_love"
@@ -45,7 +44,6 @@
                 android:id="@+id/version"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:enabled="false"
                 android:gravity="center_horizontal"
                 android:paddingBottom="4dp"
                 android:textColor="?attr/lightTextColor"
