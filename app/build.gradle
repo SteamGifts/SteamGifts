@@ -10,7 +10,6 @@ android {
         minSdkVersion 10
         targetSdkVersion 23
         versionCode rootProject.ext.versionCode
-        versionName rootProject.ext.versionName
         project.ext.set('archivesBaseName', 'SteamGifts')
     }
     buildTypes {
@@ -23,14 +22,15 @@ android {
         // ** This is the build flavor you want to pick for running the app locally. **
         local {
             ext.enableCrashlytics = false
+            versionName "${rootProject.ext.versionName}.local"
         }
         // Release pushed to non-beta testers
         stable {
-            null
+            versionName rootProject.ext.versionName
         }
         // Release for the beta channel
         beta {
-            null
+            versionName "${rootProject.ext.versionName}.beta"
         }
     }
 }

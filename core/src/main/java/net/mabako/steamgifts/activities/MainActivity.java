@@ -30,6 +30,7 @@ import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader;
 import com.mikepenz.materialdrawer.util.DrawerImageLoader;
 import com.squareup.picasso.Picasso;
 
+import net.mabako.steamgifts.ApplicationTemplate;
 import net.mabako.steamgifts.activities.settings.SettingsActivity;
 import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.fragments.DiscussionListFragment;
@@ -72,6 +73,8 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
 
         // savedInstanceState is non-null if a fragment state is saved from a previous configuration.
         if (savedInstanceState == null) {
+            ((ApplicationTemplate) getApplication()).showBetaNotification(this, true);
+
             // Load a default fragment to show all giveaways
             Serializable type = getIntent().getSerializableExtra(ARG_TYPE);
             if (type == null)
@@ -213,7 +216,8 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
                             ActionBar actionBar = getSupportActionBar();
                             if (actionBar != null)
                                 actionBar.setSubtitle(null);
-
+                        } else if (identifier == R.string.navigation_beta) {
+                            ((ApplicationTemplate) getApplication()).showBetaNotification(MainActivity.this, false);
                         } else {
                             for (GiveawayListFragment.Type type : GiveawayListFragment.Type.values()) {
                                 if (type.getNavbarResource() == identifier) {
@@ -355,6 +359,9 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
         drawer.addItem(new PrimaryDrawerItem().withName(R.string.preferences).withIdentifier(R.string.preferences).withSelectable(false).withIcon(FontAwesome.Icon.faw_cog));
         drawer.addItem(new PrimaryDrawerItem().withName(R.string.navigation_help).withIdentifier(R.string.navigation_help).withSelectable(false).withIcon(FontAwesome.Icon.faw_question));
         drawer.addItem(new PrimaryDrawerItem().withName(R.string.navigation_about).withIdentifier(R.string.navigation_about).withSelectable(false).withIcon(FontAwesome.Icon.faw_info));
+
+        if (((ApplicationTemplate) getApplication()).isBetaBuild())
+            drawer.addItem(new PrimaryDrawerItem().withName(R.string.navigation_beta).withIdentifier(R.string.navigation_beta).withSelectable(false).withIcon(FontAwesome.Icon.faw_user_times));
     }
 
     @Override

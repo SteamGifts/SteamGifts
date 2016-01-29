@@ -12,9 +12,10 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import net.mabako.steamgifts.ApplicationTemplate;
+import net.mabako.steamgifts.activities.DetailActivity;
 import net.mabako.steamgifts.core.BuildConfig;
 import net.mabako.steamgifts.core.R;
-import net.mabako.steamgifts.activities.DetailActivity;
 import net.mabako.steamgifts.data.BasicDiscussion;
 
 public class AboutFragment extends Fragment {
@@ -23,7 +24,7 @@ public class AboutFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.fragment_about, container, false);
 
-        ((TextView) layout.findViewById(R.id.version)).setText(String.format("Version %s (Build %d)", BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE));
+        ((TextView) layout.findViewById(R.id.version)).setText(String.format("Version %s (Build %d)", ((ApplicationTemplate) getActivity().getApplication()).getAppVersionName(), BuildConfig.VERSION_CODE));
 
         layout.findViewById(R.id.forum_thread).setOnClickListener(new View.OnClickListener() {
             @Override
