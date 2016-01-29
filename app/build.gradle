@@ -21,24 +21,22 @@ android {
     }
     productFlavors {
         // ** This is the build flavor you want to pick for running the app locally. **
-        local {
+        chocolate {
             ext.enableCrashlytics = false
         }
-        // Release pushed to non-beta testers
-        stable {
-            androidGitVersion {
-                // Since we're essentially using stable versions after beta versions (which might use earlier, similar version codes), bump this.
-                // In comparison:
-                //    v1.2-beta.3 -> 1002003 --> 1002003
-                //    v1.2        -> 1002000 --> 1002500
-                //    v1.2.3      -> 1002003 --> 1002503
-                // This would simply not install. Henceforth, we ensure our 'stable' releases always have a higher version number.
-                versionCode = rootProject.ext.versionCode + 500
-            }
-        }
         // Release for the beta channel
-        beta {
+        strawberry {
             null
+        }
+        // Release pushed to non-beta testers
+        vanilla {
+            // Since we're essentially using stable versions after beta versions (which might use earlier, similar version codes), bump this.
+            // In comparison:
+            //    v1.2-beta.3 -> 1002003 --> 1002003
+            //    v1.2        -> 1002000 --> 1002500
+            //    v1.2.3      -> 1002003 --> 1002503
+            // This would simply not install. Henceforth, we ensure our 'stable' releases always have a higher version number.
+            versionCode = rootProject.ext.versionCode + 500
         }
     }
 }
