@@ -10,6 +10,7 @@ android {
         minSdkVersion 10
         targetSdkVersion 23
         versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
         project.ext.set('archivesBaseName', 'SteamGifts')
     }
     buildTypes {
@@ -22,15 +23,22 @@ android {
         // ** This is the build flavor you want to pick for running the app locally. **
         local {
             ext.enableCrashlytics = false
-            versionName "${rootProject.ext.versionName}.local"
         }
         // Release pushed to non-beta testers
         stable {
-            versionName rootProject.ext.versionName
+            androidGitVersion {
+                // Since we're essentially using stable versions after beta versions (which might use earlier, similar version codes), bump this.
+                // In comparison:
+                //    v1.2-beta.3 -> 1002003 --> 1002003
+                //    v1.2        -> 1002000 --> 1002500
+                //    v1.2.3      -> 1002003 --> 1002503
+                // This would simply not install. Henceforth, we ensure our 'stable' releases always have a higher version number.
+                versionCode = rootProject.ext.versionCode + 500
+            }
         }
         // Release for the beta channel
         beta {
-            versionName "${rootProject.ext.versionName}.beta"
+            null
         }
     }
 }

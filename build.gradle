@@ -1,11 +1,3 @@
-ext {
-    versionCode = 49
-    versionName = "1.0.1"
-
-    compileSdkVersion = 23
-    buildToolsVersion = "23.0.2"
-}
-
 buildscript {
     repositories {
         jcenter()
@@ -19,6 +11,23 @@ buildscript {
 
         classpath 'io.fabric.tools:gradle:1.+'
     }
+}
+
+plugins {
+    id 'com.gladed.androidgitversion' version '0.2.7'
+}
+
+androidGitVersion {
+    prefix 'v'
+    hideBranches = [ 'master', 'stable' ]
+}
+
+ext {
+    compileSdkVersion = 23
+    buildToolsVersion = "23.0.2"
+
+    versionName = androidGitVersion.name()
+    versionCode = androidGitVersion.code()
 }
 
 allprojects {
