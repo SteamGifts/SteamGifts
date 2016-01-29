@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -28,7 +29,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CheckForNewMessages extends BroadcastReceiver {
-    private static final String PREF_NOTIFICATIONS_ENABLED = "preference_notifications";
+    private static final String DEFAULT_PREF_NOTIFICATIONS_ENABLED = "preference_notifications";
+
+    private static final String PREFS_NOTIFICATIONS_SERVICE = "notification-service";
+    private static final String PREF_KEY_LAST_SHOWN_NOTIFICATION = "last-shown-notification";
 
     private static final int NOTIFICATION_ID = 1234;
 
@@ -43,7 +47,7 @@ public class CheckForNewMessages extends BroadcastReceiver {
     public void onReceive(final Context context, Intent intent) {
         Log.v(TAG, "Checking for new messages...");
 
-        boolean notificationsEnabled = PreferenceManager.getDefaultSharedPreferences(context).getBoolean(PREF_NOTIFICATIONS_ENABLED, true);
+        boolean notificationsEnabled = PreferenceManager.getDefaultSharedPreferences(context).getBoolean(DEFAULT_PREF_NOTIFICATIONS_ENABLED, true);
         if (!notificationsEnabled) {
             Log.v(TAG, "Notifications disabled");
             return;
@@ -86,12 +90,32 @@ public class CheckForNewMessages extends BroadcastReceiver {
                     }
                 }
 
-                if (mostRecentComments.size() == 0) {
+                if (mostRecentComments.isEmpty()) {
                     Log.v(TAG, "Got no unread messages?");
-                } else if (mostRecentComments.size() == 1) {
-                    showSingleCommentNotification(context, mostRecentComments.get(0));
                 } else {
-                    showMultipleCommentNotifications(context, mostRecentComments);
+                    SharedPreferences sharedPreferences = context.getSharedPreferences(PREFS_NOTIFICATIONS_SERVICE, Context.MODE_PRIVATE);
+                    String lastCommentId = sharedPreferences.getString(PREF_KEY_LAST_SHOWN_NOTIFICATION, null);
+
+                    // While this same comment may appear in a later notification, we're establishing that it may not be the first comment again.
+
+                    // This is simply so you're not being notified about the same message(s) over and over again, and if it's still unread when a new
+                    // message is pushed, we may show it again.
+                    Comment firstComment = mostRecentComments.get(0);
+                    if (lastCommentId != null && lastCommentId.equals(firstComment.getPermalinkId())) {
+                        // We've shown a notification for the very same comment before, so do nothing...
+                        Log.d(TAG, "Most recent comment has the same comment id as the last comment");
+                        return;
+                    }
+
+                    // Save the last comment id
+                    sharedPreferences.edit().putString(PREF_KEY_LAST_SHOWN_NOTIFICATION, firstComment.getPermalinkId()).apply();
+
+                    // Do we show a single (expanded) content or a bunch of comments?
+                    if (mostRecentComments.size() == 1) {
+                        showSingleCommentNotification(context, mostRecentComments.get(0));
+                    } else {
+                        showMultipleCommentNotifications(context, mostRecentComments);
+                    }
                 }
             }
         }, 1).execute();
