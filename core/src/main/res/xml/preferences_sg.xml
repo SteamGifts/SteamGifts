@@ -3,6 +3,11 @@
     <PreferenceCategory
         android:key="preferences_sg_header"
         android:title="@string/preferences_sg_header">
+
+        <CheckBoxPreference android:title="@string/preference_notifications"
+            android:defaultValue="true"
+            android:key="preference_notifications"/>
+
         <Preference android:title="@string/preference_sg_sync">
             <intent
                 android:targetClass="net.mabako.steamgifts.activities.SyncActivity"
