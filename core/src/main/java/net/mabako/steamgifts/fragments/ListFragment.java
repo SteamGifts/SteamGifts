@@ -18,6 +18,7 @@ import android.widget.ProgressBar;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.core.R;
+import net.mabako.steamgifts.fragments.interfaces.ILoadItemsListener;
 import net.mabako.steamgifts.fragments.interfaces.IScrollToTop;
 
 import java.io.Serializable;
@@ -25,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 // TODO make EndlessAdapter's viewInReverse more easily handled within here.
-public abstract class ListFragment<AdapterType extends EndlessAdapter> extends Fragment implements EndlessAdapter.OnLoadListener, IScrollToTop {
+public abstract class ListFragment<AdapterType extends EndlessAdapter> extends Fragment implements EndlessAdapter.OnLoadListener, IScrollToTop, ILoadItemsListener {
     private static final long serialVersionUID = -1489654549912777189L;
     private static final String SAVED_ADAPTER = "listadapter";
 
@@ -142,6 +143,7 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
     }
 
 
+    @Override
     public void addItems(List<? extends IEndlessAdaptable> items, boolean clearExistingItems, String xsrfToken) {
         addItems(items, clearExistingItems);
 

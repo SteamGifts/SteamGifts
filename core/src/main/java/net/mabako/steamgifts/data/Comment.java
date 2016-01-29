@@ -22,6 +22,7 @@ public class Comment implements Serializable, IEndlessAdaptable {
     private final boolean op;
 
     private boolean deleted, highlighted;
+    private String permalinkId;
 
     public Comment(int id, String author, String timeAgo, String timeAgoLong, String content, int depth, String avatar, boolean isOp) {
         this.id = id;
@@ -80,6 +81,14 @@ public class Comment implements Serializable, IEndlessAdaptable {
 
     public boolean isOp() {
         return op;
+    }
+
+    public String getPermalinkId() {
+        return permalinkId;
+    }
+
+    public void setPermalinkId(String permalinkId) {
+        this.permalinkId = permalinkId;
     }
 
     @Override

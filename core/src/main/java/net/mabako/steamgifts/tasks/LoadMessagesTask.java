@@ -1,15 +1,11 @@
 package net.mabako.steamgifts.tasks;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import net.mabako.steamgifts.activities.UrlHandlingActivity;
-import net.mabako.steamgifts.activities.WebViewActivity;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.data.MessageHeader;
-import net.mabako.steamgifts.fragments.profile.MessageListFragment;
+import net.mabako.steamgifts.fragments.interfaces.ILoadItemsListener;
 import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
 
 import org.jsoup.Connection;
@@ -24,13 +20,13 @@ import java.util.List;
 public class LoadMessagesTask extends AsyncTask<Void, Void, List<IEndlessAdaptable>> {
     private final static String TAG = LoadMessagesTask.class.getSimpleName();
 
-    private final MessageListFragment fragment;
+    private final ILoadItemsListener listener;
     private final int page;
 
     private String foundXsrfToken = null;
 
-    public LoadMessagesTask(MessageListFragment fragment, int page) {
-        this.fragment = fragment;
+    public LoadMessagesTask(ILoadItemsListener listener, int page) {
+        this.listener = listener;
         this.page = page;
     }
 
@@ -86,6 +82,6 @@ public class LoadMessagesTask extends AsyncTask<Void, Void, List<IEndlessAdaptab
     @Override
     protected void onPostExecute(List<IEndlessAdaptable> iEndlessAdaptables) {
         super.onPostExecute(iEndlessAdaptables);
-        fragment.addItems(iEndlessAdaptables, page == 1, foundXsrfToken);
+        listener.addItems(iEndlessAdaptables, page == 1, foundXsrfToken);
     }
 }
