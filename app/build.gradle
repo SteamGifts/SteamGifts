@@ -20,11 +20,17 @@ android {
         }
     }
     productFlavors {
-        out {
-            null
-        }
+        // ** This is the build flavor you want to pick for running the app locally. **
         local {
             ext.enableCrashlytics = false
+        }
+        // Release pushed to non-beta testers
+        stable {
+            null
+        }
+        // Release for the beta channel
+        beta {
+            null
         }
     }
 }
