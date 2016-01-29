@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.FloatingActionButton xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scroll_to_top_button"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom|right"
+    android:layout_margin="16dp"
+    android:src="@drawable/ic_chevron_up"
+    android:visibility="gone"
+    app:backgroundTint="?attr/colorAccountHeader"
+    app:fabSize="mini"
+    app:layout_anchorGravity="bottom|right|end"
+    app:layout_behavior="net.mabako.steamgifts.behavior.ScrollAwareFABBehavior"
+    tools:visibility="visible" />

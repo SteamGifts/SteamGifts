@@ -2,6 +2,8 @@ package net.mabako.steamgifts.fragments;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -12,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 
 import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
@@ -35,6 +36,9 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
     protected SwipeRefreshLayout swipeContainer;
     private ProgressBar progressBar;
 
+    @Nullable
+    private FloatingActionButton floatingActionButton;
+
     private AsyncTask<Void, Void, ?> taskToFetchItems = null;
 
     @Override
@@ -51,11 +55,23 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        RelativeLayout layout = (RelativeLayout) inflater.inflate(getLayoutResource(), container, false);
+        View layout = inflater.inflate(getLayoutResource(), container, false);
 
         listView = (RecyclerView) layout.findViewById(R.id.list);
         swipeContainer = (SwipeRefreshLayout) layout.findViewById(R.id.swipeContainer);
         progressBar = (ProgressBar) layout.findViewById(R.id.progressBar);
+
+        floatingActionButton = (FloatingActionButton) container.getRootView().findViewById(R.id.scroll_to_top_button);
+        if (floatingActionButton != null)
+            floatingActionButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listView != null) {
+                        listView.scrollToPosition(0);
+                        floatingActionButton.hide();
+                    }
+                }
+            });
 
         setupListViewAdapter();
         setupSwipeContainer();
@@ -154,6 +170,9 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
         progressBar.setVisibility(View.VISIBLE);
         swipeContainer.setVisibility(View.GONE);
         swipeContainer.setRefreshing(false);
+
+        if (floatingActionButton != null)
+            floatingActionButton.setVisibility(View.GONE);
 
         // TODO reverse pages?
         fetchItems(adapter.isViewInReverse() ? EndlessAdapter.LAST_PAGE : EndlessAdapter.FIRST_PAGE);
