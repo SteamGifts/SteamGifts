@@ -48,4 +48,9 @@ public abstract class ApplicationTemplate extends Application {
      * @return current application version code
      */
     public abstract int getAppVersionCode();
+
+    /**
+     * Current version flavor.
+     */
+    public abstract String getFlavor();
 }

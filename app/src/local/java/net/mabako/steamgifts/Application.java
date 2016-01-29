@@ -10,4 +10,9 @@ public class Application extends ApplicationTemplate {
     public int getAppVersionCode() {
         return BuildConfig.VERSION_CODE;
     }
+
+    @Override
+    public String getFlavor() {
+        return BuildConfig.FLAVOR;
+    }
 }

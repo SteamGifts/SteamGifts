@@ -26,7 +26,7 @@ public class AboutFragment extends Fragment {
         LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.fragment_about, container, false);
 
         TextView versionText = (TextView) layout.findViewById(R.id.version);
-        versionText.setText(String.format("Version %s", ((ApplicationTemplate) getActivity().getApplication()).getAppVersionName()));
+        versionText.setText(String.format("Version %s (%s)", ((ApplicationTemplate) getActivity().getApplication()).getAppVersionName(), ((ApplicationTemplate) getActivity().getApplication()).getFlavor()));
         versionText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
