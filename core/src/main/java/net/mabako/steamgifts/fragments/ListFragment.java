@@ -2,6 +2,8 @@ package net.mabako.steamgifts.fragments;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -12,18 +14,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 
 import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.core.R;
+import net.mabako.steamgifts.fragments.interfaces.IScrollToTop;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 // TODO make EndlessAdapter's viewInReverse more easily handled within here.
-public abstract class ListFragment<AdapterType extends EndlessAdapter> extends Fragment implements EndlessAdapter.OnLoadListener {
+public abstract class ListFragment<AdapterType extends EndlessAdapter> extends Fragment implements EndlessAdapter.OnLoadListener, IScrollToTop {
     private static final long serialVersionUID = -1489654549912777189L;
     private static final String SAVED_ADAPTER = "listadapter";
 
@@ -34,6 +36,9 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
 
     protected SwipeRefreshLayout swipeContainer;
     private ProgressBar progressBar;
+
+    @Nullable
+    private FloatingActionButton scrollToTopButton;
 
     private AsyncTask<Void, Void, ?> taskToFetchItems = null;
 
@@ -51,14 +56,16 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        RelativeLayout layout = (RelativeLayout) inflater.inflate(getLayoutResource(), container, false);
+        View layout = inflater.inflate(getLayoutResource(), container, false);
 
         listView = (RecyclerView) layout.findViewById(R.id.list);
         swipeContainer = (SwipeRefreshLayout) layout.findViewById(R.id.swipeContainer);
         progressBar = (ProgressBar) layout.findViewById(R.id.progressBar);
+        scrollToTopButton = (FloatingActionButton) container.getRootView().findViewById(R.id.scroll_to_top_button);
 
         setupListViewAdapter();
         setupSwipeContainer();
+        setupScrollToTopButton();
 
         if (loadItemsInitially) {
             initializeListView();
@@ -155,6 +162,9 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
         swipeContainer.setVisibility(View.GONE);
         swipeContainer.setRefreshing(false);
 
+        if (scrollToTopButton != null)
+            scrollToTopButton.setVisibility(View.GONE);
+
         // TODO reverse pages?
         fetchItems(adapter.isViewInReverse() ? EndlessAdapter.LAST_PAGE : EndlessAdapter.FIRST_PAGE);
     }
@@ -208,6 +218,23 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
         taskToFetchItems = null;
         adapter.cancelLoading();
         swipeContainer.setRefreshing(false);
+    }
+
+    @Override
+    public void setupScrollToTopButton() {
+        if (scrollToTopButton != null) {
+            scrollToTopButton.setVisibility(View.GONE);
+            scrollToTopButton.setTag("clickable");
+            scrollToTopButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listView != null) {
+                        listView.scrollToPosition(0);
+                        scrollToTopButton.hide();
+                    }
+                }
+            });
+        }
     }
 
     @Override
