@@ -22,15 +22,19 @@ import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.adapters.viewholder.GameViewHolder;
 import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.Game;
+import net.mabako.steamgifts.fragments.interfaces.IScrollToTop;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class StoreFragment extends Fragment {
+public abstract class StoreFragment extends Fragment implements IScrollToTop {
     protected boolean loaded;
 
     private LoadStoreTask task;
+
+    private RecyclerView listView;
+    private FloatingActionButton scrollToTopButton;
 
     protected Adapter adapter;
 
@@ -50,23 +54,12 @@ public abstract class StoreFragment extends Fragment {
 
         setHasOptionsMenu(true);
 
-        final RecyclerView listView = (RecyclerView) layout.findViewById(R.id.list);
+        listView = (RecyclerView) layout.findViewById(R.id.list);
         listView.setAdapter(adapter);
         listView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        final FloatingActionButton scrollToTopButton = (FloatingActionButton) container.getRootView().findViewById(R.id.scroll_to_top_button);
-        if (scrollToTopButton != null) {
-            scrollToTopButton.setVisibility(View.GONE);
-            scrollToTopButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listView != null) {
-                        listView.scrollToPosition(0);
-                        scrollToTopButton.hide();
-                    }
-                }
-            });
-        }
+        scrollToTopButton = (FloatingActionButton) container.getRootView().findViewById(R.id.scroll_to_top_button);
+        setupScrollToTopButton();
 
         if (loaded)
             layout.findViewById(R.id.progressBar).setVisibility(View.GONE);
@@ -94,6 +87,23 @@ public abstract class StoreFragment extends Fragment {
 
             task = getTaskToStart();
             task.execute();
+        }
+    }
+
+    @Override
+    public void setupScrollToTopButton() {
+        if (scrollToTopButton != null) {
+            scrollToTopButton.setVisibility(View.GONE);
+            scrollToTopButton.setTag("clickable");
+            scrollToTopButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listView != null) {
+                        listView.scrollToPosition(0);
+                        scrollToTopButton.hide();
+                    }
+                }
+            });
         }
     }
 

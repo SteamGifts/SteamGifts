@@ -13,6 +13,10 @@ import android.view.View;
 
 import net.mabako.steamgifts.core.R;
 
+/**
+ * Floating Action Button that is hiding if you're scrolling down a {@link RecyclerView}, and is
+ * visible if you're beyond the first element and scroll up again.
+ */
 public class ScrollAwareFABBehavior extends FloatingActionButton.Behavior {
     public ScrollAwareFABBehavior(Context context, AttributeSet attrs) {
         super();
@@ -42,6 +46,7 @@ public class ScrollAwareFABBehavior extends FloatingActionButton.Behavior {
         }
 
         if (view == null) {
+            // We do not have a view we can immediately find.
             child.hide();
             return;
         }
