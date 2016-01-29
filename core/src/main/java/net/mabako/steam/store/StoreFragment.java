@@ -2,6 +2,7 @@ package net.mabako.steam.store;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -49,9 +50,23 @@ public abstract class StoreFragment extends Fragment {
 
         setHasOptionsMenu(true);
 
-        RecyclerView listView = (RecyclerView) layout.findViewById(R.id.list);
+        final RecyclerView listView = (RecyclerView) layout.findViewById(R.id.list);
         listView.setAdapter(adapter);
         listView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        final FloatingActionButton scrollToTopButton = (FloatingActionButton) container.getRootView().findViewById(R.id.scroll_to_top_button);
+        if (scrollToTopButton != null) {
+            scrollToTopButton.setVisibility(View.GONE);
+            scrollToTopButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listView != null) {
+                        listView.scrollToPosition(0);
+                        scrollToTopButton.hide();
+                    }
+                }
+            });
+        }
 
         if (loaded)
             layout.findViewById(R.id.progressBar).setVisibility(View.GONE);

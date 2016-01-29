@@ -3,6 +3,7 @@ package net.mabako.steamgifts.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -10,6 +11,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.Toast;
 
 import net.mabako.sgtools.SGToolsDetailFragment;
@@ -19,6 +21,7 @@ import net.mabako.steamgifts.data.BasicGiveaway;
 import net.mabako.steamgifts.fragments.DiscussionDetailFragment;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
 import net.mabako.steamgifts.fragments.UserDetailFragment;
+import net.mabako.steamgifts.fragments.interfaces.IScrollToTop;
 import net.mabako.steamgifts.fragments.profile.CreatedListFragment;
 import net.mabako.steamgifts.fragments.profile.EnteredListFragment;
 import net.mabako.steamgifts.fragments.profile.MessageListFragment;
@@ -267,7 +270,23 @@ public class DetailActivity extends CommonActivity {
 
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            FloatingActionButton scrollToTopButton = (FloatingActionButton) findViewById(R.id.scroll_to_top_button);
+            if (scrollToTopButton != null) {
+                scrollToTopButton.hide();
+                scrollToTopButton.setTag(null);
 
+                Fragment fragment = getItem(position);
+                if (fragment instanceof IScrollToTop) {
+                    ((IScrollToTop) fragment).setupScrollToTopButton();
+                } else {
+                    scrollToTopButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Toast.makeText(DetailActivity.this, "Got no scroll listener, can't scroll to top.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }
         }
 
         @Override
