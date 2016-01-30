@@ -1,15 +1,16 @@
 package net.mabako.steamgifts.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Toast;
@@ -165,7 +166,7 @@ public class DetailActivity extends CommonActivity {
     private void loadPagedFragments(Fragment... fragments) {
         pager = (ViewPager) findViewById(R.id.viewPager);
 
-        pagerAdapter = new SimplePagerAdapter(getSupportFragmentManager(), fragments);
+        pagerAdapter = new TitledPagerAdapter(this, pager, fragments);
         pager.setAdapter(pagerAdapter);
         pager.addOnPageChangeListener(pagerAdapter);
 
@@ -195,7 +196,7 @@ public class DetailActivity extends CommonActivity {
     /**
      * Adds a fragment that is removed as soon as it is swiped away.
      *
-     * @param transientFragment
+     * @param transientFragment the fragment to set
      */
     public void setTransientFragment(Fragment transientFragment) {
         if (pagerAdapter == null)
@@ -219,12 +220,17 @@ public class DetailActivity extends CommonActivity {
     /**
      * Simple fragment adapter that basically just holds a list of... fragments, without any fancy schmuck.
      */
-    private class SimplePagerAdapter extends FragmentStatePagerAdapter implements ViewPager.OnPageChangeListener {
+    public abstract static class SimplePagerAdapter extends FragmentStatePagerAdapter implements ViewPager.OnPageChangeListener {
+        private final Activity activity;
+        private final ViewPager viewPager;
+
         private List<Fragment> fragments = new ArrayList<>();
         private Fragment transientFragment;
 
-        public SimplePagerAdapter(FragmentManager fm, Fragment... fragments) {
-            super(fm);
+        public SimplePagerAdapter(AppCompatActivity activity, ViewPager viewPager, Fragment... fragments) {
+            super(activity.getSupportFragmentManager());
+            this.activity = activity;
+            this.viewPager = viewPager;
             this.fragments.addAll(Arrays.asList(fragments));
         }
 
@@ -240,10 +246,11 @@ public class DetailActivity extends CommonActivity {
 
         @Override
         public int getItemPosition(Object object) {
-            if (fragments.contains(object))
-                return fragments.indexOf(object);
+            Fragment fragment = (Fragment) object;
+            if (fragments.contains(fragment))
+                return fragments.indexOf(fragment);
 
-            if (transientFragment != null && object == transientFragment)
+            if (transientFragment != null && fragment == transientFragment)
                 return fragments.size();
 
             return POSITION_NONE;
@@ -258,11 +265,6 @@ public class DetailActivity extends CommonActivity {
             return size;
         }
 
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return getFragmentTitle(getItem(position));
-        }
-
         public void add(Fragment fragment) {
             fragments.add(fragment);
             notifyDataSetChanged();
@@ -270,7 +272,7 @@ public class DetailActivity extends CommonActivity {
 
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            FloatingActionButton scrollToTopButton = (FloatingActionButton) findViewById(R.id.scroll_to_top_button);
+            FloatingActionButton scrollToTopButton = (FloatingActionButton) activity.findViewById(R.id.scroll_to_top_button);
             if (scrollToTopButton != null && positionOffsetPixels != 0) {
                 scrollToTopButton.hide();
                 scrollToTopButton.setTag(null);
@@ -284,7 +286,7 @@ public class DetailActivity extends CommonActivity {
         @Override
         public void onPageScrollStateChanged(int state) {
             if (state == ViewPager.SCROLL_STATE_IDLE) {
-                int position = pager.getCurrentItem();
+                int position = viewPager.getCurrentItem();
 
                 // Remove the fragment as soon as it is swiped away.
                 if (position < fragments.size() && transientFragment != null) {
@@ -292,7 +294,7 @@ public class DetailActivity extends CommonActivity {
                     notifyDataSetChanged();
                 }
 
-                FloatingActionButton scrollToTopButton = (FloatingActionButton) findViewById(R.id.scroll_to_top_button);
+                FloatingActionButton scrollToTopButton = (FloatingActionButton) activity.findViewById(R.id.scroll_to_top_button);
                 if (scrollToTopButton != null) {
                     Fragment fragment = getItem(position);
                     if (fragment instanceof IScrollToTop) {
@@ -301,7 +303,7 @@ public class DetailActivity extends CommonActivity {
                         scrollToTopButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Toast.makeText(DetailActivity.this, "Got no scroll listener, can't scroll to top.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(activity, "Got no scroll listener, can't scroll to top.", Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -313,6 +315,16 @@ public class DetailActivity extends CommonActivity {
             this.transientFragment = transientFragment;
             notifyDataSetChanged();
         }
+    }
 
+    private class TitledPagerAdapter extends SimplePagerAdapter {
+        public TitledPagerAdapter(AppCompatActivity activity, ViewPager viewPager, Fragment... fragments) {
+            super(activity, viewPager, fragments);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return getFragmentTitle(getItem(position));
+        }
     }
 }

@@ -10,8 +10,6 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -27,6 +25,7 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import net.mabako.steamgifts.activities.DetailActivity;
 import net.mabako.steamgifts.activities.WebViewActivity;
 import net.mabako.steamgifts.adapters.GiveawayAdapter;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
@@ -87,8 +86,14 @@ public class UserDetailFragment extends Fragment implements IUserNotifications {
         if (toolbar != null)
             toolbar.setTitle(user.getName());
 
-        viewPagerAdapter = new CustomPagerAdapter(getActivity().getSupportFragmentManager());
+        UserGiveawayListFragment fragmentSent = UserGiveawayListFragment.newInstance(user, "", true);
+        fragmentSent.setiUserNotification(UserDetailFragment.this);
+
+        UserGiveawayListFragment fragmentWon = UserGiveawayListFragment.newInstance(user, "/giveaways/won", false);
+        fragmentWon.setiUserNotification(UserDetailFragment.this);
+
         viewPager = (ViewPager) layout.findViewById(R.id.viewPager);
+        viewPagerAdapter = new CustomPagerAdapter((AppCompatActivity) getActivity(), viewPager, fragmentSent, fragmentWon);
         viewPager.setAdapter(viewPagerAdapter);
 
         tabLayout = (TabLayout) layout.findViewById(R.id.tabLayout);
@@ -162,26 +167,9 @@ public class UserDetailFragment extends Fragment implements IUserNotifications {
         }
     }
 
-    private class CustomPagerAdapter extends FragmentPagerAdapter {
-        public CustomPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            switch (position) {
-                case 0: {
-                    UserGiveawayListFragment fragment = UserGiveawayListFragment.newInstance(user, "", true);
-                    fragment.setiUserNotification(UserDetailFragment.this);
-                    return fragment;
-                }
-                case 1: {
-                    UserGiveawayListFragment fragment = UserGiveawayListFragment.newInstance(user, "/giveaways/won", false);
-                    fragment.setiUserNotification(UserDetailFragment.this);
-                    return fragment;
-                }
-            }
-            return null;
+    private class CustomPagerAdapter extends DetailActivity.SimplePagerAdapter {
+        public CustomPagerAdapter(AppCompatActivity activity, ViewPager viewPager, Fragment... fragments) {
+            super(activity, viewPager, fragments);
         }
 
         @Override
@@ -202,11 +190,6 @@ public class UserDetailFragment extends Fragment implements IUserNotifications {
                 }
             }
             return null;
-        }
-
-        @Override
-        public int getCount() {
-            return 2;
         }
     }
 
