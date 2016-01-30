@@ -1,7 +1,7 @@
 package net.mabako.steamgifts.data;
 
-import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
+import net.mabako.steamgifts.core.R;
 
 import java.io.Serializable;
 
@@ -22,6 +22,7 @@ public class Comment implements Serializable, IEndlessAdaptable {
     private final boolean op;
 
     private boolean deleted, highlighted;
+    private String permalinkId;
 
     public Comment(int id, String author, String timeAgo, String timeAgoLong, String content, int depth, String avatar, boolean isOp) {
         this.id = id;
@@ -82,13 +83,25 @@ public class Comment implements Serializable, IEndlessAdaptable {
         return op;
     }
 
+    public String getPermalinkId() {
+        return permalinkId;
+    }
+
+    public void setPermalinkId(String permalinkId) {
+        this.permalinkId = permalinkId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || !(o instanceof Comment))
             return false;
 
-        if (id == 0)
-            return false;
+        if (id == 0) {
+            if (permalinkId != null && !"".equals(permalinkId))
+                return permalinkId.equals(((Comment) o).permalinkId);
+            else
+                return false;
+        }
         return ((Comment) o).id == id;
     }
 

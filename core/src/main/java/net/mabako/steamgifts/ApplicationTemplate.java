@@ -8,6 +8,12 @@ import com.crashlytics.android.Crashlytics;
 import io.fabric.sdk.android.Fabric;
 
 public abstract class ApplicationTemplate extends Application {
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        PeriodicTasks.scheduleAllTasks(getBaseContext());
+    }
+
     /**
      * Setup Crashlytics.
      */

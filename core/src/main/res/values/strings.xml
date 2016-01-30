@@ -131,6 +131,7 @@
     <string name="preference_discussion_comments_reversed_sub_on">Show newest comments first</string>
 
     <string name="preferences_sg_header">SteamGifts Account</string>
+    <string name="preference_notifications">Show Notifications</string>
     <string name="preference_sg_sync">Sync Account</string>
     <string name="preference_sg_hidden_games">Hidden Games</string>
     <string name="preference_sg_hidden_games_sub">Un-hide games from your account</string>
@@ -199,4 +200,10 @@
     <string name="placeholder_comment_author">Author</string>
     <string name="placeholder_comment_time">Time</string>
     <string name="placeholder_comment_text">Comment</string>
+
+    <!-- Notifications -->
+    <string name="notification_user_replied_to_you">%s replied to you</string>
+    <string name="notification_new_messages">%d new messages</string>
+
+    <!-- unsorted -->
 </resources>

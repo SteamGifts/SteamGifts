@@ -21,6 +21,7 @@ import android.widget.ProgressBar;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.core.R;
+import net.mabako.steamgifts.fragments.interfaces.ILoadItemsListener;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ import java.util.List;
 import java.util.Set;
 
 // TODO make EndlessAdapter's viewInReverse more easily handled within here.
-public abstract class ListFragment<AdapterType extends EndlessAdapter> extends Fragment implements EndlessAdapter.OnLoadListener {
+public abstract class ListFragment<AdapterType extends EndlessAdapter> extends Fragment implements EndlessAdapter.OnLoadListener, ILoadItemsListener {
     private static final String TAG = ListFragment.class.getSimpleName();
 
     private static final String SAVED_ADAPTER = "listadapter";
@@ -298,6 +299,8 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
 
     private static class BundleEquality {
         public static boolean equalBundles(Bundle one, Bundle two) {
+            if (one == null)
+                return two == null;
             if (one.size() != two.size())
                 return false;
 

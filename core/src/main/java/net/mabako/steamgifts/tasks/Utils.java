@@ -56,6 +56,8 @@ public final class Utils {
 
             Element timeCreated = thisComment.select(".comment__actions > div span").first();
 
+            Uri permalinkUri = Uri.parse(thisComment.select(".comment__actions a[href^=/go/comment").first().attr("href"));
+
             int commentId = 0;
             try {
                 commentId = Integer.parseInt(c.attr("data-comment-id"));
@@ -63,6 +65,7 @@ public final class Utils {
             }
 
             Comment comment = new Comment(commentId, author, timeCreated.text(), timeCreated.attr("title"), content, depth, avatar, isOp);
+            comment.setPermalinkId(permalinkUri.getPathSegments().get(2));
 
             // check if the comment is deleted
             comment.setDeleted(thisComment.select(".comment__summary").first().select(".comment__delete-state").size() == 1);
