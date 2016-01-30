@@ -1,5 +1,6 @@
 package net.mabako.steamgifts.tasks;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -21,11 +22,12 @@ public class LoadMessagesTask extends AsyncTask<Void, Void, List<IEndlessAdaptab
     private final static String TAG = LoadMessagesTask.class.getSimpleName();
 
     private final ILoadItemsListener listener;
+    private Context context;
     private final int page;
 
     private String foundXsrfToken = null;
 
-    public LoadMessagesTask(ILoadItemsListener listener, int page) {
+    public LoadMessagesTask(ILoadItemsListener listener, Context context, int page) {
         this.listener = listener;
         this.page = page;
     }
@@ -33,15 +35,15 @@ public class LoadMessagesTask extends AsyncTask<Void, Void, List<IEndlessAdaptab
     @Override
     protected List<IEndlessAdaptable> doInBackground(Void... params) {
         try {
-            // Fetch the Giveaway page
+            // Fetch the messages page
 
             Connection jsoup = Jsoup.connect("http://www.steamgifts.com/messages/search");
             jsoup.data("page", Integer.toString(page));
-            jsoup.cookie("PHPSESSID", SteamGiftsUserData.getCurrent().getSessionId());
+            jsoup.cookie("PHPSESSID", SteamGiftsUserData.getCurrent(context).getSessionId());
 
             Document document = jsoup.get();
 
-            SteamGiftsUserData.extract(document);
+            SteamGiftsUserData.extract(context, document);
 
             // Fetch the xsrf token
             Element xsrfToken = document.select("input[name=xsrf_token]").first();

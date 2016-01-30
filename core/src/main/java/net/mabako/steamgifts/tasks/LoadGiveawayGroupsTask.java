@@ -41,11 +41,11 @@ public class LoadGiveawayGroupsTask extends AsyncTask<Void, Void, List<GiveawayG
             Connection jsoup = Jsoup.connect("http://www.steamgifts.com/giveaway/" + path + "/groups/search");
             jsoup.data("page", Integer.toString(page));
 
-            if (SteamGiftsUserData.getCurrent().isLoggedIn())
-                jsoup.cookie("PHPSESSID", SteamGiftsUserData.getCurrent().getSessionId());
+            if (SteamGiftsUserData.getCurrent(fragment.getContext()).isLoggedIn())
+                jsoup.cookie("PHPSESSID", SteamGiftsUserData.getCurrent(fragment.getContext()).getSessionId());
             Document document = jsoup.get();
 
-            SteamGiftsUserData.extract(document);
+            SteamGiftsUserData.extract(fragment.getContext(), document);
 
             // Parse all rows of groups
             Elements groups = document.select(".table__row-inner-wrap");

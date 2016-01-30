@@ -10,19 +10,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.activities.DetailActivity;
-import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.adapters.MessageAdapter;
+import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.Comment;
 import net.mabako.steamgifts.fragments.ListFragment;
 import net.mabako.steamgifts.fragments.UserDetailFragment;
 import net.mabako.steamgifts.fragments.interfaces.IActivityTitle;
 import net.mabako.steamgifts.fragments.interfaces.ICommentableFragment;
+import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
 import net.mabako.steamgifts.tasks.LoadMessagesTask;
 import net.mabako.steamgifts.tasks.MarkMessagesReadTask;
-import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
 
 import java.io.Serializable;
 import java.util.List;
@@ -50,7 +49,7 @@ public class MessageListFragment extends ListFragment<MessageAdapter> implements
 
     @Override
     protected AsyncTask<Void, Void, ?> getFetchItemsTask(int page) {
-        return new LoadMessagesTask(this, page);
+        return new LoadMessagesTask(this, getContext(), page);
     }
 
     @Override
@@ -91,7 +90,7 @@ public class MessageListFragment extends ListFragment<MessageAdapter> implements
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.user) {
-            showProfile(SteamGiftsUserData.getCurrent().getName());
+            showProfile(SteamGiftsUserData.getCurrent(getContext()).getName());
             return true;
         } else if (itemId == R.id.mark_read) {
             new MarkMessagesReadTask(this, adapter.getXsrfToken()).execute();
@@ -125,6 +124,6 @@ public class MessageListFragment extends ListFragment<MessageAdapter> implements
         getActivity().supportInvalidateOptionsMenu();
 
         // We no longer have any notifications
-        SteamGiftsUserData.getCurrent().setMessageNotification(0);
+        SteamGiftsUserData.getCurrent(getContext()).setMessageNotification(0);
     }
 }

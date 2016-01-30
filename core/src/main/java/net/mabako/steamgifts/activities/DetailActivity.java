@@ -86,7 +86,7 @@ public class DetailActivity extends CommonActivity {
             loadPagedFragments(new MessageListFragment(), new WonListFragment(), new EnteredListFragment(), new CreatedListFragment());
 
             // Depending on what notifications are currently shown, bring the relevant tab up first.
-            SteamGiftsUserData u = SteamGiftsUserData.getCurrent();
+            SteamGiftsUserData u = SteamGiftsUserData.getCurrent(this);
             if (u.getWonNotification() > 0)
                 pager.setCurrentItem(1);
             else if (u.getMessageNotification() > 0)

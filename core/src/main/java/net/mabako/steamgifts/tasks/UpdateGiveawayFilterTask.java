@@ -21,7 +21,7 @@ public class UpdateGiveawayFilterTask<FragmentType extends Fragment> extends Aja
     private final String gameTitle;
 
     public UpdateGiveawayFilterTask(FragmentType fragment, String xsrfToken, String what, int internalGameId, String gameTitle) {
-        super(fragment, xsrfToken, what);
+        super(fragment, fragment.getContext(), xsrfToken, what);
 
         // We only use the normal ajax.php if we remove a game
         // ... like seriously?

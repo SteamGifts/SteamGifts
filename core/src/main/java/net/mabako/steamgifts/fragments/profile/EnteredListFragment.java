@@ -99,7 +99,7 @@ public class EnteredListFragment extends ListFragment<GiveawayAdapter> implement
         // if (enterLeaveTask != null)
         // enterLeaveTask.cancel(true);
 
-        enterLeaveTask = new EnterLeaveGiveawayTask(this, giveawayId, xsrfToken, what);
+        enterLeaveTask = new EnterLeaveGiveawayTask(this, getContext(), giveawayId, xsrfToken, what);
         enterLeaveTask.execute();
     }
 

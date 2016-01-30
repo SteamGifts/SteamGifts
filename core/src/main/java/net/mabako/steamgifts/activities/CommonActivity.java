@@ -83,7 +83,7 @@ public class CommonActivity extends BaseActivity {
             case REQUEST_LOGIN:
             case REQUEST_LOGIN_PASSIVE:
                 // Do not show an explicit notification.
-                if (resultCode == RESPONSE_LOGIN_SUCCESSFUL && SteamGiftsUserData.getCurrent().isLoggedIn())
+                if (resultCode == RESPONSE_LOGIN_SUCCESSFUL && SteamGiftsUserData.getCurrent(this).isLoggedIn())
                     onAccountChange();
 
                 // Pass on the result.

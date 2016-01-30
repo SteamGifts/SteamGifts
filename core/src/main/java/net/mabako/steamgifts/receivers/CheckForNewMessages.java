@@ -87,7 +87,7 @@ public class CheckForNewMessages extends BroadcastReceiver {
                 return;
             }
 
-            SteamGiftsUserData userData = SteamGiftsUserData.getCurrent();
+            SteamGiftsUserData userData = SteamGiftsUserData.getCurrent(context);
             if (!userData.isLoggedIn()) {
                 Log.v(TAG, "Not checking for messages, no session info available");
                 return;
@@ -100,7 +100,7 @@ public class CheckForNewMessages extends BroadcastReceiver {
                 return;
             }
 
-            new LoadMessagesTask(this, 1).execute();
+            new LoadMessagesTask(this, context, 1).execute();
         }
 
         /**
@@ -108,8 +108,6 @@ public class CheckForNewMessages extends BroadcastReceiver {
          */
         @Override
         public void addItems(List<? extends IEndlessAdaptable> items, boolean clearExistingItems, String xsrfToken) {
-            SteamGiftsUserData userData = SteamGiftsUserData.getCurrent();
-
             if (items == null || items.size() == 0) {
                 Log.d(TAG, "got no messages -at all-");
                 return;
@@ -193,10 +191,10 @@ public class CheckForNewMessages extends BroadcastReceiver {
                     .setSmallIcon(R.drawable.sgwhite)
                     .setPriority(NotificationCompat.PRIORITY_LOW)
                     .setCategory(NotificationCompat.CATEGORY_SOCIAL)
-                    .setContentTitle(String.format(context.getString(R.string.notification_new_messages), SteamGiftsUserData.getCurrent().getMessageNotification()))
+                    .setContentTitle(String.format(context.getString(R.string.notification_new_messages), SteamGiftsUserData.getCurrent(context).getMessageNotification()))
                     .setContentText(formatString(comments.get(0), false))
                     .setStyle(inboxStyle) /* 4.1+ */
-                    .setNumber(SteamGiftsUserData.getCurrent().getMessageNotification())
+                    .setNumber(SteamGiftsUserData.getCurrent(context).getMessageNotification())
                     .setContentIntent(getViewMessagesIntent())
                     .setDeleteIntent(getDeleteIntent())
                     .setAutoCancel(true)

@@ -27,7 +27,7 @@ public class LoginActivity extends SteamLoginActivity {
     @Override
     protected void onLoginSuccessful(String phpSessionId) {
         SteamGiftsUserData.clear();
-        SteamGiftsUserData.getCurrent().setSessionId(phpSessionId);
+        SteamGiftsUserData.getCurrent(this).setSessionId(phpSessionId);
 
         webView.loadUrl("javascript:contenthandler.processHTML(document.documentElement.outerHTML);");
     }
@@ -42,7 +42,7 @@ public class LoginActivity extends SteamLoginActivity {
         @JavascriptInterface
         @SuppressWarnings("unused")
         public void processHTML(String html) {
-            SteamGiftsUserData.extract(Jsoup.parse(html));
+            SteamGiftsUserData.extract(LoginActivity.this, Jsoup.parse(html));
 
             setResult(CommonActivity.RESPONSE_LOGIN_SUCCESSFUL);
             finish();

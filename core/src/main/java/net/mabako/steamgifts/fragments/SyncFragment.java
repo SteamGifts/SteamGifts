@@ -55,7 +55,7 @@ public class SyncFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sync, container, false);
 
-        if (!SteamGiftsUserData.getCurrent().isLoggedIn()) {
+        if (!SteamGiftsUserData.getCurrent(getContext()).isLoggedIn()) {
             getActivity().setResult(Activity.RESULT_CANCELED);
             getActivity().finish();
 
@@ -134,10 +134,10 @@ public class SyncFragment extends Fragment {
                 // Fetch the Giveaway page
 
                 Connection jsoup = Jsoup.connect("http://www.steamgifts.com/account/profile/sync");
-                jsoup.cookie("PHPSESSID", SteamGiftsUserData.getCurrent().getSessionId());
+                jsoup.cookie("PHPSESSID", SteamGiftsUserData.getCurrent(fragment.getContext()).getSessionId());
                 Document document = jsoup.get();
 
-                SteamGiftsUserData.extract(document);
+                SteamGiftsUserData.extract(fragment.getContext(), document);
 
                 // Fetch the xsrf token
                 Element xsrfToken = document.select("input[name=xsrf_token]").first();
@@ -168,7 +168,7 @@ public class SyncFragment extends Fragment {
         private static final String TAG = SyncTask.class.getSimpleName();
 
         SyncTask(SyncFragment fragment, String xsrfToken) {
-            super(fragment, xsrfToken, "sync");
+            super(fragment, fragment.getContext(), xsrfToken, "sync");
         }
 
         @Override

@@ -43,14 +43,14 @@ public class LoadGiveawayDetailsTask extends AsyncTask<Void, Void, GiveawayExtra
 
         try {
             Connection connection = Jsoup.connect(url);
-            if (SteamGiftsUserData.getCurrent().isLoggedIn())
-                connection.cookie("PHPSESSID", SteamGiftsUserData.getCurrent().getSessionId());
+            if (SteamGiftsUserData.getCurrent(fragment.getContext()).isLoggedIn())
+                connection.cookie("PHPSESSID", SteamGiftsUserData.getCurrent(fragment.getContext()).getSessionId());
 
             Connection.Response response = connection.execute();
             Document document = response.parse();
 
             // Update user details
-            SteamGiftsUserData.extract(document);
+            SteamGiftsUserData.extract(fragment.getContext(), document);
 
             // Check if we have an error page showing...
             Element breadcrumbs = document.select(".page__heading__breadcrumbs").first();

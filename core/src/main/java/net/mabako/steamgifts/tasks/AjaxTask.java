@@ -1,5 +1,6 @@
 package net.mabako.steamgifts.tasks;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.Log;
@@ -19,10 +20,12 @@ public abstract class AjaxTask<FragmentType> extends AsyncTask<Void, Void, Conne
     private final String xsrfToken;
     private final String what;
 
+    private final Context context;
     private final FragmentType fragment;
 
-    public AjaxTask(FragmentType fragment, String xsrfToken, String what) {
+    public AjaxTask(FragmentType fragment, Context context, String xsrfToken, String what) {
         this.fragment = fragment;
+        this.context = context;
         this.xsrfToken = xsrfToken;
         this.what = what;
 
@@ -41,7 +44,7 @@ public abstract class AjaxTask<FragmentType> extends AsyncTask<Void, Void, Conne
                     .connect(url)
                     .data("xsrf_token", xsrfToken)
                     .data("do", what)
-                    .cookie("PHPSESSID", SteamGiftsUserData.getCurrent().getSessionId())
+                    .cookie("PHPSESSID", SteamGiftsUserData.getCurrent(context).getSessionId())
                     .followRedirects(false);
 
             addExtraParameters(connection);
@@ -69,5 +72,9 @@ public abstract class AjaxTask<FragmentType> extends AsyncTask<Void, Void, Conne
 
     void setUrl(String url) {
         this.url = url;
+    }
+
+    public Context getContext() {
+        return context;
     }
 }

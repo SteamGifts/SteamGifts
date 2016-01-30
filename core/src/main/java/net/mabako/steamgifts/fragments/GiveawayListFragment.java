@@ -166,7 +166,7 @@ public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter
         // if (enterLeaveTask != null)
         // enterLeaveTask.cancel(true);
 
-        enterLeaveTask = new EnterLeaveGiveawayTask(this, giveawayId, xsrfToken, what);
+        enterLeaveTask = new EnterLeaveGiveawayTask(this, getContext(), giveawayId, xsrfToken, what);
         enterLeaveTask.execute();
     }
 

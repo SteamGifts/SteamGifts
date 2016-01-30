@@ -164,7 +164,7 @@ public class Giveaway extends BasicGiveaway implements IEndlessAdaptable {
     }
 
     public boolean isLevelPositive() {
-        return level > 0 && SteamGiftsUserData.getCurrent().getLevel() >= level;
+        return level > 0 && SteamGiftsUserData.getCurrent(null).getLevel() >= level;
     }
 
     public boolean isLevelNegative() {

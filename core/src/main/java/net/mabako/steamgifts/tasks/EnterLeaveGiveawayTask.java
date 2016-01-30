@@ -1,5 +1,6 @@
 package net.mabako.steamgifts.tasks;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -19,8 +20,8 @@ public class EnterLeaveGiveawayTask extends AjaxTask<IHasEnterableGiveaways> {
     private final static String TAG = EnterLeaveGiveawayTask.class.getSimpleName();
     private final String giveawayId;
 
-    public EnterLeaveGiveawayTask(IHasEnterableGiveaways fragment, String giveawayId, String xsrfToken, String what) {
-        super(fragment, xsrfToken, what);
+    public EnterLeaveGiveawayTask(IHasEnterableGiveaways fragment, Context context, String giveawayId, String xsrfToken, String what) {
+        super(fragment, context, xsrfToken, what);
         this.giveawayId = giveawayId;
     }
 
@@ -43,7 +44,7 @@ public class EnterLeaveGiveawayTask extends AjaxTask<IHasEnterableGiveaways> {
                 fragment.onEnterLeaveResult(giveawayId, getWhat(), success, true);
 
                 // Update the points we have.
-                SteamGiftsUserData.getCurrent().setPoints(points);
+                SteamGiftsUserData.getCurrent(getContext()).setPoints(points);
 
                 if (fragment instanceof Fragment && "error".equals(root.getString("type")) && "Sync Required".equals(root.getString("msg"))) {
                     ((Fragment) fragment).getActivity().startActivity(new Intent(((Fragment) fragment).getContext(), SyncActivity.class));

@@ -1,7 +1,12 @@
 package net.mabako.steamgifts.persistentdata;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 
 import net.mabako.steamgifts.tasks.Utils;
 
@@ -14,7 +19,13 @@ import java.util.List;
 
 public class SteamGiftsUserData {
     private static final String TAG = SteamGiftsUserData.class.getSimpleName();
-    private static SteamGiftsUserData current = new SteamGiftsUserData();
+
+    private static final String PREF_KEY_SESSION_ID = "session-id";
+    private static final String PREF_ACCOUNT = "account";
+    private static final String PREF_KEY_USERNAME = "username";
+    private static final String PREF_KEY_IMAGE = "image-url";
+
+    private static SteamGiftsUserData current;
     private String sessionId;
     private String name;
     private String imageUrl;
@@ -34,11 +45,35 @@ public class SteamGiftsUserData {
         pointUpdateHandlers.remove(handler);
     }
 
-    public static SteamGiftsUserData getCurrent() {
+    public static synchronized SteamGiftsUserData getCurrent(@Nullable Context context) {
+        if (current == null) {
+            if (context == null) {
+                // do not keep the data, though, so anything here is pretty much a no-op
+                Log.w(TAG, "Instantiiating no-op SteamGiftsUserData");
+                return new SteamGiftsUserData();
+            }
+            current = new SteamGiftsUserData();
+
+            // Load session & username if possible
+            SharedPreferences sp = context.getSharedPreferences(PREF_ACCOUNT, Context.MODE_PRIVATE);
+            if (sp.contains(PREF_KEY_SESSION_ID) && sp.contains(PREF_KEY_USERNAME)) {
+                current.setSessionId(sp.getString(PREF_KEY_SESSION_ID, null));
+                current.setName(sp.getString(PREF_KEY_USERNAME, null));
+                current.setImageUrl(sp.getString(PREF_KEY_IMAGE, null));
+            } else {
+                SteamGiftsUserData.clear();
+            }
+        }
         return current;
     }
 
-    public static void extract(Document document) {
+    public static void extract(@Nullable Context context, @Nullable Document document) {
+        if (getCurrent(context) == null)
+            return;
+
+        if (document == null)
+            return;
+
         Elements navbar = document.select(".nav__button-container");
 
         Element userContainer = navbar.last().select("a").first();
@@ -162,5 +197,21 @@ public class SteamGiftsUserData {
 
     public boolean hasNotifications() {
         return createdNotification != 0 || messageNotification != 0 || wonNotification != 0;
+    }
+
+    public void save(@NonNull Context context) {
+        SharedPreferences.Editor spEditor = context.getSharedPreferences(PREF_ACCOUNT, Context.MODE_PRIVATE).edit();
+
+        if (isLoggedIn()) {
+            spEditor.putString(PREF_KEY_SESSION_ID, sessionId);
+            spEditor.putString(PREF_KEY_USERNAME, name);
+            spEditor.putString(PREF_KEY_IMAGE, imageUrl);
+        } else {
+            spEditor.remove(PREF_KEY_SESSION_ID);
+            spEditor.remove(PREF_KEY_USERNAME);
+            spEditor.remove(PREF_KEY_IMAGE);
+        }
+        spEditor.apply();
+
     }
 }

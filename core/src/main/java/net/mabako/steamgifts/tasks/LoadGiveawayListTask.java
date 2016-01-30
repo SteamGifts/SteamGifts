@@ -59,11 +59,11 @@ public class LoadGiveawayListTask extends AsyncTask<Void, Void, List<Giveaway>> 
             if (type != GiveawayListFragment.Type.ALL)
                 jsoup.data("type", type.name().toLowerCase());
 
-            if (SteamGiftsUserData.getCurrent().isLoggedIn())
-                jsoup.cookie("PHPSESSID", SteamGiftsUserData.getCurrent().getSessionId());
+            if (SteamGiftsUserData.getCurrent(fragment.getContext()).isLoggedIn())
+                jsoup.cookie("PHPSESSID", SteamGiftsUserData.getCurrent(fragment.getContext()).getSessionId());
             Document document = jsoup.get();
 
-            SteamGiftsUserData.extract(document);
+            SteamGiftsUserData.extract(fragment.getContext(), document);
 
             // Fetch the xsrf token
             Element xsrfToken = document.select("input[name=xsrf_token]").first();

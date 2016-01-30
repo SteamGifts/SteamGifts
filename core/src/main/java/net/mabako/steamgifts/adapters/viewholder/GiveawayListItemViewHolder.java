@@ -159,7 +159,7 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         // Are we logged in & do we have a token to submit with our "form"?
-        if (SteamGiftsUserData.getCurrent().isLoggedIn() && fragment != null && (adapter.getXsrfToken() != null || savedGiveaways != null)) {
+        if (SteamGiftsUserData.getCurrent(null).isLoggedIn() && fragment != null && (adapter.getXsrfToken() != null || savedGiveaways != null)) {
 
             // Which giveaway is this even for?
             final Giveaway giveaway = (Giveaway) adapter.getItem(getAdapterPosition());
@@ -188,7 +188,7 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
                 if (giveaway.isEntered()) {
                     menu.add(Menu.NONE, 1, Menu.NONE, leaveText).setOnMenuItemClickListener(this);
                 } else {
-                    menu.add(Menu.NONE, 2, Menu.NONE, enterText).setOnMenuItemClickListener(this).setEnabled(giveaway.getPoints() <= SteamGiftsUserData.getCurrent().getPoints() && giveaway.getLevel() <= SteamGiftsUserData.getCurrent().getLevel() && !SteamGiftsUserData.getCurrent().getName().equals(giveaway.getCreator()));
+                    menu.add(Menu.NONE, 2, Menu.NONE, enterText).setOnMenuItemClickListener(this).setEnabled(giveaway.getPoints() <= SteamGiftsUserData.getCurrent(null).getPoints() && giveaway.getLevel() <= SteamGiftsUserData.getCurrent(null).getLevel() && !SteamGiftsUserData.getCurrent(null).getName().equals(giveaway.getCreator()));
                 }
             }
 

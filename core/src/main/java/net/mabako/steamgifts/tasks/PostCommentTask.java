@@ -11,8 +11,8 @@ public class PostCommentTask extends AjaxTask<Activity> {
     private final String description;
     private final int parentId;
 
-    public PostCommentTask(Activity fragment, String path, String xsrfToken, String description, int parentId) {
-        super(fragment, xsrfToken, "comment_new");
+    public PostCommentTask(Activity activity, String path, String xsrfToken, String description, int parentId) {
+        super(activity, activity, xsrfToken, "comment_new");
 
         setUrl("http://www.steamgifts.com/" + path);
         this.description = description;

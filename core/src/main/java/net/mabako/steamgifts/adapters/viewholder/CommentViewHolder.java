@@ -90,7 +90,7 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        if (SteamGiftsUserData.getCurrent().isLoggedIn()) {
+        if (SteamGiftsUserData.getCurrent(null).isLoggedIn()) {
             menu.setHeaderTitle(R.string.actions);
 
             if (writeCommentListener != null) {

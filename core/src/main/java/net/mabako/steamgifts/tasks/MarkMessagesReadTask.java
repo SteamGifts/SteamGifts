@@ -11,7 +11,7 @@ import org.jsoup.Connection;
  */
 public class MarkMessagesReadTask extends AjaxTask<MessageListFragment> {
     public MarkMessagesReadTask(MessageListFragment fragment, String xsrfToken) {
-        super(fragment, xsrfToken, "read_messages");
+        super(fragment, fragment.getContext(), xsrfToken, "read_messages");
         setUrl("http://www.steamgifts.com/messages");
     }
 

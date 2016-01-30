@@ -65,7 +65,7 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
         SteamGiftsUserData.addUpdateHandler(this);
-        onUpdatePoints(SteamGiftsUserData.getCurrent().getPoints());
+        onUpdatePoints(SteamGiftsUserData.getCurrent(this).getPoints());
 
         boolean noDrawer = getIntent().getBooleanExtra(ARG_NO_DRAWER, false);
         if (!noDrawer)
@@ -129,7 +129,7 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
     @Override
     protected void loadFragment(Fragment fragment) {
         super.loadFragment(fragment);
-        onUpdatePoints(SteamGiftsUserData.getCurrent().getPoints());
+        onUpdatePoints(SteamGiftsUserData.getCurrent(this).getPoints());
     }
 
     private void setupNavBar() {
@@ -157,9 +157,9 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
                 .withOnAccountHeaderProfileImageListener(new AccountHeader.OnAccountHeaderProfileImageListener() {
                     @Override
                     public boolean onProfileImageClick(View view, IProfile profile, boolean current) {
-                        if (SteamGiftsUserData.getCurrent().isLoggedIn()) {
+                        if (SteamGiftsUserData.getCurrent(MainActivity.this).isLoggedIn()) {
                             Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-                            intent.putExtra(UserDetailFragment.ARG_USER, SteamGiftsUserData.getCurrent().getName());
+                            intent.putExtra(UserDetailFragment.ARG_USER, SteamGiftsUserData.getCurrent(MainActivity.this).getName());
                             startActivity(intent);
                             return true;
                         }
@@ -176,7 +176,7 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
         accountHeader.getView().findViewById(R.id.material_drawer_account_header_notifications).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (SteamGiftsUserData.getCurrent().isLoggedIn()) {
+                if (SteamGiftsUserData.getCurrent(MainActivity.this).isLoggedIn()) {
                     Intent intent = new Intent(MainActivity.this, DetailActivity.class);
                     intent.putExtra(DetailActivity.ARG_NOTIFICATIONS, true);
                     startActivity(intent);
@@ -257,7 +257,7 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
                         TextView notifications = (TextView) accountHeader.getView().findViewById(R.id.material_drawer_account_header_notifications);
 
                         // Are we even logged in?
-                        SteamGiftsUserData user = SteamGiftsUserData.getCurrent();
+                        SteamGiftsUserData user = SteamGiftsUserData.getCurrent(MainActivity.this);
                         if (user.isLoggedIn()) {
                             // Format the string
                             String newInfo = String.format(getString(R.string.drawer_profile_info), user.getLevel(), user.getPoints());
@@ -311,7 +311,7 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
         // Rebuild the header.
         accountHeader.clear();
 
-        SteamGiftsUserData account = SteamGiftsUserData.getCurrent();
+        SteamGiftsUserData account = SteamGiftsUserData.getCurrent(this);
         if (account.isLoggedIn()) {
             profile = new ProfileDrawerItem().withName(account.getName()).withEmail("...").withIdentifier(1);
 
@@ -372,14 +372,14 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
             case REQUEST_LOGIN:
                 if (resultCode == CommonActivity.RESPONSE_LOGIN_SUCCESSFUL) {
                     onAccountChange();
-                    Snackbar.make(findViewById(R.id.swipeContainer), "Welcome, " + SteamGiftsUserData.getCurrent().getName() + "!", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(findViewById(R.id.swipeContainer), "Welcome, " + SteamGiftsUserData.getCurrent(this).getName() + "!", Snackbar.LENGTH_LONG).show();
                 } else
                     Snackbar.make(findViewById(R.id.swipeContainer), "Login failed", Snackbar.LENGTH_LONG).show();
                 break;
 
             case REQUEST_SETTINGS:
                 if (resultCode == RESPONSE_LOGOUT) {
-                    new LogoutTask(MainActivity.this, SteamGiftsUserData.getCurrent().getSessionId()).execute();
+                    new LogoutTask(MainActivity.this, SteamGiftsUserData.getCurrent(this).getSessionId()).execute();
 
                     SteamGiftsUserData.clear();
                     onAccountChange();
@@ -404,7 +404,7 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
     public void onUpdatePoints(final int newPoints) {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            if (SteamGiftsUserData.getCurrent().isLoggedIn() && getCurrentFragment() instanceof GiveawayListFragment) {
+            if (SteamGiftsUserData.getCurrent(this).isLoggedIn() && getCurrentFragment() instanceof GiveawayListFragment) {
                 actionBar.setSubtitle(String.format("%dP", newPoints));
             } else {
                 actionBar.setSubtitle(null);

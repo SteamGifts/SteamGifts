@@ -22,7 +22,7 @@ public class SettingsActivity extends BaseActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preferences_app);
 
-            if (SteamGiftsUserData.getCurrent().isLoggedIn()) {
+            if (SteamGiftsUserData.getCurrent(getContext()).isLoggedIn()) {
                 addPreferencesFromResource(R.xml.preferences_sg);
 
                 final PreferenceCategory category = (PreferenceCategory) findPreference("preferences_sg_header");

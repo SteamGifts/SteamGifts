@@ -46,11 +46,11 @@ public abstract class LoadGameListTask extends AsyncTask<Void, Void, List<IEndle
             if (searchQuery != null)
                 jsoup.data("q", searchQuery);
 
-            jsoup.cookie("PHPSESSID", SteamGiftsUserData.getCurrent().getSessionId());
+            jsoup.cookie("PHPSESSID", SteamGiftsUserData.getCurrent(fragment.getContext()).getSessionId());
 
             Document document = jsoup.get();
 
-            SteamGiftsUserData.extract(document);
+            SteamGiftsUserData.extract(fragment.getContext(), document);
 
             // Fetch the xsrf token
             Element xsrfToken = document.select("input[name=xsrf_token]").first();

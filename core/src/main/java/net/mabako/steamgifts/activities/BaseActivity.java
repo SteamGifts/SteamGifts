@@ -21,8 +21,6 @@ public class BaseActivity extends AppCompatActivity {
 
     private static final String PREF_KEY_SESSION_ID = "session-id";
     private static final String PREF_ACCOUNT = "account";
-    private static final String PREF_KEY_USERNAME = "username";
-    private static final String PREF_KEY_IMAGE = "image-url";
 
     private boolean nightMode = false;
 
@@ -31,18 +29,8 @@ public class BaseActivity extends AppCompatActivity {
         setTheme();
         super.onCreate(savedInstanceState);
 
-        // Load session & username if possible
-        SharedPreferences sp = getSharedPreferences(PREF_ACCOUNT, MODE_PRIVATE);
-        if (sp.contains(PREF_KEY_SESSION_ID) && sp.contains(PREF_KEY_USERNAME)) {
-            SteamGiftsUserData.getCurrent().setSessionId(sp.getString(PREF_KEY_SESSION_ID, null));
-            SteamGiftsUserData.getCurrent().setName(sp.getString(PREF_KEY_USERNAME, null));
-            SteamGiftsUserData.getCurrent().setImageUrl(sp.getString(PREF_KEY_IMAGE, null));
-        } else {
-            SteamGiftsUserData.clear();
-        }
-
         // sgtools.info preferences
-        sp = getSharedPreferences(SGToolsLoginActivity.PREF_ACCOUNT, Activity.MODE_PRIVATE);
+        SharedPreferences sp = getSharedPreferences(SGToolsLoginActivity.PREF_ACCOUNT, Activity.MODE_PRIVATE);
         if (sp.contains(SGToolsLoginActivity.PREF_KEY_SESSION_ID)) {
             SGToolsUserData.getCurrent().setSessionId(sp.getString(SGToolsLoginActivity.PREF_KEY_SESSION_ID, null));
         } else {
@@ -70,19 +58,7 @@ public class BaseActivity extends AppCompatActivity {
 
     protected void onAccountChange() {
         // Persist all relevant data.
-        SharedPreferences.Editor spEditor = getSharedPreferences(PREF_ACCOUNT, MODE_PRIVATE).edit();
-
-        SteamGiftsUserData account = SteamGiftsUserData.getCurrent();
-        if (account.isLoggedIn()) {
-            spEditor.putString(PREF_KEY_SESSION_ID, account.getSessionId());
-            spEditor.putString(PREF_KEY_USERNAME, account.getName());
-            spEditor.putString(PREF_KEY_IMAGE, account.getImageUrl());
-        } else {
-            spEditor.remove(PREF_KEY_SESSION_ID);
-            spEditor.remove(PREF_KEY_USERNAME);
-            spEditor.remove(PREF_KEY_IMAGE);
-        }
-        spEditor.apply();
+        SteamGiftsUserData.getCurrent(this).save(this);
     }
 
     private boolean setTheme() {

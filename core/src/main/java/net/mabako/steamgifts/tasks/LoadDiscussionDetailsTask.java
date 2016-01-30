@@ -59,7 +59,7 @@ public class LoadDiscussionDetailsTask extends AsyncTask<Void, Void, DiscussionE
                 Document document = response.parse();
 
                 // Update user details
-                SteamGiftsUserData.extract(document);
+                SteamGiftsUserData.extract(fragment.getContext(), document);
 
                 DiscussionExtras extras = loadExtras(document);
                 if (loadDetails) {
@@ -93,8 +93,8 @@ public class LoadDiscussionDetailsTask extends AsyncTask<Void, Void, DiscussionE
         Connection connection = Jsoup.connect(url)
                 .followRedirects(true);
 
-        if (SteamGiftsUserData.getCurrent().isLoggedIn())
-            connection.cookie("PHPSESSID", SteamGiftsUserData.getCurrent().getSessionId());
+        if (SteamGiftsUserData.getCurrent(fragment.getContext()).isLoggedIn())
+            connection.cookie("PHPSESSID", SteamGiftsUserData.getCurrent(fragment.getContext()).getSessionId());
 
         Connection.Response response = connection.execute();
         return response;

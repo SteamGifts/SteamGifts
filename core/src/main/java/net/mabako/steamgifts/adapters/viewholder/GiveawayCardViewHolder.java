@@ -139,7 +139,7 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
                             }
                         });
                     }
-                } else if (!SteamGiftsUserData.getCurrent().isLoggedIn()) {
+                } else if (!SteamGiftsUserData.getCurrent(null).isLoggedIn()) {
                     loginButton.setVisibility(View.VISIBLE);
                 }
 

@@ -39,8 +39,8 @@ public class LoadUserDetailsTask extends AsyncTask<Void, Void, List<Giveaway>> {
             // Fetch the Giveaway page
             Connection connection = Jsoup.connect("http://www.steamgifts.com/user/" + path + "/search");
             connection.data("page", Integer.toString(page));
-            if (SteamGiftsUserData.getCurrent().isLoggedIn())
-                connection.cookie("PHPSESSID", SteamGiftsUserData.getCurrent().getSessionId());
+            if (SteamGiftsUserData.getCurrent(fragment.getContext()).isLoggedIn())
+                connection.cookie("PHPSESSID", SteamGiftsUserData.getCurrent(fragment.getContext()).getSessionId());
 
             connection.followRedirects(false);
             Connection.Response response = connection.execute();
@@ -48,7 +48,7 @@ public class LoadUserDetailsTask extends AsyncTask<Void, Void, List<Giveaway>> {
 
             if (response.statusCode() == 200) {
 
-                SteamGiftsUserData.extract(document);
+                SteamGiftsUserData.extract(fragment.getContext(), document);
 
                 if (!user.isLoaded())
                     loadUser(document);

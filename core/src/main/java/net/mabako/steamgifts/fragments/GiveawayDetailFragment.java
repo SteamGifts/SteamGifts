@@ -205,7 +205,7 @@ public class GiveawayDetailFragment extends ListFragment<CommentAdapter> impleme
         if (enterLeaveTask != null)
             enterLeaveTask.cancel(true);
 
-        enterLeaveTask = new EnterLeaveGiveawayTask(this, giveawayId, xsrfToken, enterOrDelete);
+        enterLeaveTask = new EnterLeaveGiveawayTask(this, getContext(), giveawayId, xsrfToken, enterOrDelete);
         enterLeaveTask.execute();
     }
 

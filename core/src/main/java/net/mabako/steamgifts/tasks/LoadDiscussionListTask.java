@@ -58,11 +58,11 @@ public class LoadDiscussionListTask extends AsyncTask<Void, Void, List<Discussio
             if (type == DiscussionListFragment.Type.CREATED)
                 jsoup.followRedirects(false);
 
-            if (SteamGiftsUserData.getCurrent().isLoggedIn())
-                jsoup.cookie("PHPSESSID", SteamGiftsUserData.getCurrent().getSessionId());
+            if (SteamGiftsUserData.getCurrent(fragment.getContext()).isLoggedIn())
+                jsoup.cookie("PHPSESSID", SteamGiftsUserData.getCurrent(fragment.getContext()).getSessionId());
             Document document = jsoup.get();
 
-            SteamGiftsUserData.extract(document);
+            SteamGiftsUserData.extract(fragment.getContext(), document);
 
             // Parse all rows of discussions
             Elements discussions = document.select(".table__row-inner-wrap");
