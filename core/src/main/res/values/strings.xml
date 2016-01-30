@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SteamGifts</string>
+    <string name="app_name">sg</string>
     <string name="navigation_about">About</string>
     <string name="navigation_help">Help</string>
     <string name="navigation_beta">Opt Out of Beta</string>
@@ -53,7 +53,7 @@
     <string name="logged_out">Goodbye!</string>
 
     <!-- About dialog -->
-    <string name="app_name_long">SteamGifts for Android</string>
+    <string name="app_name_long">sg for SteamGifts</string>
     <string name="about_made_with_love">made with {faw-heart} by kt</string>
     <string name="about_forum_thread">Discuss on SteamGifts.com</string>
     <string name="about_mail">Contact via Mail</string>
