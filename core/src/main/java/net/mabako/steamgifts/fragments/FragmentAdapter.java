@@ -127,7 +127,8 @@ public abstract class FragmentAdapter extends FragmentStatePagerAdapter implemen
 
     @Override
     public Parcelable saveState() {
-        setTransientFragment(null);
+        if (transientFragment != null)
+            setTransientFragment(null);
 
         return super.saveState();
     }
