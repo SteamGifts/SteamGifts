@@ -183,7 +183,8 @@ public class GiveawayDetailFragment extends ListFragment<CommentAdapter> impleme
         ((Giveaway) giveaway).setTimeRemaining(extras.getTimeRemaining());
 
         giveawayCard.setExtras(extras);
-        getActivity().supportInvalidateOptionsMenu();
+        if (getActivity() != null)
+            getActivity().supportInvalidateOptionsMenu();
         adapter.setStickyItem(giveawayCard);
 
         super.addItems(extras.getComments(), page == 1);

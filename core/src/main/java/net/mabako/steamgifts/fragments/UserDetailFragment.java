@@ -25,7 +25,6 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
-import net.mabako.steamgifts.activities.DetailActivity;
 import net.mabako.steamgifts.activities.WebViewActivity;
 import net.mabako.steamgifts.adapters.GiveawayAdapter;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
@@ -167,7 +166,7 @@ public class UserDetailFragment extends Fragment implements IUserNotifications {
         }
     }
 
-    private class CustomPagerAdapter extends DetailActivity.SimplePagerAdapter {
+    private class CustomPagerAdapter extends FragmentAdapter {
         public CustomPagerAdapter(AppCompatActivity activity, ViewPager viewPager, Fragment... fragments) {
             super(activity, viewPager, fragments);
         }
