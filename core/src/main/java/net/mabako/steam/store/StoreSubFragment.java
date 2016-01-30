@@ -37,7 +37,7 @@ public class StoreSubFragment extends StoreFragment {
 
     public void showDetails(int appId) {
         DetailActivity activity = (DetailActivity) getActivity();
-        activity.setTransientFragment(StoreAppFragment.newInstance(appId));
+        activity.setTransientFragment(StoreAppFragment.newInstance(appId, true));
     }
 
     private class LoadSubTask extends LoadStoreTask {

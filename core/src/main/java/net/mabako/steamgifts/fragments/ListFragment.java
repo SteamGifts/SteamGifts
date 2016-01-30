@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -30,6 +29,8 @@ import java.util.List;
 
 // TODO make EndlessAdapter's viewInReverse more easily handled within here.
 public abstract class ListFragment<AdapterType extends EndlessAdapter> extends Fragment implements EndlessAdapter.OnLoadListener, IScrollToTop {
+    private static final String TAG = ListFragment.class.getSimpleName();
+
     private static final String SAVED_ADAPTER = "listadapter";
 
     private boolean loadItemsInitially = true;
@@ -198,7 +199,7 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
         }
     }
 
-    private void initializeListView() {
+    protected void initializeListView() {
         if (adapter.isEmpty()) {
             fetchItems(1);
         } else {
@@ -272,11 +273,11 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
         ViewPager viewPager = (ViewPager) rootView.findViewById(R.id.viewPager);
         if (viewPager != null) {
             PagerAdapter adapter = viewPager.getAdapter();
-            if (adapter instanceof FragmentStatePagerAdapter) {
-                return ((FragmentStatePagerAdapter) adapter).getItem(viewPager.getCurrentItem()) == this;
+            if (adapter instanceof FragmentAdapter) {
+                return ((FragmentAdapter) adapter).getItem(viewPager.getCurrentItem()) == this;
             }
 
-            Log.w(getClass().getSimpleName(), "NOT A STATE ADAPTER");
+            Log.w(TAG, getClass().getSimpleName() + " does not have a FragmentAdapter!");
             return true;
         } else {
             // not a paged view, so there's no real way for this not to be active.

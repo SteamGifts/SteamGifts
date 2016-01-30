@@ -2,10 +2,7 @@ package net.mabako.steam.store;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -24,20 +21,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StoreAppFragment extends StoreFragment {
-    public static StoreAppFragment newInstance(int appId) {
+    public static StoreAppFragment newInstance(int appId, boolean refreshOnCreate) {
         StoreAppFragment fragment = new StoreAppFragment();
 
         Bundle args = new Bundle();
         args.putString("app", String.valueOf(appId));
+        args.putBoolean("refresh", refreshOnCreate);
         fragment.setArguments(args);
 
         return fragment;
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        Log.d("SAF", getArguments().getString("app"));
-        super.onCreate(savedInstanceState);
+    public void onResume() {
+        super.onResume();
+        if (getArguments().getBoolean("refresh", false))
+            refresh();
     }
 
     @Override
@@ -52,7 +51,6 @@ public class StoreAppFragment extends StoreFragment {
                     .connect("http://store.steampowered.com/api/appdetails/")
                     .data("appids", getArguments().getString("app"))
                     .data("l", "en");
-
         }
 
         @Override

@@ -15,11 +15,10 @@ import net.mabako.steam.store.data.Space;
 import net.mabako.steam.store.data.Text;
 import net.mabako.steam.store.viewholder.PictureViewHolder;
 import net.mabako.steam.store.viewholder.TextViewHolder;
-import net.mabako.steamgifts.activities.DetailActivity;
+import net.mabako.steamgifts.activities.CommonActivity;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.adapters.viewholder.GameViewHolder;
-import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.Game;
 import net.mabako.steamgifts.fragments.ListFragment;
 
@@ -102,12 +101,18 @@ public abstract class StoreFragment extends ListFragment<StoreFragment.Adapter> 
     // FIXME this isn't properly reset on device rotations; while the main giveaway page has an options menu afterwards, the store pages do not unless they're opened again.
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        ((DetailActivity) getActivity()).getCurrentFragment().onCreateOptionsMenu(menu, inflater);
+        if (getActivity() == null)
+            return;
+
+        ((CommonActivity) getActivity()).getCurrentFragment().onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return ((DetailActivity) getActivity()).getCurrentFragment().onOptionsItemSelected(item);
+        if (getActivity() == null)
+            return super.onOptionsItemSelected(item);
+
+        return ((CommonActivity) getActivity()).getCurrentFragment().onOptionsItemSelected(item);
     }
 
     @Override

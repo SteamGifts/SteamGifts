@@ -1,6 +1,7 @@
 package net.mabako.steamgifts.fragments;
 
 import android.app.Activity;
+import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -122,5 +123,12 @@ public abstract class FragmentAdapter extends FragmentStatePagerAdapter implemen
     public void setTransientFragment(Fragment transientFragment) {
         this.transientFragment = transientFragment;
         notifyDataSetChanged();
+    }
+
+    @Override
+    public Parcelable saveState() {
+        setTransientFragment(null);
+
+        return super.saveState();
     }
 }
