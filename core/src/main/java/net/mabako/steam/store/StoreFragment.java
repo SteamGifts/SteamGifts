@@ -1,6 +1,7 @@
 package net.mabako.steam.store;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -33,6 +34,7 @@ public abstract class StoreFragment extends ListFragment<StoreFragment.Adapter> 
     }
 
     @Override
+    @NonNull
     protected Adapter createAdapter() {
         return new Adapter();
     }
@@ -50,6 +52,7 @@ public abstract class StoreFragment extends ListFragment<StoreFragment.Adapter> 
     }
 
     public static class Adapter extends EndlessAdapter {
+        private static final long serialVersionUID = 7169019794513055782L;
         private transient StoreFragment fragment;
 
         public void setFragmentValues(StoreFragment fragment) {

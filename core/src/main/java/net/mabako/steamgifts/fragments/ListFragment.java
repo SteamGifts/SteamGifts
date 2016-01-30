@@ -21,14 +21,14 @@ import android.widget.ProgressBar;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.core.R;
-import net.mabako.steamgifts.fragments.interfaces.IScrollToTop;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 // TODO make EndlessAdapter's viewInReverse more easily handled within here.
-public abstract class ListFragment<AdapterType extends EndlessAdapter> extends Fragment implements EndlessAdapter.OnLoadListener, IScrollToTop {
+public abstract class ListFragment<AdapterType extends EndlessAdapter> extends Fragment implements EndlessAdapter.OnLoadListener {
     private static final String TAG = ListFragment.class.getSimpleName();
 
     private static final String SAVED_ADAPTER = "listadapter";
@@ -232,20 +232,25 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
         swipeContainer.setRefreshing(false);
     }
 
-    @Override
     public void setupScrollToTopButton() {
-        if (scrollToTopButton != null && isCurrentFragmentTheActiveFragment()) {
-            scrollToTopButton.hide();
-            scrollToTopButton.setTag("clickable");
-            scrollToTopButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listView != null) {
-                        ((LinearLayoutManager) listView.getLayoutManager()).scrollToPositionWithOffset(0, 0);
-                        scrollToTopButton.hide();
+        if (scrollToTopButton != null) {
+            if (isCurrentFragmentTheActiveFragment()) {
+                scrollToTopButton.hide();
+                scrollToTopButton.setTag("clickable");
+                scrollToTopButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (listView != null) {
+                            ((LinearLayoutManager) listView.getLayoutManager()).scrollToPositionWithOffset(0, 0);
+                            scrollToTopButton.hide();
+                        }
                     }
-                }
-            });
+                });
+            } else {
+                Log.v(TAG, "setupScrollToTopButton: not the current activity");
+            }
+        } else {
+            Log.v(TAG, "setupScrollToTopButton: no FAB");
         }
     }
 
@@ -274,13 +279,45 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
         if (viewPager != null) {
             PagerAdapter adapter = viewPager.getAdapter();
             if (adapter instanceof FragmentAdapter) {
-                return ((FragmentAdapter) adapter).getItem(viewPager.getCurrentItem()) == this;
+                Fragment currentItem = ((FragmentAdapter) adapter).getItem(viewPager.getCurrentItem());
+                if (!(currentItem instanceof ListFragment))
+                    return false;
+
+                ListFragment listFragment = (ListFragment) currentItem;
+                /// TODO separate two instances of the same fragment
+                return listFragment.getClass() == getClass() && BundleEquality.equalBundles(listFragment.getArguments(), getArguments());
             }
 
             Log.w(TAG, getClass().getSimpleName() + " does not have a FragmentAdapter!");
             return true;
         } else {
             // not a paged view, so there's no real way for this not to be active.
+            return true;
+        }
+    }
+
+    private static class BundleEquality {
+        public static boolean equalBundles(Bundle one, Bundle two) {
+            if (one.size() != two.size())
+                return false;
+
+            Set<String> setOne = one.keySet();
+            Object valueOne;
+            Object valueTwo;
+
+            for (String key : setOne) {
+                valueOne = one.get(key);
+                valueTwo = two.get(key);
+                if (valueOne instanceof Bundle && valueTwo instanceof Bundle &&
+                        !equalBundles((Bundle) valueOne, (Bundle) valueTwo)) {
+                    return false;
+                } else if (valueOne == null) {
+                    if (valueTwo != null || !two.containsKey(key))
+                        return false;
+                } else if (!valueOne.equals(valueTwo))
+                    return false;
+            }
+
             return true;
         }
     }

@@ -3,24 +3,22 @@ package net.mabako.steamgifts.behavior;
 import android.content.Context;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import net.mabako.steamgifts.core.R;
+import net.mabako.steamgifts.fragments.FragmentAdapter;
 
 /**
  * Floating Action Button that is hiding if you're scrolling down a {@link RecyclerView}, and is
  * visible if you're beyond the first element and scroll up again.
  */
 public class ScrollAwareFABBehavior extends FloatingActionButton.Behavior {
-    private static final String TAG = "ScrollawareFAB";
-
     public ScrollAwareFABBehavior(Context context, AttributeSet attrs) {
         super();
     }
@@ -41,12 +39,13 @@ public class ScrollAwareFABBehavior extends FloatingActionButton.Behavior {
         // try to get the current page, if there's any.
         View view = coordinatorLayout;
         ViewPager viewPager = (ViewPager) coordinatorLayout.findViewById(R.id.viewPager);
-        if (viewPager != null) {
-            if (viewPager.getAdapter() instanceof FragmentStatePagerAdapter) {
-                int currentPage = viewPager.getCurrentItem();
-                FragmentStatePagerAdapter pagerAdapter = (FragmentStatePagerAdapter) viewPager.getAdapter();
-                view = pagerAdapter.getItem(currentPage).getView();
-            }
+        if (viewPager != null && viewPager.getAdapter() instanceof FragmentAdapter) {
+            int currentPage = viewPager.getCurrentItem();
+            FragmentAdapter pagerAdapter = (FragmentAdapter) viewPager.getAdapter();
+
+            Fragment currentItem = pagerAdapter.getItem(currentPage);
+
+            view = currentItem.getView();
         }
 
         if (view == null) {

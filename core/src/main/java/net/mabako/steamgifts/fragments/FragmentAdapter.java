@@ -7,11 +7,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import net.mabako.steamgifts.core.R;
-import net.mabako.steamgifts.fragments.interfaces.IScrollToTop;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,6 +20,7 @@ import java.util.List;
 /**
  * Simple fragment adapter that basically just holds a list of... fragments, without any fancy schmuck.
  */
+// TODO restoring the instance state here leads to a situation where none of this.fragments equals the currently selected item, neither does any directly neighboring fragment. Works if all fragments are recreated though(?)
 public abstract class FragmentAdapter extends FragmentStatePagerAdapter implements ViewPager.OnPageChangeListener {
     private final Activity activity;
     private final ViewPager viewPager;
@@ -106,8 +107,9 @@ public abstract class FragmentAdapter extends FragmentStatePagerAdapter implemen
             FloatingActionButton scrollToTopButton = (FloatingActionButton) activity.findViewById(R.id.scroll_to_top_button);
             if (scrollToTopButton != null) {
                 Fragment fragment = getItem(position);
-                if (fragment instanceof IScrollToTop) {
-                    ((IScrollToTop) fragment).setupScrollToTopButton();
+                if (fragment instanceof ListFragment) {
+                    ListFragment listFragment = (ListFragment) fragment;
+                    listFragment.setupScrollToTopButton();
                 } else {
                     scrollToTopButton.setOnClickListener(new View.OnClickListener() {
                         @Override
