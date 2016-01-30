@@ -20,6 +20,7 @@ import net.mabako.steamgifts.fragments.UserDetailFragment;
 import net.mabako.steamgifts.fragments.interfaces.IActivityTitle;
 import net.mabako.steamgifts.fragments.interfaces.ICommentableFragment;
 import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
+import net.mabako.steamgifts.receivers.CheckForNewMessages;
 import net.mabako.steamgifts.tasks.LoadMessagesTask;
 import net.mabako.steamgifts.tasks.MarkMessagesReadTask;
 
@@ -103,6 +104,16 @@ public class MessageListFragment extends ListFragment<MessageAdapter> implements
     @Override
     public void addItems(List<? extends IEndlessAdaptable> items, boolean clearExistingItems, String foundXsrfToken) {
         super.addItems(items, clearExistingItems, foundXsrfToken);
+
+        if (items != null && clearExistingItems) {
+            // The top message for the first page (clearExistingItems == true) will be marked as the last we've actually looked at/dismissed and will not be shown in a notification again.
+            for (IEndlessAdaptable item : items)
+                if (item instanceof Comment) {
+                    CheckForNewMessages.setLastDismissedCommentId(getContext(), ((Comment) item).getPermalinkId());
+                    break;
+                }
+        }
+
         getActivity().supportInvalidateOptionsMenu();
     }
 
