@@ -211,7 +211,6 @@ public class UserDetailFragment extends Fragment implements IUserNotifications {
     }
 
     public static class UserGiveawayListFragment extends ListFragment<GiveawayAdapter> implements IUserNotifications {
-        private static final String SAVED_LOAD_INITIALLY = "load-initially";
         private static final String SAVED_PATH = "path";
 
         private User user;
@@ -224,7 +223,6 @@ public class UserDetailFragment extends Fragment implements IUserNotifications {
             Bundle args = new Bundle();
             args.putSerializable(SAVED_USER, user);
             args.putString(SAVED_PATH, path);
-            args.putBoolean(SAVED_LOAD_INITIALLY, loadItemsInitially);
             fragment.setArguments(args);
 
             return fragment;
@@ -235,11 +233,9 @@ public class UserDetailFragment extends Fragment implements IUserNotifications {
             if (savedInstanceState == null) {
                 user = (User) getArguments().getSerializable(SAVED_USER);
                 path = getArguments().getString(SAVED_PATH);
-                loadItemsInitially = getArguments().getBoolean(SAVED_LOAD_INITIALLY, false);
             } else {
                 user = (User) savedInstanceState.getSerializable(SAVED_USER);
                 path = savedInstanceState.getString(SAVED_PATH);
-                loadItemsInitially = savedInstanceState.getBoolean(SAVED_LOAD_INITIALLY, false);
             }
 
             super.onCreate(savedInstanceState);
@@ -251,7 +247,6 @@ public class UserDetailFragment extends Fragment implements IUserNotifications {
             super.onSaveInstanceState(outState);
             outState.putSerializable(SAVED_USER, user);
             outState.putString(SAVED_PATH, path);
-            outState.putBoolean(SAVED_LOAD_INITIALLY, loadItemsInitially);
         }
 
         @Override

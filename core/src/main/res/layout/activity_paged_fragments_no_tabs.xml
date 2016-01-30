@@ -22,4 +22,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingTop="?attr/actionBarSize" />
+
+    <include
+        layout="@layout/fab"
+        app:layout_anchor="@id/viewPager" />
 </android.support.design.widget.CoordinatorLayout>

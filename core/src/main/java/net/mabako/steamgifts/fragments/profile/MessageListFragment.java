@@ -28,10 +28,6 @@ import java.io.Serializable;
 import java.util.List;
 
 public class MessageListFragment extends ListFragment<MessageAdapter> implements IActivityTitle, ICommentableFragment {
-    public MessageListFragment() {
-        loadItemsInitially = false;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

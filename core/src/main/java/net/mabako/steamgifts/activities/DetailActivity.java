@@ -271,21 +271,9 @@ public class DetailActivity extends CommonActivity {
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             FloatingActionButton scrollToTopButton = (FloatingActionButton) findViewById(R.id.scroll_to_top_button);
-            if (scrollToTopButton != null) {
+            if (scrollToTopButton != null && positionOffsetPixels != 0) {
                 scrollToTopButton.hide();
                 scrollToTopButton.setTag(null);
-
-                Fragment fragment = getItem(position);
-                if (fragment instanceof IScrollToTop) {
-                    ((IScrollToTop) fragment).setupScrollToTopButton();
-                } else {
-                    scrollToTopButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Toast.makeText(DetailActivity.this, "Got no scroll listener, can't scroll to top.", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
             }
         }
 
@@ -302,6 +290,21 @@ public class DetailActivity extends CommonActivity {
                 if (position < fragments.size() && transientFragment != null) {
                     transientFragment = null;
                     notifyDataSetChanged();
+                }
+
+                FloatingActionButton scrollToTopButton = (FloatingActionButton) findViewById(R.id.scroll_to_top_button);
+                if (scrollToTopButton != null) {
+                    Fragment fragment = getItem(position);
+                    if (fragment instanceof IScrollToTop) {
+                        ((IScrollToTop) fragment).setupScrollToTopButton();
+                    } else {
+                        scrollToTopButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Toast.makeText(DetailActivity.this, "Got no scroll listener, can't scroll to top.", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
                 }
             }
         }

@@ -21,10 +21,6 @@ import java.io.Serializable;
 import java.util.List;
 
 public class WonListFragment extends ListFragment<GiveawayAdapter> implements IActivityTitle {
-    public WonListFragment() {
-        loadItemsInitially = false;
-    }
-
     @Override
     public int getTitleResource() {
         return R.string.user_giveaway_won;

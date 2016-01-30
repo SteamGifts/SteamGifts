@@ -28,10 +28,6 @@ public class EnteredListFragment extends ListFragment<GiveawayAdapter> implement
     private final static String TAG = EnteredListFragment.class.getSimpleName();
     private EnterLeaveGiveawayTask enterLeaveTask;
 
-    public EnteredListFragment() {
-        loadItemsInitially = false;
-    }
-
     @Override
     public int getTitleResource() {
         return R.string.user_tab_entered;

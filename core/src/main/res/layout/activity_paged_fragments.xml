@@ -18,6 +18,7 @@
         app:title="@string/app_name" />
 
     <LinearLayout
+        android:id="@+id/pager_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -34,4 +35,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </LinearLayout>
+
+    <include
+        layout="@layout/fab"
+        app:layout_anchor="@id/pager_container" />
 </android.support.design.widget.CoordinatorLayout>

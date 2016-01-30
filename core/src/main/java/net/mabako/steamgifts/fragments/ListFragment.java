@@ -6,6 +6,9 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -29,11 +32,12 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
     private static final long serialVersionUID = -1489654549912777189L;
     private static final String SAVED_ADAPTER = "listadapter";
 
-    protected boolean loadItemsInitially = true;
+    private boolean loadItemsInitially = true;
 
     protected AdapterType adapter;
     private RecyclerView listView;
 
+    private View rootView;
     protected SwipeRefreshLayout swipeContainer;
     private ProgressBar progressBar;
 
@@ -57,6 +61,8 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(getLayoutResource(), container, false);
+        rootView = container.getRootView();
+        loadItemsInitially = isCurrentFragmentTheActiveFragment();
 
         listView = (RecyclerView) layout.findViewById(R.id.list);
         swipeContainer = (SwipeRefreshLayout) layout.findViewById(R.id.swipeContainer);
@@ -177,14 +183,18 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser && !loadItemsInitially) {
-            loadItemsInitially = true;
+        if (isVisibleToUser) {
+            setupScrollToTopButton();
 
-            if (getView() == null) {
-                // Fallback for a rare circumstance in which setUserVisibleHint would be called before onCreateView,
-                // in which case getView() returns null.
-            } else
-                initializeListView();
+            if (!loadItemsInitially) {
+                loadItemsInitially = true;
+
+                if (getView() == null) {
+                    // Fallback for a rare circumstance in which setUserVisibleHint would be called before onCreateView,
+                    // in which case getView() returns null.
+                } else
+                    initializeListView();
+            }
         }
     }
 
@@ -222,14 +232,14 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
 
     @Override
     public void setupScrollToTopButton() {
-        if (scrollToTopButton != null) {
-            scrollToTopButton.setVisibility(View.GONE);
+        if (scrollToTopButton != null && isCurrentFragmentTheActiveFragment()) {
+            scrollToTopButton.hide();
             scrollToTopButton.setTag("clickable");
             scrollToTopButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (listView != null) {
-                        listView.scrollToPosition(0);
+                        ((LinearLayoutManager) listView.getLayoutManager()).scrollToPositionWithOffset(0, 0);
                         scrollToTopButton.hide();
                     }
                 }
@@ -253,4 +263,23 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
     }
 
     protected abstract Serializable getType();
+
+    public boolean isCurrentFragmentTheActiveFragment() {
+        if (rootView == null)
+            return false;
+
+        ViewPager viewPager = (ViewPager) rootView.findViewById(R.id.viewPager);
+        if (viewPager != null) {
+            PagerAdapter adapter = viewPager.getAdapter();
+            if (adapter instanceof FragmentStatePagerAdapter) {
+                return ((FragmentStatePagerAdapter) adapter).getItem(viewPager.getCurrentItem()) == this;
+            }
+
+            Log.w(getClass().getSimpleName(), "NOT A STATE ADAPTER");
+            return true;
+        } else {
+            // not a paged view, so there's no real way for this not to be active.
+            return true;
+        }
+    }
 }
