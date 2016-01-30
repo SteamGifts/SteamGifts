@@ -11,8 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.activities.WriteCommentActivity;
+import net.mabako.steamgifts.core.R;
 
 public class WriteCommentFragment extends DialogFragment {
     private EditText edit;

@@ -76,7 +76,8 @@ public class WriteCommentActivity extends BaseActivity {
             findViewById(R.id.separator).setVisibility(View.GONE);
         }
 
-        loadFragment(R.id.fragment_container2, new WriteCommentFragment(), "writer");
+        if (savedInstanceState == null)
+            loadFragment(R.id.fragment_container2, new WriteCommentFragment(), "writer");
     }
 
     @Override
