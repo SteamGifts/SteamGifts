@@ -2,6 +2,7 @@ package net.mabako.steamgifts.fragments;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -29,7 +30,6 @@ import java.util.List;
 
 // TODO make EndlessAdapter's viewInReverse more easily handled within here.
 public abstract class ListFragment<AdapterType extends EndlessAdapter> extends Fragment implements EndlessAdapter.OnLoadListener, IScrollToTop {
-    private static final long serialVersionUID = -1489654549912777189L;
     private static final String SAVED_ADAPTER = "listadapter";
 
     private boolean loadItemsInitially = true;
@@ -206,6 +206,7 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
         }
     }
 
+    @NonNull
     protected abstract AdapterType createAdapter();
 
     /**

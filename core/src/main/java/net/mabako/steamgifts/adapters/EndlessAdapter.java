@@ -154,6 +154,13 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     public void reachedTheEnd() {
+        reachedTheEnd(true);
+    }
+
+    /**
+     * @param addEndItem if this is set to false, we do not add the "You've reached the end" text.
+     */
+    public void reachedTheEnd(boolean addEndItem) {
         if (reachedTheEnd)
             return;
 
@@ -165,9 +172,10 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         reachedTheEnd = true;
 
-        items.add(null);
-
-        notifyItemInserted(getItemCount() - 1);
+        if (addEndItem) {
+            items.add(null);
+            notifyItemInserted(getItemCount() - 1);
+        }
     }
 
     protected List<IEndlessAdaptable> getItems() {

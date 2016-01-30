@@ -1,19 +1,27 @@
 package net.mabako.steam.store;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import net.mabako.steam.store.data.Picture;
+import net.mabako.steam.store.data.Space;
 import net.mabako.steam.store.data.Text;
+import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.core.R;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class StoreAppFragment extends StoreFragment {
     public static StoreAppFragment newInstance(int appId) {
@@ -27,7 +35,13 @@ public class StoreAppFragment extends StoreFragment {
     }
 
     @Override
-    public LoadStoreTask getTaskToStart() {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        Log.d("SAF", getArguments().getString("app"));
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    protected AsyncTask<Void, Void, ?> getFetchItemsTask(int page) {
         return new LoadAppTask();
     }
 
@@ -51,14 +65,16 @@ public class StoreAppFragment extends StoreFragment {
                     if (sub.getBoolean("success")) {
                         JSONObject data = sub.getJSONObject("data");
 
+                        List<IEndlessAdaptable> items = new ArrayList<IEndlessAdaptable>();
+
                         // Game name
-                        adapter.add(new Text("<h1>" + TextUtils.htmlEncode(data.getString("name")) + "</h1>", true));
+                        items.add(new Text("<h1>" + TextUtils.htmlEncode(data.getString("name")) + "</h1>", true));
 
                         // Game description.
-                        adapter.add(new Text(data.getString("about_the_game"), true));
+                        items.add(new Text(data.getString("about_the_game"), true));
 
                         // Release?
-                        adapter.add(new Text("<strong>Release:</strong> " + data.getJSONObject("release_date").getString("date"), true));
+                        items.add(new Text("<strong>Release:</strong> " + data.getJSONObject("release_date").getString("date"), true));
 
                         // Genres
                         JSONArray genres = data.getJSONArray("genres");
@@ -70,11 +86,11 @@ public class StoreAppFragment extends StoreFragment {
 
                                 sb.append(genres.getJSONObject(i).getString("description"));
                             }
-                            adapter.add(new Text(sb.toString(), true));
+                            items.add(new Text(sb.toString(), true));
                         }
 
                         // Space!
-                        adapter.add(null);
+                        items.add(new Space());
 
                         // Some screenshots
                         JSONArray screenshots = data.getJSONArray("screenshots");
@@ -82,16 +98,16 @@ public class StoreAppFragment extends StoreFragment {
                             JSONObject screenshot = screenshots.getJSONObject(i);
 
                             // TODO higher quality images?
-                            adapter.add(new Picture(screenshot.getString("path_thumbnail")));
+                            items.add(new Picture(screenshot.getString("path_thumbnail")));
                         }
+
+                        addItems(items, true);
                     } else throw new Exception("not successful");
                 } catch (Exception e) {
                     Toast.makeText(getContext(), "Unable to load Store App", Toast.LENGTH_LONG).show();
-                    loaded = false;
                 }
             } else {
                 Toast.makeText(getContext(), "Unable to load Store App", Toast.LENGTH_LONG).show();
-                loaded = false;
             }
 
             getView().findViewById(R.id.progressBar).setVisibility(View.GONE);

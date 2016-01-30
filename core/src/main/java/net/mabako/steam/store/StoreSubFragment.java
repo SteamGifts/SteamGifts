@@ -1,11 +1,13 @@
 package net.mabako.steam.store;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Toast;
 
 import net.mabako.steamgifts.activities.DetailActivity;
+import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.Game;
 
@@ -14,10 +16,10 @@ import org.json.JSONObject;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 
-public class StoreSubFragment extends StoreFragment {
-    private static final String STATE_ADAPTER = "adapter";
-    private static final String STATE_LOADED = "loaded";
+import java.util.ArrayList;
+import java.util.List;
 
+public class StoreSubFragment extends StoreFragment {
     public static StoreSubFragment newInstance(int appId) {
         StoreSubFragment fragment = new StoreSubFragment();
 
@@ -29,26 +31,7 @@ public class StoreSubFragment extends StoreFragment {
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        if (savedInstanceState == null) {
-            adapter = new Adapter();
-        } else {
-            adapter = (Adapter) savedInstanceState.getSerializable(STATE_ADAPTER);
-            loaded = savedInstanceState.getBoolean(STATE_LOADED);
-        }
-
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putSerializable(STATE_ADAPTER, adapter);
-        outState.putBoolean(STATE_LOADED, loaded);
-    }
-
-    @Override
-    public LoadStoreTask getTaskToStart() {
+    protected AsyncTask<Void, Void, ?> getFetchItemsTask(int page) {
         return new LoadSubTask();
     }
 
@@ -77,6 +60,8 @@ public class StoreSubFragment extends StoreFragment {
                         JSONObject data = sub.getJSONObject("data");
                         JSONArray apps = data.getJSONArray("apps");
 
+                        List<IEndlessAdaptable> games = new ArrayList<>();
+
                         for (int i = 0; i < apps.length(); ++i) {
                             JSONObject app = apps.getJSONObject(i);
 
@@ -85,16 +70,16 @@ public class StoreSubFragment extends StoreFragment {
                             game.setGameId(app.getInt("id"));
                             game.setName(app.getString("name"));
 
-                            adapter.add(game);
+                            games.add(game);
                         }
+
+                        addItems(games, true);
                     } else throw new Exception("not successful");
                 } catch (Exception e) {
                     Toast.makeText(getContext(), "Unable to load Store Sub", Toast.LENGTH_LONG).show();
-                    loaded = false;
                 }
             } else {
                 Toast.makeText(getContext(), "Unable to load Store Sub", Toast.LENGTH_LONG).show();
-                loaded = false;
             }
 
             getView().findViewById(R.id.progressBar).setVisibility(View.GONE);

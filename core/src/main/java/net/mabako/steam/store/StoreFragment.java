@@ -2,9 +2,6 @@ package net.mabako.steam.store;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,130 +11,73 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import net.mabako.steam.store.data.Picture;
+import net.mabako.steam.store.data.Space;
 import net.mabako.steam.store.data.Text;
 import net.mabako.steam.store.viewholder.PictureViewHolder;
 import net.mabako.steam.store.viewholder.TextViewHolder;
 import net.mabako.steamgifts.activities.DetailActivity;
+import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.adapters.viewholder.GameViewHolder;
 import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.Game;
-import net.mabako.steamgifts.fragments.interfaces.IScrollToTop;
+import net.mabako.steamgifts.fragments.ListFragment;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
-public abstract class StoreFragment extends Fragment implements IScrollToTop {
-    protected boolean loaded;
-
-    private LoadStoreTask task;
-
-    private RecyclerView listView;
-    private FloatingActionButton scrollToTopButton;
-
-    protected Adapter adapter;
-
+public abstract class StoreFragment extends ListFragment<StoreFragment.Adapter> {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (adapter == null)
-            adapter = new Adapter();
-
         adapter.setFragmentValues(this);
     }
 
     @Override
+    protected Adapter createAdapter() {
+        return new Adapter();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_simple_list, container, false);
-
+        View layout = super.onCreateView(inflater, container, savedInstanceState);
         setHasOptionsMenu(true);
-
-        listView = (RecyclerView) layout.findViewById(R.id.list);
-        listView.setAdapter(adapter);
-        listView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        scrollToTopButton = (FloatingActionButton) container.getRootView().findViewById(R.id.scroll_to_top_button);
-        setupScrollToTopButton();
-
-        if (loaded)
-            layout.findViewById(R.id.progressBar).setVisibility(View.GONE);
-
         return layout;
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-
-        if (task != null)
-            task.cancel(true);
-
-        loaded = false;
     }
 
-    public abstract LoadStoreTask getTaskToStart();
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser && !loaded) {
-            loaded = true;
-
-            task = getTaskToStart();
-            task.execute();
-        }
-    }
-
-    @Override
-    public void setupScrollToTopButton() {
-        if (scrollToTopButton != null) {
-            scrollToTopButton.setVisibility(View.GONE);
-            scrollToTopButton.setTag("clickable");
-            scrollToTopButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listView != null) {
-                        listView.scrollToPosition(0);
-                        scrollToTopButton.hide();
-                    }
-                }
-            });
-        }
-    }
-
-    public static class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Serializable {
-        private static final long serialVersionUID = 4108707366169852332L;
-        private List<IEndlessAdaptable> items = new ArrayList<>();
-
+    public static class Adapter extends EndlessAdapter {
         private transient StoreFragment fragment;
 
+        public void setFragmentValues(StoreFragment fragment) {
+            this.fragment = fragment;
+        }
+
         @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        protected RecyclerView.ViewHolder onCreateActualViewHolder(View view, int viewType) {
             if (fragment == null)
                 throw new IllegalStateException("no fragment");
 
-            if (viewType == 0) {
-                View view = LayoutInflater.from(fragment.getContext()).inflate(R.layout.endless_spacer, parent, false);
+            if (viewType == Space.VIEW_LAYOUT) {
                 return new RecyclerView.ViewHolder(view) {
                 };
-            } else {
-                View view = LayoutInflater.from(fragment.getContext()).inflate(viewType, parent, false);
-                if (viewType == Game.VIEW_LAYOUT) {
-                    return new GameViewHolder(view, fragment);
-                } else if (viewType == Picture.VIEW_LAYOUT) {
-                    return new PictureViewHolder(view, fragment.getContext());
-                } else if (viewType == Text.VIEW_LAYOUT) {
-                    return new TextViewHolder(view, fragment.getContext());
-                }
-
-                throw new IllegalStateException("No View");
+            } else if (viewType == Game.VIEW_LAYOUT) {
+                return new GameViewHolder(view, fragment);
+            } else if (viewType == Picture.VIEW_LAYOUT) {
+                return new PictureViewHolder(view, fragment.getContext());
+            } else if (viewType == Text.VIEW_LAYOUT) {
+                return new TextViewHolder(view, fragment.getContext());
             }
+
+            throw new IllegalStateException("No View");
         }
 
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        protected void onBindActualViewHolder(RecyclerView.ViewHolder holder, int position) {
             if (holder instanceof GameViewHolder) {
                 ((GameViewHolder) holder).setFrom((Game) getItem(position));
             } else if (holder instanceof PictureViewHolder) {
@@ -147,27 +87,15 @@ public abstract class StoreFragment extends Fragment implements IScrollToTop {
             }
         }
 
-        public IEndlessAdaptable getItem(int position) {
-            return items.get(position);
+        @Override
+        protected boolean hasEnoughItems(List<IEndlessAdaptable> items) {
+            return !items.isEmpty();
         }
 
         @Override
-        public int getItemCount() {
-            return items.size();
-        }
-
-        @Override
-        public int getItemViewType(int position) {
-            return items.get(position) == null ? 0 : items.get(position).getLayout();
-        }
-
-        public void add(IEndlessAdaptable adaptable) {
-            items.add(adaptable);
-            notifyItemInserted(items.size() - 1);
-        }
-
-        public void setFragmentValues(StoreFragment fragment) {
-            this.fragment = fragment;
+        public void finishLoading(List<IEndlessAdaptable> addedItems) {
+            super.finishLoading(addedItems);
+            reachedTheEnd(false);
         }
     }
 
@@ -180,5 +108,10 @@ public abstract class StoreFragment extends Fragment implements IScrollToTop {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         return ((DetailActivity) getActivity()).getCurrentFragment().onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected Serializable getType() {
+        return null;
     }
 }

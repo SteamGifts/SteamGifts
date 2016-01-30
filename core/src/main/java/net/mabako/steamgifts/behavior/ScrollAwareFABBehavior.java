@@ -9,6 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import net.mabako.steamgifts.core.R;
@@ -18,6 +19,8 @@ import net.mabako.steamgifts.core.R;
  * visible if you're beyond the first element and scroll up again.
  */
 public class ScrollAwareFABBehavior extends FloatingActionButton.Behavior {
+    private static final String TAG = "ScrollawareFAB";
+
     public ScrollAwareFABBehavior(Context context, AttributeSet attrs) {
         super();
     }
@@ -31,8 +34,9 @@ public class ScrollAwareFABBehavior extends FloatingActionButton.Behavior {
     public void onNestedScroll(CoordinatorLayout coordinatorLayout, FloatingActionButton child, View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
         super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed);
 
-        if (child.getTag() == null)
+        if (child.getTag() == null) {
             return;
+        }
 
         // try to get the current page, if there's any.
         View view = coordinatorLayout;

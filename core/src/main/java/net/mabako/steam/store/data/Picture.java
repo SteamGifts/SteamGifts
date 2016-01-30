@@ -3,7 +3,10 @@ package net.mabako.steam.store.data;
 import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 
-public class Picture implements IEndlessAdaptable {
+import java.io.Serializable;
+
+public class Picture implements IEndlessAdaptable, Serializable {
+    private static final long serialVersionUID = 1373131985788155321L;
     public static final int VIEW_LAYOUT = R.layout.image_item;
 
     private final String url;
