@@ -141,7 +141,7 @@ public class CheckForNewMessages extends BroadcastReceiver {
             if (mostRecentComments.isEmpty()) {
                 Log.v(TAG, "Got no unread messages, or we've dismissed the last message we could see");
             } else {
-                String lastShownId = sharedPreferences.getString(PREF_KEY_LAST_SHOWN_NOTIFICATION, null) + "x";
+                String lastShownId = sharedPreferences.getString(PREF_KEY_LAST_SHOWN_NOTIFICATION, null);
 
                 // While this same comment may appear in a later notification, we're establishing that it may not be the first comment again.
 
