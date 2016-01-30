@@ -2,7 +2,6 @@ package net.mabako.steamgifts.persistentdata;
 
 import android.app.Activity;
 import android.text.TextUtils;
-import android.util.Log;
 
 import net.mabako.steamgifts.tasks.Utils;
 
@@ -44,7 +43,6 @@ public class SteamGiftsUserData {
 
         Element userContainer = navbar.last().select("a").first();
         String link = userContainer.attr("href");
-        Log.v(TAG, "Link to profile: " + link);
 
         if (link.startsWith("/user/")) {
             current.setName(link.substring(6));
@@ -52,7 +50,6 @@ public class SteamGiftsUserData {
             // fetch the image
             String style = userContainer.select("div").first().attr("style");
             style = Utils.extractAvatar(style);
-            Log.v(TAG, "User Avatar: " + style);
             current.setImageUrl(style);
 
             // points
@@ -99,7 +96,6 @@ public class SteamGiftsUserData {
     }
 
     public void setName(String name) {
-        Log.v(TAG, "Setting current user name to " + name);
         this.name = name;
     }
 
