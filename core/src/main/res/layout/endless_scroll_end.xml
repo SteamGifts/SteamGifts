@@ -6,10 +6,10 @@
     <TextView
         android:id="@+id/text"
         style="@style/MediumText"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
         android:enabled="false"
+        android:gravity="center_horizontal"
         android:indeterminate="true"
         android:padding="8dp"
         android:text="@string/end_of_endless_list" />

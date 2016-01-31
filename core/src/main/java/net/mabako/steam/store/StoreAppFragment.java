@@ -99,6 +99,9 @@ public class StoreAppFragment extends StoreFragment {
                             items.add(new Picture(screenshot.getString("path_thumbnail")));
                         }
 
+                        items.add(new Text(data.getString("legal_notice"), true, R.layout.endless_scroll_end));
+                        items.add(new Space());
+
                         addItems(items, true);
                     } else throw new Exception("not successful");
                 } catch (Exception e) {
