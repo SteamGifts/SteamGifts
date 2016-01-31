@@ -3,6 +3,7 @@ package net.mabako.steam.store;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -21,6 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StoreAppFragment extends StoreFragment {
+    private static final String TAG = StoreAppFragment.class.getSimpleName();
+
     public static StoreAppFragment newInstance(int appId, boolean refreshOnCreate) {
         StoreAppFragment fragment = new StoreAppFragment();
 
@@ -69,41 +72,50 @@ public class StoreAppFragment extends StoreFragment {
                         items.add(new Text("<h1>" + TextUtils.htmlEncode(data.getString("name")) + "</h1>", true));
 
                         // Game description.
-                        items.add(new Text(data.getString("about_the_game"), true));
+                        if (data.has("about_the_game"))
+                            items.add(new Text(data.getString("about_the_game"), true));
 
                         // Release?
-                        items.add(new Text("<strong>Release:</strong> " + data.getJSONObject("release_date").getString("date"), true));
+                        if (data.has("release_date"))
+                            items.add(new Text("<strong>Release:</strong> " + data.getJSONObject("release_date").getString("date"), true));
 
                         // Genres
-                        JSONArray genres = data.getJSONArray("genres");
-                        if (genres.length() > 0) {
-                            StringBuilder sb = new StringBuilder("<strong>Genre:</strong> ");
-                            for (int i = 0; i < genres.length(); ++i) {
-                                if (i > 0)
-                                    sb.append(", ");
+                        if (data.has("genres")) {
+                            JSONArray genres = data.getJSONArray("genres");
+                            if (genres.length() > 0) {
+                                StringBuilder sb = new StringBuilder("<strong>Genre:</strong> ");
+                                for (int i = 0; i < genres.length(); ++i) {
+                                    if (i > 0)
+                                        sb.append(", ");
 
-                                sb.append(genres.getJSONObject(i).getString("description"));
+                                    sb.append(genres.getJSONObject(i).getString("description"));
+                                }
+                                items.add(new Text(sb.toString(), true));
                             }
-                            items.add(new Text(sb.toString(), true));
                         }
 
                         // Space!
                         items.add(new Space());
 
                         // Some screenshots
-                        JSONArray screenshots = data.getJSONArray("screenshots");
-                        for (int i = 0; i < screenshots.length(); ++i) {
-                            items.add(new Picture(screenshots.getJSONObject(i).getString("path_thumbnail")));
+                        if (data.has("screenshots")) {
+                            JSONArray screenshots = data.getJSONArray("screenshots");
+                            for (int i = 0; i < screenshots.length(); ++i) {
+                                items.add(new Picture(screenshots.getJSONObject(i).getString("path_thumbnail")));
+                            }
                         }
 
-                        items.add(new Text(data.getString("legal_notice"), true, R.layout.endless_scroll_end));
+                        if (data.has("legal_notice"))
+                            items.add(new Text(data.getString("legal_notice"), true, R.layout.endless_scroll_end));
 
                         addItems(items, true);
                     } else throw new Exception("not successful");
                 } catch (Exception e) {
+                    Log.e(TAG, "Exception during loading store app", e);
                     Toast.makeText(getContext(), "Unable to load Store App", Toast.LENGTH_LONG).show();
                 }
             } else {
+                Log.e(TAG, "no JSON object");
                 Toast.makeText(getContext(), "Unable to load Store App", Toast.LENGTH_LONG).show();
             }
 

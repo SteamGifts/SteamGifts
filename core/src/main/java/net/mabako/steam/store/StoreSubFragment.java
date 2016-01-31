@@ -3,6 +3,7 @@ package net.mabako.steam.store;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -20,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StoreSubFragment extends StoreFragment {
+    private static final String TAG = StoreSubFragment.class.getSimpleName();
+
     public static StoreSubFragment newInstance(int appId) {
         StoreSubFragment fragment = new StoreSubFragment();
 
@@ -76,6 +79,7 @@ public class StoreSubFragment extends StoreFragment {
                         addItems(games, true);
                     } else throw new Exception("not successful");
                 } catch (Exception e) {
+                    Log.e(TAG, "Exception during loading store sub", e);
                     Toast.makeText(getContext(), "Unable to load Store Sub", Toast.LENGTH_LONG).show();
                 }
             } else {
