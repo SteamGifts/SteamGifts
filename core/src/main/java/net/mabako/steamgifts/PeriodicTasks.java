@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Tasks to schedule for exectution every now and then.
+ * Tasks to schedule for execution every now and then.
  */
 public class PeriodicTasks {
     private static Map<Task, TaskData> scheduledTasks = new HashMap<>();
