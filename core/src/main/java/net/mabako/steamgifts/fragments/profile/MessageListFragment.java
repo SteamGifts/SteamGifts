@@ -3,6 +3,7 @@ package net.mabako.steamgifts.fragments.profile;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -114,7 +115,9 @@ public class MessageListFragment extends ListFragment<MessageAdapter> implements
                 }
         }
 
-        getActivity().supportInvalidateOptionsMenu();
+        FragmentActivity activity = getActivity();
+        if (activity != null)
+            activity.supportInvalidateOptionsMenu();
     }
 
     public void onMarkedMessagesRead() {
@@ -132,7 +135,10 @@ public class MessageListFragment extends ListFragment<MessageAdapter> implements
         }
 
         adapter.setXsrfToken(null);
-        getActivity().supportInvalidateOptionsMenu();
+
+        FragmentActivity activity = getActivity();
+        if (activity != null)
+            activity.supportInvalidateOptionsMenu();
 
         // We no longer have any notifications
         SteamGiftsUserData.getCurrent(getContext()).setMessageNotification(0);
