@@ -93,14 +93,10 @@ public class StoreAppFragment extends StoreFragment {
                         // Some screenshots
                         JSONArray screenshots = data.getJSONArray("screenshots");
                         for (int i = 0; i < screenshots.length(); ++i) {
-                            JSONObject screenshot = screenshots.getJSONObject(i);
-
-                            // TODO higher quality images?
-                            items.add(new Picture(screenshot.getString("path_thumbnail")));
+                            items.add(new Picture(screenshots.getJSONObject(i).getString("path_thumbnail")));
                         }
 
                         items.add(new Text(data.getString("legal_notice"), true, R.layout.endless_scroll_end));
-                        items.add(new Space());
 
                         addItems(items, true);
                     } else throw new Exception("not successful");
