@@ -29,7 +29,7 @@ public class MessageAdapter extends EndlessAdapter {
         if (viewType == Comment.VIEW_LAYOUT) {
             return new MessageViewHolder(view, fragment.getActivity(), fragment);
         } else if (viewType == MessageHeader.VIEW_LAYOUT) {
-            return new MessageHeaderViewHolder(view);
+            return new MessageHeaderViewHolder(view, fragment.getActivity());
         }
 
         throw new IllegalStateException();

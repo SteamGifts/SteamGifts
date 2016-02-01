@@ -64,9 +64,7 @@ public class LoadMessagesTask extends AsyncTask<Void, Void, List<IEndlessAdaptab
         for (Element element : children) {
             Element link = element.select(".comments__entity__name a").first();
             if (link != null) {
-                // Click action for the header
-                String linkText = "http://www.steamgifts.com" + link.attr("href");
-                MessageHeader message = new MessageHeader(link.text());
+                MessageHeader message = new MessageHeader(link.text(), link.absUrl("href"));
 
                 Element commentElement = element.nextElementSibling();
                 if (commentElement != null)
