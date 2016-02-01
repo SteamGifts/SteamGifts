@@ -156,7 +156,18 @@ public class LoadDiscussionDetailsTask extends AsyncTask<Void, Void, DiscussionE
 
     private Poll loadPoll(Element pollElement) {
         Poll poll = new Poll();
-        poll.setQuestion(pollElement.select(".table__heading .table__column--width-fill p").text());
+
+        // Question and Description are actually both within the same element, which makes it a tad confusing.
+        // Fetch the question and description
+        Elements pollHeader = pollElement.select(".table__heading .table__column--width-fill p");
+
+        // Set the description only, and remove that from the question element
+        poll.setDescription(pollHeader.select("span.poll__description").text());
+        pollHeader.select("span.poll__description").html("");
+
+        // the remaining text is the question.
+        poll.setQuestion(pollHeader.text());
+
         poll.setClosed(pollElement.select("form").isEmpty());
 
         Elements answerElements = pollElement.select(".table__rows div[data-id]");

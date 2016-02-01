@@ -13,7 +13,7 @@ import java.util.List;
 public class Poll implements Serializable {
     private static final long serialVersionUID = -2876811085489294457L;
 
-    private Header header;
+    private Header header = new Header();
     private List<IEndlessAdaptable> answers = new ArrayList<>();
 
     private int totalVotes = 0;
@@ -25,8 +25,11 @@ public class Poll implements Serializable {
     }
 
     public void setQuestion(String question) {
-        header = new Header();
-        header.setText(question);
+        header.setQuestion(question);
+    }
+
+    public void setDescription(String description) {
+        header.setDescription(description);
     }
 
     public List<IEndlessAdaptable> getAnswers() {
@@ -165,14 +168,23 @@ public class Poll implements Serializable {
         public static final int VIEW_LAYOUT = R.layout.poll_header;
         private static final long serialVersionUID = 6397402142913281497L;
 
-        private String text;
+        private String question;
+        private String description;
 
-        public String getText() {
-            return text;
+        public String getQuestion() {
+            return question;
         }
 
-        public void setText(String text) {
-            this.text = text;
+        public void setQuestion(String question) {
+            this.question = question;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
         }
 
         @Override
