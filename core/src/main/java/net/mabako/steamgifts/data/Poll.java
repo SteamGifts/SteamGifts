@@ -6,11 +6,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO polls can be restricted to individual games, right now this only supports 'no game' vs 'each option has a game'
 public class Poll implements Serializable {
     private static final long serialVersionUID = -2876811085489294457L;
 
     private String question;
-    private List<IEndlessAdaptable> content = new ArrayList<>();
+    private List<IEndlessAdaptable> answers = new ArrayList<>();
 
     public String getQuestion() {
         return question;
@@ -20,16 +21,27 @@ public class Poll implements Serializable {
         this.question = question;
     }
 
-    public List<IEndlessAdaptable> getContent() {
-        return content;
+    public void addAnswer(Option option) {
+        answers.add(option);
     }
 
-    public void addOption(Option option) {
-        content.add(option);
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("Poll[");
+
+        for (int i = 0; i < answers.size(); ++i) {
+            if (i > 0)
+                sb.append(",");
+            sb.append(answers.get(i).toString());
+        }
+
+        sb.append("]");
+        return sb.toString();
     }
 
-    public class Option implements Serializable, IEndlessAdaptable {
+    public static class Option implements Serializable, IEndlessAdaptable {
         private static final long serialVersionUID = 879317134785161587L;
+
         private int id;
         private int voteCount;
         private String text;
@@ -84,6 +96,24 @@ public class Poll implements Serializable {
         @Override
         public int getLayout() {
             return 0;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (o == null || !(o instanceof Option))
+                return false;
+
+            return ((Option) o).id == id;
+        }
+
+        @Override
+        public int hashCode() {
+            return id;
+        }
+
+        @Override
+        public String toString() {
+            return "[" + id + "," + voteCount + "," + text + "," + appId + "]";
         }
     }
 }

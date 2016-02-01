@@ -8,6 +8,8 @@ import android.widget.Toast;
 
 import net.mabako.steamgifts.data.Discussion;
 import net.mabako.steamgifts.data.DiscussionExtras;
+import net.mabako.steamgifts.data.Game;
+import net.mabako.steamgifts.data.Poll;
 import net.mabako.steamgifts.fragments.DiscussionDetailFragment;
 import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
 
@@ -18,6 +20,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.util.List;
 
 public class LoadDiscussionDetailsTask extends AsyncTask<Void, Void, DiscussionExtras> {
     private static final String TAG = LoadDiscussionDetailsTask.class.getSimpleName();
@@ -139,7 +142,48 @@ public class LoadDiscussionDetailsTask extends AsyncTask<Void, Void, DiscussionE
             if (rootCommentNode != null)
                 Utils.loadComments(rootCommentNode, extras, 0, fragment.getAdapter().isViewInReverse());
         }
+
+        // Do we have a poll?
+        Element pollElement = document.select(".poll").first();
+        if (pollElement != null) {
+            try {
+                extras.setPoll(loadPoll(pollElement));
+            } catch (Exception e) {
+                Log.w(TAG, "unable to load poll", e);
+            }
+        }
+
         return extras;
+    }
+
+    private Poll loadPoll(Element pollElement) {
+        Poll poll = new Poll();
+        poll.setQuestion(pollElement.select(".table__heading .table__column--width-fill p").text());
+
+        Elements answerElements = pollElement.select(".table__rows div[data-id]");
+        for (Element thisAnswer : answerElements) {
+            Poll.Option answer = new Poll.Option();
+
+            answer.setId(Integer.valueOf(thisAnswer.attr("data-id")));
+            answer.setVoteCount(Integer.valueOf(thisAnswer.attr("data-votes")));
+            answer.setText(thisAnswer.select(".table__column__heading").text());
+
+            Element storeInfo = thisAnswer.select("a.global__image-outer-wrap").first();
+            if (storeInfo != null) {
+                Uri uri = Uri.parse(storeInfo.attr("href"));
+                List<String> pathSegments = uri.getPathSegments();
+                if (pathSegments.size() >= 2) {
+                    answer.setAppId(Integer.parseInt(pathSegments.get(1)));
+                    answer.setAppType("app".equals(pathSegments.get(0)) ? Game.Type.APP : Game.Type.SUB);
+                }
+            }
+
+            poll.addAnswer(answer);
+        }
+
+        Log.d(TAG, poll.toString());
+
+        return poll;
     }
 
     @Override
