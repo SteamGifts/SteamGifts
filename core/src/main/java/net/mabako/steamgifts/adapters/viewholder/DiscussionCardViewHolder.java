@@ -2,6 +2,7 @@ package net.mabako.steamgifts.adapters.viewholder;
 
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.Button;
@@ -51,7 +52,7 @@ public class DiscussionCardViewHolder extends RecyclerView.ViewHolder {
         if (discussion == null) {
             progressBar.setVisibility(View.VISIBLE);
         } else {
-            for (View view : new View[]{discussionTime, user, separator})
+            for (View view : new View[]{discussionTime, user})
                 view.setVisibility(View.VISIBLE);
 
             user.setText("{faw-user} " + discussion.getCreator());
@@ -69,14 +70,16 @@ public class DiscussionCardViewHolder extends RecyclerView.ViewHolder {
             } else {
                 progressBar.setVisibility(View.GONE);
 
-                if (extras.getDescription() != null) {
+                if (!TextUtils.isEmpty(extras.getDescription())) {
                     description.setText(Utils.fromHtml(((Fragment) fragment).getActivity(), extras.getDescription()));
                     description.setVisibility(View.VISIBLE);
-                    actionSeparator.setVisibility(View.VISIBLE);
+                    separator.setVisibility(View.VISIBLE);
                 }
 
-                if (extras.getXsrfToken() != null)
+                if (extras.getXsrfToken() != null) {
                     commentDiscussion.setVisibility(View.VISIBLE);
+                    actionSeparator.setVisibility(View.VISIBLE);
+                }
             }
 
             commentDiscussion.setOnClickListener(new View.OnClickListener() {
