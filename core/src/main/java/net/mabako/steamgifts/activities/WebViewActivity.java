@@ -124,6 +124,10 @@ public class WebViewActivity extends CommonActivity {
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             Intent intent = UrlHandlingActivity.getIntentForUri(WebViewActivity.this, Uri.parse(url));
             if (intent != null) {
+                // Should we mark the next context read?
+                if(getIntent().hasExtra(DetailActivity.ARG_MARK_CONTEXT_READ))
+                    intent.putExtra(DetailActivity.ARG_MARK_CONTEXT_READ, true);
+
                 startActivity(intent);
                 checkForFinishActivity();
                 return true;

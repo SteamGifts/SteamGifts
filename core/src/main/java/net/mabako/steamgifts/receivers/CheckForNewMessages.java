@@ -20,6 +20,7 @@ import android.text.style.StyleSpan;
 import android.util.Log;
 
 import net.mabako.steamgifts.activities.DetailActivity;
+import net.mabako.steamgifts.activities.UrlHandlingActivity;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.adapters.viewholder.Utils;
 import net.mabako.steamgifts.core.R;
@@ -178,7 +179,7 @@ public class CheckForNewMessages extends BroadcastReceiver {
                     .setContentTitle(String.format(context.getString(R.string.notification_user_replied_to_you), comment.getAuthor()))
                     .setContentText(formatString(comment, false))
                     .setStyle(new NotificationCompat.BigTextStyle().bigText(formatString(comment, false))) /* 4.1+ */
-                    .setContentIntent(getViewMessagesIntent()) // TODO open the single message instead of the overview
+                    .setContentIntent(getViewMessageIntent(comment))
                     .setDeleteIntent(getDeleteIntent())
                     .setAutoCancel(true)
                     .build();
@@ -237,6 +238,13 @@ public class CheckForNewMessages extends BroadcastReceiver {
         private PendingIntent getViewMessagesIntent() {
             Intent intent = new Intent(context, DetailActivity.class);
             intent.putExtra(DetailActivity.ARG_NOTIFICATIONS, true);
+
+            return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        }
+
+        private PendingIntent getViewMessageIntent(Comment comment) {
+            Intent intent = UrlHandlingActivity.getPermalinkUri(context, comment);
+            intent.putExtra(DetailActivity.ARG_MARK_CONTEXT_READ, true);
 
             return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         }

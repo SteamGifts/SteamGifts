@@ -149,6 +149,6 @@ public class MessageListFragment extends ListFragment<MessageAdapter> implements
     }
 
     public void navigateTo(@NonNull Comment comment) {
-        getActivity().startActivity(UrlHandlingActivity.getIntentForUri(getContext(), Uri.parse("http://www.steamgifts.com/go/comment/" + comment.getPermalinkId())));
+        getActivity().startActivity(UrlHandlingActivity.getPermalinkUri(getContext(), comment));
     }
 }

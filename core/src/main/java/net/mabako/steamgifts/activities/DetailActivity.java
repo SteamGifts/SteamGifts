@@ -9,6 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.widget.Toast;
 
 import net.mabako.sgtools.SGToolsDetailFragment;
@@ -25,12 +26,18 @@ import net.mabako.steamgifts.fragments.profile.EnteredListFragment;
 import net.mabako.steamgifts.fragments.profile.MessageListFragment;
 import net.mabako.steamgifts.fragments.profile.WonListFragment;
 import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
+import net.mabako.steamgifts.receivers.CheckForNewMessages;
 
 import java.io.Serializable;
 import java.util.UUID;
 
 public class DetailActivity extends CommonActivity {
     public static final String ARG_NOTIFICATIONS = "notifications";
+
+    /**
+     * If we have a {@link net.mabako.steamgifts.fragments.DetailFragment.CommentContextInfo} instance, mark the comment associated with this instance as read.
+     */
+    public static final String ARG_MARK_CONTEXT_READ = "mark-context-read";
 
     private ViewPager pager = null;
     private FragmentAdapter pagerAdapter = null;
@@ -51,6 +58,10 @@ public class DetailActivity extends CommonActivity {
 
     private void initLayout(Bundle savedInstanceState) {
         DetailFragment.CommentContextInfo commentContext = (DetailFragment.CommentContextInfo) getIntent().getSerializableExtra(DetailFragment.ARG_COMMENT_CONTEXT);
+
+        // Were we requested to mark this comment as read? This is the case if we click on a notification for a single comment.
+        if (commentContext != null && getIntent().hasExtra(ARG_MARK_CONTEXT_READ))
+            CheckForNewMessages.setLastDismissedCommentId(this, commentContext.getCommentId());
 
         Serializable serializable = getIntent().getSerializableExtra(GiveawayDetailFragment.ARG_GIVEAWAY);
         if (serializable != null) {

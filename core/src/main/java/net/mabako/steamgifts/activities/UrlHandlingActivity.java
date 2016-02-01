@@ -4,11 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import net.mabako.sgtools.SGToolsDetailFragment;
 import net.mabako.steamgifts.data.BasicDiscussion;
 import net.mabako.steamgifts.data.BasicGiveaway;
+import net.mabako.steamgifts.data.Comment;
 import net.mabako.steamgifts.fragments.DetailFragment;
 import net.mabako.steamgifts.fragments.DiscussionDetailFragment;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
@@ -28,7 +30,7 @@ public class UrlHandlingActivity extends CommonActivity {
             youtubePattern = Pattern.compile("^https?://[\\.\\w]*youtube\\.\\w+/.*"),
             youtu_bePattern = Pattern.compile("^https?://[\\.\\w]*youtu\\.be/([A-Za-z0-9\\-_]+)(\\?.*|).*");
 
-    public static Intent getIntentForUri(Context context, Uri uri) {
+    public static Intent getIntentForUri(@NonNull Context context, @NonNull Uri uri) {
         Log.v(TAG, uri.toString());
         List<String> pathSegments = uri.getPathSegments();
         if ("www.steamgifts.com".equals(uri.getHost()) || "steamgifts.com".equals(uri.getHost())) {
@@ -111,4 +113,12 @@ public class UrlHandlingActivity extends CommonActivity {
         finish();
     }
 
+    /**
+     * Get the Intent for opening a comment permalink.
+     *
+     * @param comment the comment to open
+     */
+    public static Intent getPermalinkUri(@NonNull Context context, @NonNull Comment comment) {
+        return getIntentForUri(context, Uri.parse("http://www.steamgifts.com/go/comment/" + comment.getPermalinkId()));
+    }
 }
