@@ -1,0 +1,88 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="0dp"
+    android:paddingRight="24dp">
+
+    <Button
+        android:id="@+id/vote"
+        style="@style/MediumButton"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="12dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="12dp"
+        tools:text="->" />
+
+    <android.support.v4.widget.Space
+        android:layout_width="8dp"
+        android:layout_height="match_parent" />
+
+    <!-- Space to match up the padding + margin of the vote button above; minus the space that's directly following it -->
+    <android.support.v4.widget.Space
+        android:id="@+id/space_for_no_voting"
+        android:layout_width="16dp"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="0dp"
+        android:layout_marginTop="4dp"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/text"
+            style="@style/MediumText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="0dp"
+            tools:text="Answer" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:progress="0"
+                android:secondaryProgress="0" />
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="4dp"
+                android:layout_marginStart="4dp">
+
+                <!-- this is effectively a spacer in particular this'll always leave us
+                     with enough space to display 100% and any smaller values -->
+                <TextView
+                    style="@style/SmallText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|end"
+                    android:text="100%"
+                    android:visibility="invisible"
+                    tools:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/percentage"
+                    style="@style/SmallText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|end" />
+            </FrameLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+
+</LinearLayout>

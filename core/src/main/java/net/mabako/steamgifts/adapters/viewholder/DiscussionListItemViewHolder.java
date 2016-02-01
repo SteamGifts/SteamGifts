@@ -9,10 +9,10 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.activities.CommonActivity;
 import net.mabako.steamgifts.activities.DetailActivity;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
+import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.Discussion;
 import net.mabako.steamgifts.fragments.DiscussionDetailFragment;
 
@@ -43,7 +43,12 @@ public class DiscussionListItemViewHolder extends RecyclerView.ViewHolder implem
     }
 
     public void setFrom(Discussion discussion) {
-        discussionName.setText(discussion.getTitle());
+        StringBuilder text = new StringBuilder();
+        if (discussion.isPoll())
+            text.append("{faw-align-left} ");
+        text.append(discussion.getTitle());
+
+        discussionName.setText(text);
         discussionAuthor.setText(discussion.getCreator());
         discussionTime.setText(discussion.getTimeCreated());
 

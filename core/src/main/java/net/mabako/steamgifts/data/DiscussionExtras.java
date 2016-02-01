@@ -9,6 +9,7 @@ public class DiscussionExtras implements Serializable, ICommentHolder {
     private String description;
     private String xsrfToken;
     private final List<Comment> loadedComments;
+    private Poll poll;
 
     public DiscussionExtras() {
         loadedComments = new ArrayList<>();
@@ -38,5 +39,17 @@ public class DiscussionExtras implements Serializable, ICommentHolder {
     @Override
     public void addComment(Comment comment) {
         loadedComments.add(comment);
+    }
+
+    public Poll getPoll() {
+        return poll;
+    }
+
+    public void setPoll(Poll poll) {
+        this.poll = poll;
+    }
+
+    public boolean hasPoll() {
+        return poll != null;
     }
 }

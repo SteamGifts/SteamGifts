@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import net.mabako.steamgifts.data.Discussion;
 import net.mabako.steamgifts.data.DiscussionExtras;
+import net.mabako.steamgifts.data.Poll;
 import net.mabako.steamgifts.fragments.DiscussionDetailFragment;
 import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
 
@@ -148,7 +149,50 @@ public class LoadDiscussionDetailsTask extends AsyncTask<Void, Void, DiscussionE
             if (rootCommentNode != null)
                 Utils.loadComments(rootCommentNode, extras, 0, fragment.getAdapter().isViewInReverse());
         }
+
+        // Do we have a poll?
+        Element pollElement = document.select(".poll").first();
+        if (pollElement != null) {
+            try {
+                extras.setPoll(loadPoll(pollElement));
+            } catch (Exception e) {
+                Log.w(TAG, "unable to load poll", e);
+            }
+        }
+
         return extras;
+    }
+
+    private Poll loadPoll(Element pollElement) {
+        Poll poll = new Poll();
+
+        // Question and Description are actually both within the same element, which makes it a tad confusing.
+        // Fetch the question and description
+        Elements pollHeader = pollElement.select(".table__heading .table__column--width-fill p");
+
+        // Set the description only, and remove that from the question element
+        poll.setDescription(pollHeader.select("span.poll__description").text());
+        pollHeader.select("span.poll__description").html("");
+
+        // the remaining text is the question.
+        poll.setQuestion(pollHeader.text());
+
+        poll.setClosed(pollElement.select("form").isEmpty());
+
+        Elements answerElements = pollElement.select(".table__rows div[data-id]");
+        for (Element thisAnswer : answerElements) {
+            Poll.Answer answer = new Poll.Answer();
+
+            answer.setId(Integer.valueOf(thisAnswer.attr("data-id")));
+            answer.setVoteCount(Integer.valueOf(thisAnswer.attr("data-votes")));
+            answer.setText(thisAnswer.select(".table__column__heading").text());
+
+            poll.addAnswer(answer, thisAnswer.hasClass("is-selected"));
+        }
+
+        Log.d(TAG, poll.toString());
+
+        return poll;
     }
 
     @Override
