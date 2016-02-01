@@ -181,6 +181,7 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
+    @SuppressWarnings("deprecation")
     private void setupIndicators(final Giveaway giveaway) {
         List<Spannable> spans = new ArrayList<>();
 

@@ -118,6 +118,7 @@ public final class Utils {
         setBackgroundDrawable(context, view, highlighted, R.attr.colorHighlightBackground);
     }
 
+    @SuppressWarnings("deprecation")
     public static void setBackgroundDrawable(Context context, View view, boolean highlighted, @AttrRes int attr) {
         if (highlighted) {
             int attrs[] = new int[]{attr};

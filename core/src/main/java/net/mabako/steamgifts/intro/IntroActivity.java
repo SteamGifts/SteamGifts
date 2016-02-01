@@ -37,6 +37,7 @@ public class IntroActivity extends AppIntro2 {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void init(Bundle savedInstanceState) {
         switch (getIntent().getStringExtra("type")) {
             case INTRO_MAIN:
