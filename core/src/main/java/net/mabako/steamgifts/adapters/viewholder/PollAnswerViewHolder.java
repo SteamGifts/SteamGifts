@@ -26,7 +26,7 @@ public class PollAnswerViewHolder extends RecyclerView.ViewHolder {
 
     public void setFrom(Poll.Answer answer) {
         text.setText(answer.getText());
-        updateButtonText(false, true);
+        updateButtonText(answer.isSelected(), true);
 
         Poll poll = answer.getPoll();
         int percentage = poll.getTotalVotes() == 0 ? 0 : (100 * answer.getVoteCount() / poll.getTotalVotes());
@@ -38,6 +38,6 @@ public class PollAnswerViewHolder extends RecyclerView.ViewHolder {
         if (!canVote)
             button.setVisibility(View.GONE);
         else
-            button.setText(votedThis ? "{faw-check}" : "{faw-arrow-right}");
+            button.setText(votedThis ? "{faw-check-circle}" : "{faw-arrow-right}");
     }
 }

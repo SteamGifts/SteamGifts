@@ -178,7 +178,7 @@ public class LoadDiscussionDetailsTask extends AsyncTask<Void, Void, DiscussionE
                 }
             }
 
-            poll.addAnswer(answer);
+            poll.addAnswer(answer, thisAnswer.hasClass("is-selected"));
         }
 
         Log.d(TAG, poll.toString());

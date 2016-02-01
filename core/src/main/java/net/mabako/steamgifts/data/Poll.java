@@ -1,5 +1,7 @@
 package net.mabako.steamgifts.data;
 
+import android.support.annotation.NonNull;
+
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.core.R;
 
@@ -16,6 +18,7 @@ public class Poll implements Serializable {
 
     private int totalVotes = 0;
     private int mostVotesOnASingleAnswer = 0;
+    private int selectedAnswerId;
 
     public Header getHeader() {
         return header;
@@ -30,8 +33,11 @@ public class Poll implements Serializable {
         return answers;
     }
 
-    public void addAnswer(Answer answer) {
+    public void addAnswer(@NonNull Answer answer, boolean selected) {
         answers.add(answer);
+
+        if (selected)
+            selectedAnswerId = answer.getId();
 
         answer.setPoll(this);
         totalVotes += answer.getVoteCount();
@@ -122,6 +128,10 @@ public class Poll implements Serializable {
 
         public void setPoll(Poll poll) {
             this.poll = poll;
+        }
+
+        public boolean isSelected() {
+            return poll.selectedAnswerId == id;
         }
 
         @Override
