@@ -159,6 +159,7 @@ public class LoadDiscussionDetailsTask extends AsyncTask<Void, Void, DiscussionE
     private Poll loadPoll(Element pollElement) {
         Poll poll = new Poll();
         poll.setQuestion(pollElement.select(".table__heading .table__column--width-fill p").text());
+        poll.setClosed(pollElement.select("form").isEmpty());
 
         Elements answerElements = pollElement.select(".table__rows div[data-id]");
         for (Element thisAnswer : answerElements) {

@@ -19,6 +19,7 @@ public class Poll implements Serializable {
     private int totalVotes = 0;
     private int mostVotesOnASingleAnswer = 0;
     private int selectedAnswerId;
+    private boolean closed;
 
     public Header getHeader() {
         return header;
@@ -50,6 +51,14 @@ public class Poll implements Serializable {
 
     public int getMostVotesOnASingleAnswer() {
         return mostVotesOnASingleAnswer;
+    }
+
+    public boolean isClosed() {
+        return closed;
+    }
+
+    public void setClosed(boolean closed) {
+        this.closed = closed;
     }
 
     @Override
@@ -132,6 +141,10 @@ public class Poll implements Serializable {
 
         public boolean isSelected() {
             return poll.selectedAnswerId == id;
+        }
+
+        public boolean isVoteable() {
+            return !poll.closed;
         }
 
         @Override
