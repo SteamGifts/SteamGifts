@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -20,26 +21,21 @@ import android.widget.Toast;
 
 import net.mabako.steamgifts.activities.DetailActivity;
 import net.mabako.steamgifts.activities.WriteCommentActivity;
-import net.mabako.steamgifts.adapters.CommentAdapter;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
-import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.BasicDiscussion;
 import net.mabako.steamgifts.data.Comment;
 import net.mabako.steamgifts.data.Discussion;
 import net.mabako.steamgifts.data.DiscussionExtras;
-import net.mabako.steamgifts.fragments.interfaces.ICommentableFragment;
 import net.mabako.steamgifts.fragments.util.DiscussionDetailsCard;
 import net.mabako.steamgifts.tasks.LoadDiscussionDetailsTask;
 
-import java.io.Serializable;
-import java.util.List;
-
-public class DiscussionDetailFragment extends ListFragment<CommentAdapter> implements ICommentableFragment {
+public class DiscussionDetailFragment extends DetailFragment {
     public static final String ARG_DISCUSSION = "discussion";
+
     private static final String TAG = DiscussionDetailFragment.class.getSimpleName();
 
-    private static final String SAVED_DISCUSSION = "discussion";
+    private static final String SAVED_DISCUSSION = ARG_DISCUSSION;
     private static final String SAVED_CARD = "discussion-card";
 
     /**
@@ -70,11 +66,12 @@ public class DiscussionDetailFragment extends ListFragment<CommentAdapter> imple
         outState.putSerializable(SAVED_CARD, discussionCard);
     }
 
-    public static Fragment newInstance(BasicDiscussion discussion) {
+    public static Fragment newInstance(@NonNull BasicDiscussion discussion, @Nullable CommentContextInfo context) {
         DiscussionDetailFragment d = new DiscussionDetailFragment();
 
         Bundle args = new Bundle();
         args.putSerializable(SAVED_DISCUSSION, discussion);
+        args.putSerializable(SAVED_COMMENT_CONTEXT, context);
         d.setArguments(args);
 
         return d;
@@ -96,7 +93,7 @@ public class DiscussionDetailFragment extends ListFragment<CommentAdapter> imple
 
         // To reverse or not to reverse?
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-        if (prefs.getBoolean("preference_discussion_comments_reversed", false)) {
+        if (prefs.getBoolean("preference_discussion_comments_reversed", false) && getCommentContext() == null) {
             adapter.setViewInReverse();
             fetchItems(EndlessAdapter.LAST_PAGE);
         } else {
@@ -108,24 +105,16 @@ public class DiscussionDetailFragment extends ListFragment<CommentAdapter> imple
     }
 
     @Override
-    protected CommentAdapter createAdapter() {
-        return new CommentAdapter();
-    }
-
-    @Override
-    protected AsyncTask<Void, Void, ?> getFetchItemsTask(int page) {
+    protected AsyncTask<Void, Void, ?> getFetchItemsTaskEx(int page) {
         String url = discussion.getDiscussionId();
         if (discussion instanceof Discussion)
             url += "/" + ((Discussion) discussion).getName();
+        else if (getCommentContext() != null)
+            url += "/" + getCommentContext().getDetailName();
         else
             url += "/sgforandroid";
 
         return new LoadDiscussionDetailsTask(this, url, page, !(discussion instanceof Discussion));
-    }
-
-    @Override
-    protected Serializable getType() {
-        return null;
     }
 
     public void onPostDiscussionLoaded(Discussion discussion, boolean ignoreExisting) {
@@ -160,17 +149,10 @@ public class DiscussionDetailFragment extends ListFragment<CommentAdapter> imple
         adapter.setStickyItem(discussionCard);
 
         adapter.notifyPage(page, lastPage);
-        super.addItems(extras.getComments(), false);
-    }
+        addItems(extras.getComments(), false, extras.getXsrfToken());
 
-    @Override
-    public void addItems(List<? extends IEndlessAdaptable> items, boolean clearExistingItems) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void addItems(List<? extends IEndlessAdaptable> items, boolean clearExistingItems, String xsrfToken) {
-        throw new UnsupportedOperationException();
+        if (getActivity() != null)
+            getActivity().supportInvalidateOptionsMenu();
     }
 
     @Override
@@ -213,14 +195,14 @@ public class DiscussionDetailFragment extends ListFragment<CommentAdapter> imple
 
     @Override
     public void requestComment(Comment parentComment) {
-        if (discussion instanceof Discussion && discussionCard != null && discussionCard.getExtras() != null) {
+        if (discussion instanceof Discussion && discussionCard != null && adapter.getXsrfToken() != null) {
             Intent intent = new Intent(getActivity(), WriteCommentActivity.class);
-            intent.putExtra(WriteCommentActivity.XSRF_TOKEN, discussionCard.getExtras().getXsrfToken());
+            intent.putExtra(WriteCommentActivity.XSRF_TOKEN, adapter.getXsrfToken());
             intent.putExtra(WriteCommentActivity.PATH, "discussion/" + discussion.getDiscussionId() + "/" + ((Discussion) discussion).getName());
             intent.putExtra(WriteCommentActivity.PARENT, parentComment);
             intent.putExtra(WriteCommentActivity.TITLE, ((Discussion) discussion).getTitle());
             getActivity().startActivityForResult(intent, WriteCommentActivity.REQUEST_COMMENT);
         } else
-            Log.e(TAG, "Commenting on a not fully loaded Giveaway [" + discussion + ", " + discussionCard + "]");
+            Log.e(TAG, "Commenting on a not fully loaded Giveaway [" + discussion + ", " + adapter.getXsrfToken() + "]");
     }
 }

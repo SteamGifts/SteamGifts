@@ -1,8 +1,10 @@
 package net.mabako.steamgifts.fragments.profile;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -12,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import net.mabako.steamgifts.activities.DetailActivity;
+import net.mabako.steamgifts.activities.UrlHandlingActivity;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.adapters.MessageAdapter;
 import net.mabako.steamgifts.core.R;
@@ -44,6 +47,7 @@ public class MessageListFragment extends ListFragment<MessageAdapter> implements
         return view;
     }
 
+    @NonNull
     @Override
     protected MessageAdapter createAdapter() {
         return new MessageAdapter();
@@ -142,5 +146,9 @@ public class MessageListFragment extends ListFragment<MessageAdapter> implements
 
         // We no longer have any notifications
         SteamGiftsUserData.getCurrent(getContext()).setMessageNotification(0);
+    }
+
+    public void navigateTo(@NonNull Comment comment) {
+        getActivity().startActivity(UrlHandlingActivity.getIntentForUri(getContext(), Uri.parse("http://www.steamgifts.com/go/comment/" + comment.getPermalinkId())));
     }
 }

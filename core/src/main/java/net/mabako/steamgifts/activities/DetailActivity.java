@@ -15,6 +15,7 @@ import net.mabako.sgtools.SGToolsDetailFragment;
 import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.BasicDiscussion;
 import net.mabako.steamgifts.data.BasicGiveaway;
+import net.mabako.steamgifts.fragments.DetailFragment;
 import net.mabako.steamgifts.fragments.DiscussionDetailFragment;
 import net.mabako.steamgifts.fragments.FragmentAdapter;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
@@ -49,11 +50,13 @@ public class DetailActivity extends CommonActivity {
     }
 
     private void initLayout(Bundle savedInstanceState) {
+        DetailFragment.CommentContextInfo commentContext = (DetailFragment.CommentContextInfo) getIntent().getSerializableExtra(DetailFragment.ARG_COMMENT_CONTEXT);
+
         Serializable serializable = getIntent().getSerializableExtra(GiveawayDetailFragment.ARG_GIVEAWAY);
         if (serializable != null) {
             String pref = PreferenceManager.getDefaultSharedPreferences(this).getString("preference_giveaway_load_images", "details;list");
             setContentView(pref.contains("details") ? R.layout.activity_giveaway_detail : R.layout.activity_paged_fragments_no_tabs);
-            loadPagedFragments(GiveawayDetailFragment.newInstance((BasicGiveaway) serializable));
+            loadPagedFragments(GiveawayDetailFragment.newInstance((BasicGiveaway) serializable, commentContext));
             return;
         }
 
@@ -61,7 +64,7 @@ public class DetailActivity extends CommonActivity {
         if (serializable != null) {
             setContentView(R.layout.activity_one_fragment);
             if (savedInstanceState == null)
-                loadFragment(DiscussionDetailFragment.newInstance((BasicDiscussion) serializable));
+                loadFragment(DiscussionDetailFragment.newInstance((BasicDiscussion) serializable, commentContext));
             return;
         }
 

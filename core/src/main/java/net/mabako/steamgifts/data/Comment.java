@@ -18,7 +18,7 @@ public class Comment implements Serializable, IEndlessAdaptable {
     private final String timeAgoLong;
     private final String content;
     private final String avatar;
-    private final int depth;
+    private int depth;
     private final boolean op;
 
     private boolean deleted, highlighted;
@@ -57,6 +57,10 @@ public class Comment implements Serializable, IEndlessAdaptable {
 
     public int getDepth() {
         return depth;
+    }
+
+    public void setDepth(int depth) {
+        this.depth = depth;
     }
 
     public String getAvatar() {

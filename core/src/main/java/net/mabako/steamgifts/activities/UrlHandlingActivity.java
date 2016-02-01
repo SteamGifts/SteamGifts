@@ -9,13 +9,13 @@ import android.util.Log;
 import net.mabako.sgtools.SGToolsDetailFragment;
 import net.mabako.steamgifts.data.BasicDiscussion;
 import net.mabako.steamgifts.data.BasicGiveaway;
+import net.mabako.steamgifts.fragments.DetailFragment;
 import net.mabako.steamgifts.fragments.DiscussionDetailFragment;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
 import net.mabako.steamgifts.fragments.UserDetailFragment;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -46,6 +46,7 @@ public class UrlHandlingActivity extends CommonActivity {
                     if (giveawayId.length() == 5) {
                         Intent intent = new Intent(context, DetailActivity.class);
                         intent.putExtra(GiveawayDetailFragment.ARG_GIVEAWAY, new BasicGiveaway(giveawayId));
+                        intent.putExtra(DetailFragment.ARG_COMMENT_CONTEXT, DetailFragment.CommentContextInfo.fromUri(uri));
                         return intent;
                     }
                 } else if ("discussion".equals(pathSegments.get(0))) {
@@ -54,6 +55,7 @@ public class UrlHandlingActivity extends CommonActivity {
                     if (discussionId.length() == 5) {
                         Intent intent = new Intent(context, DetailActivity.class);
                         intent.putExtra(DiscussionDetailFragment.ARG_DISCUSSION, new BasicDiscussion(discussionId));
+                        intent.putExtra(DetailFragment.ARG_COMMENT_CONTEXT, DetailFragment.CommentContextInfo.fromUri(uri));
                         return intent;
                     }
                 } else if ("user".equals(pathSegments.get(0))) {
@@ -61,6 +63,10 @@ public class UrlHandlingActivity extends CommonActivity {
 
                     Intent intent = new Intent(context, DetailActivity.class);
                     intent.putExtra(UserDetailFragment.ARG_USER, user);
+                    return intent;
+                } else if ("go".equals(pathSegments.get(0)) && "comment".equals(pathSegments.get(1)) && pathSegments.size() == 3) {
+                    Intent intent = new Intent(context, WebViewActivity.class);
+                    intent.putExtra(WebViewActivity.ARG_URL, uri.toString());
                     return intent;
                 }
             }
@@ -80,7 +86,7 @@ public class UrlHandlingActivity extends CommonActivity {
                 }
             }
         } else {
-            if(youtubePattern.matcher(uri.toString()).matches() || youtu_bePattern.matcher(uri.toString()).matches()){
+            if (youtubePattern.matcher(uri.toString()).matches() || youtu_bePattern.matcher(uri.toString()).matches()) {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(uri);
                 return intent;
@@ -104,4 +110,5 @@ public class UrlHandlingActivity extends CommonActivity {
 
         finish();
     }
+
 }

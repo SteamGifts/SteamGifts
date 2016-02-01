@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
@@ -30,15 +31,12 @@ import net.mabako.steamgifts.activities.DetailActivity;
 import net.mabako.steamgifts.activities.MainActivity;
 import net.mabako.steamgifts.activities.WebViewActivity;
 import net.mabako.steamgifts.activities.WriteCommentActivity;
-import net.mabako.steamgifts.adapters.CommentAdapter;
-import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.BasicGiveaway;
 import net.mabako.steamgifts.data.Comment;
 import net.mabako.steamgifts.data.Game;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.data.GiveawayExtras;
-import net.mabako.steamgifts.fragments.interfaces.ICommentableFragment;
 import net.mabako.steamgifts.fragments.interfaces.IHasEnterableGiveaways;
 import net.mabako.steamgifts.fragments.interfaces.IHasHideableGiveaways;
 import net.mabako.steamgifts.fragments.util.GiveawayDetailsCard;
@@ -48,11 +46,9 @@ import net.mabako.steamgifts.tasks.EnterLeaveGiveawayTask;
 import net.mabako.steamgifts.tasks.LoadGiveawayDetailsTask;
 import net.mabako.steamgifts.tasks.UpdateGiveawayFilterTask;
 
-import java.io.Serializable;
-import java.util.List;
-
-public class GiveawayDetailFragment extends ListFragment<CommentAdapter> implements ICommentableFragment, IHasEnterableGiveaways, IHasHideableGiveaways {
+public class GiveawayDetailFragment extends DetailFragment implements IHasEnterableGiveaways, IHasHideableGiveaways {
     public static final String ARG_GIVEAWAY = "giveaway";
+
     public static final String ENTRY_INSERT = "entry_insert";
     public static final String ENTRY_DELETE = "entry_delete";
 
@@ -70,11 +66,12 @@ public class GiveawayDetailFragment extends ListFragment<CommentAdapter> impleme
     private Activity activity;
     private SavedGiveaways savedGiveaways;
 
-    public static Fragment newInstance(BasicGiveaway giveaway) {
+    public static Fragment newInstance(@NonNull BasicGiveaway giveaway, @Nullable CommentContextInfo context) {
         GiveawayDetailFragment fragment = new GiveawayDetailFragment();
 
         Bundle args = new Bundle();
         args.putSerializable(SAVED_GIVEAWAY, giveaway);
+        args.putSerializable(SAVED_COMMENT_CONTEXT, context);
         fragment.setArguments(args);
 
         return fragment;
@@ -102,11 +99,6 @@ public class GiveawayDetailFragment extends ListFragment<CommentAdapter> impleme
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(SAVED_GIVEAWAY, giveaway);
-    }
-
-    @Override
-    protected CommentAdapter createAdapter() {
-        return new CommentAdapter();
     }
 
     @Override
@@ -157,24 +149,21 @@ public class GiveawayDetailFragment extends ListFragment<CommentAdapter> impleme
     }
 
     @Override
-    protected AsyncTask<Void, Void, ?> getFetchItemsTask(int page) {
+    protected AsyncTask<Void, Void, ?> getFetchItemsTaskEx(int page) {
         String url = giveaway.getGiveawayId();
         if (giveaway instanceof Giveaway)
             url += "/" + ((Giveaway) giveaway).getName();
+        else if (getCommentContext() != null)
+            url += "/" + getCommentContext().getDetailName();
 
         return new LoadGiveawayDetailsTask(this, url, page, !(giveaway instanceof Giveaway));
-    }
-
-    @Override
-    protected Serializable getType() {
-        return null;
     }
 
     public void addItems(GiveawayExtras extras, int page) {
         if (extras == null)
             return;
 
-        adapter.setXsrfToken(extras.getXsrfToken());
+        addItems(extras.getComments(), page == 1, extras.getXsrfToken());
 
         // We should always have a giveaway instance at this point of time, as
         // #onPostGiveawayLoaded is called prior to this method.
@@ -186,18 +175,6 @@ public class GiveawayDetailFragment extends ListFragment<CommentAdapter> impleme
         if (getActivity() != null)
             getActivity().supportInvalidateOptionsMenu();
         adapter.setStickyItem(giveawayCard);
-
-        super.addItems(extras.getComments(), page == 1);
-    }
-
-    @Override
-    public void addItems(List<? extends IEndlessAdaptable> items, boolean clearExistingItems) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void addItems(List<? extends IEndlessAdaptable> items, boolean clearExistingItems, String xsrfToken) {
-        throw new UnsupportedOperationException();
     }
 
     @Override

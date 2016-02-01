@@ -125,9 +125,18 @@ public class WebViewActivity extends CommonActivity {
             Intent intent = UrlHandlingActivity.getIntentForUri(WebViewActivity.this, Uri.parse(url));
             if (intent != null) {
                 startActivity(intent);
+                checkForFinishActivity();
                 return true;
             }
             return false;
         }
+    }
+
+    /**
+     * Finish this activity, if we were opened with a 'go to comment' page, and we've not navigated in any way.
+     */
+    private void checkForFinishActivity() {
+        if (!webView.canGoBack() && getIntent().getStringExtra(ARG_URL).startsWith("http://www.steamgifts.com/go/"))
+            finish();
     }
 }

@@ -27,7 +27,7 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
 
     private final TextView commentAuthor;
     private final TextView commentTime;
-    private final TextView commentContent;
+    protected final TextView commentContent;
     private final ImageView commentImage;
     private final View commentIndent;
     private final View commentMarker;
