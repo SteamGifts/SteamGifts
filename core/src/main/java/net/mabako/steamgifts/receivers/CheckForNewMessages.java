@@ -100,7 +100,7 @@ public class CheckForNewMessages extends BroadcastReceiver {
 
             ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo activeNetworkInfo = cm.getActiveNetworkInfo();
-            if (activeNetworkInfo == null || !activeNetworkInfo.isConnected() && activeNetworkInfo.getType() != ConnectivityManager.TYPE_WIFI) {
+            if (activeNetworkInfo == null || !activeNetworkInfo.isConnected() || activeNetworkInfo.getType() != ConnectivityManager.TYPE_WIFI) {
                 Log.v(TAG, "Not checking for messages due to network info: " + activeNetworkInfo);
                 return;
             }
