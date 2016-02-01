@@ -13,6 +13,7 @@ public class PollAnswerViewHolder extends RecyclerView.ViewHolder {
     private final TextView text;
     private final Button button;
     private final ProgressBar progressBar;
+    private final TextView percentageText;
 
     public PollAnswerViewHolder(View itemView) {
         super(itemView);
@@ -20,6 +21,7 @@ public class PollAnswerViewHolder extends RecyclerView.ViewHolder {
         text = (TextView) itemView.findViewById(R.id.text);
         button = (Button) itemView.findViewById(R.id.vote);
         progressBar = (ProgressBar) itemView.findViewById(R.id.progressBar);
+        percentageText = (TextView) itemView.findViewById(R.id.percentage);
     }
 
     public void setFrom(Poll.Answer answer) {
@@ -27,7 +29,9 @@ public class PollAnswerViewHolder extends RecyclerView.ViewHolder {
         updateButtonText(false, true);
 
         Poll poll = answer.getPoll();
-        progressBar.setProgress(100 * answer.getVoteCount() / poll.getTotalVotes());
+        int percentage = poll.getTotalVotes() == 0 ? 0 : (100 * answer.getVoteCount() / poll.getTotalVotes());
+        progressBar.setProgress(percentage);
+        percentageText.setText(String.format("%d%%", percentage));
     }
 
     private void updateButtonText(boolean votedThis, boolean canVote) {
