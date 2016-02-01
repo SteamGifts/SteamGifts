@@ -12,6 +12,7 @@ import net.mabako.steamgifts.core.R;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -45,7 +46,7 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
     /**
      * Sticky items, for example when using cards.
      */
-    private IEndlessAdaptable stickyItem = null;
+    private List<IEndlessAdaptable> stickyItems = new ArrayList<>();
 
     /**
      * The list of items this adapter holds.
@@ -188,10 +189,7 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
      * @return number of items currently shown
      */
     public int getItemCount() {
-        int itemCount = items.size();
-        if (stickyItem != null)
-            itemCount++;
-        return itemCount;
+        return items.size() + stickyItems.size();
     }
 
     /**
@@ -266,25 +264,42 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
         if (position == RecyclerView.NO_POSITION)
             return null;
 
-        if (stickyItem != null) {
-            return position == 0 ? stickyItem : items.get(position - 1);
-        } else {
-            return items.get(position);
+        if (position < stickyItems.size())
+            return stickyItems.get(position);
+
+        return items.get(position - stickyItems.size());
+    }
+
+    public List<IEndlessAdaptable> getStickyItems() {
+        return stickyItems;
+    }
+
+    public void setStickyItems(List<IEndlessAdaptable> stickyItems) {
+        int oldSize = this.stickyItems.size(),
+                newSize = stickyItems.size();
+
+        this.stickyItems.clear();
+        this.stickyItems.addAll(stickyItems);
+
+        if (oldSize >= newSize) {
+            notifyItemRangeChanged(0, newSize);
+
+            if (oldSize > newSize)
+                // some item was actually removed
+                notifyItemRangeRemoved(newSize, oldSize - newSize);
+        } else /* oldSize < newSize */ {
+            // new items inserted
+            notifyItemRangeChanged(0, oldSize);
+            notifyItemRangeInserted(oldSize, newSize - oldSize);
         }
     }
 
     public IEndlessAdaptable getStickyItem() {
-        return stickyItem;
+        return stickyItems.isEmpty() ? null : stickyItems.get(0);
     }
 
     public void setStickyItem(IEndlessAdaptable stickyItem) {
-        if (this.stickyItem == null) {
-            this.stickyItem = stickyItem;
-            notifyItemInserted(0);
-        } else {
-            this.stickyItem = stickyItem;
-            notifyItemChanged(0);
-        }
+        setStickyItems(Arrays.asList(stickyItem));
     }
 
     /**
@@ -361,7 +376,7 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
         IEndlessAdaptable before = position > 0 ? items.get(position - 1) : null;
 
         items.remove(position);
-        notifyItemRemoved(position + (stickyItem != null ? 1 : 0));
+        notifyItemRemoved(position + stickyItems.size());
 
         return new RemovedElement(before, current);
     }
@@ -380,7 +395,7 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
 
         items.add(position, element.getElement());
-        notifyItemInserted(position + (stickyItem != null ? 1 : 0));
+        notifyItemInserted(position + stickyItems.size());
     }
 
     /**
@@ -456,7 +471,7 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         int index = items.indexOf(item);
         if (index >= 0) {
-            notifyItemChanged(index + (stickyItem == null ? 0 : 1));
+            notifyItemChanged(index + stickyItems.size());
             return true;
         }
         return false;
