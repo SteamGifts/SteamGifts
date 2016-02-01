@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO polls can be restricted to individual games, right now this only supports 'no game' vs 'each option has a game'
+// TODO polls can show individual games, right now this is only shown as text.
 public class Poll implements Serializable {
     private static final long serialVersionUID = -2876811085489294457L;
 
@@ -85,8 +85,6 @@ public class Poll implements Serializable {
         private int voteCount;
         private String text;
 
-        private int appId = Game.NO_APP_ID;
-        private Game.Type appType = Game.Type.APP;
         private Poll poll;
 
         public int getId() {
@@ -111,26 +109,6 @@ public class Poll implements Serializable {
 
         public void setText(String text) {
             this.text = text;
-        }
-
-        public int getAppId() {
-            return appId;
-        }
-
-        public void setAppId(int appId) {
-            this.appId = appId;
-        }
-
-        public Game.Type getAppType() {
-            return appType;
-        }
-
-        public void setAppType(Game.Type appType) {
-            this.appType = appType;
-        }
-
-        public boolean isGame() {
-            return appId != Game.NO_APP_ID;
         }
 
         public Poll getPoll() {
@@ -169,7 +147,7 @@ public class Poll implements Serializable {
 
         @Override
         public String toString() {
-            return "[" + id + "," + voteCount + "," + text + "," + appId + "]";
+            return "[" + id + "," + voteCount + "," + text + "]";
         }
     }
 

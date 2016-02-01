@@ -8,7 +8,6 @@ import android.widget.Toast;
 
 import net.mabako.steamgifts.data.Discussion;
 import net.mabako.steamgifts.data.DiscussionExtras;
-import net.mabako.steamgifts.data.Game;
 import net.mabako.steamgifts.data.Poll;
 import net.mabako.steamgifts.fragments.DiscussionDetailFragment;
 import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
@@ -20,7 +19,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.util.List;
 
 public class LoadDiscussionDetailsTask extends AsyncTask<Void, Void, DiscussionExtras> {
     private static final String TAG = LoadDiscussionDetailsTask.class.getSimpleName();
@@ -168,16 +166,6 @@ public class LoadDiscussionDetailsTask extends AsyncTask<Void, Void, DiscussionE
             answer.setId(Integer.valueOf(thisAnswer.attr("data-id")));
             answer.setVoteCount(Integer.valueOf(thisAnswer.attr("data-votes")));
             answer.setText(thisAnswer.select(".table__column__heading").text());
-
-            Element storeInfo = thisAnswer.select("a.global__image-outer-wrap").first();
-            if (storeInfo != null) {
-                Uri uri = Uri.parse(storeInfo.attr("href"));
-                List<String> pathSegments = uri.getPathSegments();
-                if (pathSegments.size() >= 2) {
-                    answer.setAppId(Integer.parseInt(pathSegments.get(1)));
-                    answer.setAppType("app".equals(pathSegments.get(0)) ? Game.Type.APP : Game.Type.SUB);
-                }
-            }
 
             poll.addAnswer(answer, thisAnswer.hasClass("is-selected"));
         }
