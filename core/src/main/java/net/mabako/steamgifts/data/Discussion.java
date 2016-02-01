@@ -12,7 +12,7 @@ public class Discussion extends BasicDiscussion implements IEndlessAdaptable {
     private String timeCreated;
     private String creatorAvatar;
 
-    private boolean locked;
+    private boolean locked, poll;
 
     public Discussion(String discussionId) {
         super(discussionId);
@@ -64,6 +64,14 @@ public class Discussion extends BasicDiscussion implements IEndlessAdaptable {
 
     public void setLocked(boolean locked) {
         this.locked = locked;
+    }
+
+    public boolean isPoll() {
+        return poll;
+    }
+
+    public void setPoll(boolean poll) {
+        this.poll = poll;
     }
 
     @Override

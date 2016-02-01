@@ -92,6 +92,7 @@ public class LoadDiscussionListTask extends AsyncTask<Void, Void, List<Discussio
                     discussion.setCreatorAvatar(Utils.extractAvatar(avatarNode.attr("style")));
 
                 discussion.setLocked(element.hasClass("is-faded"));
+                discussion.setPoll(!element.select("h3 i.fa-align-left").isEmpty());
                 discussionList.add(discussion);
             }
             return discussionList;
