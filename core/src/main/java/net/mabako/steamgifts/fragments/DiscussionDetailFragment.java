@@ -127,8 +127,6 @@ public class DiscussionDetailFragment extends DetailFragment {
 
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         if (activity != null) {
-            activity.supportInvalidateOptionsMenu();
-
             ActionBar actionBar = activity.getSupportActionBar();
             if (actionBar != null) {
                 actionBar.setTitle(getTitle());

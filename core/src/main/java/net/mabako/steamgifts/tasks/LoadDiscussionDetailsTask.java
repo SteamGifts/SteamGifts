@@ -114,6 +114,15 @@ public class LoadDiscussionDetailsTask extends AsyncTask<Void, Void, DiscussionE
         discussion.setCreator(element.select(".comment__username a").first().text());
         discussion.setTimeCreated(element.select(".comment__actions > div span").first().text());
 
+        Element headerButton = document.select(".page__heading__button").first();
+        if (headerButton != null) {
+            // remove the dropdown menu.
+            headerButton.select(".page__heading__relative-dropdown").html("");
+
+            // Is this button saying 'Closed'?
+            discussion.setLocked("Closed".equals(headerButton.text().trim()));
+        }
+
         return discussion;
     }
 
