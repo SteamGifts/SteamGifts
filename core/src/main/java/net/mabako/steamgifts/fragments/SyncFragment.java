@@ -187,6 +187,7 @@ public class SyncFragment extends Fragment {
                         Activity activity = getFragment().getActivity();
                         activity.setResult(CommonActivity.RESPONSE_SYNC_SUCCESSFUL);
                         activity.finish();
+                        return;
                     } else {
                         String message = root.getString("msg");
                         if (message != null) {
