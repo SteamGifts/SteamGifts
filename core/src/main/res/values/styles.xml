@@ -69,7 +69,7 @@
     </style>
 
     <style name="SmallText.HighlightOp" parent="SmallText">
-        <item name="android:textColor">#ffffff</item>
+        <item name="android:textColor">@color/md_white_1000</item>
         <item name="android:background">?attr/colorAccountHeader</item>
         <item name="android:textStyle">bold</item>
     </style>

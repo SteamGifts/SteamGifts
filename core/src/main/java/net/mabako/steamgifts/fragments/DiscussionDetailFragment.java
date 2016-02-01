@@ -30,6 +30,8 @@ import net.mabako.steamgifts.data.DiscussionExtras;
 import net.mabako.steamgifts.fragments.util.DiscussionDetailsCard;
 import net.mabako.steamgifts.tasks.LoadDiscussionDetailsTask;
 
+import java.io.Serializable;
+
 public class DiscussionDetailFragment extends DetailFragment {
     public static final String ARG_DISCUSSION = "discussion";
 
@@ -204,5 +206,11 @@ public class DiscussionDetailFragment extends DetailFragment {
             getActivity().startActivityForResult(intent, WriteCommentActivity.REQUEST_COMMENT);
         } else
             Log.e(TAG, "Commenting on a not fully loaded Giveaway [" + discussion + ", " + adapter.getXsrfToken() + "]");
+    }
+
+    @NonNull
+    @Override
+    protected Serializable getDetailObject() {
+        return discussion;
     }
 }

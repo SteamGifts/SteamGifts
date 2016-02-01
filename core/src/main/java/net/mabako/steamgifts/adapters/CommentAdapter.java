@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import net.mabako.steamgifts.adapters.viewholder.CommentContextViewHolder;
 import net.mabako.steamgifts.adapters.viewholder.CommentViewHolder;
 import net.mabako.steamgifts.adapters.viewholder.DiscussionCardViewHolder;
 import net.mabako.steamgifts.adapters.viewholder.GiveawayCardViewHolder;
@@ -53,6 +54,8 @@ public class CommentAdapter extends EndlessAdapter {
             return new GiveawayCardViewHolder(view, (GiveawayDetailFragment) fragment);
         } else if (viewType == DiscussionDetailsCard.VIEW_LAYOUT) {
             return new DiscussionCardViewHolder(view, (DiscussionDetailFragment) fragment);
+        } else if(viewType == CommentContextViewHolder.VIEW_LAYOUT) {
+            return new CommentContextViewHolder(view, fragment.getActivity());
         }
         return null;
     }
@@ -74,6 +77,11 @@ public class CommentAdapter extends EndlessAdapter {
             DiscussionDetailsCard card = (DiscussionDetailsCard) getItem(position);
 
             holder.setFrom(card);
+        } else if(h instanceof CommentContextViewHolder) {
+            CommentContextViewHolder holder = (CommentContextViewHolder) h;
+            CommentContextViewHolder.SerializableHolder info = (CommentContextViewHolder.SerializableHolder) getItem(position);
+
+            holder.setFrom(info);
         }
     }
 

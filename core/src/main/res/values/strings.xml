@@ -75,6 +75,7 @@
     <string name="comment_not_sent">Comment could not be sent</string>
 
     <string name="discussion_locked">This discussion is locked.</string>
+    <string name="viewing_single_context">You are viewing a single comment in context.\nClick to view all comments.</string>
 
     <!-- -->
     <string name="open_steam_store">Steam Store</string>

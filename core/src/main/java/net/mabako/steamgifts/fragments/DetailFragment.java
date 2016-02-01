@@ -9,6 +9,7 @@ import android.util.Log;
 
 import net.mabako.steamgifts.adapters.CommentAdapter;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
+import net.mabako.steamgifts.adapters.viewholder.CommentContextViewHolder;
 import net.mabako.steamgifts.data.Comment;
 import net.mabako.steamgifts.fragments.interfaces.ICommentableFragment;
 
@@ -89,7 +90,7 @@ public abstract class DetailFragment extends ListFragment<CommentAdapter> implem
                 if (commentContext.getCommentId().equals(comment.getPermalinkId())) {
                     // We found the comment we want, hooray!
                     // Build a new comment context
-                    List<Comment> displayedComments = new ArrayList<>();
+                    List<IEndlessAdaptable> displayedComments = new ArrayList<>();
 
                     // Do we want to include the parent?
                     if (commentContext.isIncludeParentComment()) {
@@ -106,13 +107,18 @@ public abstract class DetailFragment extends ListFragment<CommentAdapter> implem
                     // add all children
                     addChildComments(items, comment, displayedComments);
 
+                    // Fix all the comment depths, we assume the first comment has the lowest depth here.
+                    int depthDiff = ((Comment) displayedComments.get(0)).getDepth();
+                    for (IEndlessAdaptable item : displayedComments) {
+                        Comment c = (Comment) item;
+                        c.setDepth(c.getDepth() - depthDiff);
+                    }
+
+                    // Add a 'view full discussion' to this.
+                    displayedComments.add(0, new CommentContextViewHolder.SerializableHolder(getDetailObject()));
+
                     // add the items to the adapter.
                     super.addItems(displayedComments, clearExistingItems);
-
-                    // Fix all the comment depths, we assume the first comment has the lowest depth here.
-                    int depthDiff = displayedComments.get(0).getDepth();
-                    for (Comment c : displayedComments)
-                        c.setDepth(c.getDepth() - depthDiff);
 
                     // Nothing more to do here.
                     return;
@@ -126,7 +132,7 @@ public abstract class DetailFragment extends ListFragment<CommentAdapter> implem
      *
      * @param displayedComments the list of comments we should display after this comment.
      */
-    private void addParentComments(List<? extends IEndlessAdaptable> loadedItems, Comment commentInContext, List<Comment> displayedComments) {
+    private void addParentComments(List<? extends IEndlessAdaptable> loadedItems, Comment commentInContext, List<IEndlessAdaptable> displayedComments) {
         int depth = commentInContext.getDepth();
 
         // is this the a root comment?
@@ -155,7 +161,7 @@ public abstract class DetailFragment extends ListFragment<CommentAdapter> implem
      *
      * @param displayedComments the list of comments we should display after this comment.
      */
-    private void addChildComments(List<? extends IEndlessAdaptable> loadedItems, Comment comment, List<Comment> displayedComments) {
+    private void addChildComments(List<? extends IEndlessAdaptable> loadedItems, Comment comment, List<IEndlessAdaptable> displayedComments) {
         for (int j = loadedItems.indexOf(comment) + 1; j < loadedItems.size(); ++j) {
             Comment child = (Comment) loadedItems.get(j);
 
@@ -166,6 +172,9 @@ public abstract class DetailFragment extends ListFragment<CommentAdapter> implem
             displayedComments.add(child);
         }
     }
+
+    @NonNull
+    protected abstract Serializable getDetailObject();
 
     /**
      * Context for a single comment.

@@ -46,6 +46,8 @@ import net.mabako.steamgifts.tasks.EnterLeaveGiveawayTask;
 import net.mabako.steamgifts.tasks.LoadGiveawayDetailsTask;
 import net.mabako.steamgifts.tasks.UpdateGiveawayFilterTask;
 
+import java.io.Serializable;
+
 public class GiveawayDetailFragment extends DetailFragment implements IHasEnterableGiveaways, IHasHideableGiveaways {
     public static final String ARG_GIVEAWAY = "giveaway";
 
@@ -359,5 +361,11 @@ public class GiveawayDetailFragment extends DetailFragment implements IHasEntera
 
         if (propagate)
             GiveawayListFragmentStack.onHideGame(internalGameId);
+    }
+
+    @NonNull
+    @Override
+    protected Serializable getDetailObject() {
+        return giveaway;
     }
 }
