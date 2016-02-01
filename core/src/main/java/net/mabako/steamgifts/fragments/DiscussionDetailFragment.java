@@ -145,6 +145,10 @@ public class DiscussionDetailFragment extends DetailFragment {
         if (extras == null)
             return;
 
+        if (!(discussion instanceof Discussion))
+            throw new IllegalStateException("#onPostDiscussionLoaded was probably not called");
+        ((Discussion) discussion).setPoll(extras.hasPoll());
+
         discussionCard.setExtras(extras);
         adapter.setStickyItem(discussionCard);
 
