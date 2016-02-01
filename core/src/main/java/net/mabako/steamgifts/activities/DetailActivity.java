@@ -9,13 +9,13 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.widget.Toast;
 
 import net.mabako.sgtools.SGToolsDetailFragment;
 import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.BasicDiscussion;
 import net.mabako.steamgifts.data.BasicGiveaway;
+import net.mabako.steamgifts.data.Comment;
 import net.mabako.steamgifts.fragments.DetailFragment;
 import net.mabako.steamgifts.fragments.DiscussionDetailFragment;
 import net.mabako.steamgifts.fragments.FragmentAdapter;
@@ -131,8 +131,17 @@ public class DetailActivity extends CommonActivity {
         if (requestCode == WriteCommentActivity.REQUEST_COMMENT) {
             if (resultCode == WriteCommentActivity.COMMENT_SENT) {
                 Toast.makeText(this, R.string.comment_sent, Toast.LENGTH_SHORT).show();
-            } else if (resultCode == WriteCommentActivity.COMMENT_NOT_SENT) {
-                Toast.makeText(this, R.string.comment_not_sent, Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        if (requestCode == WriteCommentActivity.REQUEST_COMMENT_EDIT && getCurrentFragment() instanceof DetailFragment) {
+            DetailFragment fragment = (DetailFragment) getCurrentFragment();
+
+            if (resultCode == WriteCommentActivity.COMMENT_EDIT_SENT && data.hasExtra("edited-comment")) {
+                Comment comment = (Comment) data.getSerializableExtra("edited-comment");
+                fragment.onCommentEdited(comment.getId(), comment.getContent(), comment.getEditableContent());
+
+                Toast.makeText(this, R.string.comment_edited, Toast.LENGTH_SHORT).show();
             }
         }
 

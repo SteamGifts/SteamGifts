@@ -20,11 +20,9 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import net.mabako.steamgifts.activities.DetailActivity;
-import net.mabako.steamgifts.activities.WriteCommentActivity;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.BasicDiscussion;
-import net.mabako.steamgifts.data.Comment;
 import net.mabako.steamgifts.data.Discussion;
 import net.mabako.steamgifts.data.DiscussionExtras;
 import net.mabako.steamgifts.fragments.util.DiscussionDetailsCard;
@@ -133,7 +131,7 @@ public class DiscussionDetailFragment extends DetailFragment {
 
             ActionBar actionBar = activity.getSupportActionBar();
             if (actionBar != null) {
-                actionBar.setTitle(discussion.getTitle());
+                actionBar.setTitle(getTitle());
             }
             activity.supportInvalidateOptionsMenu();
         }
@@ -195,22 +193,23 @@ public class DiscussionDetailFragment extends DetailFragment {
         getActivity().startActivity(intent);
     }
 
-    @Override
-    public void requestComment(Comment parentComment) {
-        if (discussion instanceof Discussion && discussionCard != null && adapter.getXsrfToken() != null) {
-            Intent intent = new Intent(getActivity(), WriteCommentActivity.class);
-            intent.putExtra(WriteCommentActivity.XSRF_TOKEN, adapter.getXsrfToken());
-            intent.putExtra(WriteCommentActivity.PATH, "discussion/" + discussion.getDiscussionId() + "/" + ((Discussion) discussion).getName());
-            intent.putExtra(WriteCommentActivity.PARENT, parentComment);
-            intent.putExtra(WriteCommentActivity.TITLE, ((Discussion) discussion).getTitle());
-            getActivity().startActivityForResult(intent, WriteCommentActivity.REQUEST_COMMENT);
-        } else
-            Log.e(TAG, "Commenting on a not fully loaded Giveaway [" + discussion + ", " + adapter.getXsrfToken() + "]");
-    }
-
     @NonNull
     @Override
     protected Serializable getDetailObject() {
         return discussion;
+    }
+
+    @Nullable
+    @Override
+    protected String getDetailPath() {
+        if (discussion instanceof Discussion)
+            return "discussion/" + discussion.getDiscussionId() + "/" + ((Discussion) discussion).getName();
+
+        return null;
+    }
+
+    @Override
+    protected String getTitle() {
+        return discussion instanceof Discussion ? ((Discussion) discussion).getTitle() : null;
     }
 }

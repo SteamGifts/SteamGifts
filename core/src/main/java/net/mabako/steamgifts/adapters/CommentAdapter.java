@@ -54,7 +54,7 @@ public class CommentAdapter extends EndlessAdapter {
             return new GiveawayCardViewHolder(view, (GiveawayDetailFragment) fragment);
         } else if (viewType == DiscussionDetailsCard.VIEW_LAYOUT) {
             return new DiscussionCardViewHolder(view, (DiscussionDetailFragment) fragment);
-        } else if(viewType == CommentContextViewHolder.VIEW_LAYOUT) {
+        } else if (viewType == CommentContextViewHolder.VIEW_LAYOUT) {
             return new CommentContextViewHolder(view, fragment.getActivity());
         }
         return null;
@@ -77,7 +77,7 @@ public class CommentAdapter extends EndlessAdapter {
             DiscussionDetailsCard card = (DiscussionDetailsCard) getItem(position);
 
             holder.setFrom(card);
-        } else if(h instanceof CommentContextViewHolder) {
+        } else if (h instanceof CommentContextViewHolder) {
             CommentContextViewHolder holder = (CommentContextViewHolder) h;
             CommentContextViewHolder.SerializableHolder info = (CommentContextViewHolder.SerializableHolder) getItem(position);
 
@@ -96,5 +96,24 @@ public class CommentAdapter extends EndlessAdapter {
                 ++rootLevelComments;
 
         return rootLevelComments == ITEMS_PER_PAGE;
+    }
+
+    /**
+     * Finds the comment with the given comment id
+     *
+     * @param commentId
+     * @return comment with the given id, if found, null otherwise
+     */
+    public Comment findItem(int commentId) {
+        if (commentId == 0)
+            return null;
+
+        for (int i = 0; i < getItemCount(); ++i) {
+            IEndlessAdaptable item = getItem(i);
+            if (item instanceof Comment && ((Comment) item).getId() == commentId)
+                return (Comment) item;
+        }
+
+        return null;
     }
 }

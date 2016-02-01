@@ -16,13 +16,13 @@ public class Comment implements Serializable, IEndlessAdaptable {
     private final String author;
     private final String timeAgo;
     private final String timeAgoLong;
-    private final String content;
+    private String content;
     private final String avatar;
     private int depth;
     private final boolean op;
 
     private boolean deleted, highlighted;
-    private String permalinkId;
+    private String permalinkId, editableContent;
 
     public Comment(int id, String author, String timeAgo, String timeAgoLong, String content, int depth, String avatar, boolean isOp) {
         this.id = id;
@@ -53,6 +53,10 @@ public class Comment implements Serializable, IEndlessAdaptable {
 
     public String getContent() {
         return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public int getDepth() {
@@ -93,6 +97,14 @@ public class Comment implements Serializable, IEndlessAdaptable {
 
     public void setPermalinkId(String permalinkId) {
         this.permalinkId = permalinkId;
+    }
+
+    public String getEditableContent() {
+        return editableContent;
+    }
+
+    public void setEditableContent(String editableContent) {
+        this.editableContent = editableContent;
     }
 
     @Override

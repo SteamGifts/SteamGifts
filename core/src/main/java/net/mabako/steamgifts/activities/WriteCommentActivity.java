@@ -1,6 +1,8 @@
 package net.mabako.steamgifts.activities;
 
+import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -12,20 +14,24 @@ import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.Comment;
 import net.mabako.steamgifts.fragments.SingleCommentFragment;
 import net.mabako.steamgifts.fragments.WriteCommentFragment;
+import net.mabako.steamgifts.tasks.AjaxTask;
+import net.mabako.steamgifts.tasks.EditCommentTask;
 import net.mabako.steamgifts.tasks.PostCommentTask;
 
 public class WriteCommentActivity extends BaseActivity {
     private static final String TAG = WriteCommentActivity.class.getSimpleName();
 
     public static final int REQUEST_COMMENT = 7;
-    public static final int COMMENT_SENT = 8;
-    public static final int COMMENT_NOT_SENT = 8;
+    public static final int REQUEST_COMMENT_EDIT = 8;
+    public static final int COMMENT_SENT = 9;
+    public static final int COMMENT_EDIT_SENT = 10;
 
     public static final String XSRF_TOKEN = "xsrf-token";
     public static final String PARENT = "parent";
     public static final String PATH = "path";
     public static final String TITLE = "title";
-    private PostCommentTask task;
+    public static final String EDIT_COMMENT = "comment-to-edit";
+    private AjaxTask<Activity> task;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,24 +83,37 @@ public class WriteCommentActivity extends BaseActivity {
         }
 
         if (savedInstanceState == null)
-            loadFragment(R.id.fragment_container2, new WriteCommentFragment(), "writer");
+            loadFragment(R.id.fragment_container2, WriteCommentFragment.newInstance((Comment) getIntent().getSerializableExtra(EDIT_COMMENT)), "writer");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
 
-        if (task != null)
+        if (task != null) {
             task.cancel(true);
+            task = null;
+        }
     }
 
-    public void submit(String text) {
-        Comment comment = (Comment) getIntent().getSerializableExtra(PARENT);
-        int parentId = 0;
-        if (comment != null)
-            parentId = comment.getId();
+    /**
+     * Editing is finished, so send the comment to the server.
+     *
+     * @param comment if set, we're editing a comment, and use this comment's id for the id we wish to submit
+     * @param text    text of either the new comment, or the edited comment
+     */
+    public void submit(@Nullable Comment comment, String text) {
+        if (comment == null) {
+            Comment parent = (Comment) getIntent().getSerializableExtra(PARENT);
+            int parentId = 0;
+            if (parent != null)
+                parentId = parent.getId();
 
-        task = new PostCommentTask(this, getIntent().getStringExtra(PATH), getIntent().getStringExtra(XSRF_TOKEN), text, parentId);
-        task.execute();
+            task = new PostCommentTask(this, getIntent().getStringExtra(PATH), getIntent().getStringExtra(XSRF_TOKEN), text, parentId);
+            task.execute();
+        } else {
+            task = new EditCommentTask(this, getIntent().getStringExtra(XSRF_TOKEN), text, comment);
+            task.execute();
+        }
     }
 }

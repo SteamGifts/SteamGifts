@@ -30,10 +30,8 @@ import net.mabako.steamgifts.activities.CommonActivity;
 import net.mabako.steamgifts.activities.DetailActivity;
 import net.mabako.steamgifts.activities.MainActivity;
 import net.mabako.steamgifts.activities.WebViewActivity;
-import net.mabako.steamgifts.activities.WriteCommentActivity;
 import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.BasicGiveaway;
-import net.mabako.steamgifts.data.Comment;
 import net.mabako.steamgifts.data.Game;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.data.GiveawayExtras;
@@ -230,7 +228,7 @@ public class GiveawayDetailFragment extends DetailFragment implements IHasEntera
 
         final CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) getActivity().findViewById(R.id.toolbar_layout);
         if (appBarLayout != null) {
-            appBarLayout.setTitle(giveaway.getTitle());
+            appBarLayout.setTitle(getTitle());
 
             ImageView toolbarImage = (ImageView) getActivity().findViewById(R.id.toolbar_image);
             if (toolbarImage != null) {
@@ -271,21 +269,6 @@ public class GiveawayDetailFragment extends DetailFragment implements IHasEntera
         Intent intent = new Intent(getActivity(), DetailActivity.class);
         intent.putExtra(UserDetailFragment.ARG_USER, user);
         getActivity().startActivity(intent);
-    }
-
-    @Override
-    public void requestComment(Comment parentComment) {
-        Log.d(TAG, "request comment for " + parentComment);
-        Log.d(TAG, "xstf-token: " + adapter.getXsrfToken());
-        if (giveaway instanceof Giveaway) {
-            Intent intent = new Intent(getActivity(), WriteCommentActivity.class);
-            intent.putExtra(WriteCommentActivity.XSRF_TOKEN, adapter.getXsrfToken());
-            intent.putExtra(WriteCommentActivity.PATH, "giveaway/" + giveaway.getGiveawayId() + "/" + ((Giveaway) giveaway).getName());
-            intent.putExtra(WriteCommentActivity.PARENT, parentComment);
-            intent.putExtra(WriteCommentActivity.TITLE, ((Giveaway) giveaway).getTitle());
-            getActivity().startActivityForResult(intent, WriteCommentActivity.REQUEST_COMMENT);
-        } else
-            throw new IllegalStateException("Commenting on a not fully loaded Giveaway");
     }
 
     @Override
@@ -367,5 +350,19 @@ public class GiveawayDetailFragment extends DetailFragment implements IHasEntera
     @Override
     protected Serializable getDetailObject() {
         return giveaway;
+    }
+
+    @Nullable
+    @Override
+    protected String getDetailPath() {
+        if (giveaway instanceof Giveaway)
+            return "giveaway/" + giveaway.getGiveawayId() + "/" + ((Giveaway) giveaway).getName();
+
+        return null;
+    }
+
+    @Override
+    protected String getTitle() {
+        return giveaway instanceof Giveaway ? ((Giveaway) giveaway).getTitle() : null;
     }
 }

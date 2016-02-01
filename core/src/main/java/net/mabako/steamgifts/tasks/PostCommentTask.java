@@ -2,8 +2,10 @@ package net.mabako.steamgifts.tasks;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.widget.Toast;
 
 import net.mabako.steamgifts.activities.WriteCommentActivity;
+import net.mabako.steamgifts.core.R;
 
 import org.jsoup.Connection;
 
@@ -32,9 +34,9 @@ public class PostCommentTask extends AjaxTask<Activity> {
             Intent data = new Intent();
             data.putExtra("parent", parentId);
             activity.setResult(WriteCommentActivity.COMMENT_SENT, data);
+            activity.finish();
         } else {
-            activity.setResult(WriteCommentActivity.COMMENT_NOT_SENT);
+            Toast.makeText(activity, R.string.comment_not_sent, Toast.LENGTH_SHORT).show();
         }
-        activity.finish();
     }
 }

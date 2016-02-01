@@ -38,7 +38,11 @@ public final class Utils {
         for (Element c : children) {
             Element thisComment = c.child(0);
 
-            // Remove "Save Changes" & "Cancel"
+            // Save the content of the edit state for a bit & remove the edit state from being rendered.
+            Element editState = thisComment.select(".comment__edit-state.is-hidden textarea[name=description]").first();
+            String editableContent = null;
+            if (editState != null)
+                editableContent = editState.text();
             thisComment.select(".comment__edit-state").html("");
 
             Element authorNode = thisComment.select(".comment__username").first();
@@ -66,6 +70,7 @@ public final class Utils {
 
             Comment comment = new Comment(commentId, author, timeCreated.text(), timeCreated.attr("title"), content, depth, avatar, isOp);
             comment.setPermalinkId(permalinkUri.getPathSegments().get(2));
+            comment.setEditableContent(editableContent);
 
             // check if the comment is deleted
             comment.setDeleted(thisComment.select(".comment__summary").first().select(".comment__delete-state").size() == 1);

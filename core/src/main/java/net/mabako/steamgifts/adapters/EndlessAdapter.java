@@ -445,6 +445,24 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     /**
+     * Find the id for the item, and if it exists, trigger a changed notification.
+     *
+     * @param item item to notify of change
+     * @return true if any item was found, false otherwise
+     */
+    public boolean notifyItemChanged(IEndlessAdaptable item) {
+        if (item == null)
+            return false;
+
+        int index = items.indexOf(item);
+        if (index >= 0) {
+            notifyItemChanged(index + (stickyItem == null ? 0 : 1));
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * View holder with no interactions.
      * <p/>
      * This is the case for the progress bar and the "You've reached the end" text.

@@ -1,15 +1,21 @@
 package net.mabako.steamgifts.fragments;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 
+import net.mabako.steamgifts.activities.WriteCommentActivity;
 import net.mabako.steamgifts.adapters.CommentAdapter;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.adapters.viewholder.CommentContextViewHolder;
+import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.Comment;
 import net.mabako.steamgifts.fragments.interfaces.ICommentableFragment;
 
@@ -175,6 +181,71 @@ public abstract class DetailFragment extends ListFragment<CommentAdapter> implem
 
     @NonNull
     protected abstract Serializable getDetailObject();
+
+    @Nullable
+    protected abstract String getDetailPath();
+
+    protected abstract String getTitle();
+
+    @Override
+    public void requestComment(Comment parentComment) {
+        Log.d(TAG, "request comment for " + parentComment);
+
+        if (TextUtils.isEmpty(adapter.getXsrfToken()))
+            throw new IllegalStateException("no xsrf token");
+
+        String path = getDetailPath();
+        if (path != null) {
+            Intent intent = new Intent(getActivity(), WriteCommentActivity.class);
+            intent.putExtra(WriteCommentActivity.XSRF_TOKEN, adapter.getXsrfToken());
+            intent.putExtra(WriteCommentActivity.TITLE, getTitle());
+            intent.putExtra(WriteCommentActivity.PATH, path);
+            intent.putExtra(WriteCommentActivity.PARENT, parentComment);
+            getActivity().startActivityForResult(intent, WriteCommentActivity.REQUEST_COMMENT);
+        } else
+            throw new IllegalStateException("got no path for the comment, not commenting...");
+    }
+
+    /**
+     * Edit a specific comment.
+     *
+     * @param comment comment to edit
+     */
+    public void requestCommentEdit(Comment comment) {
+        Log.d(TAG, "request comment edit for " + comment + ", xsrf-token: " + adapter.getXsrfToken());
+
+        if (TextUtils.isEmpty(adapter.getXsrfToken()))
+            throw new IllegalStateException("no xsrf token");
+
+        Intent intent = new Intent(getActivity(), WriteCommentActivity.class);
+        intent.putExtra(WriteCommentActivity.XSRF_TOKEN, adapter.getXsrfToken());
+
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        intent.putExtra(WriteCommentActivity.TITLE, actionBar == null ? getString(R.string.add_comment) : actionBar.getTitle());
+
+        intent.putExtra(WriteCommentActivity.EDIT_COMMENT, comment);
+        getActivity().startActivityForResult(intent, WriteCommentActivity.REQUEST_COMMENT_EDIT);
+    }
+
+    /**
+     * Callback for a successful comment edit request.
+     */
+    public void onCommentEdited(int commentId, String newContent, String newEditableContent) {
+        Comment comment = adapter.findItem(commentId);
+        if (comment == null) {
+            Log.d(TAG, "No comment with id " + commentId + " found");
+            return;
+        }
+
+        comment.setContent(newContent);
+        comment.setEditableContent(newEditableContent);
+
+        if (adapter.notifyItemChanged(comment)) {
+            Log.d(TAG, "Comment was edited & adapter triggered notify");
+        } else {
+            Log.w(TAG, "Unable to update comment " + comment);
+        }
+    }
 
     /**
      * Context for a single comment.

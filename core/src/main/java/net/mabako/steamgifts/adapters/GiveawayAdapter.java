@@ -98,12 +98,6 @@ public class GiveawayAdapter extends EndlessAdapter {
         return null;
     }
 
-    public void notifyItemChanged(Giveaway item) {
-        int index = getItems().indexOf(item);
-        if (index >= 0)
-            notifyItemChanged(index);
-    }
-
     public void removeGiveaway(String giveawayId) {
         for (int position = getItems().size() - 1; position >= 0; --position) {
             Giveaway giveaway = (Giveaway) getItem(position);

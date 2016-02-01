@@ -4,6 +4,7 @@ package net.mabako.steamgifts.adapters.viewholder;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +16,7 @@ import com.squareup.picasso.Picasso;
 
 import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.Comment;
+import net.mabako.steamgifts.fragments.DetailFragment;
 import net.mabako.steamgifts.fragments.interfaces.ICommentableFragment;
 import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
 
@@ -33,7 +35,7 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
     private final View commentMarker;
 
     private final Context context;
-    private View.OnClickListener writeCommentListener;
+    private View.OnClickListener writeCommentListener, editCommentListener;
 
     public CommentViewHolder(View v, Context context, ICommentableFragment fragment) {
         super(v);
@@ -87,6 +89,14 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
                 fragment.requestComment(comment);
             }
         };
+
+        // We assume that, if we have an editable state, we can edit the comment. Should we check for username here?
+        editCommentListener = comment.getEditableContent() == null || comment.getId() == 0 || (!(fragment instanceof DetailFragment)) ? null : new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((DetailFragment) fragment).requestCommentEdit(comment);
+            }
+        };
     }
 
     @Override
@@ -100,6 +110,17 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
                     public boolean onMenuItemClick(MenuItem item) {
                         if (writeCommentListener != null)
                             writeCommentListener.onClick(itemView);
+                        return true;
+                    }
+                });
+            }
+
+            if (editCommentListener != null) {
+                menu.add(0, 2, 0, R.string.edit_comment).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        if (editCommentListener != null)
+                            editCommentListener.onClick(itemView);
                         return true;
                     }
                 });

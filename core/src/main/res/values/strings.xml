@@ -69,10 +69,12 @@
     <!-- Contextual menus -->
     <string name="actions">Actions</string>
     <string name="add_comment">Comment</string>
+    <string name="edit_comment">Edit Comment</string>
     <string name="send_comment">Send</string>
 
     <string name="comment_sent">Comment sent, please reload to see.</string>
     <string name="comment_not_sent">Comment could not be sent</string>
+    <string name="comment_edited">Comment successfully edited.</string>
 
     <string name="discussion_locked">This discussion is locked.</string>
     <string name="viewing_single_context">You are viewing a single comment in context.\nClick to view all comments.</string>
