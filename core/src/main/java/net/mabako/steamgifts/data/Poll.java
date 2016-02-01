@@ -17,7 +17,6 @@ public class Poll implements Serializable {
     private List<IEndlessAdaptable> answers = new ArrayList<>();
 
     private int totalVotes = 0;
-    private int mostVotesOnASingleAnswer = 0;
     private int selectedAnswerId;
     private boolean closed;
 
@@ -42,19 +41,14 @@ public class Poll implements Serializable {
 
         answer.setPoll(this);
         totalVotes += answer.getVoteCount();
-        mostVotesOnASingleAnswer = Math.max(mostVotesOnASingleAnswer, answer.getVoteCount());
     }
 
     public int getTotalVotes() {
         return totalVotes;
     }
 
-    public int getMostVotesOnASingleAnswer() {
-        return mostVotesOnASingleAnswer;
-    }
-
-    public boolean isClosed() {
-        return closed;
+    public void setTotalVotes(int totalVotes) {
+        this.totalVotes = totalVotes;
     }
 
     public void setClosed(boolean closed) {
@@ -73,6 +67,14 @@ public class Poll implements Serializable {
 
         sb.append("]");
         return sb.toString();
+    }
+
+    public int getSelectedAnswerId() {
+        return selectedAnswerId;
+    }
+
+    public void setSelectedAnswerId(int selectedAnswerId) {
+        this.selectedAnswerId = selectedAnswerId;
     }
 
     public static class Answer implements Serializable, IEndlessAdaptable {

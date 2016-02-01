@@ -27,14 +27,16 @@ import net.mabako.steamgifts.data.BasicDiscussion;
 import net.mabako.steamgifts.data.Discussion;
 import net.mabako.steamgifts.data.DiscussionExtras;
 import net.mabako.steamgifts.data.Poll;
+import net.mabako.steamgifts.fragments.interfaces.IHasPoll;
 import net.mabako.steamgifts.fragments.util.DiscussionDetailsCard;
+import net.mabako.steamgifts.tasks.EnterLeavePollTask;
 import net.mabako.steamgifts.tasks.LoadDiscussionDetailsTask;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DiscussionDetailFragment extends DetailFragment {
+public class DiscussionDetailFragment extends DetailFragment implements IHasPoll {
     public static final String ARG_DISCUSSION = "discussion";
 
     private static final String TAG = DiscussionDetailFragment.class.getSimpleName();
@@ -47,6 +49,8 @@ public class DiscussionDetailFragment extends DetailFragment {
      */
     private BasicDiscussion discussion;
     private DiscussionDetailsCard discussionCard;
+
+    private EnterLeavePollTask enterLeavePollTask;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -106,6 +110,16 @@ public class DiscussionDetailFragment extends DetailFragment {
         setHasOptionsMenu(true);
 
         return layout;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        if (enterLeavePollTask != null) {
+            enterLeavePollTask.cancel(true);
+            enterLeavePollTask = null;
+        }
     }
 
     @Override
@@ -230,5 +244,72 @@ public class DiscussionDetailFragment extends DetailFragment {
     @Override
     protected String getTitle() {
         return discussion instanceof Discussion ? ((Discussion) discussion).getTitle() : null;
+    }
+
+    @Override
+    public void selectPollAnswer(@NonNull Poll.Answer answer) {
+        Poll poll = getPoll();
+        if (poll == null)
+            return;
+
+        if (enterLeavePollTask != null)
+            enterLeavePollTask.cancel(true);
+
+        int currentAnswerId = poll.getSelectedAnswerId();
+        Log.d(TAG, "entering poll " + currentAnswerId + ", " + answer.getId());
+
+        // If we're selecting the same answer, remove the vote. If it's a different answer, insert the vote.
+        enterLeavePollTask = new EnterLeavePollTask(this, getContext(), adapter.getXsrfToken(), currentAnswerId == answer.getId() ? EnterLeavePollTask.REMOVE_ANSWER : EnterLeavePollTask.SELECT_ANSWER, answer.getId());
+        enterLeavePollTask.execute();
+    }
+
+    @Override
+    public void onPollAnswerSelected(int answerId) {
+        Poll poll = getPoll();
+        if (poll == null)
+            return;
+
+        int currentAnswerId = poll.getSelectedAnswerId();
+        Log.d(TAG, "poll answer selected -- " + currentAnswerId + ", " + answerId);
+
+        // Update the currently selected answer.
+        poll.setSelectedAnswerId(answerId);
+
+        int totalVotes = poll.getTotalVotes();
+
+        if (currentAnswerId != 0) {
+            Poll.Answer answer = adapter.findPollAnswer(currentAnswerId);
+            answer.setVoteCount(answer.getVoteCount() - 1);
+
+            --totalVotes;
+        }
+
+        if (answerId != 0) {
+            Poll.Answer answer = adapter.findPollAnswer(answerId);
+            answer.setVoteCount(answer.getVoteCount() + 1);
+
+            ++totalVotes;
+        }
+
+        poll.setTotalVotes(totalVotes);
+
+        // Since we would probably have changed the total, recalculate the percentages.
+        adapter.notifyItemRangeChanged(2, poll.getAnswers().size());
+    }
+
+    private Poll getPoll() {
+        DiscussionExtras extras = discussionCard.getExtras();
+        if (extras == null) {
+            Log.d(TAG, "selectPollAnswer without extras");
+            return null;
+        }
+
+        Poll poll = extras.getPoll();
+        if (poll == null) {
+            Log.d(TAG, "selectPollAnswer without poll");
+            return null;
+        }
+
+        return poll;
     }
 }

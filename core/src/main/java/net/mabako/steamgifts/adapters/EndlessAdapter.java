@@ -474,6 +474,13 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
             notifyItemChanged(index + stickyItems.size());
             return true;
         }
+
+        index = stickyItems.indexOf(item);
+        if (index >= 0) {
+            notifyItemChanged(index);
+            return true;
+        }
+
         return false;
     }
 

@@ -16,6 +16,7 @@ import net.mabako.steamgifts.fragments.DiscussionDetailFragment;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
 import net.mabako.steamgifts.fragments.ListFragment;
 import net.mabako.steamgifts.fragments.interfaces.ICommentableFragment;
+import net.mabako.steamgifts.fragments.interfaces.IHasPoll;
 import net.mabako.steamgifts.fragments.util.DiscussionDetailsCard;
 import net.mabako.steamgifts.fragments.util.GiveawayDetailsCard;
 
@@ -69,6 +70,7 @@ public class CommentAdapter extends EndlessAdapter {
             return new RecyclerView.ViewHolder(view) {
             };
         }
+
         return null;
     }
 
@@ -96,8 +98,8 @@ public class CommentAdapter extends EndlessAdapter {
             holder.setFrom(info);
         } else if (h instanceof PollHeaderViewHolder) {
             ((PollHeaderViewHolder) h).setFrom((Poll.Header) getItem(position));
-        } else if (h instanceof PollAnswerViewHolder) {
-            ((PollAnswerViewHolder) h).setFrom((Poll.Answer) getItem(position));
+        } else if (h instanceof PollAnswerViewHolder && fragment instanceof IHasPoll) {
+            ((PollAnswerViewHolder) h).setFrom((Poll.Answer) getItem(position), (IHasPoll) fragment);
         }
     }
 
@@ -124,10 +126,23 @@ public class CommentAdapter extends EndlessAdapter {
         if (commentId == 0)
             return null;
 
-        for (int i = 0; i < getItemCount(); ++i) {
-            IEndlessAdaptable item = getItem(i);
-            if (item instanceof Comment && ((Comment) item).getId() == commentId)
+        for (IEndlessAdaptable item : getItems()) {
+            if (item instanceof Comment && ((Comment) item).getId() == commentId) {
                 return (Comment) item;
+            }
+        }
+
+        return null;
+    }
+
+    public Poll.Answer findPollAnswer(int answerId) {
+        if (answerId == 0)
+            return null;
+
+        for (IEndlessAdaptable item : getStickyItems()) {
+            if (item instanceof Poll.Answer && ((Poll.Answer) item).getId() == answerId) {
+                return (Poll.Answer) item;
+            }
         }
 
         return null;

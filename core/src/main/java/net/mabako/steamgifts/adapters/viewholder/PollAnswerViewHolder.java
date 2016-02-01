@@ -1,5 +1,6 @@
 package net.mabako.steamgifts.adapters.viewholder;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
@@ -8,6 +9,7 @@ import android.widget.TextView;
 
 import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.Poll;
+import net.mabako.steamgifts.fragments.interfaces.IHasPoll;
 
 public class PollAnswerViewHolder extends RecyclerView.ViewHolder {
     private final TextView text;
@@ -31,9 +33,16 @@ public class PollAnswerViewHolder extends RecyclerView.ViewHolder {
         percentageText = (TextView) itemView.findViewById(R.id.percentage);
     }
 
-    public void setFrom(Poll.Answer answer) {
+    public void setFrom(final Poll.Answer answer, @NonNull final IHasPoll fragment) {
         text.setText(answer.getText());
+
         updateButtonText(answer.isSelected(), answer.isVoteable());
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fragment.selectPollAnswer(answer);
+            }
+        });
 
         Poll poll = answer.getPoll();
         int percentage = poll.getTotalVotes() == 0 ? 0 : Math.round(100f * answer.getVoteCount() / poll.getTotalVotes());
