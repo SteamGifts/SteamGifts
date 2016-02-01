@@ -35,6 +35,7 @@ import net.mabako.steamgifts.tasks.LoadUserDetailsTask;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Locale;
 
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
@@ -83,7 +84,7 @@ public class UserDetailFragment extends Fragment implements IUserNotifications {
 
         ActionBar toolbar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if (toolbar != null)
-            toolbar.setTitle(user.getName());
+            toolbar.setTitle(getNonConfusingUsername());
 
         UserGiveawayListFragment fragmentSent = UserGiveawayListFragment.newInstance(user, "", true);
         fragmentSent.setiUserNotification(UserDetailFragment.this);
@@ -109,7 +110,7 @@ public class UserDetailFragment extends Fragment implements IUserNotifications {
         if (activity != null) {
             ActionBar actionBar = activity.getSupportActionBar();
             if (actionBar != null) {
-                actionBar.setTitle(user.getName());
+                actionBar.setTitle(getNonConfusingUsername());
                 actionBar.setSubtitle(getString(R.string.user_level, user.getLevel()));
             }
         }
@@ -145,6 +146,20 @@ public class UserDetailFragment extends Fragment implements IUserNotifications {
         // Refresh tabs
         for (int i = 0; i < viewPagerAdapter.getCount(); ++i)
             tabLayout.getTabAt(i).setText(viewPagerAdapter.getPageTitle(i));
+    }
+
+    /**
+     * To prevent some confusion, we'll convert names with -some- characters to lowercase as well.
+     * This helps in particular if you're called MuIIins, which is actually muiiins and not mullins.
+     *
+     * @return Lowercase and normal if the user name contains any of the blacklisted characters;
+     * otherwise just the regular name
+     */
+    private String getNonConfusingUsername() {
+        String name = user.getName();
+        if (name.contains("I") || name.contains("l") || name.contains("O") || name.contains("0"))
+            return String.format("%s (%s)", name.toLowerCase(Locale.ENGLISH), name);
+        return name;
     }
 
     @Override
