@@ -7,9 +7,9 @@ import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.TextView;
 
-import net.mabako.steamgifts.core.R;
-import net.mabako.steamgifts.adapters.viewholder.Utils;
 import net.mabako.steam.store.data.Text;
+import net.mabako.steamgifts.adapters.viewholder.Utils;
+import net.mabako.steamgifts.core.R;
 
 public class TextViewHolder extends RecyclerView.ViewHolder {
     private final Context context;
@@ -26,9 +26,10 @@ public class TextViewHolder extends RecyclerView.ViewHolder {
     public void setFrom(Text text) {
         if (TextUtils.isEmpty(text.getText()))
             textView.setText(null);
-        else if (text.isHtml())
+        else if (text.isHtml()) {
             textView.setText(Utils.fromHtml(context, text.getText()));
-        else
+            textView.setMovementMethod(LinkMovementMethod.getInstance());
+        } else
             textView.setText(text.getText());
     }
 }
