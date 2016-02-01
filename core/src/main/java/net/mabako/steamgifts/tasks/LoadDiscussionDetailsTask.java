@@ -162,7 +162,7 @@ public class LoadDiscussionDetailsTask extends AsyncTask<Void, Void, DiscussionE
 
         Elements answerElements = pollElement.select(".table__rows div[data-id]");
         for (Element thisAnswer : answerElements) {
-            Poll.Option answer = new Poll.Option();
+            Poll.Answer answer = new Poll.Answer();
 
             answer.setId(Integer.valueOf(thisAnswer.attr("data-id")));
             answer.setVoteCount(Integer.valueOf(thisAnswer.attr("data-votes")));

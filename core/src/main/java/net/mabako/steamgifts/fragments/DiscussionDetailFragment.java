@@ -21,14 +21,18 @@ import android.widget.Toast;
 
 import net.mabako.steamgifts.activities.DetailActivity;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
+import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.BasicDiscussion;
 import net.mabako.steamgifts.data.Discussion;
 import net.mabako.steamgifts.data.DiscussionExtras;
+import net.mabako.steamgifts.data.Poll;
 import net.mabako.steamgifts.fragments.util.DiscussionDetailsCard;
 import net.mabako.steamgifts.tasks.LoadDiscussionDetailsTask;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DiscussionDetailFragment extends DetailFragment {
     public static final String ARG_DISCUSSION = "discussion";
@@ -150,7 +154,18 @@ public class DiscussionDetailFragment extends DetailFragment {
         ((Discussion) discussion).setPoll(extras.hasPoll());
 
         discussionCard.setExtras(extras);
-        adapter.setStickyItem(discussionCard);
+
+        if (extras.hasPoll() && getCommentContext() == null) {
+            List<IEndlessAdaptable> pollItems = new ArrayList<>();
+            pollItems.add(discussionCard);
+
+            pollItems.add(extras.getPoll().getHeader());
+            pollItems.addAll(extras.getPoll().getAnswers());
+            pollItems.add(new Poll.CommentSeparator());
+            adapter.setStickyItems(pollItems);
+        } else {
+            adapter.setStickyItem(discussionCard);
+        }
 
         adapter.notifyPage(page, lastPage);
         addItems(extras.getComments(), false, extras.getXsrfToken());

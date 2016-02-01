@@ -1,6 +1,7 @@
 package net.mabako.steamgifts.data;
 
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
+import net.mabako.steamgifts.core.R;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -10,19 +11,39 @@ import java.util.List;
 public class Poll implements Serializable {
     private static final long serialVersionUID = -2876811085489294457L;
 
-    private String question;
+    private Header header;
     private List<IEndlessAdaptable> answers = new ArrayList<>();
 
-    public String getQuestion() {
-        return question;
+    private int totalVotes = 0;
+    private int mostVotesOnASingleAnswer = 0;
+
+    public Header getHeader() {
+        return header;
     }
 
     public void setQuestion(String question) {
-        this.question = question;
+        header = new Header();
+        header.setText(question);
     }
 
-    public void addAnswer(Option option) {
-        answers.add(option);
+    public List<IEndlessAdaptable> getAnswers() {
+        return answers;
+    }
+
+    public void addAnswer(Answer answer) {
+        answers.add(answer);
+
+        answer.setPoll(this);
+        totalVotes += answer.getVoteCount();
+        mostVotesOnASingleAnswer = Math.max(mostVotesOnASingleAnswer, answer.getVoteCount());
+    }
+
+    public int getTotalVotes() {
+        return totalVotes;
+    }
+
+    public int getMostVotesOnASingleAnswer() {
+        return mostVotesOnASingleAnswer;
     }
 
     @Override
@@ -39,8 +60,9 @@ public class Poll implements Serializable {
         return sb.toString();
     }
 
-    public static class Option implements Serializable, IEndlessAdaptable {
+    public static class Answer implements Serializable, IEndlessAdaptable {
         private static final long serialVersionUID = 879317134785161587L;
+        public static final int VIEW_LAYOUT = R.layout.poll_answer;
 
         private int id;
         private int voteCount;
@@ -48,6 +70,7 @@ public class Poll implements Serializable {
 
         private int appId = Game.NO_APP_ID;
         private Game.Type appType = Game.Type.APP;
+        private Poll poll;
 
         public int getId() {
             return id;
@@ -93,17 +116,25 @@ public class Poll implements Serializable {
             return appId != Game.NO_APP_ID;
         }
 
+        public Poll getPoll() {
+            return poll;
+        }
+
+        public void setPoll(Poll poll) {
+            this.poll = poll;
+        }
+
         @Override
         public int getLayout() {
-            return 0;
+            return VIEW_LAYOUT;
         }
 
         @Override
         public boolean equals(Object o) {
-            if (o == null || !(o instanceof Option))
+            if (o == null || !(o instanceof Answer))
                 return false;
 
-            return ((Option) o).id == id;
+            return ((Answer) o).id == id;
         }
 
         @Override
@@ -114,6 +145,36 @@ public class Poll implements Serializable {
         @Override
         public String toString() {
             return "[" + id + "," + voteCount + "," + text + "," + appId + "]";
+        }
+    }
+
+    public static class CommentSeparator implements IEndlessAdaptable, Serializable {
+        public static final int VIEW_LAYOUT = R.layout.comment_separator;
+        private static final long serialVersionUID = -8237738700191365276L;
+
+        @Override
+        public int getLayout() {
+            return VIEW_LAYOUT;
+        }
+    }
+
+    public static class Header implements IEndlessAdaptable, Serializable {
+        public static final int VIEW_LAYOUT = R.layout.poll_header;
+        private static final long serialVersionUID = 6397402142913281497L;
+
+        private String text;
+
+        public String getText() {
+            return text;
+        }
+
+        public void setText(String text) {
+            this.text = text;
+        }
+
+        @Override
+        public int getLayout() {
+            return VIEW_LAYOUT;
         }
     }
 }

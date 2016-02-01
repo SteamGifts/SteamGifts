@@ -8,7 +8,10 @@ import net.mabako.steamgifts.adapters.viewholder.CommentContextViewHolder;
 import net.mabako.steamgifts.adapters.viewholder.CommentViewHolder;
 import net.mabako.steamgifts.adapters.viewholder.DiscussionCardViewHolder;
 import net.mabako.steamgifts.adapters.viewholder.GiveawayCardViewHolder;
+import net.mabako.steamgifts.adapters.viewholder.PollAnswerViewHolder;
+import net.mabako.steamgifts.adapters.viewholder.PollHeaderViewHolder;
 import net.mabako.steamgifts.data.Comment;
+import net.mabako.steamgifts.data.Poll;
 import net.mabako.steamgifts.fragments.DiscussionDetailFragment;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
 import net.mabako.steamgifts.fragments.ListFragment;
@@ -54,8 +57,17 @@ public class CommentAdapter extends EndlessAdapter {
             return new GiveawayCardViewHolder(view, (GiveawayDetailFragment) fragment);
         } else if (viewType == DiscussionDetailsCard.VIEW_LAYOUT) {
             return new DiscussionCardViewHolder(view, (DiscussionDetailFragment) fragment);
+
         } else if (viewType == CommentContextViewHolder.VIEW_LAYOUT) {
             return new CommentContextViewHolder(view, fragment.getActivity());
+
+        } else if (viewType == Poll.Header.VIEW_LAYOUT) {
+            return new PollHeaderViewHolder(view);
+        } else if (viewType == Poll.Answer.VIEW_LAYOUT) {
+            return new PollAnswerViewHolder(view);
+        } else if (viewType == Poll.CommentSeparator.VIEW_LAYOUT) {
+            return new RecyclerView.ViewHolder(view) {
+            };
         }
         return null;
     }
@@ -82,6 +94,10 @@ public class CommentAdapter extends EndlessAdapter {
             CommentContextViewHolder.SerializableHolder info = (CommentContextViewHolder.SerializableHolder) getItem(position);
 
             holder.setFrom(info);
+        } else if (h instanceof PollHeaderViewHolder) {
+            ((PollHeaderViewHolder) h).setFrom((Poll.Header) getItem(position));
+        } else if (h instanceof PollAnswerViewHolder) {
+            ((PollAnswerViewHolder) h).setFrom((Poll.Answer) getItem(position));
         }
     }
 
