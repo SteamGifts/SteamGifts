@@ -10,7 +10,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -366,8 +365,6 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.v(TAG, "Activity result for " + requestCode + " => " + resultCode);
-
         switch (requestCode) {
             case REQUEST_LOGIN:
                 if (resultCode == CommonActivity.RESPONSE_LOGIN_SUCCESSFUL) {

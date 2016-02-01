@@ -251,8 +251,6 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     public void clear() {
-        Log.d(TAG, "Clearing list");
-
         items.clear();
         reachedTheEnd = false;
         page = viewInReverse ? LAST_PAGE : FIRST_PAGE;
@@ -405,7 +403,6 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
      * @param lastPage is this page the last page?
      */
     public void notifyPage(int page, boolean lastPage) {
-        Log.d(TAG, "asdf " + page + ", " + this.page + ", " + lastPage + ", " + viewInReverse);
         if (viewInReverse && lastPage) {
             clear();
             this.page = page;
