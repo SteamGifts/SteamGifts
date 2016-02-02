@@ -57,7 +57,7 @@ public class WebViewActivity extends CommonActivity {
             webSettings.setDisplayZoomControls(false);
 
         webView.setWebViewClient(new CustomWebViewClient());
-        webView.setWebChromeClient(new WebChromeClient());
+        webView.setWebChromeClient(new CustomWebChromeClient());
         webView.loadUrl(url);
     }
 
@@ -96,13 +96,21 @@ public class WebViewActivity extends CommonActivity {
         }
     }
 
+    private class CustomWebChromeClient extends WebChromeClient {
+        @Override
+        public void onReceivedTitle(WebView view, String title) {
+            toolbar.setTitle(title);
+            toolbar.setSubtitle(getUrl(view.getUrl()));
+        }
+    }
+
     private class CustomWebViewClient extends WebViewClient {
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
 
-            toolbar.setTitle(R.string.loading);
-            toolbar.setSubtitle(url);
+            toolbar.setTitle(getUrl(url));
+            toolbar.setSubtitle(null);
         }
 
         @Override
@@ -110,7 +118,7 @@ public class WebViewActivity extends CommonActivity {
             super.onPageFinished(view, url);
 
             toolbar.setTitle(view.getTitle());
-            toolbar.setSubtitle(url);
+            toolbar.setSubtitle(getUrl(url));
         }
 
         /**
@@ -125,7 +133,7 @@ public class WebViewActivity extends CommonActivity {
             Intent intent = UrlHandlingActivity.getIntentForUri(WebViewActivity.this, Uri.parse(url));
             if (intent != null) {
                 // Should we mark the next context read?
-                if(getIntent().hasExtra(DetailActivity.ARG_MARK_CONTEXT_READ))
+                if (getIntent().hasExtra(DetailActivity.ARG_MARK_CONTEXT_READ))
                     intent.putExtra(DetailActivity.ARG_MARK_CONTEXT_READ, true);
 
                 startActivity(intent);
@@ -142,5 +150,15 @@ public class WebViewActivity extends CommonActivity {
     private void checkForFinishActivity() {
         if (!webView.canGoBack() && getIntent().getStringExtra(ARG_URL).startsWith("http://www.steamgifts.com/go/"))
             finish();
+    }
+
+    /**
+     * Return the host name.
+     */
+    private CharSequence getUrl(String url) {
+        Uri uri = Uri.parse(url);
+        if ("https".equals(uri.getScheme()))
+            return "https://" + uri.getHost();
+        return uri.getHost();
     }
 }
