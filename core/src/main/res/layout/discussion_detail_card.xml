@@ -17,14 +17,23 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <TextView
+                android:id="@+id/discussion_name"
+                style="@style/BigText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:paddingTop="@dimen/card_margin_outer"
+                tools:text="Title" />
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingBottom="0dp"
                 android:paddingLeft="@dimen/card_margin_outer"
-                android:paddingRight="@dimen/card_margin_outer"
-                android:paddingTop="@dimen/card_margin_outer">
+                android:paddingRight="@dimen/card_margin_outer">
 
                 <TextView
                     android:id="@+id/time"

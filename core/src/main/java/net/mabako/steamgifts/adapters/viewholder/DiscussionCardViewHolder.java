@@ -24,6 +24,7 @@ public class DiscussionCardViewHolder extends RecyclerView.ViewHolder {
     private final TextView description;
     private final View separator;
     private final View actionSeparator;
+    private final TextView title;
 
     private final Button commentDiscussion;
 
@@ -38,6 +39,7 @@ public class DiscussionCardViewHolder extends RecyclerView.ViewHolder {
         description.setMovementMethod(LinkMovementMethod.getInstance());
         separator = v.findViewById(R.id.separator);
         actionSeparator = v.findViewById(R.id.action_separator);
+        title = (TextView) v.findViewById(R.id.discussion_name);
 
         commentDiscussion = (Button) v.findViewById(R.id.comment);
     }
@@ -46,14 +48,16 @@ public class DiscussionCardViewHolder extends RecyclerView.ViewHolder {
         final Discussion discussion = card.getDiscussion();
         DiscussionExtras extras = card.getExtras();
 
-        for (View view : new View[]{commentDiscussion, description, discussionTime, user, separator, actionSeparator})
+        for (View view : new View[]{commentDiscussion, description, discussionTime, user, title, separator, actionSeparator})
             view.setVisibility(View.GONE);
 
         if (discussion == null) {
             progressBar.setVisibility(View.VISIBLE);
         } else {
-            for (View view : new View[]{discussionTime, user})
+            for (View view : new View[]{discussionTime, user, title})
                 view.setVisibility(View.VISIBLE);
+
+            title.setText(discussion.getTitle());
 
             user.setText("{faw-user} " + discussion.getCreator());
             user.setOnClickListener(new View.OnClickListener() {
