@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import net.mabako.Constants;
 import net.mabako.steam.store.data.Picture;
 import net.mabako.steam.store.data.Space;
 import net.mabako.steam.store.data.Text;
@@ -52,6 +53,8 @@ public class StoreAppFragment extends StoreFragment {
         protected Connection getConnection() {
             return Jsoup
                     .connect("http://store.steampowered.com/api/appdetails/")
+                    .userAgent(Constants.JSOUP_USER_AGENT)
+                    .timeout(Constants.JSOUP_TIMEOUT)
                     .data("appids", getArguments().getString("app"))
                     .data("l", "en");
         }

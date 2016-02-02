@@ -6,6 +6,7 @@ import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
 
+import net.mabako.Constants;
 import net.mabako.steamgifts.data.Game;
 import net.mabako.steamgifts.persistentdata.SGToolsUserData;
 
@@ -39,6 +40,8 @@ class LoadGiveawayTask extends AsyncTask<Void, Void, Giveaway> {
             Log.v(TAG, "Connecting to " + url);
             Connection connection = Jsoup
                     .connect(url)
+                    .userAgent(Constants.JSOUP_USER_AGENT)
+                    .timeout(Constants.JSOUP_TIMEOUT)
                     .followRedirects(false);
 
             String sessionId = SGToolsUserData.getCurrent().getSessionId();

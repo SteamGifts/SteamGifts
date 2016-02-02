@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import net.mabako.Constants;
 import net.mabako.steamgifts.activities.MainActivity;
 
 import org.jsoup.Jsoup;
@@ -39,6 +40,8 @@ public class LogoutTask extends AsyncTask<Void, Void, Boolean> {
         // Mostly irrelevant since we clear the stored session id...
         try {
             Jsoup.connect("http://www.steamgifts.com/?logout")
+                    .userAgent(Constants.JSOUP_USER_AGENT)
+                    .timeout(Constants.JSOUP_TIMEOUT)
                     .cookie("PHPSESSID", sessionId)
                     .get();
 

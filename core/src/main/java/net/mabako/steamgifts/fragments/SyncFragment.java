@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import net.mabako.Constants;
 import net.mabako.steamgifts.activities.CommonActivity;
 import net.mabako.steamgifts.activities.WebViewActivity;
 import net.mabako.steamgifts.core.R;
@@ -133,8 +134,10 @@ public class SyncFragment extends Fragment {
             try {
                 // Fetch the Giveaway page
 
-                Connection jsoup = Jsoup.connect("http://www.steamgifts.com/account/profile/sync");
-                jsoup.cookie("PHPSESSID", SteamGiftsUserData.getCurrent(fragment.getContext()).getSessionId());
+                Connection jsoup = Jsoup.connect("http://www.steamgifts.com/account/profile/sync")
+                        .userAgent(Constants.JSOUP_USER_AGENT)
+                        .timeout(Constants.JSOUP_TIMEOUT)
+                        .cookie("PHPSESSID", SteamGiftsUserData.getCurrent(fragment.getContext()).getSessionId());
                 Document document = jsoup.get();
 
                 SteamGiftsUserData.extract(fragment.getContext(), document);

@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import net.mabako.Constants;
 import net.mabako.steamgifts.data.Discussion;
 import net.mabako.steamgifts.fragments.DiscussionListFragment;
 import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
@@ -47,7 +48,9 @@ public class LoadDiscussionListTask extends AsyncTask<Void, Void, List<Discussio
 
             Log.d(TAG, "Fetching discussions for page " + page + " and URL " + url);
 
-            Connection jsoup = Jsoup.connect(url);
+            Connection jsoup = Jsoup.connect(url)
+                    .userAgent(Constants.JSOUP_USER_AGENT)
+                    .timeout(Constants.JSOUP_TIMEOUT);
             jsoup.data("page", Integer.toString(page));
 
             if (searchQuery != null)

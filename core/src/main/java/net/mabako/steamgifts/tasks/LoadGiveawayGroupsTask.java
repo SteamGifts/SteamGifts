@@ -3,6 +3,7 @@ package net.mabako.steamgifts.tasks;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import net.mabako.Constants;
 import net.mabako.steamgifts.data.GiveawayGroup;
 import net.mabako.steamgifts.fragments.GiveawayGroupListFragment;
 import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
@@ -38,7 +39,9 @@ public class LoadGiveawayGroupsTask extends AsyncTask<Void, Void, List<GiveawayG
         try {
             // Fetch the Giveaway page
 
-            Connection jsoup = Jsoup.connect("http://www.steamgifts.com/giveaway/" + path + "/groups/search");
+            Connection jsoup = Jsoup.connect("http://www.steamgifts.com/giveaway/" + path + "/groups/search")
+                    .userAgent(Constants.JSOUP_USER_AGENT)
+                    .timeout(Constants.JSOUP_TIMEOUT);
             jsoup.data("page", Integer.toString(page));
 
             if (SteamGiftsUserData.getCurrent(fragment.getContext()).isLoggedIn())

@@ -3,6 +3,7 @@ package net.mabako.sgtools;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import net.mabako.Constants;
 import net.mabako.steamgifts.persistentdata.SGToolsUserData;
 
 import org.json.JSONException;
@@ -77,6 +78,8 @@ public class LoadGiveawayLinkTask extends AsyncTask<Void, Void, Void> {
 
         Connection connection = Jsoup
                 .connect(url)
+                .userAgent(Constants.JSOUP_USER_AGENT)
+                .timeout(Constants.JSOUP_TIMEOUT)
                 .cookie("PHPSESSID", SGToolsUserData.getCurrent().getSessionId())
                 .followRedirects(false)
                 .ignoreContentType(true);

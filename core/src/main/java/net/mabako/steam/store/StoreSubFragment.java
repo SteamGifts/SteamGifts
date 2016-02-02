@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import net.mabako.Constants;
 import net.mabako.steamgifts.activities.DetailActivity;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.core.R;
@@ -48,6 +49,8 @@ public class StoreSubFragment extends StoreFragment {
         protected Connection getConnection() {
             return Jsoup
                     .connect("http://store.steampowered.com/api/packagedetails/")
+                    .userAgent(Constants.JSOUP_USER_AGENT)
+                    .timeout(Constants.JSOUP_TIMEOUT)
                     .data("packageids", getArguments().getString("sub"))
                     .data("l", "en");
         }

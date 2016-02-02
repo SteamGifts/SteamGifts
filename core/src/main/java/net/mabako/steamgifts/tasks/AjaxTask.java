@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.Log;
 
+import net.mabako.Constants;
 import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
 
 import org.jsoup.Connection;
@@ -42,6 +43,8 @@ public abstract class AjaxTask<FragmentType> extends AsyncTask<Void, Void, Conne
             Log.v(TAG, "Connecting to " + url);
             Connection connection = Jsoup
                     .connect(url)
+                    .userAgent(Constants.JSOUP_USER_AGENT)
+                    .timeout(Constants.JSOUP_TIMEOUT)
                     .data("xsrf_token", xsrfToken)
                     .data("do", what)
                     .cookie("PHPSESSID", SteamGiftsUserData.getCurrent(context).getSessionId())

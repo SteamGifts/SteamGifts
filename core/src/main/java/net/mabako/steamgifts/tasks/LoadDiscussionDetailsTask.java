@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
 
+import net.mabako.Constants;
 import net.mabako.steamgifts.data.Discussion;
 import net.mabako.steamgifts.data.DiscussionExtras;
 import net.mabako.steamgifts.data.Poll;
@@ -92,13 +93,14 @@ public class LoadDiscussionDetailsTask extends AsyncTask<Void, Void, DiscussionE
         String url = "http://www.steamgifts.com/discussion/" + discussionId + "/search?page=" + page;
         Log.v(TAG, "Fetching discussion details for " + url);
         Connection connection = Jsoup.connect(url)
+                .userAgent(Constants.JSOUP_USER_AGENT)
+                .timeout(Constants.JSOUP_TIMEOUT)
                 .followRedirects(true);
 
         if (SteamGiftsUserData.getCurrent(fragment.getContext()).isLoggedIn())
             connection.cookie("PHPSESSID", SteamGiftsUserData.getCurrent(fragment.getContext()).getSessionId());
 
-        Connection.Response response = connection.execute();
-        return response;
+        return connection.execute();
     }
 
     private Discussion loadDiscussion(Document document, Uri linkUri) {

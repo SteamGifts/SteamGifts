@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.Log;
 
+import net.mabako.Constants;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.fragments.GiveawayListFragment;
 import net.mabako.steamgifts.persistentdata.FilterData;
@@ -42,7 +43,9 @@ public class LoadGiveawayListTask extends AsyncTask<Void, Void, List<Giveaway>> 
         try {
             // Fetch the Giveaway page
 
-            Connection jsoup = Jsoup.connect("http://www.steamgifts.com/giveaways/search");
+            Connection jsoup = Jsoup.connect("http://www.steamgifts.com/giveaways/search")
+                    .userAgent(Constants.JSOUP_USER_AGENT)
+                    .timeout(Constants.JSOUP_TIMEOUT);
             jsoup.data("page", Integer.toString(page));
 
             if (searchQuery != null)

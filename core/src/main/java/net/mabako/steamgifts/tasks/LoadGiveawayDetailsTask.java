@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
 
+import net.mabako.Constants;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.data.GiveawayExtras;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
@@ -42,7 +43,9 @@ public class LoadGiveawayDetailsTask extends AsyncTask<Void, Void, GiveawayExtra
         Log.d(TAG, "Fetching giveaway details for " + url);
 
         try {
-            Connection connection = Jsoup.connect(url);
+            Connection connection = Jsoup.connect(url)
+                    .userAgent(Constants.JSOUP_USER_AGENT)
+                    .timeout(Constants.JSOUP_TIMEOUT);
             if (SteamGiftsUserData.getCurrent(fragment.getContext()).isLoggedIn())
                 connection.cookie("PHPSESSID", SteamGiftsUserData.getCurrent(fragment.getContext()).getSessionId());
 
