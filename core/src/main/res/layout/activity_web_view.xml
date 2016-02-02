@@ -16,10 +16,27 @@
         android:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         android:subtitle="URL"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:title="@string/loading" />
+        app:title="@string/loading">
 
-    <WebView
-        android:id="@+id/webview"
+    </android.support.v7.widget.Toolbar>
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+
+        <WebView
+            android:id="@+id/webview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxHeight="2dp"
+            android:minHeight="2dp"
+            android:progress="20"
+            android:secondaryProgress="0" />
+    </FrameLayout>
 </LinearLayout>

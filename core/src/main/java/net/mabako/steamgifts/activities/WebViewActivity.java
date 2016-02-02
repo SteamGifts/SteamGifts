@@ -3,18 +3,24 @@ package net.mabako.steamgifts.activities;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import net.mabako.steamgifts.core.R;
 
@@ -27,6 +33,7 @@ public class WebViewActivity extends CommonActivity {
 
     private WebView webView;
     private ActionBar toolbar;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +50,10 @@ public class WebViewActivity extends CommonActivity {
         toolbar = getSupportActionBar();
         toolbar.setDisplayHomeAsUpEnabled(true);
         toolbar.setTitle(R.string.loading);
-        toolbar.setSubtitle(url);
+        toolbar.setSubtitle(getUrl(url));
+
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.GONE);
 
         webView = (WebView) findViewById(R.id.webview);
         WebSettings webSettings = webView.getSettings();
@@ -99,26 +109,41 @@ public class WebViewActivity extends CommonActivity {
     private class CustomWebChromeClient extends WebChromeClient {
         @Override
         public void onReceivedTitle(WebView view, String title) {
+            Log.d("webview", "receive title");
+
             toolbar.setTitle(title);
             toolbar.setSubtitle(getUrl(view.getUrl()));
+        }
+
+        @Override
+        public void onProgressChanged(WebView view, int newProgress) {
+            progressBar.setProgress(newProgress);
         }
     }
 
     private class CustomWebViewClient extends WebViewClient {
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
-            super.onPageStarted(view, url, favicon);
+            progressBar.setProgress(0);
+            progressBar.setVisibility(View.VISIBLE);
+        }
 
-            toolbar.setTitle(getUrl(url));
-            toolbar.setSubtitle(null);
+        @Override
+        public void onPageCommitVisible(WebView view, String url) {
+            toolbar.setTitle(view.getTitle());
+            toolbar.setSubtitle(getUrl(url));
         }
 
         @Override
         public void onPageFinished(WebView view, String url) {
-            super.onPageFinished(view, url);
+            progressBar.setVisibility(View.GONE);
+        }
 
-            toolbar.setTitle(view.getTitle());
-            toolbar.setSubtitle(getUrl(url));
+        @Override
+        public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+            Toast.makeText(WebViewActivity.this, "Invalid SSL Certificate.", Toast.LENGTH_SHORT).show();
+
+            handler.cancel();
         }
 
         /**
