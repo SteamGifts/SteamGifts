@@ -1,6 +1,7 @@
 package net.mabako.steamgifts.fragments;
 
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -115,8 +116,12 @@ public class UserDetailFragment extends Fragment implements IUserNotifications {
             }
         }
 
-        // Avatar?
-        Picasso.with(getContext()).load(user.getAvatar()).placeholder(R.drawable.default_avatar_mask).transform(new RoundedCornersTransformation(20, 0)).into(new Target() {
+        // Rescale the avatar to not take up the full navbar height.
+        int attrs[] = new int[]{R.attr.actionBarSize};
+        TypedArray ta = getContext().getTheme().obtainStyledAttributes(attrs);
+        int size = (int) (ta.getDimensionPixelSize(0, 0) * 0.75f);
+
+        Picasso.with(getContext()).load(user.getAvatar()).placeholder(R.drawable.default_avatar_mask).resize(size, size).transform(new RoundedCornersTransformation(20, 0)).into(new Target() {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                 AppCompatActivity activity = (AppCompatActivity) getActivity();
@@ -124,10 +129,9 @@ public class UserDetailFragment extends Fragment implements IUserNotifications {
                     ActionBar actionBar = activity.getSupportActionBar();
                     if (actionBar != null) {
                         Drawable drawable = new BitmapDrawable(getResources(), bitmap);
-                        actionBar.setIcon(drawable);
-                        actionBar.setHomeButtonEnabled(false);
+                        actionBar.setDisplayUseLogoEnabled(true);
                         actionBar.setDisplayShowHomeEnabled(true);
-                        actionBar.setDisplayHomeAsUpEnabled(false);
+                        actionBar.setIcon(drawable);
                     }
                 }
             }
