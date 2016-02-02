@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
@@ -67,7 +68,13 @@ public class SettingsActivity extends BaseActivity {
         setContentView(R.layout.activity_one_fragment);
 
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        loadFragment(R.id.fragment_container, new SettingsFragment(), "settings");
+        ActionBar actionbar = getSupportActionBar();
+        if (actionbar != null) {
+            actionbar.setDisplayHomeAsUpEnabled(true);
+            actionbar.setTitle(R.string.preferences);
+        }
+
+        if (savedInstanceState == null)
+            loadFragment(R.id.fragment_container, new SettingsFragment(), "settings");
     }
 }
