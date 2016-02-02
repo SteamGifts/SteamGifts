@@ -161,7 +161,8 @@ public class UserDetailFragment extends Fragment implements IUserNotifications {
      */
     private String getNonConfusingUsername() {
         String name = user.getName();
-        if (name.contains("I") || name.contains("l") || name.contains("O") || name.contains("0"))
+        if (name.contains("I") || name.contains("O"))
+            // If this list of characters changes, make sure name.toLowerCase() != name before formatting.
             return String.format("%s (%s)", name.toLowerCase(Locale.ENGLISH), name);
         return name;
     }
