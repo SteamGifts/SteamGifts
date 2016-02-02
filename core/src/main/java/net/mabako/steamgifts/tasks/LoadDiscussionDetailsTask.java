@@ -110,7 +110,7 @@ public class LoadDiscussionDetailsTask extends AsyncTask<Void, Void, DiscussionE
 
         Discussion discussion = new Discussion(discussionLink);
         discussion.setName(discussionName);
-        discussion.setTitle(document.title()); // TODO is this "good enough"?
+        discussion.setTitle(Utils.getPageTitle(document));
 
         discussion.setCreator(element.select(".comment__username a").first().text());
         discussion.setTimeCreated(element.select(".comment__actions > div span").first().text());

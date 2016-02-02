@@ -192,4 +192,13 @@ public final class Utils {
 
         return giveawayList;
     }
+
+    /**
+     * The document title is in the format "Game Title - Page X" if we're on /giveaways/id/name/search?page=X,
+     * so we strip out the page number.
+     */
+    public static String getPageTitle(Document document) {
+        String title = document.title();
+        return title.replaceAll(" - Page ([\\d,]+)$", "");
+    }
 }
