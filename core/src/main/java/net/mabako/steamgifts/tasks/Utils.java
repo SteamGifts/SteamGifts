@@ -77,6 +77,10 @@ public final class Utils {
 
             comment.setHighlighted(thisComment.select(".comment__parent > .comment__envelope").size() != 0);
 
+            Element roleName = thisComment.select(".comment__role-name").first();
+            if (roleName != null)
+                comment.setAuthorRole(roleName.text().replace("(", "").replace(")", ""));
+
             // add this
             parent.addComment(comment);
 

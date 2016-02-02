@@ -28,6 +28,7 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
 
     private final TextView commentAuthor;
     private final TextView commentTime;
+    private final TextView commentRole;
     protected final TextView commentContent;
     private final ImageView commentImage;
     private final View commentIndent;
@@ -43,6 +44,7 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
 
         commentAuthor = (TextView) v.findViewById(R.id.user);
         commentTime = (TextView) v.findViewById(R.id.time);
+        commentRole = (TextView) v.findViewById(R.id.role);
 
         commentContent = (TextView) v.findViewById(R.id.content);
         commentContent.setMovementMethod(LinkMovementMethod.getInstance());
@@ -61,6 +63,10 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
         commentAuthor.setText(comment.getAuthor());
         commentAuthor.setTextAppearance(context, comment.isHighlighted() ? R.style.SmallText : comment.isOp() ? R.style.SmallText_HighlightOp : R.style.SmallText_NormalUser);
         Utils.setBackgroundDrawable(context, commentAuthor, comment.isOp() && !comment.isHighlighted(), R.attr.colorAccountHeader);
+
+        // TODO this should eventually hold more information, such as white- and blacklisting icons.
+        commentRole.setVisibility(comment.getAuthorRole() == null ? View.GONE : View.VISIBLE);
+        commentRole.setText("{faw-gavel} " + comment.getAuthorRole());
 
         commentTime.setText(comment.getTimeAgo());
         commentTime.setTextAppearance(context, comment.isHighlighted() ? R.style.SmallText : R.style.SmallText_Light);

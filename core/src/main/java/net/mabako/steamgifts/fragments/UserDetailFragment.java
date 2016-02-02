@@ -112,7 +112,13 @@ public class UserDetailFragment extends Fragment implements IUserNotifications {
             ActionBar actionBar = activity.getSupportActionBar();
             if (actionBar != null) {
                 actionBar.setTitle(getNonConfusingUsername());
-                actionBar.setSubtitle(getString(R.string.user_level, user.getLevel()));
+
+                StringBuilder subtitle = new StringBuilder();
+                if (user.getRole() != null)
+                    subtitle.append(user.getRole()).append(" \u2022 ");
+                subtitle.append(getString(R.string.user_level, user.getLevel()));
+
+                actionBar.setSubtitle(subtitle);
             }
         }
 

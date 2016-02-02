@@ -1,10 +1,12 @@
 package net.mabako.steamgifts.data;
 
+import net.mabako.Constants;
+
 import java.io.Serializable;
 
 public class User implements Serializable {
     private static final long serialVersionUID = -313348528668961481L;
-    private String name, avatar, url;
+    private String name, avatar, url, role;
 
     private int level, created, won, comments;
     private String createdAmount, wonAmount;
@@ -93,5 +95,19 @@ public class User implements Serializable {
 
     public void setLoaded(boolean loaded) {
         this.loaded = loaded;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    /**
+     * Set the role, if it is a worthwhile role to display.
+     *
+     * @param role role to display
+     */
+    public void setRole(String role) {
+        if (Constants.IMPORTANT_USER_ROLES.contains(role))
+            this.role = role;
     }
 }

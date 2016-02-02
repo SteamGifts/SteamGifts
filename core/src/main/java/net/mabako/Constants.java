@@ -2,7 +2,16 @@ package net.mabako;
 
 import android.os.Build;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 public interface Constants {
+    /**
+     * Important user roles we want to display. Does not include "Member", "Bundler" or "Developer".
+     */
+    List<String> IMPORTANT_USER_ROLES = Collections.unmodifiableList(Arrays.asList("Admin", "Super Mod", "Moderator", "Support"));
+
     /**
      * User agent to be used for Jsoup connections, which is a generic Chrome build.
      */

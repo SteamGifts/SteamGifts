@@ -1,5 +1,6 @@
 package net.mabako.steamgifts.data;
 
+import net.mabako.Constants;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.core.R;
 
@@ -20,6 +21,7 @@ public class Comment implements Serializable, IEndlessAdaptable {
     private final String avatar;
     private int depth;
     private final boolean op;
+    private String authorRole;
 
     private boolean deleted, highlighted;
     private String permalinkId, editableContent;
@@ -105,6 +107,15 @@ public class Comment implements Serializable, IEndlessAdaptable {
 
     public void setEditableContent(String editableContent) {
         this.editableContent = editableContent;
+    }
+
+    public String getAuthorRole() {
+        return authorRole;
+    }
+
+    public void setAuthorRole(String authorRole) {
+        if (Constants.IMPORTANT_USER_ROLES.contains(authorRole))
+            this.authorRole = authorRole;
     }
 
     @Override
