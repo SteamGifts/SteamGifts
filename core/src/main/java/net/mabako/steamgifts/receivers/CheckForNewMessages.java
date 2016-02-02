@@ -197,7 +197,7 @@ public class CheckForNewMessages extends BroadcastReceiver {
                     .setPriority(NotificationCompat.PRIORITY_LOW)
                     .setCategory(NotificationCompat.CATEGORY_SOCIAL)
                     .setContentTitle(String.format(context.getString(R.string.notification_new_messages), SteamGiftsUserData.getCurrent(context).getMessageNotification()))
-                    .setContentText(formatString(comments.get(0), false))
+                    .setContentText(formatString(comments.get(0), true))
                     .setStyle(inboxStyle) /* 4.1+ */
                     .setNumber(SteamGiftsUserData.getCurrent(context).getMessageNotification())
                     .setContentIntent(getViewMessagesIntent())
