@@ -4,7 +4,6 @@ package net.mabako.steamgifts.adapters.viewholder;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
@@ -74,12 +73,13 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
         commentIndent.setLayoutParams(params);
 
         Picasso.with(context).load(comment.getAvatar()).placeholder(R.drawable.default_avatar_mask).transform(new RoundedCornersTransformation(20, 0)).into(commentImage);
-        View.OnClickListener viewProfileListener = new View.OnClickListener() {
+        View.OnClickListener viewProfileListener = comment.isDeleted() ? null : new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 fragment.showProfile(comment.getAuthor());
             }
         };
+
         commentImage.setOnClickListener(viewProfileListener);
         commentAuthor.setOnClickListener(viewProfileListener);
 
