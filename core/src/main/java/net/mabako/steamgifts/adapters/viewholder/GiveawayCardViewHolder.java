@@ -30,6 +30,7 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
     private GiveawayDetailFragment fragment;
 
     private final View progressBar;
+    private final TextView title;
     private final TextView user;
     private final TextView timeRemaining;
     private final TextView timeCreated;
@@ -48,6 +49,7 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
         this.fragment = fragment;
 
         progressBar = v.findViewById(R.id.progressBar);
+        title = (TextView) v.findViewById(R.id.giveaway_name);
         user = (TextView) v.findViewById(R.id.user);
         timeRemaining = (TextView) v.findViewById(R.id.remaining);
         timeCreated = (TextView) v.findViewById(R.id.created);
@@ -74,7 +76,7 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
         final Giveaway giveaway = card.getGiveaway();
         final GiveawayExtras extras = card.getExtras();
 
-        for (View view : new View[]{enterGiveaway, leaveGiveaway, commentGiveaway, loginButton, errorMessage, description, indicator, user, timeRemaining, timeCreated, separator, actionSeparator})
+        for (View view : new View[]{enterGiveaway, leaveGiveaway, commentGiveaway, loginButton, errorMessage, description, indicator, user, title, timeRemaining, timeCreated, separator, actionSeparator})
             view.setVisibility(View.GONE);
 
         if (giveaway == null) {
@@ -88,8 +90,10 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
                 }
             });
 
-            for (View view : new View[]{user, timeRemaining, timeCreated, separator})
+            for (View view : new View[]{user, title, timeRemaining, timeCreated, separator})
                 view.setVisibility(View.VISIBLE);
+
+            title.setText(giveaway.getTitle());
 
             if (giveaway.getTimeRemaining() != null) {
                 timeRemaining.setText("{faw-clock-o} " + giveaway.getTimeRemaining());

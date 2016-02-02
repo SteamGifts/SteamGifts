@@ -6,6 +6,7 @@ import java.util.List;
 
 public class GiveawayExtras implements Serializable, ICommentHolder {
     private static final long serialVersionUID = 2559783080850462760L;
+    private String title;
     private String description;
     private String xsrfToken;
     private boolean entered;
@@ -16,6 +17,14 @@ public class GiveawayExtras implements Serializable, ICommentHolder {
 
     public GiveawayExtras() {
         loadedComments = new ArrayList<>();
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getDescription() {

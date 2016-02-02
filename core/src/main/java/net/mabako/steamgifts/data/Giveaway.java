@@ -2,8 +2,8 @@ package net.mabako.steamgifts.data;
 
 import android.util.Log;
 
-import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
+import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
 
 import java.text.ParseException;
@@ -17,7 +17,13 @@ public class Giveaway extends BasicGiveaway implements IEndlessAdaptable {
     private static final String[] relativeDates = new String[]{"Yesterday", "Today", "Tomorrow"};
     public static final int VIEW_LAYOUT = R.layout.giveaway_item;
 
+    /**
+     * Note: SteamGifts truncates the giveaway title on the giveaway list, thus this may not be
+     * accurate prior to opening the giveaway page. {@link GiveawayExtras#setTitle(String)} is
+     * used on the details page to fix the title being cut off.
+     */
     private String title;
+
     private String name;
     private Game.Type type = Game.Type.APP;
     private int gameId = Game.NO_APP_ID;

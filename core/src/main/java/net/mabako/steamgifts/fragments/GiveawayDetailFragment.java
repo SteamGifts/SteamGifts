@@ -170,6 +170,8 @@ public class GiveawayDetailFragment extends DetailFragment implements IHasEntera
         if (!(giveaway instanceof Giveaway))
             throw new IllegalStateException("#onPostGiveawayLoaded was probably not called");
         ((Giveaway) giveaway).setTimeRemaining(extras.getTimeRemaining());
+        ((Giveaway) giveaway).setTitle(extras.getTitle());
+        updateTitle();
 
         giveawayCard.setExtras(extras);
         if (getActivity() != null)
@@ -226,10 +228,9 @@ public class GiveawayDetailFragment extends DetailFragment implements IHasEntera
         this.giveaway = giveaway;
         giveawayCard.setGiveaway(giveaway);
 
+        updateTitle();
         final CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) getActivity().findViewById(R.id.toolbar_layout);
         if (appBarLayout != null) {
-            appBarLayout.setTitle(getTitle());
-
             ImageView toolbarImage = (ImageView) getActivity().findViewById(R.id.toolbar_image);
             if (toolbarImage != null) {
                 Picasso.with(getContext()).load("http://cdn.akamai.steamstatic.com/steam/" + giveaway.getType().name().toLowerCase() + "s/" + giveaway.getGameId() + "/header.jpg").into(toolbarImage, new Callback() {
@@ -244,10 +245,6 @@ public class GiveawayDetailFragment extends DetailFragment implements IHasEntera
                     }
                 });
             }
-        } else {
-            ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-            if (actionBar != null)
-                actionBar.setTitle(giveaway.getTitle());
         }
 
 
@@ -364,5 +361,20 @@ public class GiveawayDetailFragment extends DetailFragment implements IHasEntera
     @Override
     protected String getTitle() {
         return giveaway instanceof Giveaway ? ((Giveaway) giveaway).getTitle() : null;
+    }
+
+    /**
+     * Update the title in the CollapsingToolbarLayout or Actionbar, depending on which is used.
+     */
+    private void updateTitle() {
+        Log.v(TAG, "Setting title to " + getTitle());
+        final CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) getActivity().findViewById(R.id.toolbar_layout);
+        if (appBarLayout != null) {
+            appBarLayout.setTitle(getTitle());
+        } else {
+            ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+            if (actionBar != null)
+                actionBar.setTitle(getTitle());
+        }
     }
 }

@@ -89,7 +89,7 @@ public class LoadGiveawayDetailsTask extends AsyncTask<Void, Void, GiveawayExtra
         String giveawayName = linkUri.getPathSegments().get(2);
 
         Giveaway giveaway = new Giveaway(giveawayLink);
-        giveaway.setTitle(element.select(".featured__heading__medium").text());
+        giveaway.setTitle(getTitle(document));
         giveaway.setName(giveawayName);
 
         giveaway.setCreator(element.select(".featured__columns > div a").text());
@@ -111,6 +111,8 @@ public class LoadGiveawayDetailsTask extends AsyncTask<Void, Void, GiveawayExtra
     @NonNull
     private GiveawayExtras loadExtras(Document document) {
         GiveawayExtras extras = new GiveawayExtras();
+
+        extras.setTitle(getTitle(document));
 
         // Load the description
         Element description = document.select(".page__description__display-state .markdown").first();
@@ -163,5 +165,14 @@ public class LoadGiveawayDetailsTask extends AsyncTask<Void, Void, GiveawayExtra
             Toast.makeText(fragment.getContext(), error, Toast.LENGTH_LONG).show();
             fragment.getActivity().finish();
         }
+    }
+
+    /**
+     * The document title is in the format "Game Title - Page X" if we're on /giveaways/id/name/search?page=X,
+     * so we strip out the page number.
+     */
+    private String getTitle(Document document) {
+        String title = document.title();
+        return title.replaceAll("- Page " + page + "$", "");
     }
 }
