@@ -379,7 +379,14 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
         return new RemovedElement(before, current);
     }
 
-    protected void restore(@NonNull RemovedElement element) {
+    /**
+     * Restore a previously removed item.
+     *
+     * @param element the item that was removed.
+     * @see #removeItem(int)
+     * @see #restore(Iterable)
+     */
+    public void restore(@NonNull RemovedElement element) {
         int position = 0;
         if (element.getElementBefore() != null) {
             position = items.indexOf(element.getElementBefore());
@@ -394,6 +401,18 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         items.add(position, element.getElement());
         notifyItemInserted(position + stickyItems.size());
+    }
+
+    /**
+     * Restore a list of previously removed items.
+     *
+     * @param elements all elements that should be restored
+     * @see #removeItem(int)
+     * @see #restore(RemovedElement)
+     */
+    public void restore(@NonNull Iterable<RemovedElement> elements) {
+        for (RemovedElement e : elements)
+            restore(e);
     }
 
     /**

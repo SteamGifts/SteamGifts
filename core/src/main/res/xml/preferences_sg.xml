@@ -4,15 +4,24 @@
         android:key="preferences_sg_header"
         android:title="@string/preferences_sg_header">
 
-        <CheckBoxPreference android:title="@string/preference_notifications"
+        <CheckBoxPreference
             android:defaultValue="true"
-            android:key="preference_notifications"/>
+            android:key="preference_notifications"
+            android:title="@string/preference_notifications" />
 
         <Preference android:title="@string/preference_sg_sync">
             <intent
                 android:targetClass="net.mabako.steamgifts.activities.SyncActivity"
                 android:targetPackage="net.mabako.steamgifts" />
         </Preference>
+
+        <Preference
+            android:key="preference_sg_whitelist"
+            android:title="@string/preference_sg_whitelist" />
+
+        <Preference
+            android:key="preference_sg_blacklist"
+            android:title="@string/preference_sg_blacklist" />
 
         <Preference
             android:summary="@string/preference_sg_hidden_games_sub"

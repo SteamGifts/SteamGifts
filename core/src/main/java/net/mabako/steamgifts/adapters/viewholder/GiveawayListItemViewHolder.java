@@ -194,7 +194,7 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
 
             // Save/Un-save a game
             if (savedGiveaways != null && giveaway.getEndTime() != null) {
-                if (!savedGiveaways.isSaved(giveaway.getGiveawayId())) {
+                if (!savedGiveaways.exists(giveaway.getGiveawayId())) {
                     menu.add(Menu.NONE, 4, Menu.NONE, R.string.add_saved_giveaway).setOnMenuItemClickListener(this);
                 } else {
                     menu.add(Menu.NONE, 5, Menu.NONE, R.string.remove_saved_giveaway).setOnMenuItemClickListener(this);

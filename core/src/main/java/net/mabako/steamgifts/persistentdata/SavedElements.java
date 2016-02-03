@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -22,6 +23,7 @@ public abstract class SavedElements<T> implements Comparator<T> {
     private static final String TAG = SavedElements.class.getSimpleName();
 
     private final String table;
+    private final Context context;
 
     private static final String KEY_ID = "id";
     private static final String KEY_VALUE = "value";
@@ -31,6 +33,7 @@ public abstract class SavedElements<T> implements Comparator<T> {
     public SavedElements(Context context, String table) {
         helper = new GiveawayOpenHelper<T>(context, this);
 
+        this.context = context;
         this.table = table;
     }
 
@@ -39,7 +42,7 @@ public abstract class SavedElements<T> implements Comparator<T> {
      *
      * @return list of savedelements
      */
-    public List<T> getGiveaways() {
+    public List<T> all() {
         return helper.all();
     }
 
@@ -52,6 +55,17 @@ public abstract class SavedElements<T> implements Comparator<T> {
      */
     public boolean add(@NonNull T element, @NonNull String elementId) {
         return helper.add(element, elementId);
+    }
+
+    /**
+     * Returns a single persistent element.
+     *
+     * @param elementId the id of the element
+     * @return the found element, or null if not existant.
+     */
+    @Nullable
+    public T get(@NonNull String elementId) {
+        return helper.get(elementId);
     }
 
     /**
@@ -70,14 +84,18 @@ public abstract class SavedElements<T> implements Comparator<T> {
      * @param elementId the id of the element
      * @return true if the element is saved, false otherwise
      */
-    public boolean isSaved(@NonNull String elementId) {
-        return helper.isSaved(elementId);
+    public boolean exists(@NonNull String elementId) {
+        return helper.exists(elementId);
     }
 
     protected abstract T getElement(Gson gson, String json);
 
     public void close() {
         helper.close();
+    }
+
+    protected Context getContext() {
+        return context;
     }
 
     private static class GiveawayOpenHelper<T> extends SQLiteOpenHelper {
@@ -106,7 +124,7 @@ public abstract class SavedElements<T> implements Comparator<T> {
             List<T> elements = new ArrayList<T>();
             Gson gson = new Gson();
 
-            Cursor cursor = getReadableDatabase().query(parent.table, new String[]{KEY_VALUE}, null, null, null, null, null);
+            Cursor cursor = getReadableDatabase().query(parent.table, new String[]{KEY_VALUE}, null, null, null, null, null, null);
             try {
                 while (cursor.moveToNext()) {
                     elements.add(parent.getElement(gson, cursor.getString(0)));
@@ -120,7 +138,19 @@ public abstract class SavedElements<T> implements Comparator<T> {
             return elements;
         }
 
-        public boolean isSaved(String elementId) {
+        public T get(String elementId) {
+            Cursor cursor = getReadableDatabase().query(parent.table, new String[]{KEY_VALUE}, KEY_ID + " = ?", new String[]{elementId}, null, null, null, null);
+            try {
+                if (cursor.moveToFirst())
+                    return parent.getElement(new Gson(), cursor.getString(0));
+
+                return null;
+            } finally {
+                cursor.close();
+            }
+        }
+
+        public boolean exists(String elementId) {
             Cursor cursor = getReadableDatabase().query(parent.table, new String[]{KEY_ID}, KEY_ID + " = ?", new String[]{elementId}, null, null, null, null);
             boolean exists = cursor.getCount() > 0;
             cursor.close();

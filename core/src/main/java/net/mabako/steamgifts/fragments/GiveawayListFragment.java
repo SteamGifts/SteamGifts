@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -125,6 +126,7 @@ public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter
         super.onDestroy();
     }
 
+    @NonNull
     @Override
     protected GiveawayAdapter createAdapter() {
         return new GiveawayAdapter(50, true, PreferenceManager.getDefaultSharedPreferences(getContext()));
@@ -202,7 +204,7 @@ public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter
 
         if (gameTitle != null) {
             // If we're propagating, this means we're visible instance
-            Snackbar.make(swipeContainer, String.format(getString(R.string.game_was_hidden), gameTitle), Snackbar.LENGTH_LONG).setAction(R.string.game_was_hidden_undo, new View.OnClickListener() {
+            Snackbar.make(swipeContainer, String.format(getString(R.string.game_was_hidden), gameTitle), Snackbar.LENGTH_LONG).setAction(R.string.undo, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     new UpdateGiveawayFilterTask<>(GiveawayListFragment.this, adapter.getXsrfToken(), UpdateGiveawayFilterTask.UNHIDE, internalGameId, gameTitle).execute();
@@ -217,7 +219,7 @@ public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter
             GiveawayListFragmentStack.onShowGame(internalGameId);
         } else if (lastRemovedGame != null) {
             if (lastRemovedGame.internalGameId == internalGameId) {
-                adapter.restoreGiveaways(lastRemovedGame.removedGiveaways);
+                adapter.restore(lastRemovedGame.removedGiveaways);
                 lastRemovedGame = null;
             } else {
                 Log.w(TAG, "onShowGame(" + internalGameId + ") expected " + lastRemovedGame.internalGameId + ", not restoring game(s)");

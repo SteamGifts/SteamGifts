@@ -71,7 +71,7 @@ public class SavedGiveawaysFragment extends ListFragment<GiveawayAdapter> implem
         if (page != 1)
             return;
 
-        addItems(savedGiveaways.getGiveaways(), true);
+        addItems(savedGiveaways.all(), true);
         adapter.reachedTheEnd();
     }
 

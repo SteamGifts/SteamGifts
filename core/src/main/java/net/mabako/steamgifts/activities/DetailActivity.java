@@ -21,6 +21,7 @@ import net.mabako.steamgifts.fragments.DiscussionDetailFragment;
 import net.mabako.steamgifts.fragments.FragmentAdapter;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
 import net.mabako.steamgifts.fragments.UserDetailFragment;
+import net.mabako.steamgifts.fragments.WhitelistBlacklistFragment;
 import net.mabako.steamgifts.fragments.profile.CreatedListFragment;
 import net.mabako.steamgifts.fragments.profile.EnteredListFragment;
 import net.mabako.steamgifts.fragments.profile.MessageListFragment;
@@ -87,6 +88,14 @@ public class DetailActivity extends CommonActivity {
             return;
         }
 
+        serializable = getIntent().getSerializableExtra(WhitelistBlacklistFragment.ARG_TYPE);
+        if (serializable != null) {
+            setContentView(R.layout.activity_one_fragment);
+            if (savedInstanceState == null)
+                loadFragment(WhitelistBlacklistFragment.newInstance((WhitelistBlacklistFragment.What) serializable, null));
+            return;
+        }
+
         serializable = getIntent().getSerializableExtra(SGToolsDetailFragment.ARG_UUID);
         if (serializable != null) {
             setContentView(R.layout.activity_detail_expanding_toolbar);
@@ -111,6 +120,15 @@ public class DetailActivity extends CommonActivity {
         }
 
         throw new IllegalStateException("no detail activity");
+    }
+
+    @Override
+    public void setContentView(int layoutResID) {
+        super.setContentView(layoutResID);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (toolbar != null)
+            setSupportActionBar(toolbar);
     }
 
     @Override

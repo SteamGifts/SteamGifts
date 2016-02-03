@@ -51,10 +51,7 @@ public class CommonActivity extends BaseActivity {
     protected void updateTitle(Fragment fragment) {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            if (fragment instanceof IActivityTitle)
-                actionBar.setTitle(getFragmentTitle(fragment));
-            else
-                actionBar.setTitle(R.string.app_name);
+            actionBar.setTitle(getFragmentTitle(fragment));
         }
     }
 

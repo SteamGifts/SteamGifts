@@ -127,11 +127,6 @@ public class GiveawayAdapter extends EndlessAdapter {
         return removedElements;
     }
 
-    public void restoreGiveaways(List<RemovedElement> elements) {
-        for (RemovedElement e : elements)
-            restore(e);
-    }
-
     @Override
     protected int addFiltered(List<IEndlessAdaptable> items) {
         if (filterItems && fragment != null) {

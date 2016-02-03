@@ -1,5 +1,6 @@
 package net.mabako.steamgifts.activities.settings;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -11,8 +12,10 @@ import android.widget.Toast;
 import net.mabako.sgtools.SGToolsLoginActivity;
 import net.mabako.steamgifts.activities.BaseActivity;
 import net.mabako.steamgifts.activities.CommonActivity;
+import net.mabako.steamgifts.activities.DetailActivity;
 import net.mabako.steamgifts.compat.PreferenceFragment;
 import net.mabako.steamgifts.core.R;
+import net.mabako.steamgifts.fragments.WhitelistBlacklistFragment;
 import net.mabako.steamgifts.persistentdata.SGToolsUserData;
 import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
 
@@ -27,6 +30,26 @@ public class SettingsActivity extends BaseActivity {
                 addPreferencesFromResource(R.xml.preferences_sg);
 
                 final PreferenceCategory category = (PreferenceCategory) findPreference("preferences_sg_header");
+
+                findPreference("preference_sg_whitelist").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        Intent intent = new Intent(getActivity(), DetailActivity.class);
+                        intent.putExtra(WhitelistBlacklistFragment.ARG_TYPE, WhitelistBlacklistFragment.What.WHITELIST);
+                        getActivity().startActivity(intent);
+                        return true;
+                    }
+                });
+
+                findPreference("preference_sg_blacklist").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        Intent intent = new Intent(getActivity(), DetailActivity.class);
+                        intent.putExtra(WhitelistBlacklistFragment.ARG_TYPE, WhitelistBlacklistFragment.What.BLACKLIST);
+                        getActivity().startActivity(intent);
+                        return true;
+                    }
+                });
 
                 findPreference("preference_sg_logout").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                     @Override

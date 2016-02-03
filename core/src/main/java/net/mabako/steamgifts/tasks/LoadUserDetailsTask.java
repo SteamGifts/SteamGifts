@@ -24,6 +24,7 @@ public class LoadUserDetailsTask extends AsyncTask<Void, Void, List<Giveaway>> {
     private final String path;
     private final int page;
     private final User user;
+    private String foundXsrfToken;
 
     public LoadUserDetailsTask(UserDetailFragment.UserGiveawayListFragment fragment, String path, int page, User user) {
         this.fragment = fragment;
@@ -76,10 +77,26 @@ public class LoadUserDetailsTask extends AsyncTask<Void, Void, List<Giveaway>> {
             fragment.onUserUpdated(user);
         }
 
-        fragment.addItems(result, page == 1);
+        fragment.addItems(result, page == 1, foundXsrfToken);
     }
 
     private void loadUser(Document document) {
+        // If this isn't the user we're logged in as, we'd get some user id.
+        Element idElement = document.select("input[name=child_user_id]").first();
+        if (idElement != null) {
+            user.setId(Integer.valueOf(idElement.attr("value")));
+        } else {
+            Log.v(TAG, "No child_user_id");
+        }
+
+        user.setWhitelisted(!document.select(".sidebar__shortcut__whitelist.is-selected").isEmpty());
+        user.setBlacklisted(!document.select(".sidebar__shortcut__blacklist.is-selected").isEmpty());
+
+        // Fetch the xsrf token - this, again, is only present if we're on another user's page.
+        Element xsrfToken = document.select("input[name=xsrf_token]").first();
+        if (xsrfToken != null)
+            foundXsrfToken = xsrfToken.attr("value");
+
         user.setName(document.select(".featured__heading__medium").first().text());
         user.setAvatar(Utils.extractAvatar(document.select(".global__image-inner-wrap").first().attr("style")));
         user.setUrl(document.select(".sidebar a[data-tooltip=\"Visit Steam Profile\"]").first().attr("href"));

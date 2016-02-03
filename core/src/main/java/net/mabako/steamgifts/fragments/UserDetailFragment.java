@@ -11,6 +11,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -21,6 +22,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
@@ -30,9 +32,12 @@ import net.mabako.steamgifts.activities.WebViewActivity;
 import net.mabako.steamgifts.adapters.GiveawayAdapter;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.core.R;
+import net.mabako.steamgifts.data.BasicUser;
 import net.mabako.steamgifts.data.User;
+import net.mabako.steamgifts.fragments.interfaces.IHasWhitelistAndBlacklist;
 import net.mabako.steamgifts.fragments.interfaces.IUserNotifications;
 import net.mabako.steamgifts.tasks.LoadUserDetailsTask;
+import net.mabako.steamgifts.tasks.UpdateWhitelistBlacklistTask;
 
 import java.io.Serializable;
 import java.util.List;
@@ -40,16 +45,20 @@ import java.util.Locale;
 
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
-public class UserDetailFragment extends Fragment implements IUserNotifications {
+public class UserDetailFragment extends Fragment implements IUserNotifications, IHasWhitelistAndBlacklist {
     private static final String TAG = UserDetailFragment.class.getSimpleName();
     public static final String ARG_USER = "user";
     private static final String SAVED_USER = "user";
 
     private User user;
+    private String xsrfToken;
 
     private CustomPagerAdapter viewPagerAdapter;
     private ViewPager viewPager;
     private TabLayout tabLayout;
+    private Button whitelist, blacklist;
+
+    private UpdateWhitelistBlacklistTask updateWhitelistBlacklistTask;
 
     public static UserDetailFragment newInstance(String userName) {
         UserDetailFragment fragment = new UserDetailFragment();
@@ -78,6 +87,16 @@ public class UserDetailFragment extends Fragment implements IUserNotifications {
         outState.putSerializable(SAVED_USER, user);
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        if (updateWhitelistBlacklistTask != null) {
+            updateWhitelistBlacklistTask.cancel(true);
+            updateWhitelistBlacklistTask = null;
+        }
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -99,6 +118,22 @@ public class UserDetailFragment extends Fragment implements IUserNotifications {
 
         tabLayout = (TabLayout) layout.findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
+
+        whitelist = (Button) layout.findViewById(R.id.whitelist);
+        whitelist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requestUserListed(user, What.WHITELIST, !user.isWhitelisted());
+            }
+        });
+
+        blacklist = (Button) layout.findViewById(R.id.blacklist);
+        blacklist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requestUserListed(user, What.BLACKLIST, !user.isBlacklisted());
+            }
+        });
 
         setHasOptionsMenu(true);
 
@@ -153,6 +188,13 @@ public class UserDetailFragment extends Fragment implements IUserNotifications {
             }
         });
 
+        if (user.getId() != 0) {
+            whitelist.setVisibility(View.VISIBLE);
+            blacklist.setVisibility(View.VISIBLE);
+
+            updateWhitelistBlacklistButtons();
+        }
+
         // Refresh tabs
         for (int i = 0; i < viewPagerAdapter.getCount(); ++i)
             tabLayout.getTabAt(i).setText(viewPagerAdapter.getPageTitle(i));
@@ -190,6 +232,45 @@ public class UserDetailFragment extends Fragment implements IUserNotifications {
         } else {
             return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void requestUserListed(BasicUser user, What what, boolean adding) {
+        if (user == null || user.getId() == 0) {
+            Log.w(TAG, "No user to white-/blacklist -- " + user);
+            return;
+        }
+
+        if (xsrfToken == null) {
+            Log.w(TAG, "No XSRF token to white-/blacklist");
+            return;
+        }
+
+        if (updateWhitelistBlacklistTask != null)
+            updateWhitelistBlacklistTask.cancel(true);
+
+        updateWhitelistBlacklistTask = new UpdateWhitelistBlacklistTask(this, getContext(), xsrfToken, what, user, adding);
+        updateWhitelistBlacklistTask.execute();
+    }
+
+    @Override
+    public void onUserWhitelistOrBlacklistUpdated(BasicUser user, What what, boolean added) {
+        Log.d(TAG, "user white/-blacklist updated: " + user.getName() + "; " + what + "; " + added);
+
+        if (user instanceof User) {
+            ((User) user).setBlacklisted(what == What.BLACKLIST && added);
+            ((User) user).setWhitelisted(what == What.WHITELIST && added);
+        }
+
+        updateWhitelistBlacklistButtons();
+    }
+
+    private void updateWhitelistBlacklistButtons() {
+        int attrs[] = new int[]{android.R.attr.textColorPrimary};
+        TypedArray ta = getContext().getTheme().obtainStyledAttributes(attrs);
+
+        whitelist.setTextColor(user.isWhitelisted() ? ContextCompat.getColor(getContext(), R.color.colorAccent) : ta.getColor(0, 0));
+        blacklist.setTextColor(user.isBlacklisted() ? ContextCompat.getColor(getContext(), R.color.colorAccent) : ta.getColor(0, 0));
     }
 
     private class CustomPagerAdapter extends FragmentAdapter {
@@ -270,6 +351,13 @@ public class UserDetailFragment extends Fragment implements IUserNotifications {
             } else {
                 super.addItems(items, clearExistingItems);
             }
+        }
+
+        @Override
+        public void addItems(List<? extends IEndlessAdaptable> items, boolean clearExistingItems, String xsrfToken) {
+            super.addItems(items, clearExistingItems, xsrfToken);
+            if (iUserNotification != null && iUserNotification instanceof UserDetailFragment)
+                ((UserDetailFragment) iUserNotification).xsrfToken = xsrfToken;
         }
 
         @Override

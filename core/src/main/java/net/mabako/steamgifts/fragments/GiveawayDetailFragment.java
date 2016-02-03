@@ -277,7 +277,7 @@ public class GiveawayDetailFragment extends DetailFragment implements IHasEntera
             menu.findItem(R.id.hide_game).setVisible(((Giveaway) giveaway).getInternalGameId() > 0 && giveawayCard.getExtras() != null && giveawayCard.getExtras().getXsrfToken() != null);
 
             if (savedGiveaways != null) {
-                boolean isSaved = savedGiveaways.isSaved(giveaway.getGiveawayId());
+                boolean isSaved = savedGiveaways.exists(giveaway.getGiveawayId());
                 menu.findItem(R.id.add_saved_element).setVisible(!isSaved);
                 menu.findItem(R.id.remove_saved_element).setVisible(isSaved);
             }

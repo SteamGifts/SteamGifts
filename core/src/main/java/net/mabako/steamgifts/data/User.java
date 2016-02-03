@@ -4,33 +4,21 @@ import net.mabako.Constants;
 
 import java.io.Serializable;
 
-public class User implements Serializable {
+public class User extends BasicUser implements Serializable {
     private static final long serialVersionUID = -313348528668961481L;
-    private String name, avatar, url, role;
+    private String url, role;
 
     private int level, created, won, comments;
     private String createdAmount, wonAmount;
 
-    private boolean loaded = false;
+    private boolean loaded = false, whitelisted, blacklisted;
+
+    public User() {
+
+    }
 
     public User(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
+        setName(name);
     }
 
     public String getUrl() {
@@ -99,6 +87,22 @@ public class User implements Serializable {
 
     public String getRole() {
         return role;
+    }
+
+    public boolean isWhitelisted() {
+        return whitelisted;
+    }
+
+    public void setWhitelisted(boolean whitelisted) {
+        this.whitelisted = whitelisted;
+    }
+
+    public boolean isBlacklisted() {
+        return blacklisted;
+    }
+
+    public void setBlacklisted(boolean blacklisted) {
+        this.blacklisted = blacklisted;
     }
 
     /**
