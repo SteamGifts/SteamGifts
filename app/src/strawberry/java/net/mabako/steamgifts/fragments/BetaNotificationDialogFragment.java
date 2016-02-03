@@ -1,11 +1,8 @@
 package net.mabako.steamgifts.fragments;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -14,7 +11,6 @@ import android.text.Html;
 
 import net.mabako.steamgifts.Application;
 import net.mabako.steamgifts.R;
-import net.mabako.steamgifts.adapters.viewholder.Utils;
 
 public class BetaNotificationDialogFragment extends DialogFragment {
     @NonNull
@@ -23,16 +19,7 @@ public class BetaNotificationDialogFragment extends DialogFragment {
         return new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.beta_dialog_title)
                 .setMessage(Html.fromHtml(getString(R.string.beta_text)))
-                .setPositiveButton(Utils.fromHtml(getContext(), getString(R.string.beta_opt_out)), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Activity activity = getActivity();
-
-                        activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/apps/testing/net.mabako.steamgifts")));
-                        activity.finish();
-                    }
-                })
-                .setNegativeButton(R.string.beta_contine, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.beta_contine, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         getContext().getSharedPreferences(Application.PREF_BETA, Context.MODE_PRIVATE).edit().putBoolean(Application.PREF_KEY_NOTIFICATION_SHOWN, true).commit();

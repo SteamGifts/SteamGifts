@@ -2,7 +2,6 @@
     <string name="app_name">sg</string>
     <string name="navigation_about">About</string>
     <string name="navigation_help">Help</string>
-    <string name="navigation_beta">Opt Out of Beta</string>
 
     <!-- Navigation for Giveaways -->
     <string name="navigation_giveaways">Giveaways</string>
