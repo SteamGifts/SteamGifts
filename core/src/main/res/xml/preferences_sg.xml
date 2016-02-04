@@ -24,13 +24,9 @@
             android:title="@string/preference_sg_blacklist" />
 
         <Preference
+            android:key="preference_sg_hidden_games"
             android:summary="@string/preference_sg_hidden_games_sub"
-            android:title="@string/preference_sg_hidden_games">
-
-            <intent
-                android:targetClass="net.mabako.steamgifts.activities.settings.ViewHiddenGamesActivity"
-                android:targetPackage="net.mabako.steamgifts" />
-        </Preference>
+            android:title="@string/preference_sg_hidden_games" />
 
         <Preference
             android:key="preference_sg_logout"

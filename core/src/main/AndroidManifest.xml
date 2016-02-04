@@ -17,7 +17,9 @@
         android:theme="@style/AppTheme.Light">
         <activity
             android:name="net.mabako.steamgifts.activities.LoginActivity"
+            android:exported="false"
             android:theme="@style/AppTheme.Dark" />
+
         <activity
             android:name="net.mabako.steamgifts.activities.MainActivity"
             android:configChanges="orientation|screenSize">
@@ -26,31 +28,43 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name="net.mabako.steamgifts.activities.DetailActivity"
+            android:configChanges="orientation|screenSize" />
+
+        <activity
+            android:name="net.mabako.steamgifts.activities.WriteCommentActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize|stateAlwaysVisible" />
+
+        <activity
+            android:name="net.mabako.steamgifts.activities.ViewGroupsActivity"
             android:configChanges="orientation|screenSize"
+            android:exported="false"
             android:parentActivityName="net.mabako.steamgifts.activities.DetailActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="net.mabako.steamgifts.activities.DetailActivity" />
+        </activity>
+
+        <activity
+            android:name="net.mabako.steamgifts.activities.AboutActivity"
+            android:exported="false"
+            android:parentActivityName="net.mabako.steamgifts.activities.MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Dark">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="net.mabako.steamgifts.activities.MainActivity" />
         </activity>
         <activity
-            android:name="net.mabako.steamgifts.activities.WriteCommentActivity"
-            android:windowSoftInputMode="adjustResize|stateAlwaysVisible" />
-        <activity
-            android:name="net.mabako.steamgifts.activities.ViewGroupsActivity"
-            android:configChanges="orientation|screenSize"
-            android:parentActivityName="net.mabako.steamgifts.activities.DetailActivity" />
-        <activity
-            android:name="net.mabako.steamgifts.activities.AboutActivity"
-            android:parentActivityName="net.mabako.steamgifts.activities.MainActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Dark" />
-        <activity
             android:name="net.mabako.steamgifts.activities.WebViewActivity"
-            android:configChanges="orientation|screenSize" />
+            android:configChanges="orientation|screenSize"
+            android:exported="false" />
         <activity
             android:name="net.mabako.steamgifts.activities.SyncActivity"
+            android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Dark" />
 
@@ -87,19 +101,24 @@
 
         <!-- Settings -->
         <activity
-            android:name="net.mabako.steamgifts.activities.settings.SettingsActivity"
+            android:name="net.mabako.steamgifts.activities.SettingsActivity"
             android:label="@string/preferences"
-            android:parentActivityName="net.mabako.steamgifts.activities.MainActivity" />
-        <activity android:name="net.mabako.steamgifts.activities.settings.ViewHiddenGamesActivity" />
+            android:parentActivityName="net.mabako.steamgifts.activities.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="net.mabako.steamgifts.activities.MainActivity" />
+        </activity>
 
         <!-- sgtools.info -->
         <activity
             android:name="net.mabako.sgtools.SGToolsLoginActivity"
+            android:exported="false"
             android:theme="@style/AppTheme.Dark" />
 
         <!-- intro -->
         <activity
             android:name="net.mabako.steamgifts.intro.IntroActivity"
+            android:exported="false"
             android:theme="@style/AppTheme.Light" />
 
         <!-- start new message checking on boot -->

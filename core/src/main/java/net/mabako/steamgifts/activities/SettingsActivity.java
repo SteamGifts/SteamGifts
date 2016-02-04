@@ -1,4 +1,4 @@
-package net.mabako.steamgifts.activities.settings;
+package net.mabako.steamgifts.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,9 +11,6 @@ import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
 import net.mabako.sgtools.SGToolsLoginActivity;
-import net.mabako.steamgifts.activities.BaseActivity;
-import net.mabako.steamgifts.activities.CommonActivity;
-import net.mabako.steamgifts.activities.DetailActivity;
 import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.fragments.WhitelistBlacklistFragment;
 import net.mabako.steamgifts.persistentdata.SGToolsUserData;
@@ -46,6 +43,16 @@ public class SettingsActivity extends BaseActivity {
                     public boolean onPreferenceClick(Preference preference) {
                         Intent intent = new Intent(getActivity(), DetailActivity.class);
                         intent.putExtra(WhitelistBlacklistFragment.ARG_TYPE, WhitelistBlacklistFragment.What.BLACKLIST);
+                        getActivity().startActivity(intent);
+                        return true;
+                    }
+                });
+
+                findPreference("preference_sg_hidden_games").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        Intent intent = new Intent(getActivity(), DetailActivity.class);
+                        intent.putExtra(DetailActivity.ARG_HIDDEN_GAMES, true);
                         getActivity().startActivity(intent);
                         return true;
                     }

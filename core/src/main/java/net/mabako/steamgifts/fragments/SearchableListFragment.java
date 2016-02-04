@@ -41,6 +41,9 @@ public abstract class SearchableListFragment<AdapterType extends EndlessAdapter>
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState == null) {
+            if (getArguments() == null)
+                throw new IllegalStateException("SearchableListFragment has no arguments. Did you call newInstance()?");
+
             searchQuery = getArguments().getString(SAVED_QUERY);
             finishActivityOnSearchStopped = getArguments().getBoolean(SAVED_FINISH_ON_STOP, false);
         } else {
