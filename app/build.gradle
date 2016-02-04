@@ -5,7 +5,7 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        applicationId "net.mabako.steamgifts"
+        applicationId 'net.mabako.steamgifts'
         minSdkVersion 15
         targetSdkVersion 23
         versionCode rootProject.ext.versionCode
@@ -25,7 +25,7 @@ android {
         }
         // Release for the beta channel
         strawberry {
-            null
+            applicationIdSuffix '.beta'
         }
         // Release pushed to non-beta testers
         vanilla {
