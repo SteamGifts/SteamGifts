@@ -12,9 +12,4 @@
 
     <dimen name="giveaway_list_indicator_size">8dp</dimen>
     <dimen name="giveaway_list_indicator_padding">2dp</dimen>
-
-    <!-- Preference fragment padding -->
-    <dimen name="preference_fragment_padding_bottom">0dp</dimen>
-    <dimen name="preference_fragment_padding_side">16dp</dimen>
-    <integer name="preference_fragment_scrollbarStyle">0x02000000</integer>
 </resources>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="net.mabako.steamgifts.core">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -10,8 +9,6 @@
 
     <!-- schedule tasks despite not running initially on the device (and before being started once) -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-
-    <uses-sdk tools:overrideLibrary="com.github.paolorotolo.appintro, com.mikepenz.actionitembadge.library" />
 
     <application
         android:allowBackup="false"
@@ -91,7 +88,8 @@
         <!-- Settings -->
         <activity
             android:name="net.mabako.steamgifts.activities.settings.SettingsActivity"
-            android:label="@string/preferences" />
+            android:label="@string/preferences"
+            android:parentActivityName="net.mabako.steamgifts.activities.MainActivity" />
         <activity android:name="net.mabako.steamgifts.activities.settings.ViewHiddenGamesActivity" />
 
         <!-- sgtools.info -->
