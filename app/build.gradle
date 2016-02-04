@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -22,7 +21,7 @@ android {
     productFlavors {
         // ** This is the build flavor you want to pick for running the app locally. **
         chocolate {
-            ext.enableCrashlytics = false
+            null
         }
         // Release for the beta channel
         strawberry {

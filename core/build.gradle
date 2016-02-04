@@ -35,7 +35,4 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.github.paolorotolo:appintro:3.3.0'
     compile 'com.google.code.gson:gson:2.5'
-    compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
-        transitive = true
-    }
 }

@@ -11,12 +11,6 @@ public class Application extends ApplicationTemplate {
     public static final String PREF_KEY_NOTIFICATION_SHOWN = "notification-shown";
 
     @Override
-    public void onCreate() {
-        super.onCreate();
-        setupFabric();
-    }
-
-    @Override
     public boolean isBetaBuild() {
         return true;
     }

@@ -3,22 +3,11 @@ package net.mabako.steamgifts;
 import android.app.Application;
 import android.support.v7.app.AppCompatActivity;
 
-import com.crashlytics.android.Crashlytics;
-
-import io.fabric.sdk.android.Fabric;
-
 public abstract class ApplicationTemplate extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
         PeriodicTasks.scheduleAllTasks(getBaseContext());
-    }
-
-    /**
-     * Setup Crashlytics.
-     */
-    protected void setupFabric() {
-        Fabric.with(new Fabric.Builder(this).kits(new Crashlytics()).build());
     }
 
     /**
