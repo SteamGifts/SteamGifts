@@ -11,10 +11,10 @@
     <PreferenceCategory android:title="@string/preferences_giveaways">
         <ListPreference
             android:defaultValue="details;list"
-            android:summary="%s"
             android:entries="@array/preference_giveaway_load_images_entries"
             android:entryValues="@array/preference_giveaway_load_images_entry_values"
             android:key="preference_giveaway_load_images"
+            android:summary="%s"
             android:title="@string/preference_giveaway_load_images" />
 
         <CheckBoxPreference
@@ -26,6 +26,14 @@
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/preferences_discussions">
+        <ListPreference
+            android:defaultValue="full"
+            android:entries="@array/preference_sidebar_discussion_list_entries"
+            android:entryValues="@array/preference_sidebar_discussion_list_entry_values"
+            android:key="preference_sidebar_discussion_list"
+            android:summary="%s"
+            android:title="@string/preference_sidebar_discussion_list" />
+
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="preference_discussion_comments_reversed"

@@ -11,4 +11,16 @@
         <item>details</item>
         <item>details;list</item>
     </string-array>
+
+    <string-array name="preference_sidebar_discussion_list_entries">
+        <item>None</item>
+        <item>Compact</item>
+        <item>All</item>
+    </string-array>
+
+    <string-array name="preference_sidebar_discussion_list_entry_values">
+        <item>hide</item>
+        <item>compact</item>
+        <item>full</item>
+    </string-array>
 </resources>

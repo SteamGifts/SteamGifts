@@ -130,6 +130,7 @@
     <string name="preference_giveaway_show_pinned_off">Not highlighted in a special way</string>
 
     <string name="preferences_discussions">Discussions</string>
+    <string name="preference_sidebar_discussion_list">Navigation Items</string>
     <string name="preference_discussion_comments_reversed">Inverse Comment Order</string>
     <string name="preference_discussion_comments_reversed_sub_off">Show oldest comments first</string>
     <string name="preference_discussion_comments_reversed_sub_on">Show newest comments first</string>
