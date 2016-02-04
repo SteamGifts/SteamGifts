@@ -8,7 +8,7 @@ import net.mabako.steamgifts.core.R;
 import java.io.Serializable;
 
 public class BasicUser implements IEndlessAdaptable, Serializable {
-    public static final int VIEW_LAYOUT = R.layout.user_item;
+    public static final int VIEW_LAYOUT = R.layout.whiteblacklist_user_item;
     private static final long serialVersionUID = 2288877588005277781L;
 
     private int id;
