@@ -1,9 +1,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground"
-    android:clickable="true"
-    android:focusable="true"
     android:orientation="vertical"
     android:paddingLeft="0dp"
     android:paddingRight="0dp">
@@ -21,26 +20,34 @@
             android:adjustViewBounds="true"
             android:scaleType="fitCenter" />
 
-        <RelativeLayout
-            android:id="@+id/game_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/giveaway_image"
-            android:layout_weight="1">
+        <android.support.v4.widget.Space
+            android:layout_width="8dp"
+            android:layout_height="match_parent" />
 
-            <TextView
-                android:id="@+id/game_name"
-                style="@style/NormalText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:paddingBottom="8dp"
-                android:paddingLeft="4dp"
-                android:paddingTop="8dp"
-                android:singleLine="true"
-                android:text="Game Name"
-                android:textAlignment="viewStart" />
-        </RelativeLayout>
+        <TextView
+            android:id="@+id/game_name"
+            style="@style/NormalText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_weight="1"
+            android:paddingBottom="8dp"
+            android:paddingTop="8dp"
+            android:singleLine="true"
+            tools:text="Game Name" />
+
+
+        <Button
+            android:id="@+id/remove_game"
+            style="@style/MediumButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:text="{faw-times}"
+            android:visibility="gone"
+            tools:text="x"
+            tools:visibility="visible" />
     </LinearLayout>
 
     <View

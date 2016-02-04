@@ -87,9 +87,10 @@
     <string name="loading">Loading</string>
 
     <string name="hide_game">Hide Game</string>
-    <string name="game_was_hidden">%s is hidden</string>
+    <string name="game_was_hidden">%s is hidden.</string>
     <string name="undo">Undo</string>
     <string name="user_whiteblacklist_removed">Removed %s.</string>
+    <string name="hidden_game_removed">Removed %s.</string>
 
     <string name="more_like_this">More like this</string>
 
@@ -144,9 +145,6 @@
     <string name="preferences_sgtools_header">sgtools.info Account</string>
     <string name="preference_sgtools_logout">Logout</string>
     <string name="preference_sgtools_logged_out">Cleared sgtools.info data</string>
-
-    <string name="hidden_games_snack">Long-Press a Game to remove it</string>
-    <string name="hidden_games_snack_dismiss">Got it</string>
 
     <!--  Strings for possible PreferenceActivity Back/Next buttons -->
     <string name="back_button_label">Back</string>

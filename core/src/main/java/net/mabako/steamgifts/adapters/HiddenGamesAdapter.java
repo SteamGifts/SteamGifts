@@ -1,6 +1,5 @@
 package net.mabako.steamgifts.adapters;
 
-import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -52,7 +51,7 @@ public class HiddenGamesAdapter extends EndlessAdapter {
         return items.size() == ITEMS_PER_PAGE;
     }
 
-    public void removeShownGame(int internalGameId) {
+    public RemovedElement removeShownGame(int internalGameId) {
         if (internalGameId == Game.NO_APP_ID)
             throw new IllegalStateException();
 
@@ -60,8 +59,9 @@ public class HiddenGamesAdapter extends EndlessAdapter {
             Game game = (Game) getItem(position);
 
             if (game != null && game.getInternalGameId() == internalGameId) {
-                removeItem(position);
+                return removeItem(position);
             }
         }
+        return null;
     }
 }

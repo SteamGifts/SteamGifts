@@ -4,20 +4,23 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import net.mabako.steam.store.StoreSubFragment;
 import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.Game;
 import net.mabako.steamgifts.fragments.HiddenGamesFragment;
-import net.mabako.steam.store.StoreSubFragment;
 
 public class GameViewHolder extends RecyclerView.ViewHolder {
     private final TextView gameName;
     private final ImageView image;
+
+    private final Button removeGame;
 
     private final Fragment fragment;
 
@@ -29,20 +32,21 @@ public class GameViewHolder extends RecyclerView.ViewHolder {
 
         gameName = (TextView) itemView.findViewById(R.id.game_name);
         image = (ImageView) itemView.findViewById(R.id.game_image);
+
+        removeGame = (Button) itemView.findViewById(R.id.remove_game);
     }
 
     public void setFrom(final Game game) {
         gameName.setText(game.getName());
 
         if (fragment instanceof HiddenGamesFragment && game.getInternalGameId() != Game.NO_APP_ID) {
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            removeGame.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public boolean onLongClick(View v) {
+                public void onClick(View v) {
                     ((HiddenGamesFragment) fragment).requestShowGame(game.getInternalGameId(), game.getName());
-                    return true;
-
                 }
             });
+            removeGame.setVisibility(View.VISIBLE);
         } else if (fragment instanceof StoreSubFragment && game.getGameId() != Game.NO_APP_ID) {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

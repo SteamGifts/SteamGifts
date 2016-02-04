@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.View;
 
 import net.mabako.steamgifts.activities.DetailActivity;
@@ -107,7 +106,7 @@ public class WhitelistBlacklistFragment extends SearchableListFragment<Whitelist
     @Override
     public void onUserWhitelistOrBlacklistUpdated(BasicUser user, final What what, boolean added) {
         if (added) {
-            if (lastRemovedUser != null && user.getId() == ((BasicUser) lastRemovedUser.getElement()).getId()) {
+            if (lastRemovedUser != null && lastRemovedUser.getElement() instanceof BasicUser && user.getId() == ((BasicUser) lastRemovedUser.getElement()).getId()) {
                 adapter.restore(lastRemovedUser);
                 lastRemovedUser = null;
             }

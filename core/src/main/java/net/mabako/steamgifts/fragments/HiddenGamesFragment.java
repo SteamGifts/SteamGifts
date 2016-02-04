@@ -3,16 +3,17 @@ package net.mabako.steamgifts.fragments;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
 import net.mabako.steamgifts.adapters.EndlessAdapter;
 import net.mabako.steamgifts.adapters.HiddenGamesAdapter;
-import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.Game;
 import net.mabako.steamgifts.fragments.interfaces.IActivityTitle;
+import net.mabako.steamgifts.fragments.interfaces.IHasHideableGiveaways;
 import net.mabako.steamgifts.tasks.LoadGameListTask;
 import net.mabako.steamgifts.tasks.UpdateGiveawayFilterTask;
 
@@ -21,11 +22,10 @@ import org.jsoup.nodes.Element;
 import java.io.Serializable;
 import java.util.List;
 
-public class HiddenGamesFragment extends SearchableListFragment<HiddenGamesAdapter> implements IActivityTitle {
-    /**
-     * Snack is only shown if the app is restarted.
-     */
-    private static boolean showSnack = true;
+public class HiddenGamesFragment extends SearchableListFragment<HiddenGamesAdapter> implements IActivityTitle, IHasHideableGiveaways {
+    private static final String SAVED_LAST_REMOVED = "last-removed-game";
+
+    private EndlessAdapter.RemovedElement lastRemovedGame;
 
     public static HiddenGamesFragment newInstance(String query) {
         HiddenGamesFragment fragment = new HiddenGamesFragment();
@@ -41,9 +41,22 @@ public class HiddenGamesFragment extends SearchableListFragment<HiddenGamesAdapt
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if (savedInstanceState == null) {
+            lastRemovedGame = null;
+        } else {
+            lastRemovedGame = (EndlessAdapter.RemovedElement) savedInstanceState.getSerializable(SAVED_LAST_REMOVED);
+        }
+
         adapter.setFragmentValues(this);
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(SAVED_LAST_REMOVED, lastRemovedGame);
+    }
+
+    @NonNull
     @Override
     protected HiddenGamesAdapter createAdapter() {
         return new HiddenGamesAdapter();
@@ -86,7 +99,26 @@ public class HiddenGamesFragment extends SearchableListFragment<HiddenGamesAdapt
     }
 
     public void onShowGame(int internalGameId) {
-        adapter.removeShownGame(internalGameId);
+        lastRemovedGame = adapter.removeShownGame(internalGameId);
+
+        if (lastRemovedGame != null) {
+            final Game game = (Game) lastRemovedGame.getElement();
+            Snackbar.make(swipeContainer, String.format(getString(R.string.hidden_game_removed), game.getName()), Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.undo, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            new UpdateGiveawayFilterTask<>(HiddenGamesFragment.this, adapter.getXsrfToken(), UpdateGiveawayFilterTask.HIDE, game.getInternalGameId(), game.getName()).execute();
+                        }
+                    }).show();
+        }
+    }
+
+    @Override
+    public void onHideGame(int internalGameId, boolean propagate, String gameTitle) {
+        if (lastRemovedGame != null && lastRemovedGame.getElement() instanceof Game && ((Game) lastRemovedGame.getElement()).getInternalGameId() == internalGameId) {
+            adapter.restore(lastRemovedGame);
+            lastRemovedGame = null;
+        }
     }
 
     @Override
@@ -102,21 +134,5 @@ public class HiddenGamesFragment extends SearchableListFragment<HiddenGamesAdapt
     @Override
     public String getExtraTitle() {
         return null;
-    }
-
-    @Override
-    public void addItems(List<? extends IEndlessAdaptable> result, boolean clearExistingItems, String xsrfToken) {
-        super.addItems(result, clearExistingItems, xsrfToken);
-
-        if (showSnack) {
-            showSnack = false;
-            Snackbar.make(getView().findViewById(R.id.list), R.string.hidden_games_snack, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.hidden_games_snack_dismiss, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            // we don't really need anything here for it to be dismissable.
-                        }
-                    }).show();
-        }
     }
 }
