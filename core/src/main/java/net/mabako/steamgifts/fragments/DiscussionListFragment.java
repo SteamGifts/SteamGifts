@@ -1,14 +1,24 @@
 package net.mabako.steamgifts.fragments;
 
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.PopupMenu;
 
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 
+import net.mabako.steamgifts.activities.CommonActivity;
 import net.mabako.steamgifts.adapters.DiscussionAdapter;
 import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.fragments.interfaces.IActivityTitle;
+import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
 import net.mabako.steamgifts.tasks.LoadDiscussionListTask;
 
 /**
@@ -54,6 +64,7 @@ public class DiscussionListFragment extends SearchableListFragment<DiscussionAda
         outState.putSerializable(SAVED_TYPE, type);
     }
 
+    @NonNull
     @Override
     protected DiscussionAdapter createAdapter() {
         return new DiscussionAdapter();
@@ -82,6 +93,50 @@ public class DiscussionListFragment extends SearchableListFragment<DiscussionAda
     @Override
     public Fragment newSearchingInstance(String query) {
         return newInstance(type, query);
+    }
+
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        if (!"full".equals(sharedPreferences.getString("preference_sidebar_discussion_list", "full"))) {
+            MenuItem categoryMenu = menu.findItem(R.id.category);
+            categoryMenu.setVisible(true);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.category) {
+            View menuItemView = getActivity().findViewById(R.id.category);
+            final PopupMenu popupMenu = new PopupMenu(getContext(), menuItemView);
+            final Menu menu = popupMenu.getMenu();
+
+            SteamGiftsUserData account = SteamGiftsUserData.getCurrent(getContext());
+            for (final DiscussionListFragment.Type type : DiscussionListFragment.Type.values()) {
+                // We only want to have 'Created Discussions' if we're actually logged in.
+                if (type == DiscussionListFragment.Type.CREATED && !account.isLoggedIn())
+                    continue;
+
+                menu.add(type.getNavbarResource()).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        popupMenu.dismiss();
+
+                        ((CommonActivity) getActivity()).loadFragment(DiscussionListFragment.newInstance(type, null));
+                        return true;
+                    }
+                });
+            }
+
+            popupMenu.show();
+
+            return true;
+        } else
+            return super.onOptionsItemSelected(item);
     }
 
     /**

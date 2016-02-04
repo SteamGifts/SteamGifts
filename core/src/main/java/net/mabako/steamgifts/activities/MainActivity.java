@@ -96,7 +96,7 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
     }
 
     @Override
-    protected void loadFragment(Fragment fragment) {
+    public void loadFragment(Fragment fragment) {
         super.loadFragment(fragment);
         onUpdatePoints(SteamGiftsUserData.getCurrent(this).getPoints());
     }

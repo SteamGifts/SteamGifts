@@ -38,6 +38,7 @@
     <string name="navigation_discussions_puzzles_title">Puzzles</string>
     <string name="navigation_discussions_created">Created</string>
     <string name="navigation_discussions_created_title">Created</string>
+    <string name="navigation_discussions_type">Category</string>
 
     <!-- Drawer items -->
     <string name="drawer_open">Open navigation drawer</string>

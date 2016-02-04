@@ -43,7 +43,7 @@ public class CommonActivity extends BaseActivity {
         startActivityForResult(new Intent(this, LoginActivity.class), REQUEST_LOGIN);
     }
 
-    protected void loadFragment(Fragment fragment) {
+    public void loadFragment(Fragment fragment) {
         super.loadFragment(R.id.fragment_container, fragment, FRAGMENT_TAG);
         updateTitle(fragment);
     }

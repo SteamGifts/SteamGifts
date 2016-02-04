@@ -8,6 +8,15 @@
         android:icon="@drawable/ic_filter_variant"
         android:title="@string/filter"
         android:visible="false"
+        app:actionLayout="@layout/menu_badge"
+        app:showAsAction="ifRoom"
+        tools:visible="true" />
+
+    <item
+        android:id="@+id/category"
+        android:icon="@drawable/ic_filter_variant"
+        android:title="@string/navigation_discussions_type"
+        android:visible="false"
         app:showAsAction="ifRoom"
         tools:visible="true" />
 
