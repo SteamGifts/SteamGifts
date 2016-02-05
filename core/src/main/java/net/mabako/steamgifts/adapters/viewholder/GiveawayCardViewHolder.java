@@ -183,6 +183,8 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
                 }
             });
         }
+
+        AttachedImageUtils.setFrom(itemView, extras, (CommonActivity) (fragment.getActivity()));
     }
 
     @SuppressWarnings("deprecation")

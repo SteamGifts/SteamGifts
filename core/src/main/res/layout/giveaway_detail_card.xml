@@ -163,6 +163,11 @@
                     android:layout_height="0dp"
                     android:layout_weight="1" />
 
+                <include
+                    layout="@layout/image_link_holder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
                 <Button
                     android:id="@+id/indicator"
                     style="@style/MediumButton"

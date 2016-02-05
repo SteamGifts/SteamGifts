@@ -2,6 +2,7 @@ package net.mabako.steamgifts.adapters.viewholder;
 
 
 import android.content.Context;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.text.method.LinkMovementMethod;
 import android.view.ContextMenu;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import net.mabako.steamgifts.activities.CommonActivity;
 import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.Comment;
 import net.mabako.steamgifts.fragments.DetailFragment;
@@ -103,6 +105,8 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
                 ((DetailFragment) fragment).requestCommentEdit(comment);
             }
         };
+
+        AttachedImageUtils.setFrom(itemView, comment, (CommonActivity) (((Fragment) fragment).getActivity()));
     }
 
     @Override

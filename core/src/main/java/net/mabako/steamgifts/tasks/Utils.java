@@ -1,11 +1,13 @@
 package net.mabako.steamgifts.tasks;
 
 import android.net.Uri;
+import android.text.TextUtils;
 
 import net.mabako.steamgifts.data.Comment;
 import net.mabako.steamgifts.data.Game;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.data.ICommentHolder;
+import net.mabako.steamgifts.data.IImageHolder;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -54,10 +56,6 @@ public final class Utils {
             if (avatarNode != null)
                 avatar = extractAvatar(avatarNode.attr("style"));
 
-            Element desc = thisComment.select(".comment__description").first();
-            desc.select(".comment__toggle-attached").html("");
-            String content = desc.html();
-
             Element timeCreated = thisComment.select(".comment__actions > div span").first();
 
             Uri permalinkUri = Uri.parse(thisComment.select(".comment__actions a[href^=/go/comment").first().attr("href"));
@@ -68,9 +66,14 @@ public final class Utils {
             } catch (NumberFormatException e) {
             }
 
-            Comment comment = new Comment(commentId, author, timeCreated.text(), timeCreated.attr("title"), content, depth, avatar, isOp);
+            Comment comment = new Comment(commentId, author, timeCreated.text(), timeCreated.attr("title"), depth, avatar, isOp);
             comment.setPermalinkId(permalinkUri.getPathSegments().get(2));
             comment.setEditableContent(editableContent);
+
+
+            Element desc = thisComment.select(".comment__description").first();
+            String content = loadAttachedImages(comment, desc);
+            comment.setContent(content);
 
             // check if the comment is deleted
             comment.setDeleted(thisComment.select(".comment__summary").first().select(".comment__delete-state").size() == 1);
@@ -95,12 +98,6 @@ public final class Utils {
 
     /**
      * Load some details for the giveaway. Some items must be loaded outside of this.
-     *
-     * @param giveaway
-     * @param element
-     * @param cssNode
-     * @param headerHintCssNode
-     * @param steamUri
      */
     public static void loadGiveaway(Giveaway giveaway, Element element, String cssNode, String headerHintCssNode, Uri steamUri) {
         // Copies & Points. They do not have separate markup classes, it's basically "if one thin markup element exists, it's one copy only"
@@ -204,5 +201,28 @@ public final class Utils {
     public static String getPageTitle(Document document) {
         String title = document.title();
         return title.replaceAll(" - Page ([\\d,]+)$", "");
+    }
+
+    /**
+     * Extracts all images from the description.
+     *
+     * @param imageHolder item to save this into
+     * @param description description of the element
+     * @return the description, minus attached images
+     */
+    public static String loadAttachedImages(IImageHolder imageHolder, Element description) {
+        // find all "View attached image" segments
+        Elements images = description.select("div > a > img.is-hidden");
+        for (Element image : images) {
+            // Extract the link.
+            String src = image.attr("src");
+            if (!TextUtils.isEmpty(src))
+                imageHolder.attachImage(src);
+
+            // Remove this image.
+            image.parent().parent().html("");
+        }
+
+        return description.html();
     }
 }

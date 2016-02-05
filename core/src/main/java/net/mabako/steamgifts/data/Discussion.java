@@ -1,7 +1,7 @@
 package net.mabako.steamgifts.data;
 
-import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
+import net.mabako.steamgifts.core.R;
 
 public class Discussion extends BasicDiscussion implements IEndlessAdaptable {
     public static final int VIEW_LAYOUT = R.layout.discussion_item;
