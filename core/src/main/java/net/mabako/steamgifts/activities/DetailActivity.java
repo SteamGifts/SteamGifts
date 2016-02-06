@@ -3,6 +3,7 @@ package net.mabako.steamgifts.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.LayoutRes;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -41,6 +42,9 @@ public class DetailActivity extends CommonActivity {
      * If we have a {@link net.mabako.steamgifts.fragments.DetailFragment.CommentContextInfo} instance, mark the comment associated with this instance as read.
      */
     public static final String ARG_MARK_CONTEXT_READ = "mark-context-read";
+
+    @LayoutRes
+    private int layoutId;
 
     private ViewPager pager = null;
     private FragmentAdapter pagerAdapter = null;
@@ -132,12 +136,18 @@ public class DetailActivity extends CommonActivity {
     }
 
     @Override
-    public void setContentView(int layoutResID) {
+    public void setContentView(@LayoutRes int layoutResID) {
+        this.layoutId = layoutResID;
         super.setContentView(layoutResID);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null)
             setSupportActionBar(toolbar);
+    }
+
+    @LayoutRes
+    public int getLayoutId() {
+        return layoutId;
     }
 
     @Override

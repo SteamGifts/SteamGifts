@@ -1,5 +1,6 @@
 package net.mabako.steamgifts.fragments.images;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import net.mabako.steamgifts.activities.DetailActivity;
 import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.Image;
 
@@ -45,6 +47,8 @@ public class ImagePagerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.image_pager_fragment, container, false);
+
+        fixStatusBarSpacing(view);
 
         view.findViewById(R.id.close).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,6 +92,20 @@ public class ImagePagerFragment extends Fragment {
         listener.onPageScrollStateChanged(ViewPager.SCROLL_STATE_IDLE);
 
         return view;
+    }
+
+    /**
+     * In particular, some windows might have android:fitsSystemWindows="true" set.
+     */
+    private void fixStatusBarSpacing(View view) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            // Not applicable to API 15 or below, since there is no translucent status bar(?)
+
+            DetailActivity activity = (DetailActivity) getActivity();
+            if (activity.getLayoutId() == R.layout.activity_giveaway_detail) {
+                view.setPadding(0, getResources().getDimensionPixelSize(R.dimen.status_bar_height), 0, 0);
+            }
+        }
     }
 
     private class PagerAdapter extends FragmentStatePagerAdapter {

@@ -12,4 +12,6 @@
 
     <dimen name="giveaway_list_indicator_size">8dp</dimen>
     <dimen name="giveaway_list_indicator_padding">2dp</dimen>
+
+    <dimen name="status_bar_height">25dp</dimen>
 </resources>

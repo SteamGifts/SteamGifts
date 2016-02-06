@@ -2,9 +2,6 @@ package net.mabako.steamgifts.data;
 
 import java.io.Serializable;
 
-/**
- * Created by mabako on 06.02.2016.
- */
 public class Image implements Serializable {
     private String url, title;
 
@@ -27,5 +24,10 @@ public class Image implements Serializable {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("(%s,%s)", url, title);
     }
 }
