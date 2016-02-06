@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 public class Picture implements IEndlessAdaptable, Serializable {
     private static final long serialVersionUID = 1373131985788155321L;
-    public static final int VIEW_LAYOUT = R.layout.image_item;
+    public static final int VIEW_LAYOUT = R.layout.store_picture;
 
     private final String url;
 

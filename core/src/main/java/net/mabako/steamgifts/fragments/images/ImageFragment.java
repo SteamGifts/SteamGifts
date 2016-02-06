@@ -110,7 +110,7 @@ public class ImageFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.image_item, container, false);
+        final View view = inflater.inflate(R.layout.image_page_item, container, false);
 
         switch (state) {
             case NONE:
