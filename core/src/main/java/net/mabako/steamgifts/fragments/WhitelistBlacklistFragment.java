@@ -38,6 +38,8 @@ public class WhitelistBlacklistFragment extends SearchableListFragment<Whitelist
         args.putString(SAVED_QUERY, query);
         fragment.setArguments(args);
 
+        fragment.type = what;
+
         return fragment;
     }
 
