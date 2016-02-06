@@ -65,7 +65,7 @@ public class AboutFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("https://github.com/mabako/SteamGifts-app"));
+                intent.setData(Uri.parse("https://github.com/SteamGifts/SteamGifts"));
 
                 startActivity(intent);
             }
