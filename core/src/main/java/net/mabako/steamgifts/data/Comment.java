@@ -28,7 +28,7 @@ public class Comment implements Serializable, IEndlessAdaptable, IImageHolder {
     private boolean deleted, highlighted;
     private String permalinkId, editableContent;
 
-    private List<String> attachedImages;
+    private List<Image> attachedImages;
 
     public Comment(int id, String author, String timeAgo, String timeAgoLong, int depth, String avatar, boolean isOp) {
         this.id = id;
@@ -137,15 +137,15 @@ public class Comment implements Serializable, IEndlessAdaptable, IImageHolder {
     }
 
     @Override
-    public synchronized void attachImage(String imageUrl) {
+    public synchronized void attachImage(Image image) {
         if (attachedImages == null)
             attachedImages = new ArrayList<>();
 
-        attachedImages.add(imageUrl);
+        attachedImages.add(image);
     }
 
     @Override
-    public List<String> getAttachedImages() {
+    public List<Image> getAttachedImages() {
         return attachedImages;
     }
 

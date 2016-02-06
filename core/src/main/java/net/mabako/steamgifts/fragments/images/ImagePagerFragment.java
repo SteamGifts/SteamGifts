@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,29 +14,31 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import net.mabako.steamgifts.core.R;
+import net.mabako.steamgifts.data.Image;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ImagePagerFragment extends Fragment {
     private static final String ARG_IMAGES = "images";
-    private List<String> images;
+    private List<Image> images;
 
-    public static ImagePagerFragment newInstance(List<String> images) {
+    public static ImagePagerFragment newInstance(List<Image> images) {
         ImagePagerFragment fragment = new ImagePagerFragment();
 
         Bundle args = new Bundle();
-        args.putStringArrayList(ARG_IMAGES, new ArrayList<>(images));
+        args.putSerializable(ARG_IMAGES, new ArrayList<>(images));
         fragment.setArguments(args);
 
         return fragment;
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        images = getArguments().getStringArrayList(ARG_IMAGES);
+        images = (List<Image>) getArguments().getSerializable(ARG_IMAGES);
     }
 
     @Nullable
@@ -65,10 +68,19 @@ public class ImagePagerFragment extends Fragment {
             @Override
             public void onPageScrollStateChanged(int state) {
                 if (state == ViewPager.SCROLL_STATE_IDLE) {
+                    // Fetch the current item.
                     int currentPosition = pager.getCurrentItem();
+                    Image image = images.get(currentPosition);
 
-                    ((TextView) view.findViewById(R.id.image_number)).setText(String.format("%d / %d", currentPosition + 1, images.size()));
-                    ((TextView) view.findViewById(R.id.image_url)).setText(images.get(currentPosition));
+                    // Show the current image, out of the number of images
+                    String index_and_title = String.format("%d / %d", currentPosition + 1, images.size());
+
+                    // Append an optional title.
+                    if (!TextUtils.isEmpty(image.getTitle()))
+                        index_and_title = String.format("%s: %s", index_and_title, image.getTitle());
+
+                    ((TextView) view.findViewById(R.id.image_number)).setText(index_and_title);
+                    ((TextView) view.findViewById(R.id.image_url)).setText(image.getUrl());
                 }
             }
         };
@@ -86,7 +98,7 @@ public class ImagePagerFragment extends Fragment {
         @Override
         public Fragment getItem(int position) {
             Log.v(ImagePagerFragment.class.getSimpleName(), "image at position " + position + " is " + images.get(position));
-            return ImageFragment.newInstance(images.get(position));
+            return ImageFragment.newInstance(images.get(position).getUrl());
         }
 
         @Override

@@ -8,6 +8,7 @@ import net.mabako.steamgifts.data.Game;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.data.ICommentHolder;
 import net.mabako.steamgifts.data.IImageHolder;
+import net.mabako.steamgifts.data.Image;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -217,7 +218,7 @@ public final class Utils {
             // Extract the link.
             String src = image.attr("src");
             if (!TextUtils.isEmpty(src))
-                imageHolder.attachImage(src);
+                imageHolder.attachImage(new Image(src, image.attr("title")));
 
             // Remove this image.
             image.parent().parent().html("");

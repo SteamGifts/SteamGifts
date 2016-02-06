@@ -15,7 +15,7 @@ public class GiveawayExtras implements Serializable, ICommentHolder, IImageHolde
     private String errorMessage;
     private boolean enterable;
 
-    private List<String> attachedImages;
+    private List<Image> attachedImages;
 
     public GiveawayExtras() {
         loadedComments = new ArrayList<>();
@@ -88,15 +88,15 @@ public class GiveawayExtras implements Serializable, ICommentHolder, IImageHolde
     }
 
     @Override
-    public synchronized void attachImage(String imageUrl) {
+    public synchronized void attachImage(Image image) {
         if (attachedImages == null)
             attachedImages = new ArrayList<>();
 
-        attachedImages.add(imageUrl);
+        attachedImages.add(image);
     }
 
     @Override
-    public List<String> getAttachedImages() {
+    public List<Image> getAttachedImages() {
         return attachedImages;
     }
 }

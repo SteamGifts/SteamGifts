@@ -8,15 +8,13 @@ import java.util.List;
 public interface IImageHolder {
     /**
      * Attach an image to this instance.
-     *
-     * @param imageUrl url of the image
      */
-    void attachImage(String imageUrl);
+    void attachImage(Image image);
 
     /**
      * Returns all attached images.
      *
      * @return List of all attached images, or null if none was attached.
      */
-    List<String> getAttachedImages();
+    List<Image> getAttachedImages();
 }

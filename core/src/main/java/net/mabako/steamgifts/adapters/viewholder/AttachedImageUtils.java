@@ -8,6 +8,7 @@ import android.widget.Button;
 import net.mabako.steamgifts.activities.CommonActivity;
 import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.IImageHolder;
+import net.mabako.steamgifts.data.Image;
 import net.mabako.steamgifts.fragments.images.ImagePagerFragment;
 
 import java.util.List;
@@ -16,7 +17,7 @@ public class AttachedImageUtils {
     private static final String IMAGE_VIEW_TAG = "imageview";
 
     public static void setFrom(View itemView, IImageHolder imageHolder, final CommonActivity activity) {
-        final List<String> images = imageHolder == null ? null : imageHolder.getAttachedImages();
+        final List<Image> images = imageHolder == null ? null : imageHolder.getAttachedImages();
 
         if (images == null || images.isEmpty()) {
             itemView.findViewById(R.id.image_link_holder).setVisibility(View.GONE);
