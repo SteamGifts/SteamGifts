@@ -36,7 +36,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/could_not_load_image" />
+            android:text="@string/could_not_load_image"
+            android:textColor="#ffffffff" />
 
         <Button
             android:id="@+id/open_browser"
@@ -45,6 +46,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:minHeight="40dp"
-            android:text="@string/open_browser" />
+            android:text="@string/open_browser"
+            android:textColor="#ffffffff" />
     </LinearLayout>
 </RelativeLayout>
