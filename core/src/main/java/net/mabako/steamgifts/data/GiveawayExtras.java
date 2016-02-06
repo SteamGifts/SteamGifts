@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GiveawayExtras implements Serializable, ICommentHolder {
+public class GiveawayExtras implements Serializable, ICommentHolder, IImageHolder {
     private static final long serialVersionUID = 2559783080850462760L;
     private String title;
     private String description;
@@ -14,6 +14,8 @@ public class GiveawayExtras implements Serializable, ICommentHolder {
     private final List<Comment> loadedComments;
     private String errorMessage;
     private boolean enterable;
+
+    private List<Image> attachedImages;
 
     public GiveawayExtras() {
         loadedComments = new ArrayList<>();
@@ -83,5 +85,18 @@ public class GiveawayExtras implements Serializable, ICommentHolder {
 
     public void setEnterable(boolean enterable) {
         this.enterable = enterable;
+    }
+
+    @Override
+    public synchronized void attachImage(Image image) {
+        if (attachedImages == null)
+            attachedImages = new ArrayList<>();
+
+        attachedImages.add(image);
+    }
+
+    @Override
+    public List<Image> getAttachedImages() {
+        return attachedImages;
     }
 }

@@ -28,8 +28,9 @@
         android:elevation="2dp" />
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:paddingLeft="4dp">
 
         <TextView
@@ -73,7 +74,7 @@
         <TextView
             android:id="@+id/content"
             style="@style/MediumText"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/time"
             android:paddingBottom="4dp"
@@ -81,4 +82,11 @@
             android:paddingRight="4dp"
             android:text="@string/placeholder_comment_text" />
     </RelativeLayout>
+
+    <include
+        layout="@layout/image_link_holder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_toRightOf="@+id/comment" />
 </LinearLayout>

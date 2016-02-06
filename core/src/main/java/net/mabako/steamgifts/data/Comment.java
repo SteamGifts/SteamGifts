@@ -5,11 +5,13 @@ import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.core.R;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Comment on a giveaway or discussion.
  */
-public class Comment implements Serializable, IEndlessAdaptable {
+public class Comment implements Serializable, IEndlessAdaptable, IImageHolder {
     private static final long serialVersionUID = -7333245576601696951L;
     public static final int VIEW_LAYOUT = R.layout.comment;
 
@@ -26,7 +28,9 @@ public class Comment implements Serializable, IEndlessAdaptable {
     private boolean deleted, highlighted;
     private String permalinkId, editableContent;
 
-    public Comment(int id, String author, String timeAgo, String timeAgoLong, String content, int depth, String avatar, boolean isOp) {
+    private List<Image> attachedImages;
+
+    public Comment(int id, String author, String timeAgo, String timeAgoLong, int depth, String avatar, boolean isOp) {
         this.id = id;
         this.author = author;
         this.timeAgo = timeAgo;
@@ -130,6 +134,19 @@ public class Comment implements Serializable, IEndlessAdaptable {
                 return false;
         }
         return ((Comment) o).id == id;
+    }
+
+    @Override
+    public synchronized void attachImage(Image image) {
+        if (attachedImages == null)
+            attachedImages = new ArrayList<>();
+
+        attachedImages.add(image);
+    }
+
+    @Override
+    public List<Image> getAttachedImages() {
+        return attachedImages;
     }
 
     @Override

@@ -211,4 +211,5 @@
     <string name="notification_new_messages">%d new messages</string>
 
     <!-- unsorted -->
+    <string name="could_not_load_image">Could not load image.</string>
 </resources>

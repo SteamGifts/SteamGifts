@@ -4,12 +4,14 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DiscussionExtras implements Serializable, ICommentHolder {
+public class DiscussionExtras implements Serializable, ICommentHolder, IImageHolder {
     private static final long serialVersionUID = 5303211073144498554L;
     private String description;
     private String xsrfToken;
     private final List<Comment> loadedComments;
     private Poll poll;
+
+    private List<Image> attachedImages;
 
     public DiscussionExtras() {
         loadedComments = new ArrayList<>();
@@ -51,5 +53,18 @@ public class DiscussionExtras implements Serializable, ICommentHolder {
 
     public boolean hasPoll() {
         return poll != null;
+    }
+
+    @Override
+    public synchronized void attachImage(Image image) {
+        if (attachedImages == null)
+            attachedImages = new ArrayList<>();
+
+        attachedImages.add(image);
+    }
+
+    @Override
+    public List<Image> getAttachedImages() {
+        return attachedImages;
     }
 }

@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import net.mabako.steamgifts.activities.CommonActivity;
 import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.Discussion;
 import net.mabako.steamgifts.data.DiscussionExtras;
@@ -93,5 +94,7 @@ public class DiscussionCardViewHolder extends RecyclerView.ViewHolder {
                 }
             });
         }
+
+        AttachedImageUtils.setFrom(itemView, extras, (CommonActivity) (((Fragment) fragment).getActivity()));
     }
 }
