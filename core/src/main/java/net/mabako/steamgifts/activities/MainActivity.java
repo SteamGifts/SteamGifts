@@ -121,14 +121,14 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
                 } else {
                     Fragment fragment = getCurrentFragment();
 
-                    if(navbar != null)
+                    if (navbar != null)
                         navbar.reconfigure();
 
                     // force an entire fragment reload if this is something giveaway reloaded
                     if (fragment instanceof GiveawayListFragment) {
                         loadFragment(GiveawayListFragment.newInstance(((GiveawayListFragment) fragment).getType(), null, false));
 
-                        if(navbar != null)
+                        if (navbar != null)
                             navbar.setSelection(((GiveawayListFragment) fragment).getType().getNavbarResource());
                     } else if (fragment instanceof SavedGiveawaysFragment) {
                         loadFragment(new SavedGiveawaysFragment());
