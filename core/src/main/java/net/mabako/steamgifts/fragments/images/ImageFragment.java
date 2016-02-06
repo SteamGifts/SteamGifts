@@ -39,17 +39,42 @@ import pl.droidsonroids.gif.GifImageView;
 /**
  * A single image on a single page.
  */
-// TODO this probably needs some overhaul in terms of lifecycle management.
 public class ImageFragment extends Fragment {
     private static final String TAG = ImageFragment.class.getSimpleName();
     private static final String ARG_URL = "image-url";
 
-    private String url;
-    private FetchImage fetchImage;
+    private static final String SAVED_STATE = "image-state";
+    private static final String SAVED_IMAGE_BYTES = "image-bytes";
 
-    private Bitmap bitmap;
+    /**
+     * URL of the image to display.
+     */
+    private String url;
+
+    /**
+     * Task to fetch the current image.
+     */
+    private FetchImageTask fetchImageTask;
+
+    /**
+     * Drawable used for the GIF file.
+     */
     private GifDrawable gifDrawable;
+
+    /**
+     * Image View used for PNG/JPG files.
+     */
     private SubsamplingScaleImageView imageView;
+
+    /**
+     * Image, in bytes.
+     */
+    private byte[] imageBytes;
+
+    /**
+     * Current fragment state.
+     */
+    private State state = State.NONE;
 
     public static ImageFragment newInstance(String imageUrl) {
         ImageFragment fragment = new ImageFragment();
@@ -64,9 +89,22 @@ public class ImageFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         url = getArguments().getString(ARG_URL);
         if (TextUtils.isEmpty(url))
             throw new IllegalStateException("No URL passed");
+
+        if (savedInstanceState != null) {
+            state = (State) savedInstanceState.getSerializable(SAVED_STATE);
+            imageBytes = savedInstanceState.getByteArray(SAVED_IMAGE_BYTES);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(SAVED_STATE, state);
+        outState.putByteArray(SAVED_IMAGE_BYTES, imageBytes);
     }
 
     @Nullable
@@ -74,10 +112,28 @@ public class ImageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.image_item, container, false);
 
-        // What if there's no saved instance state?
-        if (savedInstanceState == null) {
-            fetchImage = new FetchImage();
-            fetchImage.execute();
+        switch (state) {
+            case NONE:
+                fetchImageTask = new FetchImageTask();
+                fetchImageTask.execute();
+                break;
+
+            case UNABLE_TO_LOAD:
+                showOpenInBrowserLink(view);
+                break;
+
+            case GIF:
+                try {
+                    createGif(view);
+                } catch (Exception e) {
+                    Log.e(TAG, "Unable to restore bytes");
+                    showOpenInBrowserLink(view);
+                }
+                break;
+
+            case BITMAP:
+                createBitmap(view);
+                break;
         }
 
         return view;
@@ -90,14 +146,11 @@ public class ImageFragment extends Fragment {
 
     @Override
     public void onDestroy() {
-        if (fetchImage != null)
-            fetchImage.cancel(true);
+        if (fetchImageTask != null)
+            fetchImageTask.cancel(true);
 
         if (imageView != null)
             imageView.recycle();
-
-        if (bitmap != null)
-            bitmap.recycle();
 
         if (gifDrawable != null)
             gifDrawable.recycle();
@@ -105,33 +158,62 @@ public class ImageFragment extends Fragment {
         super.onDestroy();
     }
 
-    private void setImage(@NonNull final byte[] bytes) {
+    /**
+     * Create an image from a byte array.
+     *
+     * @param imageBytes the image's byte array
+     */
+    private void createImage(byte[] imageBytes) {
         View view = getView();
-        if (view == null)
+        if (view == null) {
+            Log.v(TAG, "createImage: no view");
             return;
-
-        view.findViewById(R.id.progressBar).setVisibility(View.GONE);
-
-        try {
-            setImage(new GifDrawable(bytes));
-            return;
-        } catch (GifIOException e) {
-            // Not a gif.
-            Log.v(TAG, "image is not a gif: " + e.getMessage());
-        } catch (IOException e) {
-            Log.d(TAG, "IOException while parsing GIF " + url, e);
         }
 
-        // Set a bitmap, whoo!
+        this.imageBytes = imageBytes;
+        if (imageBytes != null) {
+            try {
+                // Can we parse this as GIF?
+                createGif(view);
+                state = State.GIF;
+                return;
+            } catch (GifIOException e) {
+                // Not a gif, probably a normal image
+            } catch (IOException e) {
+                Log.w(TAG, "IOException while parsing GIF " + url, e);
+            }
 
-        imageView = (SubsamplingScaleImageView) view.findViewById(R.id.image);
+            // Normal image.
+            createBitmap(view);
+            state = State.BITMAP;
+        } else {
+            showOpenInBrowserLink(view);
+            state = State.UNABLE_TO_LOAD;
+        }
+    }
+
+
+    /**
+     * Create a bitmap from a PNG/JPG.
+     *
+     * @param fragmentRootView the root view of the current fragment
+     * @see #createImage(byte[])
+     * @see #onCreateView(LayoutInflater, ViewGroup, Bundle)
+     */
+    private void createBitmap(@NonNull final View fragmentRootView) {
+        Log.v(TAG, "Creating bitmap for " + url);
+
+        // Hide the progress bar
+        fragmentRootView.findViewById(R.id.progressBar).setVisibility(View.GONE);
+
+        imageView = (SubsamplingScaleImageView) fragmentRootView.findViewById(R.id.image);
         imageView.setBitmapDecoderFactory(new DecoderFactory<ImageDecoder>() {
             @Override
             public ImageDecoder make() throws IllegalAccessException, java.lang.InstantiationException {
                 return new ImageDecoder() {
                     @Override
                     public Bitmap decode(Context context, Uri uri) throws Exception {
-                        return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                        return BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
                     }
                 };
             }
@@ -148,7 +230,7 @@ public class ImageFragment extends Fragment {
 
                     @Override
                     public Point init(Context context, Uri uri) throws Exception {
-                        decoder = BitmapRegionDecoder.newInstance(bytes, 0, bytes.length, true);
+                        decoder = BitmapRegionDecoder.newInstance(imageBytes, 0, imageBytes.length, true);
                         return new Point(decoder.getWidth(), decoder.getHeight());
                     }
 
@@ -161,7 +243,7 @@ public class ImageFragment extends Fragment {
                             Bitmap bitmap = this.decoder.decodeRegion(rect, options);
                             if (bitmap == null) {
                                 imageView.setVisibility(View.GONE);
-                                showOpenInBrowserLink();
+                                showOpenInBrowserLink(fragmentRootView);
                                 return null;
                             } else {
                                 return bitmap;
@@ -191,15 +273,22 @@ public class ImageFragment extends Fragment {
         });
     }
 
-    private void setImage(GifDrawable gifDrawable) {
-        View view = getView();
-        if (view == null) {
-            gifDrawable.recycle();
-            return;
-        }
-        this.gifDrawable = gifDrawable;
+    /**
+     * Setup the container for a GIF file.
+     *
+     * @param fragmentRootView the root view of the current fragment
+     * @see #createImage(byte[])
+     * @see #onCreateView(LayoutInflater, ViewGroup, Bundle)
+     */
+    private void createGif(@NonNull View fragmentRootView) throws IOException {
+        // Create the drawable, this will throw an exception if it's not a valid gif.
+        gifDrawable = new GifDrawable(imageBytes);
+        Log.v(TAG, "Creating gif for " + url);
 
-        GifImageView imageView = (GifImageView) view.findViewById(R.id.gif);
+        // Hide the progress bar
+        fragmentRootView.findViewById(R.id.progressBar).setVisibility(View.GONE);
+
+        GifImageView imageView = (GifImageView) fragmentRootView.findViewById(R.id.gif);
         imageView.setImageDrawable(gifDrawable);
         imageView.setVisibility(View.VISIBLE);
         imageView.setOnClickListener(new View.OnClickListener() {
@@ -210,14 +299,18 @@ public class ImageFragment extends Fragment {
         });
     }
 
-    private void showOpenInBrowserLink() {
-        View view = getView();
-        if (view == null)
-            return;
-
-        view.findViewById(R.id.progressBar).setVisibility(View.GONE);
-        view.findViewById(R.id.image_not_loaded).setVisibility(View.VISIBLE);
-        view.findViewById(R.id.open_browser).setOnClickListener(new View.OnClickListener() {
+    /**
+     * Has no image, allow open in browser instead.
+     *
+     * @param fragmentRootView the root view of the current fragment
+     * @see #createImage(byte[])
+     * @see #onCreateView(LayoutInflater, ViewGroup, Bundle)
+     */
+    private void showOpenInBrowserLink(@NonNull View fragmentRootView) {
+        Log.v(TAG, "unable to load image " + url);
+        fragmentRootView.findViewById(R.id.progressBar).setVisibility(View.GONE);
+        fragmentRootView.findViewById(R.id.image_not_loaded).setVisibility(View.VISIBLE);
+        fragmentRootView.findViewById(R.id.open_browser).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
@@ -226,13 +319,18 @@ public class ImageFragment extends Fragment {
 
     }
 
-    private class FetchImage extends AsyncTask<Void, Void, byte[]> {
+    /**
+     * Task to load the image asynchronously.
+     */
+    private class FetchImageTask extends AsyncTask<Void, Void, byte[]> {
         @Override
         protected byte[] doInBackground(Void... params) {
             try {
+                // Grab an input stream to the image
                 OkHttpDownloader downloader = new OkHttpDownloader(getContext());
                 Downloader.Response response = downloader.load(Uri.parse(url), 0);
 
+                // Read the image into a byte array
                 return Okio.buffer(Okio.source(response.getInputStream())).readByteArray();
             } catch (Exception e) {
                 Log.d(ImageFragment.class.getSimpleName(), "Error fetching image", e);
@@ -243,11 +341,32 @@ public class ImageFragment extends Fragment {
         @Override
         @SuppressWarnings("deprecation")
         protected void onPostExecute(byte[] response) {
-            if (response != null) {
-                setImage(response);
-            } else {
-                showOpenInBrowserLink();
-            }
+            createImage(response);
         }
+    }
+
+    /**
+     * Current state of the fragment.
+     */
+    private enum State {
+        /**
+         * No image loaded yet.
+         */
+        NONE,
+
+        /**
+         * An error while loading image.
+         */
+        UNABLE_TO_LOAD,
+
+        /**
+         * Non-animated image such as a PNG or JPG file.
+         */
+        BITMAP,
+
+        /**
+         * GIF file
+         */
+        GIF;
     }
 }
