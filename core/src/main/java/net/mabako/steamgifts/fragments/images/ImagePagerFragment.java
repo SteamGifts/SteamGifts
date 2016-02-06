@@ -51,7 +51,7 @@ public class ImagePagerFragment extends Fragment {
         });
 
         final ViewPager pager = (ViewPager) view.findViewById(R.id.viewPager);
-        pager.setAdapter(new PagerAdapter(getFragmentManager()));
+        pager.setAdapter(new PagerAdapter(getChildFragmentManager()));
 
         ViewPager.OnPageChangeListener listener = new ViewPager.OnPageChangeListener() {
             @Override
