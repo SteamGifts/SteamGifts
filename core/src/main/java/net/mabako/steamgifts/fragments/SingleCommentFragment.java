@@ -3,21 +3,18 @@ package net.mabako.steamgifts.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.activities.WriteCommentActivity;
+import net.mabako.steamgifts.adapters.viewholder.Utils;
+import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.Comment;
-
-import org.w3c.dom.Text;
 
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
@@ -31,10 +28,7 @@ public class SingleCommentFragment extends Fragment {
 
         ((TextView) layout.findViewById(R.id.user)).setText(comment.getAuthor());
         ((TextView) layout.findViewById(R.id.time)).setText(comment.getTimeAgo());
-
-        CharSequence desc = Html.fromHtml(comment.getContent());
-        desc = desc.subSequence(0, desc.length() - 2);
-        ((TextView) layout.findViewById(R.id.content)).setText(desc);
+        ((TextView) layout.findViewById(R.id.content)).setText(Utils.fromHtml(getContext(), comment.getContent()));
 
         // Space before the marker
         View commentIndent = layout.findViewById(R.id.comment_indent);
