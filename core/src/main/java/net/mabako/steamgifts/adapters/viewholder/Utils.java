@@ -7,6 +7,8 @@ import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.AttrRes;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -27,11 +29,11 @@ public final class Utils {
             tdPattern = Pattern.compile("</td>([\\s\\r\\n]+)<td"),
             thPattern = Pattern.compile("</th>([\\s\\r\\n]+)<th");
 
-    public static CharSequence fromHtml(Context context, String source) {
-        return fromHtml(context, source, true);
+    public static CharSequence fromHtml(@NonNull Context context, String source) {
+        return fromHtml(context, source, true, null);
     }
 
-    public static CharSequence fromHtml(Context context, String source, boolean useCustomViewHandler) {
+    public static CharSequence fromHtml(@NonNull Context context, String source, boolean useCustomViewHandler, @Nullable Html.ImageGetter imageGetter) {
         if (TextUtils.isEmpty(source))
             return source;
 
@@ -39,9 +41,10 @@ public final class Utils {
                 .replace("\r\n", "\n")
                 .replace("</tr>", "</tr><br/>");
         source = thPattern.matcher(tdPattern.matcher(source).replaceAll(" | </td><td")).replaceAll(" | </th><th");
+
         if (useCustomViewHandler) {
             try {
-                CharSequence cs = Html.fromHtml(source, null, new CustomHtmlTagHandler());
+                CharSequence cs = Html.fromHtml(source, imageGetter, new CustomHtmlTagHandler());
                 cs = trim(cs, 0, cs.length());
                 return addProperLinks(context, cs);
             } catch (Exception e) {
@@ -49,7 +52,7 @@ public final class Utils {
             }
         }
 
-        CharSequence cs = Html.fromHtml(source);
+        CharSequence cs = Html.fromHtml(source, imageGetter, null);
         cs = trim(cs, 0, cs.length());
         return addProperLinks(context, cs);
     }

@@ -12,19 +12,24 @@ public class Text implements IEndlessAdaptable, Serializable {
     public static final int VIEW_LAYOUT = R.layout.text_item;
 
     private final String text;
-    private final boolean html;
+    private final boolean html, loadRemoteImages;
 
     @LayoutRes
     private final int layout;
 
     public Text(String text, boolean html) {
-        this(text, html, VIEW_LAYOUT);
+        this(text, html, VIEW_LAYOUT, false);
     }
 
-    public Text(String text, boolean html, @LayoutRes int layout) {
+    public Text(String text, boolean html, boolean loadRemoteImages) {
+        this(text, html, VIEW_LAYOUT, loadRemoteImages);
+    }
+
+    public Text(String text, boolean html, @LayoutRes int layout, boolean loadRemoteImages) {
         this.text = text;
         this.html = html;
         this.layout = layout;
+        this.loadRemoteImages = loadRemoteImages;
     }
 
     public String getText() {
@@ -33,6 +38,10 @@ public class Text implements IEndlessAdaptable, Serializable {
 
     public boolean isHtml() {
         return html;
+    }
+
+    public boolean isLoadRemoteImages() {
+        return loadRemoteImages;
     }
 
     @Override

@@ -7,6 +7,8 @@ import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import net.mabako.steam.store.data.Text;
 import net.mabako.steamgifts.adapters.viewholder.Utils;
 import net.mabako.steamgifts.core.R;
@@ -27,7 +29,7 @@ public class TextViewHolder extends RecyclerView.ViewHolder {
         if (TextUtils.isEmpty(text.getText()))
             textView.setText(null);
         else if (text.isHtml()) {
-            textView.setText(Utils.fromHtml(context, text.getText()));
+            textView.setText(Utils.fromHtml(context, text.getText(), true, new StoreImageGetter(textView, context.getResources(), Picasso.with(context))));
             textView.setMovementMethod(LinkMovementMethod.getInstance());
         } else
             textView.setText(text.getText());

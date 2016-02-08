@@ -80,7 +80,7 @@ public class StoreAppFragment extends StoreFragment {
 
                         // Release?
                         if (data.has("release_date"))
-                            items.add(new Text("<strong>Release:</strong> " + data.getJSONObject("release_date").getString("date"), true));
+                            items.add(new Text("<strong>Release:</strong> " + data.getJSONObject("release_date").getString("date"), true, true));
 
                         // Genres
                         if (data.has("genres")) {
@@ -109,7 +109,7 @@ public class StoreAppFragment extends StoreFragment {
                         }
 
                         if (data.has("legal_notice"))
-                            items.add(new Text(data.getString("legal_notice"), true, R.layout.endless_scroll_end));
+                            items.add(new Text(data.getString("legal_notice"), true, R.layout.endless_scroll_end, false));
 
                         addItems(items, true);
                     } else throw new Exception("not successful");

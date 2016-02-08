@@ -73,7 +73,7 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
         commentTime.setText(comment.getTimeAgo());
         commentTime.setTextAppearance(context, comment.isHighlighted() ? R.style.SmallText : R.style.SmallText_Light);
 
-        commentContent.setText(Utils.fromHtml(context, comment.getContent(), !comment.isDeleted()));
+        commentContent.setText(Utils.fromHtml(context, comment.getContent(), !comment.isDeleted(), null));
 
         // Space before the marker
         ViewGroup.LayoutParams params = commentIndent.getLayoutParams();
