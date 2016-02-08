@@ -28,6 +28,14 @@ public class SettingsActivity extends BaseActivity {
 
                 final PreferenceCategory category = (PreferenceCategory) findPreference("preferences_sg_header");
 
+                findPreference("preference_sg_sync").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        getActivity().startActivity(new Intent(getActivity(), SyncActivity.class));
+                        return true;
+                    }
+                });
+
                 findPreference("preference_sg_whitelist").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                     @Override
                     public boolean onPreferenceClick(Preference preference) {

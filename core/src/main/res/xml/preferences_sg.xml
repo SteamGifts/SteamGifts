@@ -9,11 +9,9 @@
             android:key="preference_notifications"
             android:title="@string/preference_notifications" />
 
-        <Preference android:title="@string/preference_sg_sync">
-            <intent
-                android:targetClass="net.mabako.steamgifts.activities.SyncActivity"
-                android:targetPackage="net.mabako.steamgifts" />
-        </Preference>
+        <Preference
+            android:key="preference_sg_sync"
+            android:title="@string/preference_sg_sync" />
 
         <Preference
             android:key="preference_sg_whitelist"
