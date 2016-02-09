@@ -1,5 +1,6 @@
 package net.mabako.steamgifts.adapters.viewholder;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
@@ -35,6 +36,7 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
     private final TextView timeRemaining;
     private final TextView timeCreated;
     private final TextView description;
+    private final TextView entries, copies;
 
     private final Button enterGiveaway;
     private final Button leaveGiveaway;
@@ -55,6 +57,8 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
         timeCreated = (TextView) v.findViewById(R.id.created);
         description = (TextView) v.findViewById(R.id.description);
         description.setMovementMethod(LinkMovementMethod.getInstance());
+        entries = (TextView) v.findViewById(R.id.entries);
+        copies = (TextView) v.findViewById(R.id.copies);
         separator = v.findViewById(R.id.separator);
         actionSeparator = v.findViewById(R.id.action_separator);
 
@@ -72,11 +76,12 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
         indicator = (Button) v.findViewById(R.id.indicator);
     }
 
+    @SuppressLint("SetTextI18n")
     public void setFrom(final GiveawayDetailsCard card) {
         final Giveaway giveaway = card.getGiveaway();
         final GiveawayExtras extras = card.getExtras();
 
-        for (View view : new View[]{enterGiveaway, leaveGiveaway, commentGiveaway, loginButton, errorMessage, description, indicator, user, title, timeRemaining, timeCreated, separator, actionSeparator})
+        for (View view : new View[]{enterGiveaway, leaveGiveaway, commentGiveaway, loginButton, errorMessage, description, indicator, user, title, timeRemaining, timeCreated, entries, copies, separator, actionSeparator})
             view.setVisibility(View.GONE);
 
         if (giveaway == null) {
@@ -112,6 +117,16 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
 
             enterGiveaway.setText(String.format(String.valueOf(itemView.getContext().getText(R.string.enter_giveaway_with_points)), giveaway.getPoints()));
             leaveGiveaway.setText(String.format(String.valueOf(itemView.getContext().getText(R.string.leave_giveaway_with_points)), giveaway.getPoints()));
+
+            if (giveaway.getEntries() >= 0) {
+                entries.setText("{faw-users} " + entries.getResources().getQuantityString(R.plurals.entries, giveaway.getCopies(), giveaway.getEntries()));
+                entries.setVisibility(View.VISIBLE);
+            }
+
+            if (giveaway.getCopies() > 1) {
+                copies.setText("{faw-clone} " + copies.getResources().getQuantityString(R.plurals.copies, giveaway.getCopies(), giveaway.getCopies()));
+                copies.setVisibility(View.VISIBLE);
+            }
 
             if (extras == null) {
                 // Still loading...

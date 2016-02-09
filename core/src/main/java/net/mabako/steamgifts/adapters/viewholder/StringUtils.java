@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.Build;
-import android.support.annotation.ArrayRes;
 import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -119,37 +118,6 @@ public final class StringUtils {
             }
         } else {
             view.setBackgroundResource(R.color.colorTransparent);
-        }
-    }
-
-    /**
-     * <p>Returns a pluralized string: depending on the amount, a different string is returned.</p>
-     * <p>The array passed to this should contain strings for (optionally) no entries, (required) one entry, and (required) multiple entries (with a placeholder)</p>
-     *
-     * @param amount   amount of items we have
-     * @param resource string array with text
-     * @return formatted (possibly pluralized) string
-     */
-    public static String pluralize(@NonNull Context context, int amount, @ArrayRes int resource) {
-        String[] strings = context.getResources().getStringArray(resource);
-        if (strings == null)
-            throw new IllegalArgumentException("Resource " + resource + " has no string array");
-
-        if (strings.length == 2) {
-            // We have text for one and multiple entries
-            if (amount == 1) {
-                return strings[0];
-            } else {
-                return String.format(strings[1], amount);
-            }
-        } else if (strings.length == 3) {
-            // We have text for no, one and multiple entries
-            if (amount <= 1)
-                return strings[amount];
-            else
-                return String.format(strings[2], amount);
-        } else {
-            throw new IllegalArgumentException("String array of size 2 or 3 expected, got " + strings.length + " with resource id " + resource);
         }
     }
 

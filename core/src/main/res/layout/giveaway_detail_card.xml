@@ -28,54 +28,79 @@
                 android:paddingTop="@dimen/card_margin_outer"
                 tools:text="Title" />
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:orientation="horizontal"
                 android:paddingBottom="0dp"
                 android:paddingLeft="@dimen/card_margin_outer"
                 android:paddingRight="@dimen/card_margin_outer">
+
+                <com.wefika.flowlayout.FlowLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/user"
+                        style="@style/SmallText.Light"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/card_margin_small"
+                        android:text="@string/placeholder_giveaway_creator"
+                        android:textStyle="bold"
+                        tools:text="Creator" />
+
+                    <TextView
+                        android:id="@+id/created"
+                        style="@style/SmallText.Light"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/card_margin_small"
+                        android:text="@string/placeholder_giveaway_start"
+                        tools:text="Started" />
+
+                    <TextView
+                        android:id="@+id/entries"
+                        style="@style/SmallText.Light"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/card_margin_small"
+                        android:text="@string/placeholder_giveaway_entries"
+                        tools:text="Entries" />
+
+                    <TextView
+                        android:id="@+id/copies"
+                        style="@style/SmallText.Light"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/card_margin_small"
+                        android:text="@string/placeholder_giveaway_copies"
+                        tools:text="Copies" />
+                </com.wefika.flowlayout.FlowLayout>
 
                 <TextView
                     android:id="@+id/remaining"
                     style="@style/SmallText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_toRightOf="@+id/created"
-                    android:gravity="right"
                     android:padding="@dimen/card_margin_small"
                     android:text="@string/placeholder_giveaway_end"
                     android:textColor="?attr/lightTextColor"
                     tools:text="End" />
+            </LinearLayout>
 
-                <TextView
-                    android:id="@+id/user"
-                    style="@style/SmallText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/card_margin_small"
-                    android:text="@string/placeholder_giveaway_creator"
-                    android:textColor="?attr/lightTextColor"
-                    android:textStyle="bold"
-                    tools:text="Creator" />
-
-                <TextView
-                    android:id="@+id/created"
-                    style="@style/SmallText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/user"
-                    android:padding="@dimen/card_margin_small"
-                    android:text="@string/placeholder_giveaway_start"
-                    android:textColor="?attr/lightTextColor"
-                    tools:text="Started" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/card_margin_outer"
+                android:paddingRight="@dimen/card_margin_outer">
 
                 <View
                     android:id="@+id/separator"
                     android:layout_width="match_parent"
                     android:layout_height="1px"
-                    android:layout_below="@+id/user"
                     android:layout_margin="4dp"
                     android:background="?attr/colorLightSeparatorBackground" />
 
@@ -173,7 +198,6 @@
                     style="@style/MediumButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="L1"
                     tools:text="L10+" />
             </LinearLayout>
         </LinearLayout>
