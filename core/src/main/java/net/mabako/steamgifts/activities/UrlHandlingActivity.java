@@ -1,10 +1,14 @@
 package net.mabako.steamgifts.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import net.mabako.sgtools.SGToolsDetailFragment;
@@ -30,6 +34,7 @@ public class UrlHandlingActivity extends CommonActivity {
             youtubePattern = Pattern.compile("^https?://[\\.\\w]*youtube\\.\\w+/.*"),
             youtu_bePattern = Pattern.compile("^https?://[\\.\\w]*youtu\\.be/([A-Za-z0-9\\-_]+)(\\?.*|).*");
 
+    @Nullable
     public static Intent getIntentForUri(@NonNull Context context, @NonNull Uri uri) {
         Log.v(TAG, uri.toString());
         List<String> pathSegments = uri.getPathSegments();
@@ -97,6 +102,41 @@ public class UrlHandlingActivity extends CommonActivity {
         return null;
     }
 
+    @NonNull
+    public static IntentDelegate getIntentForUri(@NonNull Context context, @NonNull Uri uri, boolean returnWebIntentIfNoneMatching) {
+        return getIntentForUri(context, uri, returnWebIntentIfNoneMatching, false);
+    }
+
+    @NonNull
+    public static IntentDelegate getIntentForUri(@NonNull final Context context, @NonNull Uri uri, boolean returnWebIntentIfNoneMatching, boolean noBackStack) {
+        Intent intent = getIntentForUri(context, uri);
+
+        if (intent == null) {
+            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+            String type = sp.getString("preference_external_browser", "default");
+            if ("default".equals(type))
+                type = ChromeTabsDelegate.isCustomTabsSupported(context) ? "chrome-tab" : "webview";
+
+            if ("external".equals(type)) {
+                return new RealIntentDelegate(new Intent(Intent.ACTION_VIEW, uri));
+            } else if ("chrome-tab".equals(type) && ChromeTabsDelegate.isCustomTabsSupported(context)) {
+                return new ChromeTabsDelegate(uri);
+            } else if ("webview".equals(type)) {
+                // normal webview.
+                intent = new Intent(context, WebViewActivity.class);
+                intent.putExtra(WebViewActivity.ARG_URL, uri.toString());
+
+                if (noBackStack)
+                    intent.putExtra(WebViewActivity.ARG_NO_BACK_STACK, true);
+
+                return new RealIntentDelegate(intent);
+            } else
+                throw new IllegalStateException("Unknown preference_external_browser=" + type);
+        } else {
+            return new RealIntentDelegate(intent);
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,5 +160,23 @@ public class UrlHandlingActivity extends CommonActivity {
      */
     public static Intent getPermalinkUri(@NonNull Context context, @NonNull Comment comment) {
         return getIntentForUri(context, Uri.parse("http://www.steamgifts.com/go/comment/" + comment.getPermalinkId()));
+    }
+
+    public interface IntentDelegate {
+        void start(@NonNull Activity activity);
+    }
+
+    private static class RealIntentDelegate implements IntentDelegate {
+        @NonNull
+        private final Intent intent;
+
+        public RealIntentDelegate(@NonNull Intent intent) {
+            this.intent = intent;
+        }
+
+        @Override
+        public void start(@NonNull Activity activity) {
+            activity.startActivity(intent);
+        }
     }
 }

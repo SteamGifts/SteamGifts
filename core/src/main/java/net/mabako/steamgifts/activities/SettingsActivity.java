@@ -2,12 +2,18 @@ package net.mabako.steamgifts.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.net.Uri;
 import android.os.Bundle;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.widget.Toast;
 
 import net.mabako.sgtools.SGToolsLoginActivity;
@@ -94,6 +100,40 @@ public class SettingsActivity extends BaseActivity {
                     }
                 });
             }
+
+            addPreferencesFromResource(R.xml.preferences_other);
+
+            ListPreference browserPreferences = (ListPreference) findPreference("preference_external_browser");
+
+            boolean tabsSupported = ChromeTabsDelegate.isCustomTabsSupported(getActivity());
+            if (tabsSupported) {
+                // We have some chrome version installed which supports custom tabs.
+                browserPreferences.setEntries(R.array.preference_browser_entries_with_tabs);
+                browserPreferences.setEntryValues(R.array.preference_browser_entry_values_with_tabs);
+            } else {
+                // No chrome, no tabs. This probably is also the case for API levels < Jellybean, at least custom tabs are not officially supported before that.
+                browserPreferences.setEntries(R.array.preference_browser_entries);
+                browserPreferences.setEntryValues(R.array.preference_browser_entry_values);
+
+            }
+
+            if (!tabsSupported || isDefaultApp()) {
+                // Notification for default app isn't displayed if we -are- the default app.
+                // TODO if we're not the default app, maybe offer a selection to set this the default at least?
+                Preference chromeTabsInfo = findPreference("tools_preference_default_app");
+                ((PreferenceCategory) findPreference("preferences_other")).removePreference(chromeTabsInfo);
+            }
+        }
+
+        private boolean isDefaultApp() {
+            PackageManager pm = getActivity().getPackageManager();
+            ResolveInfo resolveInfo = pm.resolveActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.steamgifts.com/giveaway/xxxxx/")), PackageManager.MATCH_DEFAULT_ONLY);
+            ActivityInfo activityInfo = resolveInfo.activityInfo;
+            if (activityInfo == null || !activityInfo.exported)
+                return false;
+
+            Log.d(SettingsActivity.class.getSimpleName(), "Current default handler for SteamGifts URLs: " + activityInfo.name);
+            return UrlHandlingActivity.class.getName().equals(activityInfo.name);
         }
     }
 

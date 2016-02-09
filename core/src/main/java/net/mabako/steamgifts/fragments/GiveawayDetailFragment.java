@@ -3,6 +3,7 @@ package net.mabako.steamgifts.fragments;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -29,7 +30,7 @@ import net.mabako.steam.store.StoreSubFragment;
 import net.mabako.steamgifts.activities.CommonActivity;
 import net.mabako.steamgifts.activities.DetailActivity;
 import net.mabako.steamgifts.activities.MainActivity;
-import net.mabako.steamgifts.activities.WebViewActivity;
+import net.mabako.steamgifts.activities.UrlHandlingActivity;
 import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.BasicGiveaway;
 import net.mabako.steamgifts.data.Game;
@@ -294,9 +295,7 @@ public class GiveawayDetailFragment extends DetailFragment implements IHasEntera
                 Giveaway giveaway = (Giveaway) this.giveaway;
                 Log.i(TAG, "Opening Steam Store entry for game " + giveaway.getGameId());
 
-                Intent intent = new Intent(activity, WebViewActivity.class);
-                intent.putExtra(WebViewActivity.ARG_URL, "http://store.steampowered.com/" + giveaway.getType().name().toLowerCase() + "/" + giveaway.getGameId() + "/");
-                activity.startActivity(intent);
+                UrlHandlingActivity.getIntentForUri(activity, Uri.parse("http://store.steampowered.com/" + giveaway.getType().name().toLowerCase() + "/" + giveaway.getGameId() + "/"), true).start(activity);
             }
             return true;
         } else if (itemId == R.id.hide_game) {

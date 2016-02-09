@@ -148,6 +148,11 @@
     <string name="preference_sgtools_logout">Logout</string>
     <string name="preference_sgtools_logged_out">Cleared sgtools.info data</string>
 
+    <string name="preferences_other">Other</string>
+    <string name="preference_browser">Open Links in</string>
+    <string name="preference_default_app">Chrome Tabs</string>
+    <string name="preference_default_app_summary">This app is not the default handler for SteamGifts URLs. Custom Chrome Tabs only open links in this app if it is set as default app.\n\nGo to SteamGifts in your browser and open any giveaway or discussion. When asked, select this app as default.</string>
+
     <!--  Strings for possible PreferenceActivity Back/Next buttons -->
     <string name="back_button_label">Back</string>
     <string name="next_button_label">Next</string>

@@ -23,4 +23,26 @@
         <item>compact</item>
         <item>full</item>
     </string-array>
+
+    <string-array name="preference_browser_entries">
+        <item>WebView (default)</item>
+        <item>External Browser</item>
+    </string-array>
+
+    <string-array name="preference_browser_entry_values">
+        <item>default</item>
+        <item>external</item>
+    </string-array>
+
+    <string-array name="preference_browser_entries_with_tabs">
+        <item>WebView</item>
+        <item>Chrome Tab (default)</item>
+        <item>External Browser</item>
+    </string-array>
+
+    <string-array name="preference_browser_entry_values_with_tabs">
+        <item>webview</item>
+        <item>default</item>
+        <item>external</item>
+    </string-array>
 </resources>

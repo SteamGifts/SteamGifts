@@ -2,7 +2,6 @@ package net.mabako.steamgifts.adapters.viewholder;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.Build;
@@ -17,9 +16,7 @@ import android.text.style.URLSpan;
 import android.util.Log;
 import android.view.View;
 
-import net.mabako.steamgifts.activities.CommonActivity;
 import net.mabako.steamgifts.activities.UrlHandlingActivity;
-import net.mabako.steamgifts.activities.WebViewActivity;
 import net.mabako.steamgifts.core.R;
 
 import java.util.regex.Pattern;
@@ -94,20 +91,7 @@ public final class Utils {
                     @Override
                     public void onClick(View widget) {
                         // Do we have anything in the app we can open with that url?
-                        Intent intent = UrlHandlingActivity.getIntentForUri(context, Uri.parse(url));
-                        if (intent == null) {
-                            // Nope, just open a normal webview.
-                            intent = new Intent(context, WebViewActivity.class);
-                            intent.putExtra(WebViewActivity.ARG_URL, url);
-
-                            context.startActivity(intent);
-                        } else {
-                            if (context instanceof Activity) {
-                                ((Activity) context).startActivityForResult(intent, CommonActivity.REQUEST_LOGIN_PASSIVE);
-                            } else {
-                                context.startActivity(intent);
-                            }
-                        }
+                        UrlHandlingActivity.getIntentForUri(context, Uri.parse(url), true).start((Activity) context);
                     }
                 }, start, end, flags);
                 stringBuilder.removeSpan(span);
