@@ -19,6 +19,9 @@ import java.util.Collections;
 import java.util.List;
 
 public final class Utils {
+    private Utils() {
+    }
+
     /**
      * Extract comments recursively.
      *

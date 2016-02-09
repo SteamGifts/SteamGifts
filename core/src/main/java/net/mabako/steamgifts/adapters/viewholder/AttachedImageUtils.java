@@ -13,7 +13,11 @@ import net.mabako.steamgifts.fragments.images.ImagePagerFragment;
 
 import java.util.List;
 
-public class AttachedImageUtils {
+public final class AttachedImageUtils {
+    private AttachedImageUtils() {
+        /* empty private constructor */
+    }
+
     private static final String IMAGE_VIEW_TAG = "imageview";
 
     public static void setFrom(View itemView, IImageHolder imageHolder, final CommonActivity activity) {

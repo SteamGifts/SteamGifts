@@ -120,4 +120,7 @@ public final class Utils {
             view.setBackgroundResource(R.color.colorTransparent);
         }
     }
+
+    private Utils() {
+    }
 }
