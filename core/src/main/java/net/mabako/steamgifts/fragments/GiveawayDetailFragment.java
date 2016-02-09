@@ -276,7 +276,7 @@ public class GiveawayDetailFragment extends DetailFragment implements IHasEntera
         if (giveaway instanceof Giveaway) {
             inflater.inflate(R.menu.giveaway_menu, menu);
             menu.findItem(R.id.open_steam_store).setVisible(((Giveaway) giveaway).getGameId() > 0);
-            menu.findItem(R.id.hide_game).setVisible(((Giveaway) giveaway).getInternalGameId() > 0 && giveawayCard.getExtras() != null && giveawayCard.getExtras().getXsrfToken() != null);
+            menu.findItem(R.id.hide_game).setEnabled(((Giveaway) giveaway).getInternalGameId() > 0 && giveawayCard.getExtras() != null && giveawayCard.getExtras().getXsrfToken() != null);
 
             if (savedGiveaways != null) {
                 boolean isSaved = savedGiveaways.exists(giveaway.getGiveawayId());
@@ -284,7 +284,7 @@ public class GiveawayDetailFragment extends DetailFragment implements IHasEntera
                 menu.findItem(R.id.remove_saved_element).setVisible(isSaved);
             }
 
-            menu.findItem(R.id.more_like_this).setVisible(((Giveaway) giveaway).getTitle() != null);
+            menu.findItem(R.id.more_like_this).setEnabled(((Giveaway) giveaway).getTitle() != null);
         }
     }
 
