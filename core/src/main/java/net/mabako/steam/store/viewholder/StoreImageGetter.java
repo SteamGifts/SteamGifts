@@ -64,6 +64,7 @@ public class StoreImageGetter implements Html.ImageGetter {
     static class BitmapDrawablePlaceHolder extends BitmapDrawable {
         protected Drawable drawable;
 
+        @SuppressWarnings("deprecation")
         public BitmapDrawablePlaceHolder(Resources res) {
             super(res);
         }
