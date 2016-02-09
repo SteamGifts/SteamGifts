@@ -1,7 +1,7 @@
 package net.mabako.steamgifts.fragments;
 
 import android.app.Activity;
-import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import net.mabako.Constants;
 import net.mabako.steamgifts.activities.CommonActivity;
-import net.mabako.steamgifts.activities.WebViewActivity;
+import net.mabako.steamgifts.activities.UrlHandlingActivity;
 import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
 import net.mabako.steamgifts.tasks.AjaxTask;
@@ -75,11 +75,7 @@ public class SyncFragment extends Fragment {
             view.findViewById(R.id.privacy_settings).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(getContext(), WebViewActivity.class);
-                    intent.putExtra(WebViewActivity.ARG_URL, "http://steamcommunity.com/my/edit/settings");
-                    intent.putExtra(WebViewActivity.ARG_NO_BACK_STACK, true);
-
-                    getActivity().startActivity(intent);
+                    UrlHandlingActivity.getIntentForUri(getContext(), Uri.parse("http://steamcommunity.com/my/edit/settings"), true).start(getActivity());
                 }
             });
 

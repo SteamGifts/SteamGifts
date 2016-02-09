@@ -1,13 +1,14 @@
 package net.mabako.steamgifts.fragments;
 
-import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -28,7 +29,7 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
-import net.mabako.steamgifts.activities.WebViewActivity;
+import net.mabako.steamgifts.activities.UrlHandlingActivity;
 import net.mabako.steamgifts.adapters.GiveawayAdapter;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.core.R;
@@ -106,10 +107,10 @@ public class UserDetailFragment extends Fragment implements IUserNotifications, 
         if (toolbar != null)
             toolbar.setTitle(getNonConfusingUsername());
 
-        UserGiveawayListFragment fragmentSent = UserGiveawayListFragment.newInstance(user, "", true);
+        UserGiveawayListFragment fragmentSent = UserGiveawayListFragment.newInstance(user, "");
         fragmentSent.setiUserNotification(UserDetailFragment.this);
 
-        UserGiveawayListFragment fragmentWon = UserGiveawayListFragment.newInstance(user, "/giveaways/won", false);
+        UserGiveawayListFragment fragmentWon = UserGiveawayListFragment.newInstance(user, "/giveaways/won");
         fragmentWon.setiUserNotification(UserDetailFragment.this);
 
         viewPager = (ViewPager) layout.findViewById(R.id.viewPager);
@@ -225,9 +226,7 @@ public class UserDetailFragment extends Fragment implements IUserNotifications, 
         // TODO white- and blacklisting
         int itemId = item.getItemId();
         if (itemId == R.id.open_steam_profile) {
-            Intent intent = new Intent(getActivity(), WebViewActivity.class);
-            intent.putExtra(WebViewActivity.ARG_URL, user.getUrl());
-            getActivity().startActivity(intent);
+            UrlHandlingActivity.getIntentForUri(getContext(), Uri.parse(user.getUrl()), true).start(getActivity());
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -306,7 +305,7 @@ public class UserDetailFragment extends Fragment implements IUserNotifications, 
         private String path;
         private IUserNotifications iUserNotification;
 
-        public static UserGiveawayListFragment newInstance(User user, String path, boolean loadItemsInitially) {
+        public static UserGiveawayListFragment newInstance(User user, String path) {
             UserGiveawayListFragment fragment = new UserGiveawayListFragment();
 
             Bundle args = new Bundle();
@@ -338,6 +337,7 @@ public class UserDetailFragment extends Fragment implements IUserNotifications, 
             outState.putString(SAVED_PATH, path);
         }
 
+        @NonNull
         @Override
         protected GiveawayAdapter createAdapter() {
             return new GiveawayAdapter(25, PreferenceManager.getDefaultSharedPreferences(getContext()));

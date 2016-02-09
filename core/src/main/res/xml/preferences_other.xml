@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/preferences_other">
+        <ListPreference
+            android:defaultValue="webview"
+            android:entries="@array/preference_browser_entries"
+            android:entryValues="@array/preference_browser_entry_values"
+            android:key="preference_external_browser"
+            android:summary="%s"
+            android:title="@string/preference_browser" />
+    </PreferenceCategory>
+</PreferenceScreen>

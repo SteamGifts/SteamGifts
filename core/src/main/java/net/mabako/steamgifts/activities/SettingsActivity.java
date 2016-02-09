@@ -96,6 +96,8 @@ public class SettingsActivity extends BaseActivity {
                     }
                 });
             }
+
+            addPreferencesFromResource(R.xml.preferences_other);
         }
     }
 
