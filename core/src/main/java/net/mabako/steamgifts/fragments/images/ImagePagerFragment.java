@@ -20,6 +20,7 @@ import net.mabako.steamgifts.data.Image;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class ImagePagerFragment extends Fragment {
     private static final String ARG_IMAGES = "images";
@@ -77,7 +78,7 @@ public class ImagePagerFragment extends Fragment {
                     Image image = images.get(currentPosition);
 
                     // Show the current image, out of the number of images
-                    String index_and_title = String.format("%d / %d", currentPosition + 1, images.size());
+                    String index_and_title = String.format(Locale.getDefault(), "%d / %d", currentPosition + 1, images.size());
 
                     // Append an optional title.
                     if (!TextUtils.isEmpty(image.getTitle()))

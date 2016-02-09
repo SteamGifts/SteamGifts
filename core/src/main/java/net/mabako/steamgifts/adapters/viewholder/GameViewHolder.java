@@ -16,6 +16,8 @@ import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.Game;
 import net.mabako.steamgifts.fragments.HiddenGamesFragment;
 
+import java.util.Locale;
+
 public class GameViewHolder extends RecyclerView.ViewHolder {
     private final TextView gameName;
     private final ImageView image;
@@ -58,7 +60,7 @@ public class GameViewHolder extends RecyclerView.ViewHolder {
 
         // giveaway_image
         if (game.getGameId() != Game.NO_APP_ID) {
-            Picasso.with(fragment.getContext()).load("http://cdn.akamai.steamstatic.com/steam/" + game.getType().name().toLowerCase() + "s/" + game.getGameId() + "/capsule_184x69.jpg").into(image, new Callback() {
+            Picasso.with(fragment.getContext()).load("http://cdn.akamai.steamstatic.com/steam/" + game.getType().name().toLowerCase(Locale.ENGLISH) + "s/" + game.getGameId() + "/capsule_184x69.jpg").into(image, new Callback() {
                 /**
                  * We manually set the height of this image to fit the container.
                  */

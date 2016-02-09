@@ -28,6 +28,7 @@ import net.mabako.steamgifts.data.BasicGiveaway;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 /**
@@ -108,7 +109,7 @@ public class SGToolsDetailFragment extends Fragment implements View.OnClickListe
         appBarLayout.setTitle(giveaway.getName());
 
         ImageView toolbarImage = (ImageView) getActivity().findViewById(R.id.toolbar_image);
-        Picasso.with(getContext()).load("http://cdn.akamai.steamstatic.com/steam/" + giveaway.getType().name().toLowerCase() + "s/" + giveaway.getGameId() + "/header.jpg").into(toolbarImage, new Callback() {
+        Picasso.with(getContext()).load("http://cdn.akamai.steamstatic.com/steam/" + giveaway.getType().name().toLowerCase(Locale.ENGLISH) + "s/" + giveaway.getGameId() + "/header.jpg").into(toolbarImage, new Callback() {
             @Override
             public void onSuccess() {
                 appBarLayout.setExpandedTitleTextAppearance(R.style.TransparentText);

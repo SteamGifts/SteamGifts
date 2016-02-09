@@ -32,6 +32,8 @@ import net.mabako.steamgifts.fragments.interfaces.IHasEnterableGiveaways;
 import net.mabako.steamgifts.persistentdata.SavedGiveaways;
 import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
 
+import java.util.Locale;
+
 public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnCreateContextMenuListener, MenuItem.OnMenuItemClickListener {
     private static final String TAG = GiveawayListItemViewHolder.class.getSimpleName();
 
@@ -102,7 +104,7 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
 
         // giveaway_image
         if (giveaway.getGameId() != Game.NO_APP_ID && showImage) {
-            Picasso.with(activity).load("http://cdn.akamai.steamstatic.com/steam/" + giveaway.getType().name().toLowerCase() + "s/" + giveaway.getGameId() + "/capsule_184x69.jpg").into(giveawayImage, new Callback() {
+            Picasso.with(activity).load("http://cdn.akamai.steamstatic.com/steam/" + giveaway.getType().name().toLowerCase(Locale.ENGLISH) + "s/" + giveaway.getGameId() + "/capsule_184x69.jpg").into(giveawayImage, new Callback() {
                 /**
                  * We manually set the height of this image to fit the container.
                  */

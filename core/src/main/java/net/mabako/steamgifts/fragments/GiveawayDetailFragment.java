@@ -46,6 +46,7 @@ import net.mabako.steamgifts.tasks.LoadGiveawayDetailsTask;
 import net.mabako.steamgifts.tasks.UpdateGiveawayFilterTask;
 
 import java.io.Serializable;
+import java.util.Locale;
 
 public class GiveawayDetailFragment extends DetailFragment implements IHasEnterableGiveaways, IHasHideableGiveaways {
     public static final String ARG_GIVEAWAY = "giveaway";
@@ -234,7 +235,7 @@ public class GiveawayDetailFragment extends DetailFragment implements IHasEntera
         if (appBarLayout != null) {
             ImageView toolbarImage = (ImageView) getActivity().findViewById(R.id.toolbar_image);
             if (toolbarImage != null) {
-                Picasso.with(getContext()).load("http://cdn.akamai.steamstatic.com/steam/" + giveaway.getType().name().toLowerCase() + "s/" + giveaway.getGameId() + "/header.jpg").into(toolbarImage, new Callback() {
+                Picasso.with(getContext()).load("http://cdn.akamai.steamstatic.com/steam/" + giveaway.getType().name().toLowerCase(Locale.ENGLISH) + "s/" + giveaway.getGameId() + "/header.jpg").into(toolbarImage, new Callback() {
                     @Override
                     public void onSuccess() {
                         appBarLayout.setExpandedTitleTextAppearance(R.style.TransparentText);
@@ -295,7 +296,7 @@ public class GiveawayDetailFragment extends DetailFragment implements IHasEntera
                 Giveaway giveaway = (Giveaway) this.giveaway;
                 Log.i(TAG, "Opening Steam Store entry for game " + giveaway.getGameId());
 
-                UrlHandlingActivity.getIntentForUri(activity, Uri.parse("http://store.steampowered.com/" + giveaway.getType().name().toLowerCase() + "/" + giveaway.getGameId() + "/"), true).start(activity);
+                UrlHandlingActivity.getIntentForUri(activity, Uri.parse("http://store.steampowered.com/" + giveaway.getType().name().toLowerCase(Locale.ENGLISH) + "/" + giveaway.getGameId() + "/"), true).start(activity);
             }
             return true;
         } else if (itemId == R.id.hide_game) {

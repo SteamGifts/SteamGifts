@@ -18,6 +18,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import java.net.URISyntaxException;
+import java.util.Locale;
 
 public class LoadGiveawayDetailsTask extends AsyncTask<Void, Void, GiveawayExtras> {
     private static final String TAG = LoadGiveawayDetailsTask.class.getSimpleName();
@@ -62,7 +63,7 @@ public class LoadGiveawayDetailsTask extends AsyncTask<Void, Void, GiveawayExtra
                 Element errorElem = document.select(".table__column--width-fill").last();
                 if (errorElem != null) {
                     String error = errorElem.text().replace("You do not have permission to view this giveaway, since ", "");
-                    this.error = error.substring(0, 1).toUpperCase() + error.substring(1);
+                    this.error = error.substring(0, 1).toUpperCase(Locale.ENGLISH) + error.substring(1);
                 }
                 return null;
             } else {

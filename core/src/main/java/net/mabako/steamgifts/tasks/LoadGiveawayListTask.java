@@ -16,6 +16,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import java.util.List;
+import java.util.Locale;
 
 public class LoadGiveawayListTask extends AsyncTask<Void, Void, List<Giveaway>> {
     private static final String TAG = LoadGiveawayListTask.class.getSimpleName();
@@ -60,7 +61,7 @@ public class LoadGiveawayListTask extends AsyncTask<Void, Void, List<Giveaway>> 
             }
 
             if (type != GiveawayListFragment.Type.ALL)
-                jsoup.data("type", type.name().toLowerCase());
+                jsoup.data("type", type.name().toLowerCase(Locale.ENGLISH));
 
             if (SteamGiftsUserData.getCurrent(fragment.getContext()).isLoggedIn())
                 jsoup.cookie("PHPSESSID", SteamGiftsUserData.getCurrent(fragment.getContext()).getSessionId());
