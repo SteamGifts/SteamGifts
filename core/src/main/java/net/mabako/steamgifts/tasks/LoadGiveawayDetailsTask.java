@@ -99,7 +99,15 @@ public class LoadGiveawayDetailsTask extends AsyncTask<Void, Void, GiveawayExtra
         giveaway.setCreator(element.select(".featured__columns > div a").text());
 
         // Entries, would usually have comment count too... but we don't display that anywhere.
-        giveaway.setEntries(-12345678);
+        Element sidebarElement = document.select("a.sidebar__navigation__item__link[href$=/entries] .sidebar__navigation__item__count").first();
+        try {
+            giveaway.setEntries(sidebarElement == null ? -1 : Integer.parseInt(sidebarElement.text().replace(",", "")));
+        } catch (NumberFormatException e) {
+            if (sidebarElement != null)
+                Log.w(TAG, "Unable to parse entry count: " + sidebarElement.text());
+
+            giveaway.setEntries(0);
+        }
 
         // this is overwritten by loadExtras()
         giveaway.setEntered(false);
