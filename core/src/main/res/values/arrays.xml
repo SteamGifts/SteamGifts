@@ -25,24 +25,24 @@
     </string-array>
 
     <string-array name="preference_browser_entries">
-        <item>Webview (default)</item>
+        <item>WebView (default)</item>
         <item>External Browser</item>
     </string-array>
 
     <string-array name="preference_browser_entry_values">
-        <item>webview</item>
+        <item>default</item>
         <item>external</item>
     </string-array>
 
     <string-array name="preference_browser_entries_with_tabs">
-        <item>Webview (default)</item>
-        <item>Chrome Tab (experimental)</item>
+        <item>WebView</item>
+        <item>Chrome Tab (default)</item>
         <item>External Browser</item>
     </string-array>
 
     <string-array name="preference_browser_entry_values_with_tabs">
         <item>webview</item>
-        <item>chrome-tab</item>
+        <item>default</item>
         <item>external</item>
     </string-array>
 </resources>

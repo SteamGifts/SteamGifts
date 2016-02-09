@@ -113,7 +113,9 @@ public class UrlHandlingActivity extends CommonActivity {
 
         if (intent == null) {
             SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-            String type = sp.getString("preference_external_browser", "webview");
+            String type = sp.getString("preference_external_browser", "default");
+            if ("default".equals(type))
+                type = ChromeTabsDelegate.isCustomTabsSupported(context) ? "chrome-tab" : "webview";
 
             if ("external".equals(type)) {
                 return new RealIntentDelegate(new Intent(Intent.ACTION_VIEW, uri));
