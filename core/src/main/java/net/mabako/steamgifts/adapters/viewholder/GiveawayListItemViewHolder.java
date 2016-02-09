@@ -87,7 +87,7 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
 
         StringBuilder sb = new StringBuilder();
         if (giveaway.getCopies() > 1)
-            sb.append(giveaway.getCopies()).append(" copies | ");
+            sb.append(StringUtils.pluralize(activity, giveaway.getCopies(), R.array.copies)).append(" | ");
 
         if (giveaway.getPoints() >= 0)
             sb.append(giveaway.getPoints()).append("P | ");
@@ -96,7 +96,7 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
             sb.append("L").append(giveaway.getLevel()).append(" | ");
 
         if (giveaway.getEntries() >= 0)
-            sb.append(giveaway.getEntries()).append(" entries | ");
+            sb.append(StringUtils.pluralize(activity, giveaway.getEntries(), R.array.entries)).append(" | ");
 
         giveawayDetails.setText(sb.length() > 3 ? sb.substring(0, sb.length() - 3) : sb.toString());
 
@@ -127,7 +127,7 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
             params.height = 0;
         }
 
-        Utils.setBackgroundDrawable(activity, itemContainer, giveaway.isEntered());
+        StringUtils.setBackgroundDrawable(activity, itemContainer, giveaway.isEntered());
 
         // Check all the indicators
         indicatorWhitelist.setVisibility(giveaway.isWhitelist() ? View.VISIBLE : View.GONE);

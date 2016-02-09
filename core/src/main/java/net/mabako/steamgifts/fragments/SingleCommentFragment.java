@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import net.mabako.steamgifts.activities.WriteCommentActivity;
-import net.mabako.steamgifts.adapters.viewholder.Utils;
+import net.mabako.steamgifts.adapters.viewholder.StringUtils;
 import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.Comment;
 
@@ -28,7 +28,7 @@ public class SingleCommentFragment extends Fragment {
 
         ((TextView) layout.findViewById(R.id.user)).setText(comment.getAuthor());
         ((TextView) layout.findViewById(R.id.time)).setText(comment.getTimeAgo());
-        ((TextView) layout.findViewById(R.id.content)).setText(Utils.fromHtml(getContext(), comment.getContent()));
+        ((TextView) layout.findViewById(R.id.content)).setText(StringUtils.fromHtml(getContext(), comment.getContent()));
 
         // Space before the marker
         View commentIndent = layout.findViewById(R.id.comment_indent);

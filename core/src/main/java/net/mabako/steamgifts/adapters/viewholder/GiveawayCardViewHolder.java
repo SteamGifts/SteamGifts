@@ -120,7 +120,7 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
                 progressBar.setVisibility(View.GONE);
 
                 if (extras.getDescription() != null) {
-                    description.setText(Utils.fromHtml(fragment.getActivity(), extras.getDescription()));
+                    description.setText(StringUtils.fromHtml(fragment.getActivity(), extras.getDescription()));
                     description.setVisibility(View.VISIBLE);
                     actionSeparator.setVisibility(View.VISIBLE);
                 }

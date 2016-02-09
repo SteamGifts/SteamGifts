@@ -22,7 +22,7 @@ import android.util.Log;
 import net.mabako.steamgifts.activities.DetailActivity;
 import net.mabako.steamgifts.activities.UrlHandlingActivity;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
-import net.mabako.steamgifts.adapters.viewholder.Utils;
+import net.mabako.steamgifts.adapters.viewholder.StringUtils;
 import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.Comment;
 import net.mabako.steamgifts.fragments.interfaces.ILoadItemsListener;
@@ -210,7 +210,7 @@ public class CheckForNewMessages extends BroadcastReceiver {
 
         @NonNull
         private CharSequence formatString(Comment comment, boolean includeName) {
-            String content = Utils.fromHtml(context, comment.getContent()).toString();
+            String content = StringUtils.fromHtml(context, comment.getContent()).toString();
             if (includeName && comment.getAuthor() != null) {
                 SpannableString sb = new SpannableString(String.format("%s  %s", comment.getAuthor(), content));
                 sb.setSpan(new StyleSpan(Typeface.BOLD), 0, comment.getAuthor().length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
