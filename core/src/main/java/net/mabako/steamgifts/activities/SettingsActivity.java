@@ -3,6 +3,7 @@ package net.mabako.steamgifts.activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
@@ -98,6 +99,17 @@ public class SettingsActivity extends BaseActivity {
             }
 
             addPreferencesFromResource(R.xml.preferences_other);
+
+            ListPreference browserPreferences = (ListPreference) findPreference("preference_external_browser");
+            if (ChromeTabsDelegate.isCustomTabsSupported(getActivity())) {
+                // We have some chrome version installed which supports custom tabs.
+                browserPreferences.setEntries(R.array.preference_browser_entries_with_tabs);
+                browserPreferences.setEntryValues(R.array.preference_browser_entry_values_with_tabs);
+            } else {
+                // No chrome, no tabs. This probably is also the case for API levels < Jellybean, at least custom tabs are not officially supported before that.
+                browserPreferences.setEntries(R.array.preference_browser_entries);
+                browserPreferences.setEntryValues(R.array.preference_browser_entry_values);
+            }
         }
     }
 

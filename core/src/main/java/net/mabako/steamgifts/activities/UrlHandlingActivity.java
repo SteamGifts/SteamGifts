@@ -117,7 +117,7 @@ public class UrlHandlingActivity extends CommonActivity {
 
             if ("external".equals(type)) {
                 return new RealIntentDelegate(new Intent(Intent.ACTION_VIEW, uri));
-            } else if ("chrome-tab".equals(type)) {
+            } else if ("chrome-tab".equals(type) && ChromeTabsDelegate.isCustomTabsSupported(context)) {
                 return new ChromeTabsDelegate(uri);
             } else if ("webview".equals(type)) {
                 // normal webview.

@@ -33,4 +33,16 @@
         <item>webview</item>
         <item>external</item>
     </string-array>
+
+    <string-array name="preference_browser_entries_with_tabs">
+        <item>Webview (default)</item>
+        <item>Chrome Tab (experimental)</item>
+        <item>External Browser</item>
+    </string-array>
+
+    <string-array name="preference_browser_entry_values_with_tabs">
+        <item>webview</item>
+        <item>chrome-tab</item>
+        <item>external</item>
+    </string-array>
 </resources>
