@@ -26,8 +26,6 @@ public class SettingsActivity extends BaseActivity {
             if (SteamGiftsUserData.getCurrent(getActivity()).isLoggedIn()) {
                 addPreferencesFromResource(R.xml.preferences_sg);
 
-                final PreferenceCategory category = (PreferenceCategory) findPreference("preferences_sg_header");
-
                 findPreference("preference_sg_sync").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                     @Override
                     public boolean onPreferenceClick(Preference preference) {
