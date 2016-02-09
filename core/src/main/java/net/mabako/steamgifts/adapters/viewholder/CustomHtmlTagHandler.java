@@ -11,7 +11,6 @@ import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.LeadingMarginSpan;
 import android.text.style.StrikethroughSpan;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
@@ -27,12 +26,12 @@ public class CustomHtmlTagHandler implements Html.TagHandler {
      * Keeps track of lists (ol, ul). On bottom of Stack is the outermost list
      * and on top of Stack is the most nested list
      */
-    Stack<String> lists = new Stack<String>();
+    Stack<String> lists = new Stack<>();
     /**
      * Tracks indexes of ordered lists so that after a nested list ends
      * we can continue with correct index of outer list
      */
-    Stack<Integer> olNextIndex = new Stack<Integer>();
+    Stack<Integer> olNextIndex = new Stack<>();
     /**
      * List indentation in pixels. Nested lists use multiple of this.
      */
@@ -53,10 +52,10 @@ public class CustomHtmlTagHandler implements Html.TagHandler {
         } else if (tag.equalsIgnoreCase("ol")) {
             if (opening) {
                 lists.push(tag);
-                olNextIndex.push(Integer.valueOf(1)).toString();
+                olNextIndex.push(1);
             } else {
                 lists.pop();
-                olNextIndex.pop().toString();
+                olNextIndex.pop();
             }
         } else if (tag.equalsIgnoreCase("li")) {
             processListItem(opening, output);
@@ -68,8 +67,7 @@ public class CustomHtmlTagHandler implements Html.TagHandler {
     /**
      * Processes a single list item.
      *
-     * @param opening
-     * @param output
+     * @param opening is this the opening tag?
      * @see <a href="https://bitbucket.org/Kuitsi/android-textview-html-list">Kuitsi/android-textview-html-list</a>
      */
     private void processListItem(boolean opening, Editable output) {
@@ -80,8 +78,8 @@ public class CustomHtmlTagHandler implements Html.TagHandler {
             String parentList = lists.peek();
             if (parentList.equalsIgnoreCase("ol")) {
                 start(output, new Ol());
-                output.append(olNextIndex.peek().toString() + ". ");
-                olNextIndex.push(Integer.valueOf(olNextIndex.pop().intValue() + 1));
+                output.append(olNextIndex.peek().toString()).append(". ");
+                olNextIndex.push(olNextIndex.pop() + 1);
             } else if (parentList.equalsIgnoreCase("ul")) {
                 start(output, new Ul());
             }
@@ -189,7 +187,6 @@ public class CustomHtmlTagHandler implements Html.TagHandler {
                 text.setSpan(replace, where, len, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         }
-        return;
     }
 
     /**
