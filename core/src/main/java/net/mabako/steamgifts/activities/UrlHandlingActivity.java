@@ -176,7 +176,7 @@ public class UrlHandlingActivity extends CommonActivity {
 
         @Override
         public void start(@NonNull Activity activity) {
-            activity.startActivity(intent);
+            activity.startActivityForResult(intent, MainActivity.REQUEST_LOGIN_PASSIVE);
         }
     }
 }
