@@ -60,6 +60,7 @@ public class FilterGiveawayDialogFragment extends DialogFragment implements Dial
         ((CheckBox) view.findViewById(R.id.filter_entered)).setChecked(f.isHideEntered());
         ((CheckBox) view.findViewById(R.id.filter_whitelist_or_group)).setChecked(f.isRestrictLevelOnlyOnPublicGiveaways());
         ((CheckBox) view.findViewById(R.id.filter_entries_per_copy)).setChecked(f.isEntriesPerCopy());
+        ((CheckBox) view.findViewById(R.id.filter_region_restricted)).setChecked(f.isRegionRestrictedOnly());
 
         return dialog;
     }
@@ -78,6 +79,7 @@ public class FilterGiveawayDialogFragment extends DialogFragment implements Dial
         newFilterData.setHideEntered(getValueAndUpdateFlags(R.id.filter_entered, oldFilterData.isHideEntered()));
         newFilterData.setRestrictLevelOnlyOnPublicGiveaways(getValueAndUpdateFlags(R.id.filter_whitelist_or_group, oldFilterData.isRestrictLevelOnlyOnPublicGiveaways()));
         newFilterData.setEntriesPerCopy(getValueAndUpdateFlags(R.id.filter_entries_per_copy, oldFilterData.isEntriesPerCopy()));
+        newFilterData.setRegionRestrictedOnly(getValueAndUpdateFlags(R.id.filter_region_restricted, oldFilterData.isRegionRestrictedOnly()));
 
         FilterData.setCurrent(newFilterData);
 

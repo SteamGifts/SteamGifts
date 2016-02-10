@@ -150,4 +150,15 @@
         app:layout_columnSpan="3"
         app:layout_gravity="center_vertical"
         app:layout_rowWeight="1" />
+
+    <!-- region restricted only -->
+    <CheckBox
+        android:id="@+id/filter_region_restricted"
+        style="@style/NormalText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/filter_region_restricted_checkbox"
+        app:layout_columnSpan="3"
+        app:layout_gravity="center_vertical"
+        app:layout_rowWeight="1" />
 </android.support.v7.widget.GridLayout>
