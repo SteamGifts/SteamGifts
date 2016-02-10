@@ -39,14 +39,17 @@
                 <com.wefika.flowlayout.FlowLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:paddingBottom="@dimen/card_margin_small">
 
                     <TextView
                         android:id="@+id/user"
                         style="@style/SmallText.Light"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="@dimen/card_margin_small"
+                        android:paddingLeft="@dimen/card_margin_small"
+                        android:paddingRight="@dimen/card_margin_small"
+                        android:paddingTop="@dimen/card_margin_small"
                         android:text="@string/placeholder_giveaway_creator"
                         android:textStyle="bold"
                         tools:text="Creator" />
@@ -56,7 +59,9 @@
                         style="@style/SmallText.Light"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="@dimen/card_margin_small"
+                        android:paddingLeft="@dimen/card_margin_small"
+                        android:paddingRight="@dimen/card_margin_small"
+                        android:paddingTop="@dimen/card_margin_small"
                         android:text="@string/placeholder_giveaway_start"
                         tools:text="Started" />
 
@@ -65,7 +70,9 @@
                         style="@style/SmallText.Light"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="@dimen/card_margin_small"
+                        android:paddingLeft="@dimen/card_margin_small"
+                        android:paddingRight="@dimen/card_margin_small"
+                        android:paddingTop="@dimen/card_margin_small"
                         android:text="@string/placeholder_giveaway_entries"
                         tools:text="Entries" />
 
@@ -74,7 +81,9 @@
                         style="@style/SmallText.Light"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="@dimen/card_margin_small"
+                        android:paddingLeft="@dimen/card_margin_small"
+                        android:paddingRight="@dimen/card_margin_small"
+                        android:paddingTop="@dimen/card_margin_small"
                         android:text="@string/placeholder_giveaway_copies"
                         tools:text="Copies" />
                 </com.wefika.flowlayout.FlowLayout>
