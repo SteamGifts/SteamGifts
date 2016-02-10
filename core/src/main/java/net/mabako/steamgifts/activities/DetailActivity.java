@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.widget.Toast;
 
 import net.mabako.sgtools.SGToolsDetailFragment;
@@ -180,6 +181,11 @@ public class DetailActivity extends CommonActivity {
 
                 Toast.makeText(this, R.string.comment_edited, Toast.LENGTH_SHORT).show();
             }
+        }
+
+        if (data != null && data.getBooleanExtra("entered", false) && getCurrentFragment() instanceof GiveawayDetailFragment) {
+            Log.d(DetailActivity.class.getSimpleName(), "Comment's giveaway entered");
+            ((GiveawayDetailFragment) getCurrentFragment()).onEntered();
         }
 
         if (data != null && data.hasExtra(CLOSE_NESTED) && getNestingStringForHomePressed().equals(data.getStringExtra(CLOSE_NESTED))) {

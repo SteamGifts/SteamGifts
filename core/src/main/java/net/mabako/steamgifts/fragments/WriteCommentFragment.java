@@ -16,7 +16,8 @@ import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.Comment;
 
 public class WriteCommentFragment extends DialogFragment {
-    private static final String STATE_COMMENT = "comment";
+    private static final String SAVED_COMMENT = "comment";
+    private static final String SAVED_GIVEAWAY_ID = "giveaway-id";
 
     private EditText edit;
 
@@ -25,11 +26,23 @@ public class WriteCommentFragment extends DialogFragment {
      */
     private Comment comment;
 
-    public static WriteCommentFragment newInstance(Comment existingComment) {
+    /**
+     * Giveaway id for 'comment and enter'
+     */
+    private String giveawayId;
+
+    /**
+     * Create a new fragment instance.
+     *
+     * @param existingComment     the parent comment to optionally display
+     * @param enterableGiveawayId giveaway id for 'enter and comment'
+     */
+    public static WriteCommentFragment newInstance(@Nullable Comment existingComment, @Nullable String enterableGiveawayId) {
         WriteCommentFragment fragment = new WriteCommentFragment();
 
         Bundle args = new Bundle();
-        args.putSerializable(STATE_COMMENT, existingComment);
+        args.putSerializable(SAVED_COMMENT, existingComment);
+        args.putString(SAVED_GIVEAWAY_ID, enterableGiveawayId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -39,16 +52,22 @@ public class WriteCommentFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState == null) {
-            comment = (Comment) getArguments().getSerializable(STATE_COMMENT);
+            comment = (Comment) getArguments().getSerializable(SAVED_COMMENT);
+            giveawayId = getArguments().getString(SAVED_GIVEAWAY_ID, null);
         } else {
-            comment = (Comment) savedInstanceState.getSerializable(STATE_COMMENT);
+            comment = (Comment) savedInstanceState.getSerializable(SAVED_COMMENT);
+            giveawayId = savedInstanceState.getString(SAVED_GIVEAWAY_ID, null);
         }
+
+        if (giveawayId != null && comment != null)
+            throw new IllegalStateException("both parent comment and enter+comment are set");
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable(STATE_COMMENT, comment);
+        outState.putSerializable(SAVED_COMMENT, comment);
+        outState.putSerializable(SAVED_GIVEAWAY_ID, giveawayId);
     }
 
     @Nullable
@@ -72,17 +91,26 @@ public class WriteCommentFragment extends DialogFragment {
     public void onCreateOptionsMenu(
             Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.write_comment_menu, menu);
+
+        menu.findItem(R.id.send_comment_and_enter).setVisible(giveawayId != null);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int i = item.getItemId();
-        if (i == R.id.send_comment) {
-            edit.setEnabled(false);
+        int id = item.getItemId();
+        if (id == R.id.send_comment) {
             ((WriteCommentActivity) getActivity()).submit(comment, edit.getText().toString());
+            return true;
+        } else if (id == R.id.send_comment_and_enter) {
+            ((WriteCommentActivity) getActivity()).submitAndEnter(edit.getText().toString(), giveawayId);
             return true;
         } else {
             return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void onEntered() {
+        giveawayId = null;
+        getActivity().supportInvalidateOptionsMenu();
     }
 }

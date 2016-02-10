@@ -201,9 +201,19 @@ public abstract class DetailFragment extends ListFragment<CommentAdapter> implem
             intent.putExtra(WriteCommentActivity.TITLE, getTitle());
             intent.putExtra(WriteCommentActivity.PATH, path);
             intent.putExtra(WriteCommentActivity.PARENT, parentComment);
+            addExtraForCommentIntent(intent, parentComment);
             getActivity().startActivityForResult(intent, WriteCommentActivity.REQUEST_COMMENT);
         } else
             throw new IllegalStateException("got no path for the comment, not commenting...");
+    }
+
+    /**
+     * A way to extend {@link #requestComment(Comment)} in adding additional parameters
+     *
+     * @param intent        the intent to add parameters to
+     * @param parentComment optional parent comment
+     */
+    protected void addExtraForCommentIntent(@NonNull Intent intent, @Nullable Comment parentComment) {
     }
 
     /**

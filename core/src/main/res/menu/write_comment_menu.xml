@@ -4,6 +4,11 @@
     tools:context=".activities.DetailActivity">
 
     <item
+        android:id="@+id/send_comment_and_enter"
+        android:title="@string/send_comment_and_enter"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/send_comment"
         android:icon="@drawable/ic_send"
         android:title="@string/send_comment"

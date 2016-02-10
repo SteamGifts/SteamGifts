@@ -31,8 +31,10 @@ import net.mabako.steamgifts.activities.CommonActivity;
 import net.mabako.steamgifts.activities.DetailActivity;
 import net.mabako.steamgifts.activities.MainActivity;
 import net.mabako.steamgifts.activities.UrlHandlingActivity;
+import net.mabako.steamgifts.activities.WriteCommentActivity;
 import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.BasicGiveaway;
+import net.mabako.steamgifts.data.Comment;
 import net.mabako.steamgifts.data.Game;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.data.GiveawayExtras;
@@ -217,6 +219,10 @@ public class GiveawayDetailFragment extends DetailFragment implements IHasEntera
             GiveawayListFragmentStack.onEnterLeaveResult(giveawayId, what, success);
     }
 
+    public void onEntered() {
+        onEnterLeaveResult(giveaway.getGiveawayId(), ENTRY_INSERT, true, true);
+    }
+
     /**
      * Set the details from the task started by {@link #fetchItems(int)}.
      *
@@ -376,5 +382,12 @@ public class GiveawayDetailFragment extends DetailFragment implements IHasEntera
             if (actionBar != null)
                 actionBar.setTitle(getTitle());
         }
+    }
+
+    @Override
+    protected void addExtraForCommentIntent(@NonNull Intent intent, @Nullable Comment parentComment) {
+        // If we're commenting on the main giveaway, and haven't entered it, we can comment + enter
+        if (parentComment == null && giveaway instanceof Giveaway && !((Giveaway) giveaway).isEntered())
+            intent.putExtra(WriteCommentActivity.GIVEAWAY_ID, giveaway.getGiveawayId());
     }
 }

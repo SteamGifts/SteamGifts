@@ -84,6 +84,11 @@
     <string name="comment_not_sent">Comment could not be sent</string>
     <string name="comment_edited">Comment successfully edited.</string>
 
+    <string name="sending_comment">Submitting comment&#8230;</string>
+    <string name="entering">Entering Giveaway&#8230;</string>
+    <string name="send_comment_and_enter">Comment + Enter</string>
+    <string name="unable_to_enter">Could not enter Giveaway.</string>
+
     <string name="discussion_locked">This discussion is locked.</string>
     <string name="viewing_single_context">You are viewing a single comment in context.\nClick to view all comments.</string>
 

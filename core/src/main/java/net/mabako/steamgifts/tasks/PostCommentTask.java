@@ -1,15 +1,10 @@
 package net.mabako.steamgifts.tasks;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.widget.Toast;
-
-import net.mabako.steamgifts.activities.WriteCommentActivity;
-import net.mabako.steamgifts.core.R;
 
 import org.jsoup.Connection;
 
-public class PostCommentTask extends AjaxTask<Activity> {
+public abstract class PostCommentTask extends AjaxTask<Activity> {
     private final String description;
     private final int parentId;
 
@@ -29,14 +24,13 @@ public class PostCommentTask extends AjaxTask<Activity> {
 
     @Override
     protected void onPostExecute(Connection.Response response) {
-        Activity activity = getFragment();
         if (response != null && response.statusCode() == 301) {
-            Intent data = new Intent();
-            data.putExtra("parent", parentId);
-            activity.setResult(WriteCommentActivity.COMMENT_SENT, data);
-            activity.finish();
-        } else {
-            Toast.makeText(activity, R.string.comment_not_sent, Toast.LENGTH_SHORT).show();
-        }
+            onSuccess();
+        } else
+            onFail();
     }
+
+    protected abstract void onSuccess();
+
+    protected abstract void onFail();
 }
