@@ -79,8 +79,8 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
     public void setFrom(Giveaway giveaway, boolean showImage) {
         giveawayName.setText(giveaway.getTitle());
 
-        if (giveaway.getTimeRemaining() != null) {
-            giveawayTime.setText(giveaway.getTimeRemaining());
+        if (giveaway.getRelativeEndTime() != null) {
+            giveawayTime.setText(giveaway.getRelativeEndTime());
         } else if (giveaway.getEndTime() != null) {
             giveawayTime.setText(DateUtils.formatDateTime(activity, giveaway.getEndTime().getTimeInMillis(), DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE));
         } else {

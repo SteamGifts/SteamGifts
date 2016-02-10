@@ -100,11 +100,11 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
 
             title.setText(giveaway.getTitle());
 
-            if (giveaway.getTimeRemaining() != null) {
-                timeRemaining.setText("{faw-clock-o} " + giveaway.getTimeRemaining());
+            if (giveaway.getRelativeEndTime() != null) {
+                timeRemaining.setText("{faw-clock-o} " + giveaway.getRelativeEndTime());
 
-                if (giveaway.getTimeCreated() != null)
-                    timeCreated.setText("{faw-calendar-o} " + giveaway.getTimeCreated());
+                if (giveaway.getRelativeCreatedTime() != null)
+                    timeCreated.setText("{faw-calendar-o} " + giveaway.getRelativeCreatedTime());
                 else
                     timeCreated.setVisibility(View.GONE);
             } else if (giveaway.getEndTime() != null) {

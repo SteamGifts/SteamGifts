@@ -71,14 +71,13 @@ public class EnteredListFragment extends ListFragment<GiveawayAdapter> implement
                     Uri uri = Uri.parse(Utils.extractAvatar(image.attr("style")));
                     List<String> pathSegments = uri.getPathSegments();
                     if (pathSegments.size() >= 3) {
-                        giveaway.setGameId(Integer.parseInt(pathSegments.get(2)));
-                        giveaway.setType("apps".equals(pathSegments.get(1)) ? Game.Type.APP : Game.Type.SUB);
+                        giveaway.setGame(new Game("apps".equals(pathSegments.get(1)) ? Game.Type.APP : Game.Type.SUB, Integer.parseInt(pathSegments.get(2))));
                     }
                 }
 
                 giveaway.setPoints(-1);
                 giveaway.setEntries(Integer.parseInt(element.select(".table__column--width-small").first().text().replace(",", "")));
-                giveaway.setTimeRemaining(firstColumn.select("span").text());
+                giveaway.setCreatedTime(firstColumn.select("span").first().attr("text"));
 
                 giveaway.setEntered(giveaway.isOpen());
                 giveaway.setDeleted(!element.select(".table__column__deleted").isEmpty());

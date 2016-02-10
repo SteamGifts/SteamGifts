@@ -123,16 +123,13 @@ public final class Utils {
         if (steamUri != null) {
             List<String> pathSegments = steamUri.getPathSegments();
             if (pathSegments.size() >= 2) {
-                giveaway.setGameId(Integer.parseInt(pathSegments.get(1)));
-                giveaway.setType("app".equals(pathSegments.get(0)) ? Game.Type.APP : Game.Type.SUB);
+                giveaway.setGame(new Game("app".equals(pathSegments.get(0)) ? Game.Type.APP : Game.Type.SUB, Integer.parseInt(pathSegments.get(1))));
             }
         }
 
         // Time remaining
-        Element endTime = element.select("." + cssNode + "__columns > div span").first();
-        giveaway.setTimeRemaining(endTime.text());
-        giveaway.setEndTime(endTime.attr("title"));
-        giveaway.setTimeCreated(element.select("." + cssNode + "__columns > div span").last().text());
+        giveaway.setEndTime(element.select("." + cssNode + "__columns > div span").first().attr("title"));
+        giveaway.setCreatedTime(element.select("." + cssNode + "__columns > div span").last().text());
 
         // Flags
         giveaway.setWhitelist(!element.select("." + cssNode + "__column--whitelist").isEmpty());

@@ -10,7 +10,6 @@ public class GiveawayExtras implements Serializable, ICommentHolder, IImageHolde
     private String description;
     private String xsrfToken;
     private boolean entered;
-    private String timeRemaining;
     private final List<Comment> loadedComments;
     private String errorMessage;
     private boolean enterable;
@@ -51,14 +50,6 @@ public class GiveawayExtras implements Serializable, ICommentHolder, IImageHolde
 
     public void setEntered(boolean entered) {
         this.entered = entered;
-    }
-
-    public String getTimeRemaining() {
-        return timeRemaining;
-    }
-
-    public void setTimeRemaining(String timeRemaining) {
-        this.timeRemaining = timeRemaining;
     }
 
     @Override

@@ -1,7 +1,7 @@
 package net.mabako.steamgifts.data;
 
-import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
+import net.mabako.steamgifts.core.R;
 
 import java.io.Serializable;
 
@@ -11,13 +11,22 @@ public class Game implements Serializable, IEndlessAdaptable {
     public static final int VIEW_LAYOUT = R.layout.game_item;
 
     private String name;
-    private Type type = Type.APP;
-    private int gameId = NO_APP_ID;
+    private Type type;
+    private int gameId;
 
     /**
      * Id used (exclusively?) for filtering games.
      */
     private int internalGameId;
+
+    public Game() {
+        this(Type.APP, NO_APP_ID);
+    }
+
+    public Game(Type type, int gameId) {
+        this.type = type;
+        this.gameId = gameId;
+    }
 
     @Override
     public int getLayout() {

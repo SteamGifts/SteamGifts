@@ -108,7 +108,7 @@ public class GiveawayDetailFragment extends DetailFragment implements IHasEntera
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        // savedGiveaways = new SavedGiveaways(context);
+        savedGiveaways = new SavedGiveaways(context);
 
         if (context instanceof Activity)
             this.activity = (Activity) context;
@@ -173,7 +173,6 @@ public class GiveawayDetailFragment extends DetailFragment implements IHasEntera
         // #onPostGiveawayLoaded is called prior to this method.
         if (!(giveaway instanceof Giveaway))
             throw new IllegalStateException("#onPostGiveawayLoaded was probably not called");
-        ((Giveaway) giveaway).setTimeRemaining(extras.getTimeRemaining());
         ((Giveaway) giveaway).setTitle(extras.getTitle());
         updateTitle();
 

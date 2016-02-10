@@ -16,8 +16,6 @@ public class ProfileGiveaway extends Giveaway {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
-        if (deleted)
-            setTimeRemaining("Deleted");
     }
 
     @Override
@@ -28,5 +26,12 @@ public class ProfileGiveaway extends Giveaway {
     @Override
     public boolean isEntered() {
         return deleted ? false : super.isEntered();
+    }
+
+    @Override
+    public String getRelativeEndTime() {
+        if (deleted)
+            return "Deleted";
+        return super.getRelativeEndTime();
     }
 }

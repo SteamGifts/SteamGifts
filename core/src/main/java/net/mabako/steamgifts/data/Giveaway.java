@@ -1,20 +1,13 @@
 package net.mabako.steamgifts.data;
 
-import android.util.Log;
-
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
 
 public class Giveaway extends BasicGiveaway implements IEndlessAdaptable {
     private static final long serialVersionUID = 1356878822345232771L;
-    private static final String[] relativeDates = new String[]{"Yesterday", "Today", "Tomorrow"};
     public static final int VIEW_LAYOUT = R.layout.giveaway_item;
 
     /**
@@ -25,20 +18,38 @@ public class Giveaway extends BasicGiveaway implements IEndlessAdaptable {
     private String title;
 
     private String name;
-    private Game.Type type = Game.Type.APP;
-    private int gameId = Game.NO_APP_ID;
+    private Game game;
+
+    /**
+     * Who created this giveaway?
+     */
     private String creator;
+
     private int entries;
     private int copies;
     private int points;
-    private String timeRemaining;
-    private String timeCreated;
-    private Calendar endTime;
-    private boolean entered = false;
 
-    private boolean whitelist, group;
+    /**
+     * When was this giveaway created?
+     */
+    private CustomDateTime createdTime;
+
+    /**
+     * When will this giveaway end?
+     */
+    private CustomDateTime endTime;
+
+    /**
+     * Have we entered this giveaway?
+     */
+    private boolean entered;
+
+    private boolean whitelist, group, isPrivate, regionRestricted;
+
+    /**
+     * Level required to enter this giveaway.
+     */
     private int level;
-    private boolean isPrivate, regionRestricted;
 
     /**
      * Id used (exclusively?) for filtering games.
@@ -62,11 +73,7 @@ public class Giveaway extends BasicGiveaway implements IEndlessAdaptable {
     }
 
     public int getGameId() {
-        return gameId;
-    }
-
-    public void setGameId(int gameId) {
-        this.gameId = gameId;
+        return game.getGameId();
     }
 
     public String getName() {
@@ -102,11 +109,7 @@ public class Giveaway extends BasicGiveaway implements IEndlessAdaptable {
     }
 
     public Game.Type getType() {
-        return type;
-    }
-
-    public void setType(Game.Type type) {
-        this.type = type;
+        return game.getType();
     }
 
     public int getPoints() {
@@ -117,16 +120,17 @@ public class Giveaway extends BasicGiveaway implements IEndlessAdaptable {
         this.points = points;
     }
 
-    public String getTimeRemaining() {
-        return timeRemaining;
+    public String getRelativeEndTime() {
+        return endTime.toString();
     }
 
-    public void setTimeRemaining(String timeRemaining) {
-        this.timeRemaining = timeRemaining != null ? timeRemaining.replace(" remaining", "") : null;
+    public String getRelativeCreatedTime() {
+        return createdTime.toString();
     }
 
     public boolean isOpen() {
-        return timeRemaining == null || !timeRemaining.endsWith("ago");
+        // FIXME
+        return endTime.isInTheFuture();
     }
 
     public boolean isEntered() {
@@ -135,14 +139,6 @@ public class Giveaway extends BasicGiveaway implements IEndlessAdaptable {
 
     public void setEntered(boolean entered) {
         this.entered = entered;
-    }
-
-    public String getTimeCreated() {
-        return timeCreated;
-    }
-
-    public void setTimeCreated(String timeCreated) {
-        this.timeCreated = timeCreated;
     }
 
     public boolean isWhitelist() {
@@ -186,48 +182,24 @@ public class Giveaway extends BasicGiveaway implements IEndlessAdaptable {
     }
 
     public Calendar getEndTime() {
-        return endTime;
+        return endTime.getCalendar();
     }
 
-    public void setEndTime(Calendar endTime) {
-        this.endTime = endTime;
+    public void setEndTime(String endTime) {
+        this.endTime = new CustomDateTime(endTime);
     }
 
-    /**
-     * <p>We assume the string passed in fits either of the following:
-     * <ul>
-     * <li>"Today, 3:40pm"</li>
-     * <li>"Tomorrow, 3:40am"</li>
-     * <li>"January 26, 2016, 3:40am"</li>
-     * </ul>
-     *
-     * @param endTime when this giveaway presumably ends
-     */
-    public void setEndTime(final String endTime) {
-        String realTime = endTime;
+    public Calendar getCreatedTime() {
+        return createdTime.getCalendar();
+    }
 
-        for (int daysOffset = 0; daysOffset < relativeDates.length; ++daysOffset) {
-            if (endTime.startsWith(relativeDates[daysOffset] + ", ")) {
-                Calendar calendar = Calendar.getInstance();
-                calendar.add(Calendar.DAY_OF_MONTH, daysOffset - 1);
-                realTime = endTime.replace(relativeDates[daysOffset], new SimpleDateFormat("MMMM d, yyyy", Locale.US).format(calendar.getTime()));
-                break;
-            }
-        }
-
-        try {
-            Date date = new SimpleDateFormat("MMMM d, yyyy, h:mma", Locale.US).parse(realTime);
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
-            setEndTime(calendar);
-        } catch (ParseException e) {
-            Log.w(Giveaway.class.getSimpleName(), "Unable to handle date " + endTime + " // " + realTime, e);
-        }
+    public void setCreatedTime(String createdTime) {
+        this.createdTime = new CustomDateTime(createdTime);
     }
 
     @Override
     public String toString() {
-        return "[GA " + getGiveawayId() + ", " + gameId + "]";
+        return "[GA " + getGiveawayId() + ", " + getGameId() + "]";
     }
 
     public int getInternalGameId() {
@@ -249,7 +221,7 @@ public class Giveaway extends BasicGiveaway implements IEndlessAdaptable {
             Giveaway g = (Giveaway) o;
 
             // Compare some random attributes
-            return title.equals(g.title) && timeRemaining.equals(g.timeRemaining) && timeCreated.equals(g.timeCreated);
+            return title.equals(g.title) && endTime.equals(g.endTime) && createdTime.equals(g.createdTime);
         } else
             return super.equals(o);
     }
@@ -260,5 +232,13 @@ public class Giveaway extends BasicGiveaway implements IEndlessAdaptable {
 
     public void setPrivate(boolean isPrivate) {
         this.isPrivate = isPrivate;
+    }
+
+    public void setGame(Game game) {
+        this.game = game;
+    }
+
+    public Game getGame() {
+        return game;
     }
 }
