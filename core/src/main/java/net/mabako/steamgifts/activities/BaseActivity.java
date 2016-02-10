@@ -56,6 +56,10 @@ public class BaseActivity extends AppCompatActivity {
         ft.commitAllowingStateLoss();
     }
 
+    protected Fragment getCurrentFragment(String fragmentTag) {
+        return getSupportFragmentManager().findFragmentByTag(fragmentTag);
+    }
+
     protected void onAccountChange() {
         // Persist all relevant data.
         SteamGiftsUserData.getCurrent(this).save(this);

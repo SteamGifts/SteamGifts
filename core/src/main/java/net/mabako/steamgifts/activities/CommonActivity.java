@@ -71,7 +71,7 @@ public class CommonActivity extends BaseActivity {
     }
 
     public Fragment getCurrentFragment() {
-        return getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
+        return getCurrentFragment(FRAGMENT_TAG);
     }
 
     @Override

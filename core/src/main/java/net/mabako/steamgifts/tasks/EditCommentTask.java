@@ -3,10 +3,8 @@ package net.mabako.steamgifts.tasks;
 import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
-import android.widget.Toast;
 
 import net.mabako.steamgifts.activities.WriteCommentActivity;
-import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.Comment;
 
 import org.json.JSONException;
@@ -16,7 +14,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-public class EditCommentTask extends AjaxTask<Activity> {
+public abstract class EditCommentTask extends AjaxTask<Activity> {
     private static final String TAG = EditCommentTask.class.getSimpleName();
 
     private final Comment comment;
@@ -69,6 +67,8 @@ public class EditCommentTask extends AjaxTask<Activity> {
                 Log.e(TAG, "Failed to parse JSON object", e);
             }
         }
-        Toast.makeText(activity, R.string.comment_not_sent, Toast.LENGTH_SHORT).show();
+        onFail();
     }
+
+    protected abstract void onFail();
 }
