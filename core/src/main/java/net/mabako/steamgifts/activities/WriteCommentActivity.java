@@ -2,7 +2,9 @@ package net.mabako.steamgifts.activities;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v7.app.ActionBar;
@@ -30,6 +32,8 @@ public class WriteCommentActivity extends BaseActivity implements DialogInterfac
     private static final String FRAGMENT_TAG_PARENT_COMMENT = "fragment-parent";
     private static final String FRAGMENT_TAG_WRITER = "fragment-writer";
 
+    private static final String SAVED_ENTERED = "entered";
+
     public static final int REQUEST_COMMENT = 7;
     public static final int REQUEST_COMMENT_EDIT = 8;
     public static final int COMMENT_SENT = 9;
@@ -44,6 +48,7 @@ public class WriteCommentActivity extends BaseActivity implements DialogInterfac
     private AjaxTask<?> task;
 
     private ProgressDialog progressDialog;
+    private boolean entered;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,8 +99,17 @@ public class WriteCommentActivity extends BaseActivity implements DialogInterfac
             findViewById(R.id.separator).setVisibility(View.GONE);
         }
 
-        if (savedInstanceState == null)
+        if (savedInstanceState == null) {
             loadFragment(R.id.fragment_container2, WriteCommentFragment.newInstance((Comment) getIntent().getSerializableExtra(EDIT_COMMENT), getIntent().getStringExtra(GIVEAWAY_ID)), FRAGMENT_TAG_WRITER);
+        } else {
+            entered = savedInstanceState.getBoolean(SAVED_ENTERED, false);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        outState.putBoolean(SAVED_ENTERED, entered);
     }
 
     @Override
@@ -122,6 +136,15 @@ public class WriteCommentActivity extends BaseActivity implements DialogInterfac
             final int parentId = parent != null ? parent.getId() : 0;
 
             task = new PostCommentTask(this, getIntent().getStringExtra(PATH), getIntent().getStringExtra(XSRF_TOKEN), text, parentId) {
+                @Override
+                protected void onSuccess() {
+                    Intent data = new Intent();
+                    data.putExtra("parent", parentId);
+                    data.putExtra("entered", entered);
+                    setResult(COMMENT_SENT, data);
+                    finish();
+                }
+
                 @Override
                 protected void onFail() {
                     Toast.makeText(WriteCommentActivity.this, R.string.comment_not_sent, Toast.LENGTH_SHORT).show();
@@ -163,6 +186,7 @@ public class WriteCommentActivity extends BaseActivity implements DialogInterfac
 
                     WriteCommentFragment fragment = (WriteCommentFragment) getCurrentFragment(FRAGMENT_TAG_WRITER);
                     fragment.onEntered();
+                    entered = true;
 
                     submit(null, text);
                 } else {

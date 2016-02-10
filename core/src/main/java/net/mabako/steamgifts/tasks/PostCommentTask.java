@@ -1,9 +1,6 @@
 package net.mabako.steamgifts.tasks;
 
 import android.app.Activity;
-import android.content.Intent;
-
-import net.mabako.steamgifts.activities.WriteCommentActivity;
 
 import org.jsoup.Connection;
 
@@ -27,15 +24,13 @@ public abstract class PostCommentTask extends AjaxTask<Activity> {
 
     @Override
     protected void onPostExecute(Connection.Response response) {
-        Activity activity = getFragment();
         if (response != null && response.statusCode() == 301) {
-            Intent data = new Intent();
-            data.putExtra("parent", parentId);
-            activity.setResult(WriteCommentActivity.COMMENT_SENT, data);
-            activity.finish();
+            onSuccess();
         } else
             onFail();
     }
+
+    protected abstract void onSuccess();
 
     protected abstract void onFail();
 }

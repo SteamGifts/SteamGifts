@@ -219,6 +219,10 @@ public class GiveawayDetailFragment extends DetailFragment implements IHasEntera
             GiveawayListFragmentStack.onEnterLeaveResult(giveawayId, what, success);
     }
 
+    public void onEntered() {
+        onEnterLeaveResult(giveaway.getGiveawayId(), ENTRY_INSERT, true, true);
+    }
+
     /**
      * Set the details from the task started by {@link #fetchItems(int)}.
      *
