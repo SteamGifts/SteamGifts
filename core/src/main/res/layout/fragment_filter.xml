@@ -93,6 +93,16 @@
         app:layout_columnWeight="1"
         app:layout_rowWeight="1" />
 
+    <CheckBox
+        android:id="@+id/filter_entries_per_copy"
+        style="@style/NormalText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/filter_entries_per_copy"
+        app:layout_columnSpan="3"
+        app:layout_gravity="center_vertical"
+        app:layout_rowWeight="1" />
+
     <!-- Points -->
     <TextView
         style="@style/NormalText"

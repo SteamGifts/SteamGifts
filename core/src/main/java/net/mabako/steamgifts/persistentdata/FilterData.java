@@ -20,7 +20,7 @@ public class FilterData implements Serializable {
     private static FilterData current = null;
 
     private int minEntries = -1, maxEntries = -1, minPoints = -1, maxPoints = -1, minLevel = -1, maxLevel = -1;
-    private boolean hideEntered, restrictLevelOnlyOnPublicGiveaways;
+    private boolean hideEntered, restrictLevelOnlyOnPublicGiveaways, entriesPerCopy;
 
     public static synchronized FilterData getCurrent(Context context) {
         if (current == null) {
@@ -105,6 +105,14 @@ public class FilterData implements Serializable {
 
     public void setRestrictLevelOnlyOnPublicGiveaways(boolean restrictLevelOnlyOnPublicGiveaways) {
         this.restrictLevelOnlyOnPublicGiveaways = restrictLevelOnlyOnPublicGiveaways;
+    }
+
+    public boolean isEntriesPerCopy() {
+        return entriesPerCopy;
+    }
+
+    public void setEntriesPerCopy(boolean entriesPerCopy) {
+        this.entriesPerCopy = entriesPerCopy;
     }
 
     public boolean isAnyActive() {

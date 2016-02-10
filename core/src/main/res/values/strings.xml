@@ -227,4 +227,5 @@
 
     <!-- unsorted -->
     <string name="could_not_load_image">Could not load image.</string>
+    <string name="filter_entries_per_copy">Show entries per copy (instead of total entries)</string>
 </resources>
