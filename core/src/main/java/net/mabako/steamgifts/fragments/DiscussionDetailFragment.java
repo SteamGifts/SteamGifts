@@ -199,7 +199,7 @@ public class DiscussionDetailFragment extends DetailFragment implements IHasPoll
             adapter.setStickyItem(discussionCard);
         }
 
-        adapter.notifyPage(page, lastPage);
+        adapter.notifyPage(getCommentContext() != null ? 1 : page, lastPage);
         addItems(extras.getComments(), false, extras.getXsrfToken());
 
         if (getActivity() != null)
