@@ -73,7 +73,9 @@ public class CreatedListFragment extends ListFragment<GiveawayAdapter> implement
 
                 giveaway.setPoints(-1);
                 giveaway.setEntries(Integer.parseInt(columns.first().text().replace(",", "")));
-                giveaway.setEndTime(firstColumn.select("span > span").first().attr("title"));
+
+                Element end = firstColumn.select("span > span").first();
+                giveaway.setEndTime(end.attr("title"), end.text());
 
                 giveaway.setEntered("Unsent".equals(columns.get(1).text()));
                 giveaway.setDeleted(!element.select(".table__column__deleted").isEmpty());

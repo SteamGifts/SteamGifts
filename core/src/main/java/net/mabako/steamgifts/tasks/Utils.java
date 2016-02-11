@@ -128,8 +128,10 @@ public final class Utils {
         }
 
         // Time remaining
-        giveaway.setEndTime(element.select("." + cssNode + "__columns > div span").first().attr("title"));
-        giveaway.setCreatedTime(element.select("." + cssNode + "__columns > div span").last().text());
+
+        Element end = element.select("." + cssNode + "__columns > div span").first();
+        giveaway.setEndTime(end.attr("title"), end.text());
+        giveaway.setCreatedTime(element.select("." + cssNode + "__columns > div span").last().attr("title"));
 
         // Flags
         giveaway.setWhitelist(!element.select("." + cssNode + "__column--whitelist").isEmpty());

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -79,10 +78,8 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
     public void setFrom(Giveaway giveaway, boolean showImage) {
         giveawayName.setText(giveaway.getTitle());
 
-        if (giveaway.getRelativeEndTime() != null) {
-            giveawayTime.setText(giveaway.getRelativeEndTime());
-        } else if (giveaway.getEndTime() != null) {
-            giveawayTime.setText(DateUtils.formatDateTime(activity, giveaway.getEndTime().getTimeInMillis(), DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE));
+        if (giveaway.getEndTime() != null) {
+            giveawayTime.setText(giveaway.getRelativeEndTime(activity));
         } else {
             giveawayTime.setVisibility(View.GONE);
         }

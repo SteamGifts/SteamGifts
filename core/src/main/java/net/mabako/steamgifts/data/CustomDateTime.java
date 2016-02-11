@@ -1,5 +1,8 @@
 package net.mabako.steamgifts.data;
 
+import android.content.Context;
+import android.support.annotation.NonNull;
+import android.text.format.DateUtils;
 import android.util.Log;
 
 import java.io.Serializable;
@@ -37,7 +40,7 @@ public class CustomDateTime implements Serializable {
     private final boolean beginning;
 
     /**
-     * <p>We assume the string passed in fits either of the following:
+     * <p>Set the time to an absolute date. We assume either of the following formats:
      * <ul>
      * <li>"Today, 3:40pm"</li>
      * <li>"Tomorrow, 3:40am"</li>
@@ -46,7 +49,8 @@ public class CustomDateTime implements Serializable {
      *
      * @param time the time string to parse
      */
-    public CustomDateTime(String time) {
+    public CustomDateTime(@NonNull final String time, boolean beginning) {
+        this.beginning = beginning;
         String realTime = time;
 
         for (int daysOffset = 0; daysOffset < relativeDates.length; ++daysOffset) {
@@ -62,15 +66,45 @@ public class CustomDateTime implements Serializable {
             Date date = new SimpleDateFormat("MMMM d, yyyy, h:mma", Locale.US).parse(realTime);
             calendar = Calendar.getInstance();
             calendar.setTime(date);
-            beginning = false;
         } catch (ParseException e) {
             Log.w(Giveaway.class.getSimpleName(), "Unable to handle date " + time + " // " + realTime, e);
             throw new RuntimeException(e);
         }
     }
 
-    public String toString() {
-        return "?";
+    public String toString(Context context) {
+        final long realTimeDiff = (Calendar.getInstance().getTimeInMillis() - calendar.getTimeInMillis()) / 1000;
+        long timeDiff = Math.abs(realTimeDiff);
+
+        if (timeDiff < 60)
+            return toString(timeDiff, realTimeDiff, "second");
+        timeDiff /= 60;
+
+        if (timeDiff < 60)
+            return toString(timeDiff, realTimeDiff, "minute");
+        timeDiff /= 60;
+
+        if (timeDiff < 24)
+            return toString(timeDiff, realTimeDiff, "hour");
+        timeDiff /= 24;
+
+        if (timeDiff <= 7)
+            return toString(timeDiff, realTimeDiff, "day");
+
+        if (timeDiff <= 30)
+            return toString(timeDiff / 7, realTimeDiff, "week");
+
+        return DateUtils.formatDateTime(context, calendar.getTimeInMillis(), DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
+    }
+
+    private String toString(long timeDiff, long realTimeDiff, String unit) {
+        String inWords = String.format("%d %s%s", timeDiff, unit, timeDiff == 1 ? "" : "s");
+        if (beginning)
+            return "Begins in " + inWords;
+        else if (realTimeDiff > 0)
+            return inWords + " ago";
+        else
+            return inWords;
     }
 
     public boolean isBeginning() {

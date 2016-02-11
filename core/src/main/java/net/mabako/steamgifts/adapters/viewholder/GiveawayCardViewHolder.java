@@ -7,7 +7,6 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
@@ -100,16 +99,13 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
 
             title.setText(giveaway.getTitle());
 
-            if (giveaway.getRelativeEndTime() != null) {
-                timeRemaining.setText("{faw-clock-o} " + giveaway.getRelativeEndTime());
+            if (giveaway.getEndTime() != null) {
+                timeRemaining.setText("{faw-clock-o} " + giveaway.getRelativeEndTime(fragment.getContext()));
 
-                if (giveaway.getRelativeCreatedTime() != null)
-                    timeCreated.setText("{faw-calendar-o} " + giveaway.getRelativeCreatedTime());
+                if (giveaway.getCreatedTime() != null)
+                    timeCreated.setText("{faw-calendar-o} " + giveaway.getRelativeCreatedTime(fragment.getContext()));
                 else
                     timeCreated.setVisibility(View.GONE);
-            } else if (giveaway.getEndTime() != null) {
-                timeRemaining.setText("{faw-clock-o} " + DateUtils.formatDateTime(fragment.getContext(), giveaway.getEndTime().getTimeInMillis(), DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE));
-                timeCreated.setVisibility(View.GONE);
             } else {
                 timeRemaining.setVisibility(View.GONE);
                 timeCreated.setVisibility(View.GONE);

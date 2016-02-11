@@ -1,5 +1,8 @@
 package net.mabako.steamgifts.data;
 
+import android.content.Context;
+import android.support.annotation.NonNull;
+
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
@@ -73,7 +76,7 @@ public class Giveaway extends BasicGiveaway implements IEndlessAdaptable {
     }
 
     public int getGameId() {
-        return game.getGameId();
+        return game != null ? game.getGameId() : Game.NO_APP_ID;
     }
 
     public String getName() {
@@ -109,7 +112,7 @@ public class Giveaway extends BasicGiveaway implements IEndlessAdaptable {
     }
 
     public Game.Type getType() {
-        return game.getType();
+        return game != null ? game.getType() : Game.Type.APP;
     }
 
     public int getPoints() {
@@ -120,12 +123,12 @@ public class Giveaway extends BasicGiveaway implements IEndlessAdaptable {
         this.points = points;
     }
 
-    public String getRelativeEndTime() {
-        return endTime.toString();
+    public String getRelativeEndTime(Context context) {
+        return endTime.toString(context);
     }
 
-    public String getRelativeCreatedTime() {
-        return createdTime.toString();
+    public String getRelativeCreatedTime(Context context) {
+        return createdTime.toString(context);
     }
 
     public boolean isOpen() {
@@ -185,16 +188,16 @@ public class Giveaway extends BasicGiveaway implements IEndlessAdaptable {
         return endTime.getCalendar();
     }
 
-    public void setEndTime(String endTime) {
-        this.endTime = new CustomDateTime(endTime);
+    public void setEndTime(@NonNull String endTime, @NonNull String relativeEndTime) {
+        this.endTime = new CustomDateTime(endTime, relativeEndTime.startsWith("Begins in "));
     }
 
     public Calendar getCreatedTime() {
         return createdTime.getCalendar();
     }
 
-    public void setCreatedTime(String createdTime) {
-        this.createdTime = new CustomDateTime(createdTime);
+    public void setCreatedTime(@NonNull String createdTime) {
+        this.createdTime = new CustomDateTime(createdTime, false);
     }
 
     @Override
