@@ -100,7 +100,10 @@ public class CustomDateTime implements Serializable {
 
     private String toString(long timeDiff, long realTimeDiff, String unit) {
         String inWords = String.format("%d %s%s", timeDiff, unit, timeDiff == 1 ? "" : "s");
-        if (beginning)
+        if (beginning && realTimeDiff > 0)
+            // Giveaway already began, but we don't really know when it does actually -end-.
+            return "Began already";
+        else if (beginning)
             return "Begins in " + inWords;
         else if (realTimeDiff > 0)
             return inWords + " ago";

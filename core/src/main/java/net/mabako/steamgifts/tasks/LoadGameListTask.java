@@ -88,4 +88,8 @@ public abstract class LoadGameListTask extends AsyncTask<Void, Void, List<IEndle
     }
 
     protected abstract IEndlessAdaptable load(Element element);
+
+    public int getPage() {
+        return page;
+    }
 }

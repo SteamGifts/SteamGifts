@@ -21,6 +21,10 @@ public class ProfileGiveaway extends Giveaway {
         this.deleted = deleted;
     }
 
+    public boolean isDeleted() {
+        return deleted;
+    }
+
     @Override
     public boolean isOpen() {
         return !deleted && super.isOpen();
