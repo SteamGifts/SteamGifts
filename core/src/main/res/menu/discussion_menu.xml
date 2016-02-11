@@ -4,11 +4,27 @@
     tools:context=".activities.DetailActivity">
 
     <item
+        android:id="@+id/add_saved_element"
+        android:icon="@drawable/ic_star_outline"
+        android:title="@string/add_saved_discussion"
+        android:visible="false"
+        app:showAsAction="ifRoom"
+        tools:visible="true" />
+
+    <item
+        android:id="@+id/remove_saved_element"
+        android:icon="@drawable/ic_star"
+        android:title="@string/remove_saved_discussion"
+        android:visible="false"
+        app:showAsAction="ifRoom"
+        tools:visible="true" />
+
+    <item
         android:id="@+id/comment"
         android:icon="@drawable/ic_send"
         android:title="@string/add_comment"
         android:visible="false"
-        app:showAsAction="ifRoom"
+        app:showAsAction="always"
         tools:visible="true" />
 
     <item
@@ -17,5 +33,5 @@
         android:title="@string/discussion_locked"
         android:visible="false"
         app:showAsAction="always"
-        tools:visible="true"/>
+        tools:visible="true" />
 </menu>

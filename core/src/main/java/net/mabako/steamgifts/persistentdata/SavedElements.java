@@ -102,13 +102,14 @@ public abstract class SavedElements<T> implements Comparator<T> {
         private final SavedElements<T> parent;
 
         public GiveawayOpenHelper(Context context, SavedElements<T> parent) {
-            super(context, "savedelements", null, 2);
+            super(context, "savedelements", null, 3);
             this.parent = parent;
         }
 
         @Override
         public void onCreate(SQLiteDatabase db) {
             db.execSQL("CREATE TABLE " + SavedGiveaways.DB_TABLE + "(" + KEY_ID + " text primary key, " + KEY_VALUE + " text)");
+            db.execSQL("CREATE TABLE " + SavedDiscussions.DB_TABLE + "(" + KEY_ID + " text primary key, " + KEY_VALUE + " text)");
         }
 
         private boolean add(T element, String elementId) {
@@ -169,6 +170,10 @@ public abstract class SavedElements<T> implements Comparator<T> {
             // Delete all saved giveawys
             if (oldVersion < 2)
                 db.delete(SavedGiveaways.DB_TABLE, null, null);
+
+            // Create a new table for saved discussions
+            if (oldVersion < 3)
+                db.execSQL("CREATE TABLE " + SavedDiscussions.DB_TABLE + "(" + KEY_ID + " text primary key, " + KEY_VALUE + " text)");
         }
     }
 }

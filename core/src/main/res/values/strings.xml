@@ -9,7 +9,6 @@
     <string name="navigation_giveaways_group">Group</string>
     <string name="navigation_giveaways_wishlist">Wishlist</string>
     <string name="navigation_giveaways_new">New</string>
-    <string name="navigation_saved_elements">Starred</string>
     <string name="navigation_giveaways_all_title">All Giveaways</string>
     <string name="navigation_giveaways_group_title">Group Giveaways</string>
     <string name="navigation_giveaways_wishlist_title">Wishlist Giveaways</string>
@@ -198,13 +197,21 @@
     <string name="filter_region_restricted_checkbox">Only region restricted Giveaways</string>
 
     <!-- Saving Giveaways -->
-    <string name="add_saved_giveaway">Star Giveaway</string>
-    <string name="remove_saved_giveaway">Unstar Giveaway</string>
-    <string name="added_saved_giveaway"><![CDATA[Giveaway was starred and can be found under Menu > Starred.]]></string>
-    <string name="removed_saved_giveaway">Giveaway is no longer starred.</string>
+    <string name="navigation_saved_elements">Bookmarks</string>
 
-    <string name="saved_elements_title">Starred</string>
+    <string name="add_saved_giveaway">Bookmark</string>
+    <string name="remove_saved_giveaway">Removed Bookmark</string>
+    <string name="added_saved_giveaway"><![CDATA[Giveaway was bookmarked and can be found under Menu > Bookmarks.]]></string>
+    <string name="removed_saved_giveaway">Giveaway is no longer bookmarked.</string>
+
+    <string name="add_saved_discussion">Bookmark</string>
+    <string name="remove_saved_discussion">Removed Bookmark</string>
+    <string name="added_saved_discussion"><![CDATA[Discussion was bookmarked and can be found under Menu > Bookmarks.]]></string>
+    <string name="removed_saved_discussion">Discussion is no longer bookmarked.</string>
+
+    <string name="saved_elements_title">Bookmarks</string>
     <string name="saved_giveaways_title">Giveaways</string>
+    <string name="saved_discussions_title">Discussions</string>
     <string name="remove_all_entered_saved">Remove Entered Giveaways</string>
 
     <!-- Sync -->

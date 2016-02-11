@@ -7,7 +7,7 @@ import com.google.gson.Gson;
 import net.mabako.steamgifts.data.Giveaway;
 
 public class SavedGiveaways extends SavedElements<Giveaway> {
-    public static final String DB_TABLE = "giveaways";
+    static final String DB_TABLE = "giveaways";
 
     public SavedGiveaways(Context context) {
         super(context, DB_TABLE);

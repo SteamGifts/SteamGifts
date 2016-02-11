@@ -23,6 +23,7 @@ import net.mabako.steamgifts.fragments.DiscussionDetailFragment;
 import net.mabako.steamgifts.fragments.FragmentAdapter;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
 import net.mabako.steamgifts.fragments.HiddenGamesFragment;
+import net.mabako.steamgifts.fragments.SavedDiscussionsFragment;
 import net.mabako.steamgifts.fragments.SavedGiveawaysFragment;
 import net.mabako.steamgifts.fragments.UserDetailFragment;
 import net.mabako.steamgifts.fragments.WhitelistBlacklistFragment;
@@ -130,7 +131,7 @@ public class DetailActivity extends CommonActivity {
 
             setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
             ActionBar actionBar = getSupportActionBar();
-            if(actionBar != null)
+            if (actionBar != null)
                 actionBar.setTitle(R.string.notifications_title);
 
             return;
@@ -144,14 +145,14 @@ public class DetailActivity extends CommonActivity {
         }
 
         if (getIntent().hasExtra(ARG_SAVED_ELEMENTS)) {
-            setContentView(R.layout.activity_paged_fragments_no_tabs);
+            setContentView(R.layout.activity_paged_fragments);
             if (savedInstanceState == null)
-                loadPagedFragments(new SavedGiveawaysFragment());
+                loadPagedFragments(new SavedGiveawaysFragment(), new SavedDiscussionsFragment());
 
 
             setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
             ActionBar actionBar = getSupportActionBar();
-            if(actionBar != null)
+            if (actionBar != null)
                 actionBar.setTitle(R.string.saved_elements_title);
 
             return;

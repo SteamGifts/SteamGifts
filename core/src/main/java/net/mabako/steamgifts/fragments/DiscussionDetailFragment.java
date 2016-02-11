@@ -1,5 +1,6 @@
 package net.mabako.steamgifts.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -29,6 +30,7 @@ import net.mabako.steamgifts.data.DiscussionExtras;
 import net.mabako.steamgifts.data.Poll;
 import net.mabako.steamgifts.fragments.interfaces.IHasPoll;
 import net.mabako.steamgifts.fragments.util.DiscussionDetailsCard;
+import net.mabako.steamgifts.persistentdata.SavedDiscussions;
 import net.mabako.steamgifts.tasks.EnterLeavePollTask;
 import net.mabako.steamgifts.tasks.LoadDiscussionDetailsTask;
 
@@ -43,6 +45,8 @@ public class DiscussionDetailFragment extends DetailFragment implements IHasPoll
 
     private static final String SAVED_DISCUSSION = ARG_DISCUSSION;
     private static final String SAVED_CARD = "discussion-card";
+
+    private SavedDiscussions savedDiscussions;
 
     /**
      * Content to show for the giveaway details.
@@ -110,6 +114,22 @@ public class DiscussionDetailFragment extends DetailFragment implements IHasPoll
         setHasOptionsMenu(true);
 
         return layout;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        savedDiscussions = new SavedDiscussions(context);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        if (savedDiscussions != null) {
+            savedDiscussions.close();
+            savedDiscussions = null;
+        }
     }
 
     @Override
@@ -214,6 +234,33 @@ public class DiscussionDetailFragment extends DetailFragment implements IHasPoll
                     }
                 });
             }
+
+
+            if (savedDiscussions != null) {
+                boolean isSaved = savedDiscussions.exists(discussion.getDiscussionId());
+                menu.findItem(R.id.add_saved_element).setVisible(!isSaved);
+                menu.findItem(R.id.remove_saved_element).setVisible(isSaved);
+            }
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        if (itemId == R.id.add_saved_element) {
+            if (discussion instanceof Discussion && savedDiscussions.add((Discussion) discussion, discussion.getDiscussionId())) {
+                getActivity().supportInvalidateOptionsMenu();
+                Toast.makeText(getContext(), R.string.added_saved_discussion, Toast.LENGTH_SHORT).show();
+            }
+            return true;
+        } else if (itemId == R.id.remove_saved_element) {
+            if (discussion instanceof Discussion && savedDiscussions.remove(discussion.getDiscussionId())) {
+                getActivity().supportInvalidateOptionsMenu();
+                Toast.makeText(getContext(), R.string.removed_saved_discussion, Toast.LENGTH_SHORT).show();
+            }
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 
