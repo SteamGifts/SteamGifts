@@ -157,15 +157,18 @@ public class CommentAdapter extends EndlessAdapter {
     public void replaceComment(Comment comment) {
         List<IEndlessAdaptable> items = getItems();
         for (int i = 0; i < items.size(); ++i) {
-            Comment c = (Comment) items.get(i);
-            if (c.getId() == comment.getId()) {
-                // update the found comment
-                items.set(i, comment);
+            IEndlessAdaptable item = items.get(i);
+            if (item instanceof Comment) {
+                Comment c = (Comment) item;
+                if (c.getId() == comment.getId()) {
+                    // update the found comment
+                    items.set(i, comment);
 
-                // notify of update
-                notifyItemChanged(comment);
+                    // notify of update
+                    notifyItemChanged(comment);
 
-                return;
+                    return;
+                }
             }
         }
 
