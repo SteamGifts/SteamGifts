@@ -177,7 +177,6 @@ public class SavedGiveawaysFragment extends ListFragment<SavedGiveawaysFragment.
             // do nothing much except update the status of existing giveaways.
             for (IEndlessAdaptable endlessAdaptable : items) {
                 ProfileGiveaway giveaway = (ProfileGiveaway) endlessAdaptable;
-                Log.d(TAG, giveaway.getGiveawayId() + " ~> " + giveaway.isOpen() + ", " + giveaway.isDeleted());
                 if (!giveaway.isOpen() && !giveaway.isDeleted()) {
                     foundAnyClosedGiveaways = true;
                     break;
