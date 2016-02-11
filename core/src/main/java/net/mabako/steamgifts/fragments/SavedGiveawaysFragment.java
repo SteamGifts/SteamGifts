@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 
 import net.mabako.steamgifts.adapters.GiveawayAdapter;
 import net.mabako.steamgifts.core.R;
@@ -51,6 +52,7 @@ public class SavedGiveawaysFragment extends ListFragment<GiveawayAdapter> implem
         GiveawayListFragmentStack.removeFragment(this);
     }
 
+    @NonNull
     @Override
     protected GiveawayAdapter createAdapter() {
         return new GiveawayAdapter(-1, false, PreferenceManager.getDefaultSharedPreferences(getContext()));
@@ -77,7 +79,7 @@ public class SavedGiveawaysFragment extends ListFragment<GiveawayAdapter> implem
 
     @Override
     public int getTitleResource() {
-        return R.string.navigation_giveaways_saved_title;
+        return R.string.saved_giveaways_title;
     }
 
     @Override
