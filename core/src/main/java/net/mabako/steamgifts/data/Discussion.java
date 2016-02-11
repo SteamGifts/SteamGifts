@@ -1,7 +1,11 @@
 package net.mabako.steamgifts.data;
 
+import android.content.Context;
+
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.core.R;
+
+import java.util.Calendar;
 
 public class Discussion extends BasicDiscussion implements IEndlessAdaptable {
     public static final int VIEW_LAYOUT = R.layout.discussion_item;
@@ -9,7 +13,7 @@ public class Discussion extends BasicDiscussion implements IEndlessAdaptable {
     private String title;
     private String name;
     private String creator;
-    private String timeCreated;
+    private CustomDateTime createdTime;
     private String creatorAvatar;
 
     private boolean locked, poll;
@@ -42,12 +46,17 @@ public class Discussion extends BasicDiscussion implements IEndlessAdaptable {
         this.creator = creator;
     }
 
-    public String getTimeCreated() {
-        return timeCreated;
+
+    public Calendar getCreatedTime() {
+        return createdTime.getCalendar();
     }
 
-    public void setTimeCreated(String timeCreated) {
-        this.timeCreated = timeCreated;
+    public String getRelativeCreatedTime(Context context) {
+        return createdTime.toString(context);
+    }
+
+    public void setCreatedTime(String time) {
+        createdTime = new CustomDateTime(time, false);
     }
 
     public String getCreatorAvatar() {

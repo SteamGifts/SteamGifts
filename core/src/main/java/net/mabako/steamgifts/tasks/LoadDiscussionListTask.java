@@ -85,7 +85,7 @@ public class LoadDiscussionListTask extends AsyncTask<Void, Void, List<Discussio
                 discussion.setName(discussionName);
 
                 Element p = element.select(".table__column--width-fill p").first();
-                discussion.setTimeCreated(p.select("span").first().text());
+                discussion.setCreatedTime(p.select("span").first().attr("title"));
                 discussion.setCreator(p.select("a").last().text());
 
                 // The creator's avatar

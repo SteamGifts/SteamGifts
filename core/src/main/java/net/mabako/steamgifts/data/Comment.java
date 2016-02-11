@@ -1,11 +1,14 @@
 package net.mabako.steamgifts.data;
 
+import android.content.Context;
+
 import net.mabako.Constants;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.core.R;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -17,8 +20,7 @@ public class Comment implements Serializable, IEndlessAdaptable, IImageHolder {
 
     private final int id;
     private final String author;
-    private final String timeAgo;
-    private final String timeAgoLong;
+    private CustomDateTime createdTime;
     private String content;
     private final String avatar;
     private int depth;
@@ -30,12 +32,9 @@ public class Comment implements Serializable, IEndlessAdaptable, IImageHolder {
 
     private List<Image> attachedImages;
 
-    public Comment(int id, String author, String timeAgo, String timeAgoLong, int depth, String avatar, boolean isOp) {
+    public Comment(int id, String author, int depth, String avatar, boolean isOp) {
         this.id = id;
         this.author = author;
-        this.timeAgo = timeAgo;
-        this.timeAgoLong = timeAgoLong;
-        this.content = content;
         this.depth = depth;
         this.avatar = avatar;
         this.op = isOp;
@@ -49,12 +48,16 @@ public class Comment implements Serializable, IEndlessAdaptable, IImageHolder {
         return author;
     }
 
-    public String getTimeAgo() {
-        return timeAgo;
+    public Calendar getCreatedTime() {
+        return createdTime.getCalendar();
     }
 
-    public String getTimeAgoLong() {
-        return timeAgoLong;
+    public String getRelativeCreatedTime(Context context) {
+        return createdTime.toString(context);
+    }
+
+    public void setCreatedTime(String time) {
+        createdTime = new CustomDateTime(time, false);
     }
 
     public String getContent() {

@@ -27,7 +27,7 @@ public class SingleCommentFragment extends Fragment {
         Comment comment = (Comment) getActivity().getIntent().getSerializableExtra(WriteCommentActivity.PARENT);
 
         ((TextView) layout.findViewById(R.id.user)).setText(comment.getAuthor());
-        ((TextView) layout.findViewById(R.id.time)).setText(comment.getTimeAgo());
+        ((TextView) layout.findViewById(R.id.time)).setText(comment.getRelativeCreatedTime(container.getContext()));
         ((TextView) layout.findViewById(R.id.content)).setText(StringUtils.fromHtml(getContext(), comment.getContent()));
 
         // Space before the marker

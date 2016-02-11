@@ -47,7 +47,8 @@ public class CustomDateTime implements Serializable {
      * <li>"January 26, 2016, 3:40am"</li>
      * </ul>
      *
-     * @param time the time string to parse
+     * @param time      the time string to parse
+     * @param beginning true if this date is the date of the beginning, and not the end. Giveaways do not have an 'end date' if they're not open yet
      */
     public CustomDateTime(@NonNull final String time, boolean beginning) {
         this.beginning = beginning;

@@ -70,9 +70,10 @@ public final class Utils {
             } catch (NumberFormatException e) {
             }
 
-            Comment comment = new Comment(commentId, author, timeCreated.text(), timeCreated.attr("title"), depth, avatar, isOp);
+            Comment comment = new Comment(commentId, author, depth, avatar, isOp);
             comment.setPermalinkId(permalinkUri.getPathSegments().get(2));
             comment.setEditableContent(editableContent);
+            comment.setCreatedTime(timeCreated.attr("title"));
 
 
             Element desc = thisComment.select(".comment__description").first();
