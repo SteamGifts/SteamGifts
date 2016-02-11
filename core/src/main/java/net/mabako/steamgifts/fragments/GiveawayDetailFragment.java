@@ -108,7 +108,7 @@ public class GiveawayDetailFragment extends DetailFragment implements IHasEntera
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        // savedGiveaways = new SavedGiveaways(context);
+        savedGiveaways = new SavedGiveaways(context);
 
         if (context instanceof Activity)
             this.activity = (Activity) context;
@@ -173,7 +173,6 @@ public class GiveawayDetailFragment extends DetailFragment implements IHasEntera
         // #onPostGiveawayLoaded is called prior to this method.
         if (!(giveaway instanceof Giveaway))
             throw new IllegalStateException("#onPostGiveawayLoaded was probably not called");
-        ((Giveaway) giveaway).setTimeRemaining(extras.getTimeRemaining());
         ((Giveaway) giveaway).setTitle(extras.getTitle());
         updateTitle();
 
@@ -262,6 +261,11 @@ public class GiveawayDetailFragment extends DetailFragment implements IHasEntera
         if (getActivity() instanceof DetailActivity && giveaway.getGameId() != Game.NO_APP_ID && !fragmentAdded) {
             ((DetailActivity) getActivity()).addFragmentUnlessExists(giveaway.getType() == Game.Type.APP ? StoreAppFragment.newInstance(giveaway.getGameId(), false) : StoreSubFragment.newInstance(giveaway.getGameId()));
             fragmentAdded = true;
+        }
+
+        if (savedGiveaways != null && savedGiveaways.exists(giveaway.getGiveawayId())) {
+            // refresh the saved giveaway... this is probably only noteworthy if, for some reason, the giveaway has begun after we starred it.
+            savedGiveaways.add(giveaway, giveaway.getGiveawayId());
         }
     }
 

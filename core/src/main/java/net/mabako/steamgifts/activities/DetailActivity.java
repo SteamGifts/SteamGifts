@@ -23,6 +23,7 @@ import net.mabako.steamgifts.fragments.DiscussionDetailFragment;
 import net.mabako.steamgifts.fragments.FragmentAdapter;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
 import net.mabako.steamgifts.fragments.HiddenGamesFragment;
+import net.mabako.steamgifts.fragments.SavedGiveawaysFragment;
 import net.mabako.steamgifts.fragments.UserDetailFragment;
 import net.mabako.steamgifts.fragments.WhitelistBlacklistFragment;
 import net.mabako.steamgifts.fragments.profile.CreatedListFragment;
@@ -38,6 +39,7 @@ import java.util.UUID;
 public class DetailActivity extends CommonActivity {
     public static final String ARG_NOTIFICATIONS = "notifications";
     public static final String ARG_HIDDEN_GAMES = "view-hidden-games";
+    public static final String ARG_SAVED_ELEMENTS = "saved-elements";
 
     /**
      * If we have a {@link net.mabako.steamgifts.fragments.DetailFragment.CommentContextInfo} instance, mark the comment associated with this instance as read.
@@ -113,16 +115,24 @@ public class DetailActivity extends CommonActivity {
 
         if (getIntent().hasExtra(ARG_NOTIFICATIONS)) {
             setContentView(R.layout.activity_paged_fragments);
-            loadPagedFragments(new MessageListFragment(), new WonListFragment(), new EnteredListFragment(), new CreatedListFragment());
+            if (savedInstanceState == null) {
+                loadPagedFragments(new MessageListFragment(), new WonListFragment(), new EnteredListFragment(), new CreatedListFragment());
 
-            // Depending on what notifications are currently shown, bring the relevant tab up first.
-            SteamGiftsUserData u = SteamGiftsUserData.getCurrent(this);
-            if (u.getWonNotification() > 0)
-                pager.setCurrentItem(1);
-            else if (u.getMessageNotification() > 0)
-                pager.setCurrentItem(0);
-            else if (u.getCreatedNotification() > 0)
-                pager.setCurrentItem(3);
+                // Depending on what notifications are currently shown, bring the relevant tab up first.
+                SteamGiftsUserData u = SteamGiftsUserData.getCurrent(this);
+                if (u.getWonNotification() > 0)
+                    pager.setCurrentItem(1);
+                else if (u.getMessageNotification() > 0)
+                    pager.setCurrentItem(0);
+                else if (u.getCreatedNotification() > 0)
+                    pager.setCurrentItem(3);
+            }
+
+            setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+            ActionBar actionBar = getSupportActionBar();
+            if(actionBar != null)
+                actionBar.setTitle(R.string.notifications_title);
+
             return;
         }
 
@@ -133,7 +143,21 @@ public class DetailActivity extends CommonActivity {
             return;
         }
 
-        throw new IllegalStateException("no detail activity");
+        if (getIntent().hasExtra(ARG_SAVED_ELEMENTS)) {
+            setContentView(R.layout.activity_paged_fragments_no_tabs);
+            if (savedInstanceState == null)
+                loadPagedFragments(new SavedGiveawaysFragment());
+
+
+            setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+            ActionBar actionBar = getSupportActionBar();
+            if(actionBar != null)
+                actionBar.setTitle(R.string.saved_elements_title);
+
+            return;
+        }
+
+        throw new IllegalStateException("no detail activity, lacking any fragment to initialize");
     }
 
     @Override

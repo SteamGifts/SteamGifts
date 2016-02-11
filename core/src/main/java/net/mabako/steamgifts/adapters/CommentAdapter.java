@@ -57,7 +57,7 @@ public class CommentAdapter extends EndlessAdapter {
         } else if (viewType == GiveawayDetailsCard.VIEW_LAYOUT) {
             return new GiveawayCardViewHolder(view, (GiveawayDetailFragment) fragment);
         } else if (viewType == DiscussionDetailsCard.VIEW_LAYOUT) {
-            return new DiscussionCardViewHolder(view, (DiscussionDetailFragment) fragment);
+            return new DiscussionCardViewHolder(view, (DiscussionDetailFragment) fragment, fragment.getContext());
 
         } else if (viewType == CommentContextViewHolder.VIEW_LAYOUT) {
             return new CommentContextViewHolder(view, fragment.getActivity());

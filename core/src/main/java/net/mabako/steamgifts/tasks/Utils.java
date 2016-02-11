@@ -70,9 +70,10 @@ public final class Utils {
             } catch (NumberFormatException e) {
             }
 
-            Comment comment = new Comment(commentId, author, timeCreated.text(), timeCreated.attr("title"), depth, avatar, isOp);
+            Comment comment = new Comment(commentId, author, depth, avatar, isOp);
             comment.setPermalinkId(permalinkUri.getPathSegments().get(2));
             comment.setEditableContent(editableContent);
+            comment.setCreatedTime(timeCreated.attr("title"));
 
 
             Element desc = thisComment.select(".comment__description").first();
@@ -123,16 +124,15 @@ public final class Utils {
         if (steamUri != null) {
             List<String> pathSegments = steamUri.getPathSegments();
             if (pathSegments.size() >= 2) {
-                giveaway.setGameId(Integer.parseInt(pathSegments.get(1)));
-                giveaway.setType("app".equals(pathSegments.get(0)) ? Game.Type.APP : Game.Type.SUB);
+                giveaway.setGame(new Game("app".equals(pathSegments.get(0)) ? Game.Type.APP : Game.Type.SUB, Integer.parseInt(pathSegments.get(1))));
             }
         }
 
         // Time remaining
-        Element endTime = element.select("." + cssNode + "__columns > div span").first();
-        giveaway.setTimeRemaining(endTime.text());
-        giveaway.setEndTime(endTime.attr("title"));
-        giveaway.setTimeCreated(element.select("." + cssNode + "__columns > div span").last().text());
+
+        Element end = element.select("." + cssNode + "__columns > div span").first();
+        giveaway.setEndTime(end.attr("title"), end.text());
+        giveaway.setCreatedTime(element.select("." + cssNode + "__columns > div span").last().attr("title"));
 
         // Flags
         giveaway.setWhitelist(!element.select("." + cssNode + "__column--whitelist").isEmpty());

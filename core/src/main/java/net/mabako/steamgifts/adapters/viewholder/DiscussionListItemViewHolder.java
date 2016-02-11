@@ -50,7 +50,7 @@ public class DiscussionListItemViewHolder extends RecyclerView.ViewHolder implem
 
         discussionName.setText(text);
         discussionAuthor.setText(discussion.getCreator());
-        discussionTime.setText(discussion.getTimeCreated());
+        discussionTime.setText(discussion.getRelativeCreatedTime(activity));
 
         StringUtils.setBackgroundDrawable(activity, itemContainer, discussion.isLocked());
 

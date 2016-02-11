@@ -1,6 +1,7 @@
 package net.mabako.steamgifts.adapters.viewholder;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
@@ -70,7 +71,7 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
         commentRole.setVisibility(comment.getAuthorRole() == null ? View.GONE : View.VISIBLE);
         commentRole.setText("{faw-gavel} " + comment.getAuthorRole());
 
-        commentTime.setText(comment.getTimeAgo());
+        commentTime.setText(comment.getRelativeCreatedTime(context));
         commentTime.setTextAppearance(context, comment.isHighlighted() ? R.style.SmallText : R.style.SmallText_Light);
 
         commentContent.setText(StringUtils.fromHtml(context, comment.getContent(), !comment.isDeleted(), null));

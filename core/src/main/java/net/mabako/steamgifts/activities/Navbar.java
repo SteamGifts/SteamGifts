@@ -33,7 +33,6 @@ import com.squareup.picasso.Picasso;
 import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.fragments.DiscussionListFragment;
 import net.mabako.steamgifts.fragments.GiveawayListFragment;
-import net.mabako.steamgifts.fragments.SavedGiveawaysFragment;
 import net.mabako.steamgifts.fragments.SearchableListFragment;
 import net.mabako.steamgifts.fragments.UserDetailFragment;
 import net.mabako.steamgifts.intro.IntroActivity;
@@ -130,11 +129,10 @@ public class Navbar {
                         } else if (identifier == R.string.preferences) {
                             activity.startActivityForResult(new Intent(activity, SettingsActivity.class), CommonActivity.REQUEST_SETTINGS);
 
-                        } else if (identifier == R.string.navigation_giveaways_saved) {
-                            activity.loadFragment(new SavedGiveawaysFragment());
-                            ActionBar actionBar = activity.getSupportActionBar();
-                            if (actionBar != null)
-                                actionBar.setSubtitle(null);
+                        } else if (identifier == R.string.navigation_saved_elements) {
+                            Intent intent = new Intent(activity, DetailActivity.class);
+                            intent.putExtra(DetailActivity.ARG_SAVED_ELEMENTS, true);
+                            activity.startActivityForResult(intent, CommonActivity.REQUEST_LOGIN_PASSIVE);
                         } else {
                             for (GiveawayListFragment.Type type : GiveawayListFragment.Type.values()) {
                                 if (type.getNavbarResource() == identifier) {
@@ -146,6 +144,9 @@ public class Navbar {
                             for (DiscussionListFragment.Type type : DiscussionListFragment.Type.values()) {
                                 if (type.getNavbarResource() == identifier) {
                                     activity.loadFragment(DiscussionListFragment.newInstance(type, null));
+                                    ActionBar actionBar = activity.getSupportActionBar();
+                                    if (actionBar != null)
+                                        actionBar.setSubtitle(null);
                                     break;
                                 }
                             }
@@ -251,6 +252,7 @@ public class Navbar {
         addDiscussionItems(account);
 
         drawer.addItems(new DividerDrawerItem());
+        drawer.addItem(new PrimaryDrawerItem().withName(R.string.navigation_saved_elements).withIdentifier(R.string.navigation_saved_elements).withSelectable(false).withIcon(FontAwesome.Icon.faw_star));
         drawer.addItem(new PrimaryDrawerItem().withName(R.string.preferences).withIdentifier(R.string.preferences).withSelectable(false).withIcon(FontAwesome.Icon.faw_cog));
         drawer.addItem(new PrimaryDrawerItem().withName(R.string.navigation_help).withIdentifier(R.string.navigation_help).withSelectable(false).withIcon(FontAwesome.Icon.faw_question));
         drawer.addItem(new PrimaryDrawerItem().withName(R.string.navigation_about).withIdentifier(R.string.navigation_about).withSelectable(false).withIcon(FontAwesome.Icon.faw_info));
@@ -274,7 +276,6 @@ public class Navbar {
                     new PrimaryDrawerItem().withName(R.string.navigation_giveaways_wishlist).withIdentifier(R.string.navigation_giveaways_wishlist).withIcon(FontAwesome.Icon.faw_heart));
         }
         drawer.addItems(new PrimaryDrawerItem().withName(R.string.navigation_giveaways_new).withIdentifier(R.string.navigation_giveaways_new).withIcon(FontAwesome.Icon.faw_refresh));
-        // TODO drawer.addItems(new PrimaryDrawerItem().withName(R.string.navigation_giveaways_saved).withIdentifier(R.string.navigation_giveaways_saved).withIcon(FontAwesome.Icon.faw_star));
     }
 
     /**

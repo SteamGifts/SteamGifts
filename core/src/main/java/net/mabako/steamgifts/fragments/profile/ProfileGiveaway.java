@@ -1,5 +1,7 @@
 package net.mabako.steamgifts.fragments.profile;
 
+import android.content.Context;
+
 import net.mabako.steamgifts.data.Giveaway;
 
 /**
@@ -8,6 +10,7 @@ import net.mabako.steamgifts.data.Giveaway;
  * giveaway, as there's no SG game id (different from the store app ids).
  */
 public class ProfileGiveaway extends Giveaway {
+    private static final long serialVersionUID = 5980737736788961021L;
     private boolean deleted;
 
     public ProfileGiveaway(String giveawayId) {
@@ -16,17 +19,26 @@ public class ProfileGiveaway extends Giveaway {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
-        if (deleted)
-            setTimeRemaining("Deleted");
+    }
+
+    public boolean isDeleted() {
+        return deleted;
     }
 
     @Override
     public boolean isOpen() {
-        return deleted ? false : super.isOpen();
+        return !deleted && super.isOpen();
     }
 
     @Override
     public boolean isEntered() {
-        return deleted ? false : super.isEntered();
+        return !deleted && super.isEntered();
+    }
+
+    @Override
+    public String getRelativeEndTime(Context context) {
+        if (deleted)
+            return "Deleted";
+        return super.getRelativeEndTime(context);
     }
 }

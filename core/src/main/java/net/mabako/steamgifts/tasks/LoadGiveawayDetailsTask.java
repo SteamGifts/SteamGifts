@@ -154,11 +154,6 @@ public class LoadGiveawayDetailsTask extends AsyncTask<Void, Void, GiveawayExtra
                 extras.setErrorMessage(error.text().trim());
         }
 
-        // Time left
-        Element time = document.select("div.featured__columns div.featured__column > span").first();
-        if (time != null)
-            extras.setTimeRemaining(time.text().trim());
-
         // Load comments
         Element rootCommentNode = document.select(".comments").first();
         if (rootCommentNode != null)

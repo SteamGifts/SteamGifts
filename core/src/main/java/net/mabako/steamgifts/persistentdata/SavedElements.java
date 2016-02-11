@@ -102,7 +102,7 @@ public abstract class SavedElements<T> implements Comparator<T> {
         private final SavedElements<T> parent;
 
         public GiveawayOpenHelper(Context context, SavedElements<T> parent) {
-            super(context, "savedelements", null, 1);
+            super(context, "savedelements", null, 2);
             this.parent = parent;
         }
 
@@ -165,6 +165,10 @@ public abstract class SavedElements<T> implements Comparator<T> {
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             Log.w(TAG, "Upgrading database from version " + oldVersion + " to " + newVersion);
+
+            // Delete all saved giveawys
+            if (oldVersion < 2)
+                db.delete(SavedGiveaways.DB_TABLE, null, null);
         }
     }
 }

@@ -64,14 +64,14 @@ public class WonListFragment extends ListFragment<GiveawayAdapter> implements IA
                     Uri uri = Uri.parse(Utils.extractAvatar(image.attr("style")));
                     List<String> pathSegments = uri.getPathSegments();
                     if (pathSegments.size() >= 3) {
-                        giveaway.setGameId(Integer.parseInt(pathSegments.get(2)));
-                        giveaway.setType("apps".equals(pathSegments.get(1)) ? Game.Type.APP : Game.Type.SUB);
+                        giveaway.setGame(new Game("apps".equals(pathSegments.get(1)) ? Game.Type.APP : Game.Type.SUB, Integer.parseInt(pathSegments.get(2))));
                     }
                 }
 
                 giveaway.setPoints(-1);
                 giveaway.setEntries(-1);
-                giveaway.setTimeRemaining(firstColumn.select("span").text());
+                Element end = firstColumn.select("span").first();
+                giveaway.setEndTime(end.attr("title"), end.text());
 
                 // Has any feedback option been picked yet?
                 // If so, this would be == 1, 0 hidden items implies both feedback options are currently available to be picked.

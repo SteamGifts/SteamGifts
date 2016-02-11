@@ -64,8 +64,7 @@ public class CreatedListFragment extends ListFragment<GiveawayAdapter> implement
                     Uri uri = Uri.parse(Utils.extractAvatar(image.attr("style")));
                     List<String> pathSegments = uri.getPathSegments();
                     if (pathSegments.size() >= 3) {
-                        giveaway.setGameId(Integer.parseInt(pathSegments.get(2)));
-                        giveaway.setType("apps".equals(pathSegments.get(1)) ? Game.Type.APP : Game.Type.SUB);
+                        giveaway.setGame(new Game("apps".equals(pathSegments.get(1)) ? Game.Type.APP : Game.Type.SUB, Integer.parseInt(pathSegments.get(2))));
                     }
                 }
 
@@ -74,7 +73,9 @@ public class CreatedListFragment extends ListFragment<GiveawayAdapter> implement
 
                 giveaway.setPoints(-1);
                 giveaway.setEntries(Integer.parseInt(columns.first().text().replace(",", "")));
-                giveaway.setTimeRemaining(firstColumn.select("span > span").text());
+
+                Element end = firstColumn.select("span > span").first();
+                giveaway.setEndTime(end.attr("title"), end.text());
 
                 giveaway.setEntered("Unsent".equals(columns.get(1).text()));
                 giveaway.setDeleted(!element.select(".table__column__deleted").isEmpty());

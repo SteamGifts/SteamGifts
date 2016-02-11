@@ -9,12 +9,11 @@
     <string name="navigation_giveaways_group">Group</string>
     <string name="navigation_giveaways_wishlist">Wishlist</string>
     <string name="navigation_giveaways_new">New</string>
-    <string name="navigation_giveaways_saved">Starred</string>
+    <string name="navigation_saved_elements">Starred</string>
     <string name="navigation_giveaways_all_title">All Giveaways</string>
     <string name="navigation_giveaways_group_title">Group Giveaways</string>
     <string name="navigation_giveaways_wishlist_title">Wishlist Giveaways</string>
     <string name="navigation_giveaways_new_title">New Giveaways</string>
-    <string name="navigation_giveaways_saved_title">Starred Giveaways</string>
 
     <!-- Navigation for Discussions -->
     <string name="navigation_discussions">Discussions</string>
@@ -121,11 +120,13 @@
     <string name="user_giveaways_created_count">%1$d sent\n%2$s</string>
     <string name="user_giveaway_won_count">%1$d won\n%2$s</string>
     <string name="private_giveaway">This giveaway is private.</string>
+    <string name="view_profile">View Profile</string>
 
     <string name="user_tab_notifications">Messages</string>
     <string name="user_tab_won">Won</string>
     <string name="user_tab_entered">Entered</string>
     <string name="user_tab_created">Created</string>
+    <string name="mark_read">Mark as Read</string>
 
     <!-- sgtools.info -->
     <string name="sgtools_loading">Loading SGTools</string>
@@ -166,15 +167,6 @@
     <string name="preference_default_app">Chrome Tabs</string>
     <string name="preference_default_app_summary">This app is not the default handler for SteamGifts URLs. Custom Chrome Tabs only open links in this app if it is set as default app.\n\nGo to SteamGifts in your browser and open any giveaway or discussion. When asked, select this app as default.</string>
 
-    <!--  Strings for possible PreferenceActivity Back/Next buttons -->
-    <string name="back_button_label">Back</string>
-    <string name="next_button_label">Next</string>
-
-    <!-- Optional button to Skip a PreferenceActivity [CHAR LIMIT=20] -->
-    <string name="skip_button_label">Skip</string>
-    <string name="view_profile">View Profile</string>
-    <string name="mark_read">Mark as Read</string>
-
     <!-- Intro -->
     <string name="intro_giveaway_context">Long-Clicking a Giveaway or Comment to quickly enter or comment.</string>
     <string name="intro_giveaway_context_header">Context Menus</string>
@@ -202,12 +194,18 @@
     <string name="filter_points">Points</string>
     <string name="filter_entered_checkbox">Hide entered Giveaways</string>
     <string name="filter_whitelist_or_group_checkbox">Show group and whitelist giveaways regardless of level</string>
+    <string name="filter_entries_per_copy">Show entries per copy (instead of total entries)</string>
+    <string name="filter_region_restricted_checkbox">Only region restricted Giveaways</string>
 
     <!-- Saving Giveaways -->
     <string name="add_saved_giveaway">Star Giveaway</string>
     <string name="remove_saved_giveaway">Unstar Giveaway</string>
-    <string name="added_saved_giveaway"><![CDATA[Giveaway was starred and can be found under Giveaways > Starred.]]></string>
+    <string name="added_saved_giveaway"><![CDATA[Giveaway was starred and can be found under Menu > Starred.]]></string>
     <string name="removed_saved_giveaway">Giveaway is no longer starred.</string>
+
+    <string name="saved_elements_title">Starred</string>
+    <string name="saved_giveaways_title">Giveaways</string>
+    <string name="remove_all_entered_saved">Remove Entered Giveaways</string>
 
     <!-- Sync -->
     <string name="sync_details">Public Steam data is automatically synced every few days. You can however use the option below to sync your profile.</string>
@@ -227,11 +225,10 @@
     <string name="placeholder_comment_text">Comment</string>
 
     <!-- Notifications -->
+    <string name="notifications_title">Notifications</string>
     <string name="notification_user_replied_to_you">%s replied to you</string>
     <string name="notification_new_messages">%d new messages</string>
 
     <!-- unsorted -->
     <string name="could_not_load_image">Could not load image.</string>
-    <string name="filter_entries_per_copy">Show entries per copy (instead of total entries)</string>
-    <string name="filter_region_restricted_checkbox">Only region restricted Giveaways</string>
 </resources>

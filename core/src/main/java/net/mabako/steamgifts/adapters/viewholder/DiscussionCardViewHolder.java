@@ -1,5 +1,6 @@
 package net.mabako.steamgifts.adapters.viewholder;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -18,6 +19,7 @@ import net.mabako.steamgifts.fragments.util.DiscussionDetailsCard;
 
 public class DiscussionCardViewHolder extends RecyclerView.ViewHolder {
     private final ICommentableFragment fragment;
+    private final Context context;
 
     private final View progressBar;
     private final TextView discussionTime;
@@ -29,9 +31,10 @@ public class DiscussionCardViewHolder extends RecyclerView.ViewHolder {
 
     private final Button commentDiscussion;
 
-    public DiscussionCardViewHolder(View v, final DiscussionDetailFragment fragment) {
+    public DiscussionCardViewHolder(View v, DiscussionDetailFragment fragment, Context context) {
         super(v);
         this.fragment = fragment;
+        this.context = context;
 
         progressBar = v.findViewById(R.id.progressBar);
         user = (TextView) v.findViewById(R.id.user);
@@ -67,7 +70,7 @@ public class DiscussionCardViewHolder extends RecyclerView.ViewHolder {
                     fragment.showProfile(discussion.getCreator());
                 }
             });
-            discussionTime.setText("{faw-calendar-o} " + discussion.getTimeCreated());
+            discussionTime.setText("{faw-calendar-o} " + discussion.getRelativeCreatedTime(context));
 
             if (extras == null) {
                 // Still loading...
