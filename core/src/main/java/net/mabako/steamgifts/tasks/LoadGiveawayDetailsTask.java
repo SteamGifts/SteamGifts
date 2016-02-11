@@ -89,6 +89,8 @@ public class LoadGiveawayDetailsTask extends AsyncTask<Void, Void, GiveawayExtra
         Element element = document.select(".featured__inner-wrap").first();
 
         // Basic information
+        if (linkUri.getPathSegments().size() < 3)
+            throw new IllegalStateException("Too few path segments. " + linkUri.getPath());
         String giveawayLink = linkUri.getPathSegments().get(1);
         String giveawayName = linkUri.getPathSegments().get(2);
 
