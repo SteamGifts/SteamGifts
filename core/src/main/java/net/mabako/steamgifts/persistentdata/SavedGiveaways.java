@@ -18,6 +18,7 @@ public class SavedGiveaways extends SavedElements<Giveaway> {
         Giveaway giveaway = gson.fromJson(json, Giveaway.class);
 
         giveaway.setEntries(-1);
+        giveaway.setEntered(false);
 
         return giveaway;
     }
