@@ -262,6 +262,11 @@ public class GiveawayDetailFragment extends DetailFragment implements IHasEntera
             ((DetailActivity) getActivity()).addFragmentUnlessExists(giveaway.getType() == Game.Type.APP ? StoreAppFragment.newInstance(giveaway.getGameId(), false) : StoreSubFragment.newInstance(giveaway.getGameId()));
             fragmentAdded = true;
         }
+
+        if (savedGiveaways != null && savedGiveaways.exists(giveaway.getGiveawayId())) {
+            // refresh the saved giveaway... this is probably only noteworthy if, for some reason, the giveaway has begun after we starred it.
+            savedGiveaways.add(giveaway, giveaway.getGiveawayId());
+        }
     }
 
     public void onPostGiveawayLoaded(Giveaway giveaway) {
