@@ -76,6 +76,8 @@
     <string name="actions">Actions</string>
     <string name="add_comment">Comment</string>
     <string name="edit_comment">Edit Comment</string>
+    <string name="delete_comment">Delete Comment</string>
+    <string name="undelete_comment">Undelete Comment</string>
     <string name="send_comment">Send</string>
 
     <string name="comment_sent">Comment sent, please reload to see.</string>

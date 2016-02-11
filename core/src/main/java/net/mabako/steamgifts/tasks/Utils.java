@@ -1,6 +1,7 @@
 package net.mabako.steamgifts.tasks;
 
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import net.mabako.steamgifts.data.Comment;
@@ -42,52 +43,14 @@ public final class Utils {
             Collections.reverse(children);
 
         for (Element c : children) {
-            Element thisComment = c.child(0);
-
-            // Save the content of the edit state for a bit & remove the edit state from being rendered.
-            Element editState = thisComment.select(".comment__edit-state.is-hidden textarea[name=description]").first();
-            String editableContent = null;
-            if (editState != null)
-                editableContent = editState.text();
-            thisComment.select(".comment__edit-state").html("");
-
-            Element authorNode = thisComment.select(".comment__username").first();
-            String author = authorNode.text();
-            boolean isOp = authorNode.hasClass("comment__username--op");
-
-            String avatar = null;
-            Element avatarNode = thisComment.select(".global__image-inner-wrap").first();
-            if (avatarNode != null)
-                avatar = extractAvatar(avatarNode.attr("style"));
-
-            Element timeCreated = thisComment.select(".comment__actions > div span").first();
-
-            Uri permalinkUri = Uri.parse(thisComment.select(".comment__actions a[href^=/go/comment").first().attr("href"));
-
-            int commentId = 0;
+            long commentId = 0;
             try {
                 commentId = Integer.parseInt(c.attr("data-comment-id"));
             } catch (NumberFormatException e) {
+                /* do nothing */
             }
 
-            Comment comment = new Comment(commentId, author, depth, avatar, isOp);
-            comment.setPermalinkId(permalinkUri.getPathSegments().get(2));
-            comment.setEditableContent(editableContent);
-            comment.setCreatedTime(timeCreated.attr("title"));
-
-
-            Element desc = thisComment.select(".comment__description").first();
-            String content = loadAttachedImages(comment, desc);
-            comment.setContent(content);
-
-            // check if the comment is deleted
-            comment.setDeleted(thisComment.select(".comment__summary").first().select(".comment__delete-state").size() == 1);
-
-            comment.setHighlighted(thisComment.select(".comment__parent > .comment__envelope").size() != 0);
-
-            Element roleName = thisComment.select(".comment__role-name").first();
-            if (roleName != null)
-                comment.setAuthorRole(roleName.text().replace("(", "").replace(")", ""));
+            Comment comment = loadComment(c.child(0), commentId, depth);
 
             // add this
             parent.addComment(comment);
@@ -95,6 +58,60 @@ public final class Utils {
             // Add all children
             loadComments(c.select(".comment__children").first(), parent, depth + 1, false);
         }
+    }
+
+    /**
+     * Load a single comment
+     *
+     * @param element   comment HTML element
+     * @param commentId the id of  the comment to be loaded
+     * @param depth     the depth at which to display said comment
+     * @return the new comment
+     */
+    @NonNull
+    public static Comment loadComment(Element element, long commentId, int depth) {
+        // Save the content of the edit state for a bit & remove the edit state from being rendered.
+        Element editState = element.select(".comment__edit-state.is-hidden textarea[name=description]").first();
+        String editableContent = null;
+        if (editState != null)
+            editableContent = editState.text();
+        element.select(".comment__edit-state").html("");
+
+        Element authorNode = element.select(".comment__username").first();
+        String author = authorNode.text();
+        boolean isOp = authorNode.hasClass("comment__username--op");
+
+        String avatar = null;
+        Element avatarNode = element.select(".global__image-inner-wrap").first();
+        if (avatarNode != null)
+            avatar = extractAvatar(avatarNode.attr("style"));
+
+        Element timeCreated = element.select(".comment__actions > div span").first();
+
+        Uri permalinkUri = Uri.parse(element.select(".comment__actions a[href^=/go/comment").first().attr("href"));
+
+        Comment comment = new Comment(commentId, author, depth, avatar, isOp);
+        comment.setPermalinkId(permalinkUri.getPathSegments().get(2));
+        comment.setEditableContent(editableContent);
+        comment.setCreatedTime(timeCreated.attr("title"));
+
+
+        Element desc = element.select(".comment__description").first();
+        String content = loadAttachedImages(comment, desc);
+        comment.setContent(content);
+
+        // check if the comment is deleted
+        comment.setDeleted(element.select(".comment__summary").first().select(".comment__delete-state").size() == 1);
+
+        comment.setHighlighted(element.select(".comment__parent > .comment__envelope").size() != 0);
+
+        Element roleName = element.select(".comment__role-name").first();
+        if (roleName != null)
+            comment.setAuthorRole(roleName.text().replace("(", "").replace(")", ""));
+
+        // Do we have either a delete or undelete link?
+        comment.setDeletable(element.select(".comment__actions__button.js__comment-delete").size() + element.select(".comment__actions__button.js__comment-undelete").size() == 1);
+        return comment;
     }
 
     public static String extractAvatar(String style) {

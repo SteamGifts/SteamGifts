@@ -2,6 +2,7 @@ package net.mabako.steamgifts.adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
 import net.mabako.steamgifts.adapters.viewholder.CommentContextViewHolder;
@@ -122,7 +123,7 @@ public class CommentAdapter extends EndlessAdapter {
      * @param commentId
      * @return comment with the given id, if found, null otherwise
      */
-    public Comment findItem(int commentId) {
+    public Comment findItem(long commentId) {
         if (commentId == 0)
             return null;
 
@@ -146,5 +147,28 @@ public class CommentAdapter extends EndlessAdapter {
         }
 
         return null;
+    }
+
+    /**
+     * Replace an existing comment with a new one.
+     *
+     * @param comment new comment to add, should have the same comment id as the old one
+     */
+    public void replaceComment(Comment comment) {
+        List<IEndlessAdaptable> items = getItems();
+        for (int i = 0; i < items.size(); ++i) {
+            Comment c = (Comment) items.get(i);
+            if (c.getId() == comment.getId()) {
+                // update the found comment
+                items.set(i, comment);
+
+                // notify of update
+                notifyItemChanged(comment);
+
+                return;
+            }
+        }
+
+        Log.w(CommentAdapter.class.getSimpleName(), "Comment with " + comment.getId() + " not found to update");
     }
 }

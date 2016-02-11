@@ -18,6 +18,7 @@ import net.mabako.steamgifts.adapters.viewholder.CommentContextViewHolder;
 import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.Comment;
 import net.mabako.steamgifts.fragments.interfaces.ICommentableFragment;
+import net.mabako.steamgifts.tasks.DeleteCommentTask;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -240,7 +241,7 @@ public abstract class DetailFragment extends ListFragment<CommentAdapter> implem
     /**
      * Callback for a successful comment edit request.
      */
-    public void onCommentEdited(int commentId, String newContent, String newEditableContent) {
+    public void onCommentEdited(long commentId, String newContent, String newEditableContent) {
         Comment comment = adapter.findItem(commentId);
         if (comment == null) {
             Log.d(TAG, "No comment with id " + commentId + " found");
@@ -255,6 +256,15 @@ public abstract class DetailFragment extends ListFragment<CommentAdapter> implem
         } else {
             Log.w(TAG, "Unable to update comment " + comment);
         }
+    }
+
+    @Override
+    public void deleteComment(Comment comment) {
+        new DeleteCommentTask(this, getContext(), adapter.getXsrfToken(), comment.isDeleted() ? DeleteCommentTask.DO_UNDELETE : DeleteCommentTask.DO_DELETE, comment).execute();
+    }
+
+    public void onCommentDeleted(Comment comment) {
+        adapter.replaceComment(comment);
     }
 
     /**

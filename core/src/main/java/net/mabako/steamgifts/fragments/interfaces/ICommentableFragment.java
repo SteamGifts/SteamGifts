@@ -6,4 +6,6 @@ public interface ICommentableFragment {
     void showProfile(String user);
 
     void requestComment(Comment parentComment);
+
+    void deleteComment(Comment comment);
 }

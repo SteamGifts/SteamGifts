@@ -133,7 +133,7 @@ public class WriteCommentActivity extends BaseActivity implements DialogInterfac
 
         if (comment == null) {
             Comment parent = (Comment) getIntent().getSerializableExtra(PARENT);
-            final int parentId = parent != null ? parent.getId() : 0;
+            final long parentId = parent != null ? parent.getId() : 0;
 
             task = new PostCommentTask(this, getIntent().getStringExtra(PATH), getIntent().getStringExtra(XSRF_TOKEN), text, parentId) {
                 @Override

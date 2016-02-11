@@ -18,7 +18,7 @@ public class Comment implements Serializable, IEndlessAdaptable, IImageHolder {
     private static final long serialVersionUID = -7333245576601696951L;
     public static final int VIEW_LAYOUT = R.layout.comment;
 
-    private final int id;
+    private final long id;
     private final String author;
     private CustomDateTime createdTime;
     private String content;
@@ -27,12 +27,12 @@ public class Comment implements Serializable, IEndlessAdaptable, IImageHolder {
     private final boolean op;
     private String authorRole;
 
-    private boolean deleted, highlighted;
+    private boolean deleted, deletable, highlighted;
     private String permalinkId, editableContent;
 
     private List<Image> attachedImages;
 
-    public Comment(int id, String author, int depth, String avatar, boolean isOp) {
+    public Comment(long id, String author, int depth, String avatar, boolean isOp) {
         this.id = id;
         this.author = author;
         this.depth = depth;
@@ -40,7 +40,7 @@ public class Comment implements Serializable, IEndlessAdaptable, IImageHolder {
         this.op = isOp;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -86,6 +86,14 @@ public class Comment implements Serializable, IEndlessAdaptable, IImageHolder {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public boolean isDeletable() {
+        return deletable;
+    }
+
+    public void setDeletable(boolean deletable) {
+        this.deletable = deletable;
     }
 
     public boolean isHighlighted() {

@@ -1,7 +1,6 @@
 package net.mabako.steamgifts.adapters.viewholder;
 
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
@@ -38,7 +37,8 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
     private final View commentMarker;
 
     private final Context context;
-    private View.OnClickListener writeCommentListener, editCommentListener;
+    private View.OnClickListener writeCommentListener, editCommentListener, deleteCommentListener;
+    private boolean deleted;
 
     public CommentViewHolder(View v, Context context, ICommentableFragment fragment) {
         super(v);
@@ -107,6 +107,14 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
             }
         };
 
+        deleted = comment.isDeleted();
+        deleteCommentListener = comment.getId() == 0 || !comment.isDeletable() ? null : new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fragment.deleteComment(comment);
+            }
+        };
+
         AttachedImageUtils.setFrom(itemView, comment, (CommonActivity) (((Fragment) fragment).getActivity()));
     }
 
@@ -116,7 +124,7 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
             menu.setHeaderTitle(R.string.actions);
 
             if (writeCommentListener != null) {
-                menu.add(0, 1, 0, R.string.add_comment).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                menu.add(R.string.add_comment).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         if (writeCommentListener != null)
@@ -127,11 +135,22 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
             }
 
             if (editCommentListener != null) {
-                menu.add(0, 2, 0, R.string.edit_comment).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                menu.add(R.string.edit_comment).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         if (editCommentListener != null)
                             editCommentListener.onClick(itemView);
+                        return true;
+                    }
+                });
+            }
+
+            if (deleteCommentListener != null) {
+                menu.add(deleted ? R.string.undelete_comment : R.string.delete_comment).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        if (deleteCommentListener != null)
+                            deleteCommentListener.onClick(itemView);
                         return true;
                     }
                 });

@@ -1,7 +1,6 @@
 package net.mabako.steamgifts.fragments.profile;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -82,6 +81,11 @@ public class MessageListFragment extends ListFragment<MessageAdapter> implements
 
     @Override
     public void requestComment(Comment parentComment) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void deleteComment(Comment comment) {
         throw new UnsupportedOperationException();
     }
 

@@ -6,9 +6,9 @@ import org.jsoup.Connection;
 
 public abstract class PostCommentTask extends AjaxTask<Activity> {
     private final String description;
-    private final int parentId;
+    private final long parentId;
 
-    public PostCommentTask(Activity activity, String path, String xsrfToken, String description, int parentId) {
+    public PostCommentTask(Activity activity, String path, String xsrfToken, String description, long parentId) {
         super(activity, activity, xsrfToken, "comment_new");
 
         setUrl("http://www.steamgifts.com/" + path);
