@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -103,6 +104,7 @@ public class SavedGiveawaysFragment extends ListFragment<GiveawayAdapter> implem
             enteredGameListTask.cancel(true);
         }
         enteredGameListTask = new LoadEnteredGameListTask(this, 1);
+        enteredGameListTask.execute();
     }
 
 
@@ -151,34 +153,36 @@ public class SavedGiveawaysFragment extends ListFragment<GiveawayAdapter> implem
      */
     @Override
     public void addItems(List<? extends IEndlessAdaptable> items, boolean clearExistingItems) {
-        Log.d(TAG, "Fetched some " + items.size() + " entries");
+        if (items != null) {
+            // closed or not deleted
+            boolean foundAnyClosedGiveaways = false;
 
-        // closed or not deleted
-        boolean foundAnyClosedGiveaways = false;
+            // do nothing much except update the status of existing giveaways.
+            for (IEndlessAdaptable endlessAdaptable : items) {
+                ProfileGiveaway giveaway = (ProfileGiveaway) endlessAdaptable;
+                Log.d(TAG, giveaway.getGiveawayId() + " ~> " + giveaway.isOpen() + ", " + giveaway.isDeleted());
+                if (!giveaway.isOpen() && !giveaway.isDeleted()) {
+                    foundAnyClosedGiveaways = true;
+                    break;
+                }
 
-        // do nothing much except update the status of existing giveaways.
-        for (IEndlessAdaptable endlessAdaptable : items) {
-            ProfileGiveaway giveaway = (ProfileGiveaway) endlessAdaptable;
-            Log.d(TAG, giveaway.getGiveawayId() + " ~> " + giveaway.isOpen() + ", " + giveaway.isDeleted());
-            if (!giveaway.isOpen() && !giveaway.isDeleted()) {
-                foundAnyClosedGiveaways = true;
-                break;
+                Giveaway existingGiveaway = adapter.findItem(giveaway.getGiveawayId());
+                if (existingGiveaway != null) {
+                    existingGiveaway.setEntries(giveaway.getEntries());
+                    existingGiveaway.setEntered(true);
+                    adapter.notifyItemChanged(existingGiveaway);
+                }
             }
 
-            Giveaway existingGiveaway = adapter.findItem(giveaway.getGiveawayId());
-            if (existingGiveaway != null) {
-                existingGiveaway.setEntries(giveaway.getEntries());
-                existingGiveaway.setEntered(true);
-                adapter.notifyItemChanged(existingGiveaway);
+            // have we found any non-closed giveaways?
+            if (foundAnyClosedGiveaways) {
+                enteredGameListTask = null;
+            } else {
+                enteredGameListTask = new LoadEnteredGameListTask(this, enteredGameListTask.getPage() + 1);
+                enteredGameListTask.execute();
             }
-        }
-
-        // have we found any non-closed giveaways?
-        if (foundAnyClosedGiveaways) {
-            enteredGameListTask = null;
         } else {
-            enteredGameListTask = new LoadEnteredGameListTask(this, enteredGameListTask.getPage() + 1);
-            enteredGameListTask.execute();
+            showSnack("Failed to update entered giveaways", Snackbar.LENGTH_LONG);
         }
     }
 
