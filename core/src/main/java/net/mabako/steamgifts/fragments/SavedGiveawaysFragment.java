@@ -1,12 +1,20 @@
 package net.mabako.steamgifts.fragments;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 
 import net.mabako.steamgifts.adapters.GiveawayAdapter;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
@@ -21,13 +29,14 @@ import net.mabako.steamgifts.persistentdata.SavedGiveaways;
 import net.mabako.steamgifts.tasks.EnterLeaveGiveawayTask;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Show a list of saved giveaways.
  */
 // TODO implements IHasEnterableGiveaways?
-public class SavedGiveawaysFragment extends ListFragment<GiveawayAdapter> implements IActivityTitle, IHasEnterableGiveaways {
+public class SavedGiveawaysFragment extends ListFragment<SavedGiveawaysFragment.SavedGiveawaysAdapter> implements IActivityTitle, IHasEnterableGiveaways {
     private static final String TAG = SavedGiveawaysFragment.class.getSimpleName();
 
     private SavedGiveaways savedGiveaways;
@@ -47,6 +56,15 @@ public class SavedGiveawaysFragment extends ListFragment<GiveawayAdapter> implem
     public void onAttach(Context context) {
         super.onAttach(context);
         savedGiveaways = new SavedGiveaways(getContext());
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+
+        setHasOptionsMenu(true);
+
+        return view;
     }
 
     @Override
@@ -81,10 +99,29 @@ public class SavedGiveawaysFragment extends ListFragment<GiveawayAdapter> implem
         }
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.saved_giveaways_menu, menu);
+        menu.findItem(R.id.remove_all_entered_saved).setVisible(adapter.getEnteredItemCount() > 0);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.remove_all_entered_saved) {
+            for (Giveaway enteredGiveaway : adapter.getEnteredItems()) {
+                savedGiveaways.remove(enteredGiveaway.getGiveawayId());
+                adapter.removeGiveaway(enteredGiveaway.getGiveawayId());
+            }
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
     @NonNull
     @Override
-    protected GiveawayAdapter createAdapter() {
-        return new GiveawayAdapter(-1, false, PreferenceManager.getDefaultSharedPreferences(getContext()));
+    protected SavedGiveawaysAdapter createAdapter() {
+        return new SavedGiveawaysAdapter(-1, false, PreferenceManager.getDefaultSharedPreferences(getContext()));
     }
 
     @Override
@@ -154,6 +191,10 @@ public class SavedGiveawaysFragment extends ListFragment<GiveawayAdapter> implem
                 }
             }
 
+            FragmentActivity activity = getActivity();
+            if (activity != null)
+                activity.supportInvalidateOptionsMenu();
+
             // have we found any non-closed giveaways?
             if (foundAnyClosedGiveaways) {
                 enteredGameListTask = null;
@@ -189,5 +230,37 @@ public class SavedGiveawaysFragment extends ListFragment<GiveawayAdapter> implem
 
         if (propagate)
             GiveawayListFragmentStack.onEnterLeaveResult(giveawayId, what, success);
+    }
+
+    /**
+     * Adapter with some useful functions for saved items.
+     */
+    public static class SavedGiveawaysAdapter extends GiveawayAdapter {
+        private static final long serialVersionUID = -6841859269105451683L;
+
+        private SavedGiveawaysAdapter(int itemsPerPage, boolean filterItems, SharedPreferences sharedPreferences) {
+            super(itemsPerPage, filterItems, sharedPreferences);
+        }
+
+        public int getEnteredItemCount() {
+            int entered = 0;
+
+            for (IEndlessAdaptable item : getItems()) {
+                if (item instanceof Giveaway && ((Giveaway) item).isEntered())
+                    ++entered;
+            }
+
+            return entered;
+        }
+
+        public List<Giveaway> getEnteredItems() {
+            List<Giveaway> entered = new ArrayList<>();
+            for (IEndlessAdaptable item : getItems()) {
+                if (item instanceof Giveaway && ((Giveaway) item).isEntered())
+                    entered.add((Giveaway) item);
+            }
+
+            return entered;
+        }
     }
 }
