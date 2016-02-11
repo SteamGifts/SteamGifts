@@ -124,11 +124,11 @@ public class Giveaway extends BasicGiveaway implements IEndlessAdaptable {
     }
 
     public String getRelativeEndTime(Context context) {
-        return endTime.toString(context);
+        return endTime != null ? endTime.toString(context) : null;
     }
 
     public String getRelativeCreatedTime(Context context) {
-        return createdTime.toString(context);
+        return createdTime != null ? createdTime.toString(context) : null;
     }
 
     public boolean isOpen() {
@@ -185,7 +185,7 @@ public class Giveaway extends BasicGiveaway implements IEndlessAdaptable {
     }
 
     public Calendar getEndTime() {
-        return endTime.getCalendar();
+        return endTime != null ? endTime.getCalendar() : null;
     }
 
     public void setEndTime(@NonNull String endTime, @NonNull String relativeEndTime) {
@@ -193,7 +193,7 @@ public class Giveaway extends BasicGiveaway implements IEndlessAdaptable {
     }
 
     public Calendar getCreatedTime() {
-        return createdTime.getCalendar();
+        return createdTime != null ? createdTime.getCalendar() : null;
     }
 
     public void setCreatedTime(@NonNull String createdTime) {

@@ -46,13 +46,12 @@ public class Discussion extends BasicDiscussion implements IEndlessAdaptable {
         this.creator = creator;
     }
 
-
     public Calendar getCreatedTime() {
-        return createdTime.getCalendar();
+        return createdTime != null ? createdTime.getCalendar() : null;
     }
 
     public String getRelativeCreatedTime(Context context) {
-        return createdTime.toString(context);
+        return createdTime != null ? createdTime.toString(context) : null;
     }
 
     public void setCreatedTime(String time) {

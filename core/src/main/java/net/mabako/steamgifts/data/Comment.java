@@ -49,11 +49,11 @@ public class Comment implements Serializable, IEndlessAdaptable, IImageHolder {
     }
 
     public Calendar getCreatedTime() {
-        return createdTime.getCalendar();
+        return createdTime != null ? createdTime.getCalendar() : null;
     }
 
     public String getRelativeCreatedTime(Context context) {
-        return createdTime.toString(context);
+        return createdTime != null ? createdTime.toString(context) : null;
     }
 
     public void setCreatedTime(String time) {
