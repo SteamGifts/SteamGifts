@@ -133,7 +133,7 @@ public class Giveaway extends BasicGiveaway implements IEndlessAdaptable {
 
     public boolean isOpen() {
         // FIXME
-        return endTime.isInTheFuture();
+        return endTime == null || endTime.isInTheFuture();
     }
 
     public boolean isEntered() {

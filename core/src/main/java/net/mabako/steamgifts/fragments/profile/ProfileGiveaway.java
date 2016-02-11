@@ -23,12 +23,12 @@ public class ProfileGiveaway extends Giveaway {
 
     @Override
     public boolean isOpen() {
-        return deleted && super.isOpen();
+        return !deleted && super.isOpen();
     }
 
     @Override
     public boolean isEntered() {
-        return deleted && super.isEntered();
+        return !deleted && super.isEntered();
     }
 
     @Override
