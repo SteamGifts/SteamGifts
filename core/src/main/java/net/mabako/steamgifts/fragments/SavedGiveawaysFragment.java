@@ -7,9 +7,6 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import net.mabako.steamgifts.adapters.GiveawayAdapter;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
@@ -44,18 +41,6 @@ public class SavedGiveawaysFragment extends ListFragment<GiveawayAdapter> implem
         adapter.setFragmentValues(getActivity(), this, savedGiveaways);
 
         GiveawayListFragmentStack.addFragment(this);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
-
-        if (savedInstanceState == null) {
-            enteredGameListTask = new LoadEnteredGameListTask(this, 1);
-            enteredGameListTask.execute();
-        }
-
-        return view;
     }
 
     @Override
@@ -96,18 +81,6 @@ public class SavedGiveawaysFragment extends ListFragment<GiveawayAdapter> implem
         }
     }
 
-    @Override
-    protected void refresh() {
-        super.refresh();
-
-        if (enteredGameListTask != null) {
-            enteredGameListTask.cancel(true);
-        }
-        enteredGameListTask = new LoadEnteredGameListTask(this, 1);
-        enteredGameListTask.execute();
-    }
-
-
     @NonNull
     @Override
     protected GiveawayAdapter createAdapter() {
@@ -131,6 +104,13 @@ public class SavedGiveawaysFragment extends ListFragment<GiveawayAdapter> implem
 
         super.addItems(savedGiveaways.all(), true);
         adapter.reachedTheEnd();
+
+        // Load all entered giveaways
+        if (enteredGameListTask != null)
+            enteredGameListTask.cancel(true);
+
+        enteredGameListTask = new LoadEnteredGameListTask(this, 1);
+        enteredGameListTask.execute();
     }
 
     @Override
