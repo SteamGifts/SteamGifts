@@ -56,6 +56,7 @@
     <string name="about_forum_thread">Discuss on SteamGifts.com</string>
     <string name="about_mail">Contact via Mail</string>
     <string name="about_source_code">Source Code</string>
+    <string name="about_donate_via_paypal">Donate via PayPal</string>
 
     <!-- Details: Enter/Leave/Comment -->
     <string name="enter_giveaway">Enter</string>

@@ -58,18 +58,18 @@
                 android:textColor="?attr/lightTextColor"
                 tools:text="Version Code" />
 
-            <Button
-                android:id="@+id/forum_thread"
-                style="@style/MediumButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="@string/about_forum_thread" />
-
-            <LinearLayout
+            <com.wefika.flowlayout.FlowLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center">
+                android:gravity="center_horizontal">
+
+                <Button
+                    android:id="@+id/forum_thread"
+                    style="@style/MediumButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/about_forum_thread" />
 
                 <Button
                     android:id="@+id/mail"
@@ -79,12 +79,20 @@
                     android:text="@string/about_mail" />
 
                 <Button
+                    android:id="@+id/donate_via_paypal"
+                    style="@style/MediumButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/about_donate_via_paypal" />
+
+                <Button
                     android:id="@+id/source"
                     style="@style/MediumButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/about_source_code" />
-            </LinearLayout>
+            </com.wefika.flowlayout.FlowLayout>
         </LinearLayout>
     </android.support.v7.widget.CardView>
 </LinearLayout>
