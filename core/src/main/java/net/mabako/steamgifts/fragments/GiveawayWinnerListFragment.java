@@ -7,14 +7,14 @@ import android.support.v4.app.Fragment;
 import android.view.Menu;
 import android.view.MenuInflater;
 
-import net.mabako.steamgifts.adapters.GiveawayGroupAdapter;
+import net.mabako.steamgifts.adapters.UserAdapter;
 import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.fragments.interfaces.IActivityTitle;
-import net.mabako.steamgifts.tasks.LoadGiveawayGroupsTask;
+import net.mabako.steamgifts.tasks.LoadGiveawayWinnersTask;
 
 import java.io.Serializable;
 
-public class GiveawayGroupListFragment extends ListFragment<GiveawayGroupAdapter> implements IActivityTitle {
+public class GiveawayWinnerListFragment extends ListFragment<UserAdapter> implements IActivityTitle {
     private static final String SAVED_PATH = "path";
     private static final String SAVED_TITLE = "title";
 
@@ -29,7 +29,7 @@ public class GiveawayGroupListFragment extends ListFragment<GiveawayGroupAdapter
     private String title;
 
     public static Fragment newInstance(String title, String path) {
-        GiveawayGroupListFragment g = new GiveawayGroupListFragment();
+        GiveawayWinnerListFragment g = new GiveawayWinnerListFragment();
 
         Bundle args = new Bundle();
         args.putString(SAVED_TITLE, title);
@@ -53,18 +53,18 @@ public class GiveawayGroupListFragment extends ListFragment<GiveawayGroupAdapter
             path = savedInstanceState.getString(SAVED_PATH);
         }
 
-        adapter.setFragmentValues(this, getContext());
+        adapter.setFragmentValues(this);
     }
 
     @NonNull
     @Override
-    protected GiveawayGroupAdapter createAdapter() {
-        return new GiveawayGroupAdapter();
+    protected UserAdapter createAdapter() {
+        return new UserAdapter();
     }
 
     @Override
     protected AsyncTask<Void, Void, ?> getFetchItemsTask(int page) {
-        return new LoadGiveawayGroupsTask(this, page, path);
+        return new LoadGiveawayWinnersTask(this, page, path);
     }
 
     @Override
@@ -74,7 +74,7 @@ public class GiveawayGroupListFragment extends ListFragment<GiveawayGroupAdapter
 
     @Override
     public int getTitleResource() {
-        return R.string.giveaway_groups;
+        return R.string.giveaway_winners;
     }
 
     @Override

@@ -143,15 +143,22 @@ public class LoadGiveawayDetailsTask extends AsyncTask<Void, Void, GiveawayExtra
         if (enterLeaveForm != null) {
             extras.setEntered(enterLeaveForm.select(".sidebar__entry-insert").hasClass("is-hidden"));
 
-            if (enterLeaveForm == document.select(".sidebar > form").first()) {
-                extras.setEnterable(true);
-            } else {
-                extras.setErrorMessage("N/A");
-            }
+            extras.setEnterable(enterLeaveForm == document.select(".sidebar > form").first());
         } else {
             Element error = document.select(".sidebar .sidebar__error").first();
             if (error != null)
                 extras.setErrorMessage(error.text().trim());
+        }
+
+        // Winners, if any
+        Element sidebarElement = document.select("a.sidebar__navigation__item__link[href$=/winners] .sidebar__navigation__item__count").first();
+        try {
+            extras.setWinners(sidebarElement == null ? null : Integer.parseInt(sidebarElement.text().replace(",", "")));
+        } catch (NumberFormatException e) {
+            if (sidebarElement != null)
+                Log.w(TAG, "Unable to parse entry count: " + sidebarElement.text());
+
+            extras.setWinners(null);
         }
 
         // Load comments

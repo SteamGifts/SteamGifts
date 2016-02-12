@@ -13,6 +13,7 @@ public class GiveawayExtras implements Serializable, ICommentHolder, IImageHolde
     private final List<Comment> loadedComments;
     private String errorMessage;
     private boolean enterable;
+    private Integer winners;
 
     private List<Image> attachedImages;
 
@@ -84,6 +85,14 @@ public class GiveawayExtras implements Serializable, ICommentHolder, IImageHolde
             attachedImages = new ArrayList<>();
 
         attachedImages.add(image);
+    }
+
+    public Integer getWinners() {
+        return winners;
+    }
+
+    public void setWinners(Integer winners) {
+        this.winners = winners;
     }
 
     @Override

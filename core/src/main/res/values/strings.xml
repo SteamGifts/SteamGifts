@@ -72,6 +72,8 @@
         <item quantity="one">%d copy</item>
         <item quantity="other">%d copies</item>
     </plurals>
+    <string name="giveaway_groups">Groups</string>
+    <string name="giveaway_winners">Winners</string>
 
     <!-- Contextual menus -->
     <string name="actions">Actions</string>

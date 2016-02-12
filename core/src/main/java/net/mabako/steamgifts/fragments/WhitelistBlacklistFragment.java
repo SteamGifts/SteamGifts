@@ -10,7 +10,7 @@ import android.view.View;
 
 import net.mabako.steamgifts.activities.DetailActivity;
 import net.mabako.steamgifts.adapters.EndlessAdapter;
-import net.mabako.steamgifts.adapters.WhitelistBlacklistAdapter;
+import net.mabako.steamgifts.adapters.UserAdapter;
 import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.BasicUser;
 import net.mabako.steamgifts.fragments.interfaces.IActivityTitle;
@@ -18,7 +18,7 @@ import net.mabako.steamgifts.fragments.interfaces.IHasWhitelistAndBlacklist;
 import net.mabako.steamgifts.tasks.LoadWhitelistBlacklistTask;
 import net.mabako.steamgifts.tasks.UpdateWhitelistBlacklistTask;
 
-public class WhitelistBlacklistFragment extends SearchableListFragment<WhitelistBlacklistAdapter> implements IHasWhitelistAndBlacklist, IActivityTitle {
+public class WhitelistBlacklistFragment extends SearchableListFragment<UserAdapter> implements IHasWhitelistAndBlacklist, IActivityTitle {
     public static final String ARG_TYPE = "whitelist-blacklist-type";
 
     private static final String SAVED_TYPE = "type";
@@ -82,8 +82,8 @@ public class WhitelistBlacklistFragment extends SearchableListFragment<Whitelist
 
     @NonNull
     @Override
-    protected WhitelistBlacklistAdapter createAdapter() {
-        return new WhitelistBlacklistAdapter();
+    protected UserAdapter createAdapter() {
+        return new UserAdapter();
     }
 
     @Override
@@ -134,11 +134,5 @@ public class WhitelistBlacklistFragment extends SearchableListFragment<Whitelist
     @Override
     public String getExtraTitle() {
         return null;
-    }
-
-    public void showProfile(String name) {
-        Intent intent = new Intent(getContext(), DetailActivity.class);
-        intent.putExtra(UserDetailFragment.ARG_USER, name);
-        getActivity().startActivity(intent);
     }
 }

@@ -14,8 +14,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import net.mabako.steamgifts.activities.CommonActivity;
+import net.mabako.steamgifts.activities.DetailActivity;
 import net.mabako.steamgifts.activities.SyncActivity;
-import net.mabako.steamgifts.activities.ViewGroupsActivity;
 import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.data.GiveawayExtras;
@@ -39,6 +39,7 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
 
     private final Button enterGiveaway;
     private final Button leaveGiveaway;
+    private final Button viewWinners;
     private final Button commentGiveaway;
     private final Button loginButton;
     private final Button errorMessage;
@@ -63,6 +64,7 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
 
         enterGiveaway = (Button) v.findViewById(R.id.enter);
         leaveGiveaway = (Button) v.findViewById(R.id.leave);
+        viewWinners = (Button) v.findViewById(R.id.winners);
         commentGiveaway = (Button) v.findViewById(R.id.comment);
         errorMessage = (Button) v.findViewById(R.id.error);
         loginButton = (Button) v.findViewById(R.id.login);
@@ -80,7 +82,7 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
         final Giveaway giveaway = card.getGiveaway();
         final GiveawayExtras extras = card.getExtras();
 
-        for (View view : new View[]{enterGiveaway, leaveGiveaway, commentGiveaway, loginButton, errorMessage, description, indicator, user, title, timeRemaining, timeCreated, entries, copies, separator, actionSeparator})
+        for (View view : new View[]{enterGiveaway, leaveGiveaway, viewWinners, commentGiveaway, loginButton, errorMessage, description, indicator, user, title, timeRemaining, timeCreated, entries, copies, separator, actionSeparator})
             view.setVisibility(View.GONE);
 
         if (giveaway == null) {
@@ -154,6 +156,9 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
                             }
                         });
                     }
+                } else if (extras.getWinners() != null) {
+                    viewWinners.setText("{faw-trophy} " + extras.getWinners());
+                    viewWinners.setVisibility(View.VISIBLE);
                 } else if (!SteamGiftsUserData.getCurrent(null).isLoggedIn()) {
                     loginButton.setVisibility(View.VISIBLE);
                 }
@@ -184,6 +189,16 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
                         leaveGiveaway.setEnabled(false);
                         fragment.requestEnterLeave(giveaway.getGiveawayId(), GiveawayDetailFragment.ENTRY_DELETE, extras.getXsrfToken());
                     }
+                }
+            });
+
+            viewWinners.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(fragment.getContext(), DetailActivity.class);
+                    intent.putExtra(DetailActivity.ARG_GIVEAWAY_DETAILS, new DetailActivity.GiveawayDetails(DetailActivity.GiveawayDetails.Type.WINNERS, giveaway.getGiveawayId() + "/" + giveaway.getName(), giveaway.getTitle()));
+
+                    fragment.getActivity().startActivityForResult(intent, CommonActivity.REQUEST_LOGIN_PASSIVE);
                 }
             });
 
@@ -226,16 +241,15 @@ public class GiveawayCardViewHolder extends RecyclerView.ViewHolder {
         if (!spans.isEmpty()) {
             indicator.setVisibility(View.VISIBLE);
 
-            CharSequence text = TextUtils.concat(spans.toArray(new Spannable[0]));
+            CharSequence text = TextUtils.concat(spans.toArray(new Spannable[spans.size()]));
             indicator.setText(text);
 
             if (giveaway.isGroup()) {
                 indicator.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(fragment.getContext(), ViewGroupsActivity.class);
-                        intent.putExtra(ViewGroupsActivity.TITLE, giveaway.getTitle());
-                        intent.putExtra(ViewGroupsActivity.PATH, giveaway.getGiveawayId() + "/" + giveaway.getName());
+                        Intent intent = new Intent(fragment.getContext(), DetailActivity.class);
+                        intent.putExtra(DetailActivity.ARG_GIVEAWAY_DETAILS, new DetailActivity.GiveawayDetails(DetailActivity.GiveawayDetails.Type.GROUPS, giveaway.getGiveawayId() + "/" + giveaway.getName(), giveaway.getTitle()));
 
                         fragment.getActivity().startActivityForResult(intent, CommonActivity.REQUEST_LOGIN_PASSIVE);
                     }

@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 
 import net.mabako.steamgifts.adapters.GiveawayAdapter;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
@@ -37,6 +38,7 @@ public class WonListFragment extends ListFragment<GiveawayAdapter> implements IA
         adapter.setFragmentValues(getActivity(), this, null);
     }
 
+    @NonNull
     @Override
     protected GiveawayAdapter createAdapter() {
         return new GiveawayAdapter(50, PreferenceManager.getDefaultSharedPreferences(getContext()));

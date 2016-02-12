@@ -3,6 +3,7 @@ package net.mabako.steamgifts.activities;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -51,10 +52,19 @@ public class CommonActivity extends BaseActivity {
     protected void updateTitle(Fragment fragment) {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setTitle(getFragmentTitle(fragment));
+            String fragmentTitle = getFragmentTitle(fragment);
+            actionBar.setTitle(fragmentTitle);
+
+            if (fragment instanceof IActivityTitle) {
+                String extraTitle = ((IActivityTitle) fragment).getExtraTitle();
+                if (extraTitle != null && !extraTitle.equals(fragmentTitle)) {
+                    actionBar.setSubtitle(extraTitle);
+                }
+            }
         }
     }
 
+    @NonNull
     protected String getFragmentTitle(Fragment fragment) {
         String title = getString(R.string.app_name);
         if (fragment instanceof IActivityTitle) {
