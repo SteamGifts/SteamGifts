@@ -202,12 +202,12 @@
     <string name="navigation_saved_elements">Bookmarks</string>
 
     <string name="add_saved_giveaway">Bookmark</string>
-    <string name="remove_saved_giveaway">Removed Bookmark</string>
+    <string name="remove_saved_giveaway">Remove Bookmark</string>
     <string name="added_saved_giveaway"><![CDATA[Giveaway was bookmarked and can be found under Menu > Bookmarks.]]></string>
     <string name="removed_saved_giveaway">Giveaway is no longer bookmarked.</string>
 
     <string name="add_saved_discussion">Bookmark</string>
-    <string name="remove_saved_discussion">Removed Bookmark</string>
+    <string name="remove_saved_discussion">Remove Bookmark</string>
     <string name="added_saved_discussion"><![CDATA[Discussion was bookmarked and can be found under Menu > Bookmarks.]]></string>
     <string name="removed_saved_discussion">Discussion is no longer bookmarked.</string>
 
