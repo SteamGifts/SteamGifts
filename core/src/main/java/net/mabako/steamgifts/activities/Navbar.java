@@ -33,6 +33,7 @@ import com.squareup.picasso.Picasso;
 import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.fragments.DiscussionListFragment;
 import net.mabako.steamgifts.fragments.GiveawayListFragment;
+import net.mabako.steamgifts.fragments.SavedFragment;
 import net.mabako.steamgifts.fragments.SearchableListFragment;
 import net.mabako.steamgifts.fragments.UserDetailFragment;
 import net.mabako.steamgifts.intro.IntroActivity;
@@ -130,9 +131,10 @@ public class Navbar {
                             activity.startActivityForResult(new Intent(activity, SettingsActivity.class), CommonActivity.REQUEST_SETTINGS);
 
                         } else if (identifier == R.string.navigation_saved_elements) {
-                            Intent intent = new Intent(activity, DetailActivity.class);
-                            intent.putExtra(DetailActivity.ARG_SAVED_ELEMENTS, true);
-                            activity.startActivityForResult(intent, CommonActivity.REQUEST_LOGIN_PASSIVE);
+                            activity.loadFragment(new SavedFragment());
+                            ActionBar actionBar = activity.getSupportActionBar();
+                            if (actionBar != null)
+                                actionBar.setSubtitle(null);
                         } else {
                             for (GiveawayListFragment.Type type : GiveawayListFragment.Type.values()) {
                                 if (type.getNavbarResource() == identifier) {
@@ -252,7 +254,7 @@ public class Navbar {
         addDiscussionItems(account);
 
         drawer.addItems(new DividerDrawerItem());
-        drawer.addItem(new PrimaryDrawerItem().withName(R.string.navigation_saved_elements).withIdentifier(R.string.navigation_saved_elements).withSelectable(false).withIcon(FontAwesome.Icon.faw_star));
+        drawer.addItem(new PrimaryDrawerItem().withName(R.string.navigation_saved_elements).withIdentifier(R.string.navigation_saved_elements).withIcon(FontAwesome.Icon.faw_star));
         drawer.addItem(new PrimaryDrawerItem().withName(R.string.preferences).withIdentifier(R.string.preferences).withSelectable(false).withIcon(FontAwesome.Icon.faw_cog));
         drawer.addItem(new PrimaryDrawerItem().withName(R.string.navigation_help).withIdentifier(R.string.navigation_help).withSelectable(false).withIcon(FontAwesome.Icon.faw_question));
         drawer.addItem(new PrimaryDrawerItem().withName(R.string.navigation_about).withIdentifier(R.string.navigation_about).withSelectable(false).withIcon(FontAwesome.Icon.faw_info));
