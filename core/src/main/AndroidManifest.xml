@@ -39,16 +39,6 @@
             android:windowSoftInputMode="adjustResize|stateAlwaysVisible" />
 
         <activity
-            android:name="net.mabako.steamgifts.activities.ViewGroupsActivity"
-            android:configChanges="orientation|screenSize"
-            android:exported="false"
-            android:parentActivityName="net.mabako.steamgifts.activities.DetailActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="net.mabako.steamgifts.activities.DetailActivity" />
-        </activity>
-
-        <activity
             android:name="net.mabako.steamgifts.activities.AboutActivity"
             android:exported="false"
             android:parentActivityName="net.mabako.steamgifts.activities.MainActivity"
