@@ -5,8 +5,8 @@ import android.view.View;
 
 import net.mabako.steamgifts.adapters.viewholder.UserViewHolder;
 import net.mabako.steamgifts.data.BasicUser;
+import net.mabako.steamgifts.data.Winner;
 import net.mabako.steamgifts.fragments.ListFragment;
-import net.mabako.steamgifts.fragments.WhitelistBlacklistFragment;
 
 import java.util.List;
 
@@ -31,7 +31,7 @@ public class UserAdapter extends EndlessAdapter {
 
     @Override
     protected RecyclerView.ViewHolder onCreateActualViewHolder(View view, int viewType) {
-        if (viewType == BasicUser.VIEW_LAYOUT)
+        if (viewType == BasicUser.VIEW_LAYOUT || viewType == Winner.VIEW_LAYOUT)
             return new UserViewHolder(view, fragment);
 
         throw new IllegalStateException("view tpye " + viewType + " is unknown");

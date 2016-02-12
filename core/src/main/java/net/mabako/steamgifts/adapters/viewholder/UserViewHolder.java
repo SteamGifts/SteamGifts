@@ -13,6 +13,7 @@ import com.squareup.picasso.Picasso;
 import net.mabako.steamgifts.activities.DetailActivity;
 import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.BasicUser;
+import net.mabako.steamgifts.data.Winner;
 import net.mabako.steamgifts.fragments.ListFragment;
 import net.mabako.steamgifts.fragments.UserDetailFragment;
 import net.mabako.steamgifts.fragments.WhitelistBlacklistFragment;
@@ -25,6 +26,7 @@ public class UserViewHolder extends RecyclerView.ViewHolder {
     private final View userHolder;
 
     private final TextView userName;
+    private final TextView userStatus;
     private final ImageView userAvatar;
 
     private final Button removeUser;
@@ -36,6 +38,7 @@ public class UserViewHolder extends RecyclerView.ViewHolder {
         userHolder = itemView.findViewById(R.id.user_holder);
 
         userName = (TextView) itemView.findViewById(R.id.user);
+        userStatus = (TextView) itemView.findViewById(R.id.status);
         userAvatar = (ImageView) itemView.findViewById(R.id.avatar);
 
         removeUser = (Button) itemView.findViewById(R.id.remove_user);
@@ -56,15 +59,17 @@ public class UserViewHolder extends RecyclerView.ViewHolder {
             });
         }
 
-        if (fragment instanceof WhitelistBlacklistFragment) {
+        if (removeUser != null && fragment instanceof WhitelistBlacklistFragment) {
             removeUser.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     ((WhitelistBlacklistFragment) fragment).requestUserListed(user, ((WhitelistBlacklistFragment) fragment).getType(), false);
                 }
             });
-        } else {
-            removeUser.setVisibility(View.GONE);
+        }
+
+        if (userStatus != null && user instanceof Winner) {
+            userStatus.setText(((Winner) user).getStatus());
         }
     }
 }

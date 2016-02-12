@@ -4,7 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import net.mabako.Constants;
-import net.mabako.steamgifts.data.BasicUser;
+import net.mabako.steamgifts.data.Winner;
 import net.mabako.steamgifts.fragments.GiveawayWinnerListFragment;
 import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
 
@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class LoadGiveawayWinnersTask extends AsyncTask<Void, Void, List<BasicUser>> {
+public class LoadGiveawayWinnersTask extends AsyncTask<Void, Void, List<Winner>> {
     private static final String TAG = LoadGiveawayGroupsTask.class.getSimpleName();
 
     private final GiveawayWinnerListFragment fragment;
@@ -33,7 +33,7 @@ public class LoadGiveawayWinnersTask extends AsyncTask<Void, Void, List<BasicUse
     }
 
     @Override
-    protected List<BasicUser> doInBackground(Void... params) {
+    protected List<Winner> doInBackground(Void... params) {
         Log.d(TAG, "Fetching giveaways for page " + page);
 
         try {
@@ -58,14 +58,14 @@ public class LoadGiveawayWinnersTask extends AsyncTask<Void, Void, List<BasicUse
     }
 
     @Override
-    protected void onPostExecute(List<BasicUser> result) {
+    protected void onPostExecute(List<Winner> result) {
         super.onPostExecute(result);
         fragment.addItems(result, page == 1);
     }
 
-    private List<BasicUser> loadAll(Document document) {
+    private List<Winner> loadAll(Document document) {
         Elements users = document.select(".table__row-inner-wrap");
-        List<BasicUser> userList = new ArrayList<>();
+        List<Winner> userList = new ArrayList<>();
 
         for (Element element : users) {
             userList.add(load(element));
@@ -73,11 +73,12 @@ public class LoadGiveawayWinnersTask extends AsyncTask<Void, Void, List<BasicUse
         return userList;
     }
 
-    private BasicUser load(Element element) {
-        BasicUser user = new BasicUser();
+    private Winner load(Element element) {
+        Winner user = new Winner();
 
         user.setName(element.select(".table__column__heading").text());
         user.setAvatar(Utils.extractAvatar(element.select(".global__image-inner-wrap").attr("style")));
+        user.setStatus(element.select(".table__column--width-small.text-center").last().text());
 
         return user;
     }
