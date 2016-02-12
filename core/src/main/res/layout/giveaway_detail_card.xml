@@ -185,6 +185,14 @@
                     android:visibility="gone" />
 
                 <Button
+                    android:id="@+id/winners"
+                    style="@style/MediumButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    tools:text="View Winners" />
+
+                <Button
                     android:id="@+id/comment"
                     style="@style/MediumButton"
                     android:layout_width="wrap_content"

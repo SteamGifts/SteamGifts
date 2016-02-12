@@ -22,6 +22,8 @@ import net.mabako.steamgifts.fragments.DetailFragment;
 import net.mabako.steamgifts.fragments.DiscussionDetailFragment;
 import net.mabako.steamgifts.fragments.FragmentAdapter;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
+import net.mabako.steamgifts.fragments.GiveawayGroupListFragment;
+import net.mabako.steamgifts.fragments.GiveawayWinnerListFragment;
 import net.mabako.steamgifts.fragments.HiddenGamesFragment;
 import net.mabako.steamgifts.fragments.SavedDiscussionsFragment;
 import net.mabako.steamgifts.fragments.SavedGiveawaysFragment;
@@ -41,6 +43,7 @@ public class DetailActivity extends CommonActivity {
     public static final String ARG_NOTIFICATIONS = "notifications";
     public static final String ARG_HIDDEN_GAMES = "view-hidden-games";
     public static final String ARG_SAVED_ELEMENTS = "saved-elements";
+    public static final String ARG_GIVEAWAY_DETAILS = "giveaway-details";
 
     /**
      * If we have a {@link net.mabako.steamgifts.fragments.DetailFragment.CommentContextInfo} instance, mark the comment associated with this instance as read.
@@ -155,6 +158,20 @@ public class DetailActivity extends CommonActivity {
             if (actionBar != null)
                 actionBar.setTitle(R.string.saved_elements_title);
 
+            return;
+        }
+
+        GiveawayDetails details = (GiveawayDetails) getIntent().getSerializableExtra(ARG_GIVEAWAY_DETAILS);
+        if (details != null) {
+            if (details.getType() == GiveawayDetails.Type.WINNERS) {
+                setContentView(R.layout.activity_one_fragment);
+                if (savedInstanceState == null)
+                    loadFragment(GiveawayWinnerListFragment.newInstance(details.getGiveawayTitle(), details.getPath()));
+            } else if (details.getType() == GiveawayDetails.Type.GROUPS) {
+                setContentView(R.layout.activity_one_fragment);
+                if (savedInstanceState == null)
+                    loadFragment(GiveawayGroupListFragment.newInstance(details.getGiveawayTitle(), details.getPath()));
+            }
             return;
         }
 
@@ -312,6 +329,37 @@ public class DetailActivity extends CommonActivity {
         @Override
         public CharSequence getPageTitle(int position) {
             return getFragmentTitle(getItem(position));
+        }
+    }
+
+    public static final class GiveawayDetails implements Serializable {
+        private static final long serialVersionUID = 8711132604891618178L;
+
+        private Type type;
+        private String path;
+        private String giveawayTitle;
+
+        public GiveawayDetails(Type type, String path, String title) {
+            this.type = type;
+            this.path = path;
+            this.giveawayTitle = title;
+        }
+
+        public Type getType() {
+            return type;
+        }
+
+        public String getPath() {
+            return path;
+        }
+
+        public String getGiveawayTitle() {
+            return giveawayTitle;
+        }
+
+        public enum Type {
+            GROUPS,
+            WINNERS
         }
     }
 }

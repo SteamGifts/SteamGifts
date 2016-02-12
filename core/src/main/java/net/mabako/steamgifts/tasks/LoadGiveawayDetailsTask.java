@@ -143,11 +143,7 @@ public class LoadGiveawayDetailsTask extends AsyncTask<Void, Void, GiveawayExtra
         if (enterLeaveForm != null) {
             extras.setEntered(enterLeaveForm.select(".sidebar__entry-insert").hasClass("is-hidden"));
 
-            if (enterLeaveForm == document.select(".sidebar > form").first()) {
-                extras.setEnterable(true);
-            } else {
-                extras.setErrorMessage("N/A");
-            }
+            extras.setEnterable(enterLeaveForm == document.select(".sidebar > form").first());
         } else {
             Element error = document.select(".sidebar .sidebar__error").first();
             if (error != null)
