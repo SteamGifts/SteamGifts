@@ -19,9 +19,6 @@ import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
 public class BaseActivity extends AppCompatActivity {
     public static final String CLOSE_NESTED = "close-nested";
 
-    private static final String PREF_KEY_SESSION_ID = "session-id";
-    private static final String PREF_ACCOUNT = "account";
-
     private boolean nightMode = false;
 
     @Override
