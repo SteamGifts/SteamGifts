@@ -7,3 +7,6 @@ android:
     - android-23
     - extra
     - extra-android-m2repository
+
+script:
+   - ./gradlew build connectedCheck --stacktrace
