@@ -177,7 +177,12 @@ public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter
             Giveaway giveaway = adapter.findItem(giveawayId);
             if (giveaway != null) {
                 giveaway.setEntered(GiveawayDetailFragment.ENTRY_INSERT.equals(what));
-                adapter.notifyItemChanged(giveaway);
+                if (GiveawayDetailFragment.ENTRY_INSERT.equals(what) && FilterData.getCurrent(getContext()).isHideEntered()) {
+                    // we want to hide entered giveaways
+                    adapter.removeGiveaway(giveawayId);
+                } else {
+                    adapter.notifyItemChanged(giveaway);
+                }
             }
         } else {
             Log.e(TAG, "Probably an error catching the result...");
