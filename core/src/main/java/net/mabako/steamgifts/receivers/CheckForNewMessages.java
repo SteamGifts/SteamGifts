@@ -177,8 +177,8 @@ public class CheckForNewMessages extends BroadcastReceiver {
                     .setPriority(NotificationCompat.PRIORITY_LOW)
                     .setCategory(NotificationCompat.CATEGORY_SOCIAL)
                     .setContentTitle(String.format(context.getString(R.string.notification_user_replied_to_you), comment.getAuthor()))
-                    .setContentText(formatString(comment, false))
-                    .setStyle(new NotificationCompat.BigTextStyle().bigText(formatString(comment, false))) /* 4.1+ */
+                    .setContentText(formatComment(comment, false))
+                    .setStyle(new NotificationCompat.BigTextStyle().bigText(formatComment(comment, false))) /* 4.1+ */
                     .setContentIntent(getViewMessageIntent(comment))
                     .setDeleteIntent(getDeleteIntent())
                     .setAutoCancel(true)
@@ -190,14 +190,14 @@ public class CheckForNewMessages extends BroadcastReceiver {
         private void showMultipleCommentNotifications(Context context, List<Comment> comments) {
             NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
             for (Comment comment : comments)
-                inboxStyle.addLine(formatString(comment, true));
+                inboxStyle.addLine(formatComment(comment, true));
 
             Notification notification = new NotificationCompat.Builder(context)
                     .setSmallIcon(R.drawable.sgwhite)
                     .setPriority(NotificationCompat.PRIORITY_LOW)
                     .setCategory(NotificationCompat.CATEGORY_SOCIAL)
                     .setContentTitle(String.format(context.getString(R.string.notification_new_messages), SteamGiftsUserData.getCurrent(context).getMessageNotification()))
-                    .setContentText(formatString(comments.get(0), true))
+                    .setContentText(formatComment(comments.get(0), true))
                     .setStyle(inboxStyle) /* 4.1+ */
                     .setNumber(SteamGiftsUserData.getCurrent(context).getMessageNotification())
                     .setContentIntent(getViewMessagesIntent())
@@ -209,8 +209,12 @@ public class CheckForNewMessages extends BroadcastReceiver {
         }
 
         @NonNull
-        private CharSequence formatString(Comment comment, boolean includeName) {
+        private CharSequence formatComment(Comment comment, boolean includeName) {
             String content = StringUtils.fromHtml(context, comment.getContent()).toString();
+            if (TextUtils.isEmpty(content) && comment.getAttachedImages() != null && comment.getAttachedImages().size() > 0) {
+                content = context.getString(R.string.notification_has_attached_image);
+            }
+
             if (includeName && comment.getAuthor() != null) {
                 SpannableString sb = new SpannableString(String.format("%s  %s", comment.getAuthor(), content));
                 sb.setSpan(new StyleSpan(Typeface.BOLD), 0, comment.getAuthor().length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
