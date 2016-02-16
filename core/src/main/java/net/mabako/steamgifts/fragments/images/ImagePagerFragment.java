@@ -1,5 +1,6 @@
 package net.mabako.steamgifts.fragments.images;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -23,6 +24,8 @@ import java.util.List;
 import java.util.Locale;
 
 public class ImagePagerFragment extends Fragment {
+    private static final String TAG = ImagePagerFragment.class.getSimpleName();
+
     private static final String ARG_IMAGES = "images";
     private List<Image> images;
 
@@ -51,6 +54,9 @@ public class ImagePagerFragment extends Fragment {
 
         fixStatusBarSpacing(view);
 
+        final ViewPager pager = (ViewPager) view.findViewById(R.id.viewPager);
+        pager.setAdapter(new PagerAdapter(getChildFragmentManager()));
+
         view.findViewById(R.id.close).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,8 +64,24 @@ public class ImagePagerFragment extends Fragment {
             }
         });
 
-        final ViewPager pager = (ViewPager) view.findViewById(R.id.viewPager);
-        pager.setAdapter(new PagerAdapter(getChildFragmentManager()));
+        view.findViewById(R.id.share).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int currentPosition = pager.getCurrentItem();
+                try {
+                    Image image = images.get(currentPosition);
+
+                    Intent intent = new Intent();
+                    intent.setAction(Intent.ACTION_SEND);
+                    intent.putExtra(Intent.EXTRA_TEXT, image.getUrl());
+                    intent.putExtra(Intent.EXTRA_SUBJECT, image.getTitle());
+                    intent.setType("text/plain");
+                    startActivity(Intent.createChooser(intent, getString(R.string.share_image)));
+                } catch (IndexOutOfBoundsException e) {
+                    Log.e(TAG, "Unable to share image cause none exists (" + currentPosition + ")", e);
+                }
+            }
+        });
 
         ViewPager.OnPageChangeListener listener = new ViewPager.OnPageChangeListener() {
             @Override
@@ -116,7 +138,7 @@ public class ImagePagerFragment extends Fragment {
 
         @Override
         public Fragment getItem(int position) {
-            Log.v(ImagePagerFragment.class.getSimpleName(), "image at position " + position + " is " + images.get(position));
+            Log.v(TAG, "image at position " + position + " is " + images.get(position));
             return ImageFragment.newInstance(images.get(position).getUrl());
         }
 
