@@ -112,6 +112,9 @@ public class SavedGiveawaysFragment extends ListFragment<SavedGiveawaysFragment.
                 savedGiveaways.remove(enteredGiveaway.getGiveawayId());
                 adapter.removeGiveaway(enteredGiveaway.getGiveawayId());
             }
+
+            if (getActivity() != null)
+                getActivity().invalidateOptionsMenu();
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -220,8 +223,14 @@ public class SavedGiveawaysFragment extends ListFragment<SavedGiveawaysFragment.
         if (success == Boolean.TRUE) {
             Giveaway giveaway = adapter.findItem(giveawayId);
             if (giveaway != null) {
+                boolean currentlyEnteredAny = adapter.getEnteredItemCount() > 0;
+
                 giveaway.setEntered(GiveawayDetailFragment.ENTRY_INSERT.equals(what));
                 adapter.notifyItemChanged(giveaway);
+
+                boolean nowEnteredAny = adapter.getEnteredItemCount() > 0;
+                if (currentlyEnteredAny != nowEnteredAny && getActivity() != null)
+                    getActivity().supportInvalidateOptionsMenu();
             }
         } else {
             Log.e(TAG, "Probably an error catching the result...");
