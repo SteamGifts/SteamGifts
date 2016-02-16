@@ -56,7 +56,7 @@ public class SteamGiftsUserData {
 
             // Load session & username if possible
             SharedPreferences sp = context.getSharedPreferences(PREF_ACCOUNT, Context.MODE_PRIVATE);
-            if (sp.contains(PREF_KEY_SESSION_ID) && sp.contains(PREF_KEY_USERNAME)) {
+            if (sp.contains(PREF_KEY_SESSION_ID) && sp.contains(PREF_KEY_USERNAME) && sp.getString(PREF_KEY_SESSION_ID, null) != null) {
                 current.setSessionId(sp.getString(PREF_KEY_SESSION_ID, null));
                 current.setName(sp.getString(PREF_KEY_USERNAME, null));
                 current.setImageUrl(sp.getString(PREF_KEY_IMAGE, null));
