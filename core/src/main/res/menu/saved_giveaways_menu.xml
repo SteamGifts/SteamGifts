@@ -4,6 +4,7 @@
 
     <item
         android:id="@+id/remove_all_entered_saved"
+        android:icon="@drawable/ic_check_all"
         android:title="@string/remove_all_entered_saved"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
 </menu>
