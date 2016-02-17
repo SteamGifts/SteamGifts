@@ -36,7 +36,6 @@ import java.util.List;
 /**
  * Show a list of saved giveaways.
  */
-// TODO implements IHasEnterableGiveaways?
 public class SavedGiveawaysFragment extends ListFragment<SavedGiveawaysFragment.SavedGiveawaysAdapter> implements IActivityTitle, IHasEnterableGiveaways {
     private static final String TAG = SavedGiveawaysFragment.class.getSimpleName();
 

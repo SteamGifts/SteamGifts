@@ -25,8 +25,6 @@ import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
 import net.mabako.steamgifts.fragments.GiveawayGroupListFragment;
 import net.mabako.steamgifts.fragments.GiveawayWinnerListFragment;
 import net.mabako.steamgifts.fragments.HiddenGamesFragment;
-import net.mabako.steamgifts.fragments.SavedDiscussionsFragment;
-import net.mabako.steamgifts.fragments.SavedGiveawaysFragment;
 import net.mabako.steamgifts.fragments.UserDetailFragment;
 import net.mabako.steamgifts.fragments.WhitelistBlacklistFragment;
 import net.mabako.steamgifts.fragments.profile.CreatedListFragment;
@@ -42,7 +40,6 @@ import java.util.UUID;
 public class DetailActivity extends CommonActivity {
     public static final String ARG_NOTIFICATIONS = "notifications";
     public static final String ARG_HIDDEN_GAMES = "view-hidden-games";
-    public static final String ARG_SAVED_ELEMENTS = "saved-elements";
     public static final String ARG_GIVEAWAY_DETAILS = "giveaway-details";
 
     /**
@@ -144,20 +141,6 @@ public class DetailActivity extends CommonActivity {
             setContentView(R.layout.activity_one_fragment);
             if (savedInstanceState == null)
                 loadFragment(HiddenGamesFragment.newInstance(null));
-            return;
-        }
-
-        if (getIntent().hasExtra(ARG_SAVED_ELEMENTS)) {
-            setContentView(R.layout.activity_paged_fragments);
-            if (savedInstanceState == null)
-                loadPagedFragments(new SavedGiveawaysFragment(), new SavedDiscussionsFragment());
-
-
-            setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-            ActionBar actionBar = getSupportActionBar();
-            if (actionBar != null)
-                actionBar.setTitle(R.string.saved_elements_title);
-
             return;
         }
 
