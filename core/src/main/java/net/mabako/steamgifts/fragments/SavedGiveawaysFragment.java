@@ -26,6 +26,7 @@ import net.mabako.steamgifts.fragments.profile.LoadEnteredGameListTask;
 import net.mabako.steamgifts.fragments.profile.ProfileGiveaway;
 import net.mabako.steamgifts.fragments.util.GiveawayListFragmentStack;
 import net.mabako.steamgifts.persistentdata.SavedGiveaways;
+import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
 import net.mabako.steamgifts.tasks.EnterLeaveGiveawayTask;
 
 import java.io.Serializable;
@@ -149,8 +150,10 @@ public class SavedGiveawaysFragment extends ListFragment<SavedGiveawaysFragment.
         if (enteredGameListTask != null)
             enteredGameListTask.cancel(true);
 
-        enteredGameListTask = new LoadEnteredGameListTask(this, 1);
-        enteredGameListTask.execute();
+        if (SteamGiftsUserData.getCurrent(getContext()).isLoggedIn()) {
+            enteredGameListTask = new LoadEnteredGameListTask(this, 1);
+            enteredGameListTask.execute();
+        }
     }
 
     @Override
@@ -211,6 +214,11 @@ public class SavedGiveawaysFragment extends ListFragment<SavedGiveawaysFragment.
 
     @Override
     public void requestEnterLeave(String giveawayId, String enterOrDelete, String xsrfToken) {
+        if (!SteamGiftsUserData.getCurrent(getContext()).isLoggedIn()) {
+            Log.w(TAG, "Could not request enter/leave giveaway, since we're not logged in");
+            return;
+        }
+
         if (enterLeaveTask != null)
             enterLeaveTask.cancel(true);
 
