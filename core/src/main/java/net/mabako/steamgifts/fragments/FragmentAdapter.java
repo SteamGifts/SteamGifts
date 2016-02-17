@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -30,6 +31,13 @@ public abstract class FragmentAdapter extends FragmentStatePagerAdapter implemen
 
     public FragmentAdapter(AppCompatActivity activity, ViewPager viewPager, Fragment... fragments) {
         super(activity.getSupportFragmentManager());
+        this.activity = activity;
+        this.viewPager = viewPager;
+        this.fragments.addAll(Arrays.asList(fragments));
+    }
+
+    public FragmentAdapter(FragmentManager fragmentManager, AppCompatActivity activity, ViewPager viewPager, Fragment... fragments) {
+        super(fragmentManager);
         this.activity = activity;
         this.viewPager = viewPager;
         this.fragments.addAll(Arrays.asList(fragments));
