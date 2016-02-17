@@ -37,7 +37,7 @@ public class SavedFragment extends Fragment {
 
     private class TitledPagerAdapter extends FragmentAdapter {
         public TitledPagerAdapter(AppCompatActivity activity, ViewPager viewPager, Fragment... fragments) {
-            super(activity, viewPager, fragments);
+            super(getChildFragmentManager(), activity, viewPager, fragments);
         }
 
         @Override
