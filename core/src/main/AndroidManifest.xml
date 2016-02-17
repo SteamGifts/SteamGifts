@@ -121,5 +121,8 @@
 
         <!-- check for new messages -->
         <receiver android:name="net.mabako.steamgifts.receivers.CheckForNewMessages" />
+
+        <!-- check for won giveaways -->
+        <receiver android:name="net.mabako.steamgifts.receivers.CheckForWonGiveaways" />
     </application>
 </manifest>

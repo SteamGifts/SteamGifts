@@ -240,6 +240,8 @@
     <string name="notifications_title">Notifications</string>
     <string name="notification_user_replied_to_you">%s replied to you</string>
     <string name="notification_new_messages">%d new messages</string>
+    <string name="notification_won_game">You won %s</string>
+    <string name="notification_won_games">You won %d games</string>
     <string name="notification_has_attached_image">Image</string>
 
     <!-- unsorted -->

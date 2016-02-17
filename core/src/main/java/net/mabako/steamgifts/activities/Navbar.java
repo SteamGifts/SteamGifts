@@ -38,6 +38,7 @@ import net.mabako.steamgifts.fragments.SearchableListFragment;
 import net.mabako.steamgifts.fragments.UserDetailFragment;
 import net.mabako.steamgifts.intro.IntroActivity;
 import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
+import net.mabako.steamgifts.receivers.AbstractNotificationCheckReceiver;
 
 public class Navbar {
     private final CommonActivity activity;
@@ -97,7 +98,7 @@ public class Navbar {
             public void onClick(View v) {
                 if (SteamGiftsUserData.getCurrent(activity).isLoggedIn()) {
                     Intent intent = new Intent(activity, DetailActivity.class);
-                    intent.putExtra(DetailActivity.ARG_NOTIFICATIONS, true);
+                    intent.putExtra(DetailActivity.ARG_NOTIFICATIONS, AbstractNotificationCheckReceiver.NotificationId.NO_TYPE);
                     activity.startActivity(intent);
                 }
             }

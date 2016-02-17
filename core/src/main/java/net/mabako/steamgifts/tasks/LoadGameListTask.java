@@ -1,11 +1,12 @@
 package net.mabako.steamgifts.tasks;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import net.mabako.Constants;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
-import net.mabako.steamgifts.fragments.ListFragment;
+import net.mabako.steamgifts.fragments.interfaces.ILoadItemsListener;
 import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
 
 import org.jsoup.Connection;
@@ -23,14 +24,16 @@ import java.util.List;
 public abstract class LoadGameListTask extends AsyncTask<Void, Void, List<IEndlessAdaptable>> {
     private static final String TAG = LoadGiveawayListTask.class.getSimpleName();
 
-    private final ListFragment<?> fragment;
+    private final ILoadItemsListener listener;
+    private final Context context;
     private final int page;
     private final String searchQuery;
     private final String pathSegment;
     private String foundXsrfToken;
 
-    public LoadGameListTask(ListFragment fragment, String pathSegment, int page, String searchQuery) {
-        this.fragment = fragment;
+    public LoadGameListTask(ILoadItemsListener listener, Context context, String pathSegment, int page, String searchQuery) {
+        this.listener = listener;
+        this.context = context;
         this.pathSegment = pathSegment;
         this.page = page;
         this.searchQuery = searchQuery;
@@ -49,11 +52,11 @@ public abstract class LoadGameListTask extends AsyncTask<Void, Void, List<IEndle
             if (searchQuery != null)
                 jsoup.data("q", searchQuery);
 
-            jsoup.cookie("PHPSESSID", SteamGiftsUserData.getCurrent(fragment.getContext()).getSessionId());
+            jsoup.cookie("PHPSESSID", SteamGiftsUserData.getCurrent(context).getSessionId());
 
             Document document = jsoup.get();
 
-            SteamGiftsUserData.extract(fragment.getContext(), document);
+            SteamGiftsUserData.extract(context, document);
 
             // Fetch the xsrf token
             Element xsrfToken = document.select("input[name=xsrf_token]").first();
@@ -74,7 +77,7 @@ public abstract class LoadGameListTask extends AsyncTask<Void, Void, List<IEndle
     @Override
     protected void onPostExecute(List<IEndlessAdaptable> result) {
         super.onPostExecute(result);
-        fragment.addItems(result, page == 1, foundXsrfToken);
+        listener.addItems(result, page == 1, foundXsrfToken);
     }
 
     private List<IEndlessAdaptable> loadAll(Document document) {

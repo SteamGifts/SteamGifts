@@ -46,7 +46,7 @@ public class CreatedListFragment extends ListFragment<GiveawayAdapter> implement
 
     @Override
     protected AsyncTask<Void, Void, ?> getFetchItemsTask(int page) {
-        return new LoadGameListTask(this, "giveaways/created", page, null) {
+        return new LoadGameListTask(this, getContext(), "giveaways/created", page, null) {
             @Override
             protected IEndlessAdaptable load(Element element) {
                 Element firstColumn = element.select(".table__column--width-fill").first();

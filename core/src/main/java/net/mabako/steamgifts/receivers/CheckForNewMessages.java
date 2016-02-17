@@ -1,14 +1,11 @@
 package net.mabako.steamgifts.receivers;
 
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
-import android.support.v4.app.NotificationCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
@@ -32,22 +29,14 @@ import java.util.List;
  * Check for new messages at <a href="http://www.steamgifts.com/messages">steamgifts.com/messages</a>
  * and display a notification if any exists.
  */
-public class CheckForNewMessages extends AbstractCheckReceiver {
-    private static final String DEFAULT_PREF_NOTIFICATIONS_ENABLED = "preference_notifications";
+public class CheckForNewMessages extends AbstractNotificationCheckReceiver {
+    private static NotificationId NOTIFICATION_ID = NotificationId.MESSAGES;
 
-    private static final String PREFS_NOTIFICATIONS_SERVICE = "notification-service";
-    private static final String PREF_KEY_LAST_SHOWN_NOTIFICATION = "last-shown-notification";
-    private static final String PREF_KEY_LAST_DISMISSED_NOTIFICATION = "last-dismissed-notification";
+    private static final String PREF_KEY_LAST_SHOWN_NOTIFICATION = "last-shown-message";
+    private static final String PREF_KEY_LAST_DISMISSED_NOTIFICATION = "last-dismissed-message";
 
     private static final String ACTION_DELETE = "delete";
     private static final String EXTRA_COMMENT_ID = "comment-id";
-
-    private static final int NOTIFICATION_ID = 1234;
-
-    /**
-     * Number of Comments we display at most.
-     */
-    private static final int MAX_DISPLAYED_COMMENTS = 5;
 
     private static final String TAG = CheckForNewMessages.class.getSimpleName();
 
@@ -56,7 +45,7 @@ public class CheckForNewMessages extends AbstractCheckReceiver {
         String action = intent.getAction();
         if (TextUtils.isEmpty(action)) {
             Log.v(TAG, "Checking for new messages...");
-            if (shouldRunNetworkTask(TAG, context, DEFAULT_PREF_NOTIFICATIONS_ENABLED)) {
+            if (shouldRunNetworkTask(TAG, context)) {
                 new LoadMessagesTask(new Check(context), context, 1).execute();
             }
         } else if (ACTION_DELETE.equals(action)) {
@@ -96,10 +85,15 @@ public class CheckForNewMessages extends AbstractCheckReceiver {
                 return;
             }
 
+            if (SteamGiftsUserData.getCurrent(context).getWonNotification() > 0) {
+                // Do we have any won giveaways? If so, let's check if there's any new among them.
+                context.sendBroadcast(new Intent(context, CheckForWonGiveaways.class));
+            }
+
             SharedPreferences sharedPreferences = context.getSharedPreferences(PREFS_NOTIFICATIONS_SERVICE, Context.MODE_PRIVATE);
             String lastDismissedId = sharedPreferences.getString(PREF_KEY_LAST_DISMISSED_NOTIFICATION, "meow");
 
-            List<Comment> mostRecentComments = new ArrayList<>(MAX_DISPLAYED_COMMENTS);
+            List<Comment> mostRecentComments = new ArrayList<>(MAX_DISPLAYED_NOTIFICATIONS);
             for (IEndlessAdaptable adaptable : items) {
                 if (adaptable instanceof Comment) {
                     Comment comment = (Comment) adaptable;
@@ -112,7 +106,7 @@ public class CheckForNewMessages extends AbstractCheckReceiver {
                         break;
 
                     mostRecentComments.add(comment);
-                    if (mostRecentComments.size() == MAX_DISPLAYED_COMMENTS)
+                    if (mostRecentComments.size() == MAX_DISPLAYED_NOTIFICATIONS)
                         break;
                 }
             }
@@ -135,65 +129,24 @@ public class CheckForNewMessages extends AbstractCheckReceiver {
                     Log.d(TAG, "Most recent comment has the same comment id as the last comment");
                     return;
                 }
-                this.lastCommentId = mostRecentComments.get(0).getPermalinkId();
+                this.lastCommentId = firstComment.getPermalinkId();
 
                 // Save the last comment id
                 sharedPreferences.edit().putString(PREF_KEY_LAST_SHOWN_NOTIFICATION, firstComment.getPermalinkId()).apply();
 
                 // Do we show a single (expanded) content or a bunch of comments?
                 if (mostRecentComments.size() == 1) {
-                    showSingleCommentNotification(mostRecentComments.get(0));
+                    showNotification(context, NOTIFICATION_ID, R.drawable.sgwhite, String.format(context.getString(R.string.notification_user_replied_to_you), firstComment.getAuthor()), formatComment(firstComment, false), getViewMessageIntent(firstComment), getDeleteIntent());
                 } else {
-                    showMultipleCommentNotifications(mostRecentComments);
+                    List<CharSequence> texts = new ArrayList<>(mostRecentComments.size());
+                    for (Comment comment : mostRecentComments)
+                        texts.add(formatComment(comment, true));
+
+                    showNotification(context, NOTIFICATION_ID, R.drawable.sgwhite, String.format(context.getString(R.string.notification_new_messages), SteamGiftsUserData.getCurrent(context).getMessageNotification()), texts, getViewMessagesIntent(), getDeleteIntent());
                 }
+
+                Log.d(TAG, "Shown " + mostRecentComments.size() + " messages as notification");
             }
-        }
-
-        /**
-         * If only a single unread message exists, show only the single message.
-         *
-         * @param comment the comment to show
-         */
-        private void showSingleCommentNotification(Comment comment) {
-            Notification notification = new NotificationCompat.Builder(context)
-                    .setSmallIcon(R.drawable.sgwhite)
-                    .setPriority(NotificationCompat.PRIORITY_LOW)
-                    .setCategory(NotificationCompat.CATEGORY_SOCIAL)
-                    .setContentTitle(String.format(context.getString(R.string.notification_user_replied_to_you), comment.getAuthor()))
-                    .setContentText(formatComment(comment, false))
-                    .setStyle(new NotificationCompat.BigTextStyle().bigText(formatComment(comment, false))) /* 4.1+ */
-                    .setContentIntent(getViewMessageIntent(comment))
-                    .setDeleteIntent(getDeleteIntent())
-                    .setAutoCancel(true)
-                    .build();
-
-            showNotification(notification);
-        }
-
-        /**
-         * If multiple un-read messages are shown which we've not seen previously, show them all.
-         *
-         * @param comments the comments to display
-         */
-        private void showMultipleCommentNotifications(List<Comment> comments) {
-            NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
-            for (Comment comment : comments)
-                inboxStyle.addLine(formatComment(comment, true));
-
-            Notification notification = new NotificationCompat.Builder(context)
-                    .setSmallIcon(R.drawable.sgwhite)
-                    .setPriority(NotificationCompat.PRIORITY_LOW)
-                    .setCategory(NotificationCompat.CATEGORY_SOCIAL)
-                    .setContentTitle(String.format(context.getString(R.string.notification_new_messages), SteamGiftsUserData.getCurrent(context).getMessageNotification()))
-                    .setContentText(formatComment(comments.get(0), true))
-                    .setStyle(inboxStyle) /* 4.1+ */
-                    .setNumber(SteamGiftsUserData.getCurrent(context).getMessageNotification())
-                    .setContentIntent(getViewMessagesIntent())
-                    .setDeleteIntent(getDeleteIntent())
-                    .setAutoCancel(true)
-                    .build();
-
-            showNotification(notification);
         }
 
         /**
@@ -220,15 +173,6 @@ public class CheckForNewMessages extends AbstractCheckReceiver {
         }
 
         /**
-         * Show the built notification in the systray.
-         *
-         * @param notification notification to display
-         */
-        private void showNotification(Notification notification) {
-            ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(NOTIFICATION_ID, notification);
-        }
-
-        /**
          * Return an intent for dismissing all messages, i.e. not showing them in future anymore.
          *
          * @return intent for dismissing all messages.
@@ -251,7 +195,7 @@ public class CheckForNewMessages extends AbstractCheckReceiver {
          */
         private PendingIntent getViewMessagesIntent() {
             Intent intent = new Intent(context, DetailActivity.class);
-            intent.putExtra(DetailActivity.ARG_NOTIFICATIONS, true);
+            intent.putExtra(DetailActivity.ARG_NOTIFICATIONS, NOTIFICATION_ID);
 
             return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         }

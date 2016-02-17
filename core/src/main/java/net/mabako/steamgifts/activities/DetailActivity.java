@@ -32,6 +32,7 @@ import net.mabako.steamgifts.fragments.profile.EnteredListFragment;
 import net.mabako.steamgifts.fragments.profile.MessageListFragment;
 import net.mabako.steamgifts.fragments.profile.WonListFragment;
 import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
+import net.mabako.steamgifts.receivers.AbstractNotificationCheckReceiver;
 import net.mabako.steamgifts.receivers.CheckForNewMessages;
 
 import java.io.Serializable;
@@ -114,19 +115,26 @@ public class DetailActivity extends CommonActivity {
             return;
         }
 
-        if (getIntent().hasExtra(ARG_NOTIFICATIONS)) {
+        serializable = getIntent().getSerializableExtra(ARG_NOTIFICATIONS);
+        if (serializable != null) {
             setContentView(R.layout.activity_paged_fragments);
             if (savedInstanceState == null) {
                 loadPagedFragments(new MessageListFragment(), new WonListFragment(), new EnteredListFragment(), new CreatedListFragment());
 
-                // Depending on what notifications are currently shown, bring the relevant tab up first.
-                SteamGiftsUserData u = SteamGiftsUserData.getCurrent(this);
-                if (u.getWonNotification() > 0)
+                if (serializable == AbstractNotificationCheckReceiver.NotificationId.NO_TYPE) {
+                    // Depending on what notifications are currently shown, bring the relevant tab up first.
+                    SteamGiftsUserData u = SteamGiftsUserData.getCurrent(this);
+                    if (u.getWonNotification() > 0)
+                        pager.setCurrentItem(1);
+                    else if (u.getMessageNotification() > 0)
+                        pager.setCurrentItem(0);
+                    else if (u.getCreatedNotification() > 0)
+                        pager.setCurrentItem(3);
+                } else if (serializable == AbstractNotificationCheckReceiver.NotificationId.WON) {
                     pager.setCurrentItem(1);
-                else if (u.getMessageNotification() > 0)
+                } else if (serializable == AbstractNotificationCheckReceiver.NotificationId.MESSAGES) {
                     pager.setCurrentItem(0);
-                else if (u.getCreatedNotification() > 0)
-                    pager.setCurrentItem(3);
+                }
             }
 
             setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
