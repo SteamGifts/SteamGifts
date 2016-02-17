@@ -3,14 +3,10 @@ package net.mabako.steamgifts.receivers;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.text.Spannable;
@@ -32,7 +28,11 @@ import net.mabako.steamgifts.tasks.LoadMessagesTask;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CheckForNewMessages extends BroadcastReceiver {
+/**
+ * Check for new messages at <a href="http://www.steamgifts.com/messages">steamgifts.com/messages</a>
+ * and display a notification if any exists.
+ */
+public class CheckForNewMessages extends AbstractCheckReceiver {
     private static final String DEFAULT_PREF_NOTIFICATIONS_ENABLED = "preference_notifications";
 
     private static final String PREFS_NOTIFICATIONS_SERVICE = "notification-service";
@@ -54,8 +54,11 @@ public class CheckForNewMessages extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
-        if (action == null || "".equals(action)) {
-            new Check(context).run();
+        if (TextUtils.isEmpty(action)) {
+            Log.v(TAG, "Checking for new messages...");
+            if (shouldRunNetworkTask(TAG, context, DEFAULT_PREF_NOTIFICATIONS_ENABLED)) {
+                new LoadMessagesTask(new Check(context), context, 1).execute();
+            }
         } else if (ACTION_DELETE.equals(action)) {
             // If we explicitly dismiss this notification, we want to stop this message from re-appearing ever.
             String lastDismissedId = intent.getStringExtra(EXTRA_COMMENT_ID);
@@ -81,31 +84,6 @@ public class CheckForNewMessages extends BroadcastReceiver {
 
         public Check(Context context) {
             this.context = context;
-        }
-
-        private void run() {
-            Log.v(TAG, "Checking for new messages...");
-
-            boolean notificationsEnabled = PreferenceManager.getDefaultSharedPreferences(context).getBoolean(DEFAULT_PREF_NOTIFICATIONS_ENABLED, true);
-            if (!notificationsEnabled) {
-                Log.v(TAG, "Notifications disabled");
-                return;
-            }
-
-            SteamGiftsUserData userData = SteamGiftsUserData.getCurrent(context);
-            if (!userData.isLoggedIn()) {
-                Log.v(TAG, "Not checking for messages, no session info available");
-                return;
-            }
-
-            ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo activeNetworkInfo = cm.getActiveNetworkInfo();
-            if (activeNetworkInfo == null || !activeNetworkInfo.isConnected() || activeNetworkInfo.getType() != ConnectivityManager.TYPE_WIFI) {
-                Log.v(TAG, "Not checking for messages due to network info: " + activeNetworkInfo);
-                return;
-            }
-
-            new LoadMessagesTask(this, context, 1).execute();
         }
 
         /**
@@ -164,14 +142,19 @@ public class CheckForNewMessages extends BroadcastReceiver {
 
                 // Do we show a single (expanded) content or a bunch of comments?
                 if (mostRecentComments.size() == 1) {
-                    showSingleCommentNotification(context, mostRecentComments.get(0));
+                    showSingleCommentNotification(mostRecentComments.get(0));
                 } else {
-                    showMultipleCommentNotifications(context, mostRecentComments);
+                    showMultipleCommentNotifications(mostRecentComments);
                 }
             }
         }
 
-        private void showSingleCommentNotification(Context context, Comment comment) {
+        /**
+         * If only a single unread message exists, show only the single message.
+         *
+         * @param comment the comment to show
+         */
+        private void showSingleCommentNotification(Comment comment) {
             Notification notification = new NotificationCompat.Builder(context)
                     .setSmallIcon(R.drawable.sgwhite)
                     .setPriority(NotificationCompat.PRIORITY_LOW)
@@ -187,7 +170,12 @@ public class CheckForNewMessages extends BroadcastReceiver {
             showNotification(notification);
         }
 
-        private void showMultipleCommentNotifications(Context context, List<Comment> comments) {
+        /**
+         * If multiple un-read messages are shown which we've not seen previously, show them all.
+         *
+         * @param comments the comments to display
+         */
+        private void showMultipleCommentNotifications(List<Comment> comments) {
             NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
             for (Comment comment : comments)
                 inboxStyle.addLine(formatComment(comment, true));
@@ -208,6 +196,13 @@ public class CheckForNewMessages extends BroadcastReceiver {
             showNotification(notification);
         }
 
+        /**
+         * Returns the comment's content, and, optionally, the author's name
+         *
+         * @param comment     comment to display the content of
+         * @param includeName whether or not to include the author's name
+         * @return text to display in the notification
+         */
         @NonNull
         private CharSequence formatComment(Comment comment, boolean includeName) {
             String content = StringUtils.fromHtml(context, comment.getContent()).toString();
@@ -224,10 +219,20 @@ public class CheckForNewMessages extends BroadcastReceiver {
             }
         }
 
+        /**
+         * Show the built notification in the systray.
+         *
+         * @param notification notification to display
+         */
         private void showNotification(Notification notification) {
             ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(NOTIFICATION_ID, notification);
         }
 
+        /**
+         * Return an intent for dismissing all messages, i.e. not showing them in future anymore.
+         *
+         * @return intent for dismissing all messages.
+         */
         private PendingIntent getDeleteIntent() {
             if (TextUtils.isEmpty(lastCommentId))
                 Log.w(TAG, "Calling getDeleteIntent without a comment id");
@@ -239,6 +244,11 @@ public class CheckForNewMessages extends BroadcastReceiver {
             return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         }
 
+        /**
+         * Return an intent for viewing all messages.
+         *
+         * @return intent for viewing all messages
+         */
         private PendingIntent getViewMessagesIntent() {
             Intent intent = new Intent(context, DetailActivity.class);
             intent.putExtra(DetailActivity.ARG_NOTIFICATIONS, true);
@@ -246,6 +256,12 @@ public class CheckForNewMessages extends BroadcastReceiver {
             return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         }
 
+        /**
+         * Return an intent for viewing a single message.
+         *
+         * @param comment the comment to view
+         * @return intent for viewing a single message
+         */
         private PendingIntent getViewMessageIntent(Comment comment) {
             Intent intent = UrlHandlingActivity.getPermalinkUri(context, comment);
             intent.putExtra(DetailActivity.ARG_MARK_CONTEXT_READ, true);
