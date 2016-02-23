@@ -50,7 +50,7 @@ public class CheckForWonGiveaways extends AbstractNotificationCheckReceiver {
             }
         } else if (ACTION_DELETE.equals(action)) {
             // If we explicitly dismiss this notification, we want to stop this message from re-appearing ever.
-            ArrayList<String> lastDismissedId = intent.getStringArrayListExtra(EXTRA_GIVEAWAY_IDS);
+            List<String> lastDismissedId = intent.getStringArrayListExtra(EXTRA_GIVEAWAY_IDS);
             if (lastDismissedId == null || lastDismissedId.isEmpty()) {
                 Log.w(TAG, "Trying to execute " + ACTION_DELETE + " without a single giveaway id");
                 return;
@@ -62,9 +62,9 @@ public class CheckForWonGiveaways extends AbstractNotificationCheckReceiver {
         }
     }
 
-    public static void setLastDismissedGiveawayIds(@NonNull Context context, @NonNull ArrayList<String> giveawayIds) {
+    public static void setLastDismissedGiveawayIds(@NonNull Context context, @NonNull List<String> giveawayIds) {
         Log.v(TAG, "Marking won games as dismissed");
-        context.getSharedPreferences(PREFS_NOTIFICATIONS_SERVICE, Context.MODE_PRIVATE).edit().putStringSet(PREF_KEY_LAST_DISMISSED_WON_GAMES, new HashSet<String>(giveawayIds)).apply();
+        context.getSharedPreferences(PREFS_NOTIFICATIONS_SERVICE, Context.MODE_PRIVATE).edit().putStringSet(PREF_KEY_LAST_DISMISSED_WON_GAMES, new HashSet<>(giveawayIds)).apply();
     }
 
     private static class Check implements ILoadItemsListener {
