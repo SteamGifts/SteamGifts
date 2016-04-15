@@ -6,8 +6,5 @@
     <application
         android:name=".Application"
         android:icon="@mipmap/ic_launcher">
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="1b40e27532a40911a496ce430c992676dbe8e377" />
     </application>
 </manifest>
