@@ -8,10 +8,12 @@
     <string name="navigation_giveaways_all">All</string>
     <string name="navigation_giveaways_group">Group</string>
     <string name="navigation_giveaways_wishlist">Wishlist</string>
+    <string name="navigation_giveaways_recommended">Recommended</string>
     <string name="navigation_giveaways_new">New</string>
     <string name="navigation_giveaways_all_title">All Giveaways</string>
     <string name="navigation_giveaways_group_title">Group Giveaways</string>
     <string name="navigation_giveaways_wishlist_title">Wishlist Giveaways</string>
+    <string name="navigation_giveaways_recommended_title">Recommended Giveaways</string>
     <string name="navigation_giveaways_new_title">New Giveaways</string>
 
     <!-- Navigation for Discussions -->
