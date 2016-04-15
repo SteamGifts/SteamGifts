@@ -44,7 +44,7 @@ public class LoadDiscussionListTask extends AsyncTask<Void, Void, List<Discussio
             String segment = "";
             if (type != DiscussionListFragment.Type.ALL)
                 segment = type.name().replace("_", "-").toLowerCase(Locale.ENGLISH) + "/";
-            String url = "http://www.steamgifts.com/discussions/" + segment + "search";
+            String url = "https://www.steamgifts.com/discussions/" + segment + "search";
 
             Log.d(TAG, "Fetching discussions for page " + page + " and URL " + url);
 

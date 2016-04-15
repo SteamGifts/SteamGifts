@@ -178,7 +178,7 @@ public class WebViewActivity extends CommonActivity {
      * Finish this activity, if we were opened with a 'go to comment' page, and we've not navigated in any way.
      */
     private void checkForFinishActivity() {
-        if (!webView.canGoBack() && getIntent().getStringExtra(ARG_URL).startsWith("http://www.steamgifts.com/go/"))
+        if (!webView.canGoBack() && getIntent().getStringExtra(ARG_URL).startsWith("https://www.steamgifts.com/go/"))
             finish();
     }
 

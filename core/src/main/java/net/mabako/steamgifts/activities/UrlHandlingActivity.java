@@ -159,7 +159,7 @@ public class UrlHandlingActivity extends CommonActivity {
      * @param comment the comment to open
      */
     public static Intent getPermalinkUri(@NonNull Context context, @NonNull Comment comment) {
-        return getIntentForUri(context, Uri.parse("http://www.steamgifts.com/go/comment/" + comment.getPermalinkId()));
+        return getIntentForUri(context, Uri.parse("https://www.steamgifts.com/go/comment/" + comment.getPermalinkId()));
     }
 
     public interface IntentDelegate {

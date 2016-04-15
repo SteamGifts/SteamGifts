@@ -16,7 +16,7 @@ import java.io.IOException;
 public abstract class AjaxTask<FragmentType> extends AsyncTask<Void, Void, Connection.Response> {
     private static final String TAG = AjaxTask.class.getSimpleName();
 
-    private String url = "http://www.steamgifts.com/ajax.php";
+    private String url = "https://www.steamgifts.com/ajax.php";
 
     private final String xsrfToken;
     private final String what;

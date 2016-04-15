@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Check for new messages at <a href="http://www.steamgifts.com/messages">steamgifts.com/messages</a>
+ * Check for new messages at <a href="https://www.steamgifts.com/messages">steamgifts.com/messages</a>
  * and display a notification if any exists.
  */
 public class CheckForNewMessages extends AbstractNotificationCheckReceiver {

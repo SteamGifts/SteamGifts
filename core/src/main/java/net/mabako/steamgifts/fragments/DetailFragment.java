@@ -311,7 +311,7 @@ public abstract class DetailFragment extends ListFragment<CommentAdapter> implem
         }
 
         /**
-         * If the uri has the format of http://www.steamgifts.com/giveaways/[id]/[name]#comment, or http://www.steamgifts.com/giveaways/[id]/[name]/search?page=27#comment, we do return the context.
+         * If the uri has the format of https://www.steamgifts.com/giveaways/[id]/[name]#comment, or https://www.steamgifts.com/giveaways/[id]/[name]/search?page=27#comment, we do return the context.
          */
         public static CommentContextInfo fromUri(Uri uri) {
             if (TextUtils.isEmpty(uri.getFragment()))

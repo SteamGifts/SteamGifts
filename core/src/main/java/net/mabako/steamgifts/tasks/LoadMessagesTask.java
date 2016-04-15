@@ -38,7 +38,7 @@ public class LoadMessagesTask extends AsyncTask<Void, Void, List<IEndlessAdaptab
         try {
             // Fetch the messages page
 
-            Connection jsoup = Jsoup.connect("http://www.steamgifts.com/messages/search")
+            Connection jsoup = Jsoup.connect("https://www.steamgifts.com/messages/search")
                     .userAgent(Constants.JSOUP_USER_AGENT)
                     .timeout(Constants.JSOUP_TIMEOUT);
             jsoup.data("page", Integer.toString(page));

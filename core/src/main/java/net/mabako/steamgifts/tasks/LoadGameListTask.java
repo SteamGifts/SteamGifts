@@ -44,7 +44,7 @@ public abstract class LoadGameListTask extends AsyncTask<Void, Void, List<IEndle
         try {
             // Fetch the Giveaway page
 
-            Connection jsoup = Jsoup.connect("http://www.steamgifts.com/" + pathSegment + "/search")
+            Connection jsoup = Jsoup.connect("https://www.steamgifts.com/" + pathSegment + "/search")
                     .userAgent(Constants.JSOUP_USER_AGENT)
                     .timeout(Constants.JSOUP_TIMEOUT);
             jsoup.data("page", Integer.toString(page));

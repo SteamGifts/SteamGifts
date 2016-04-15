@@ -9,8 +9,8 @@ import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
 import org.jsoup.Jsoup;
 
 public class LoginActivity extends SteamLoginActivity {
-    private static final String LOGIN_URL = "http://www.steamgifts.com/?login";
-    private static final String REDIRECTED_URL = "http://www.steamgifts.com/";
+    private static final String LOGIN_URL = "https://www.steamgifts.com/?login";
+    private static final String REDIRECTED_URL = "https://www.steamgifts.com/";
 
     public LoginActivity() {
         super(REDIRECTED_URL, REDIRECTED_URL);
