@@ -162,9 +162,11 @@ public final class Utils {
             giveaway.setLevel(Integer.parseInt(level.text().replace("Level", "").replace("+", "").trim()));
 
         // Internal ID for blacklisting
-        Element popup = element.select(".giveaway__hide.trigger-popup").first();
-        if (popup != null)
-            giveaway.setInternalGameId(Integer.parseInt(popup.attr("data-game-id")));
+        try {
+            giveaway.setInternalGameId(Integer.parseInt(element.parent().attr("data-game-id")));
+        } catch (NumberFormatException e) {
+            // no game ID for us to allow hiding the game.
+        }
     }
 
     /**

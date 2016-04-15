@@ -47,7 +47,7 @@ public class UpdateGiveawayFilterTask<FragmentType extends Fragment> extends Aja
 
         FragmentType fragment = getFragment();
         if (fragment instanceof IHasHideableGiveaways && HIDE.equals(getWhat())) {
-            if (response.statusCode() == 301) {
+            if (response.statusCode() == 200) {
                 ((IHasHideableGiveaways) fragment).onHideGame(internalGameId, true, gameTitle);
                 return;
             }
