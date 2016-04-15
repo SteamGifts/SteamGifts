@@ -39,7 +39,7 @@ public class LogoutTask extends AsyncTask<Void, Void, Boolean> {
     protected Boolean doInBackground(Void... params) {
         // Mostly irrelevant since we clear the stored session id...
         try {
-            Jsoup.connect("http://www.steamgifts.com/?logout")
+            Jsoup.connect("https://www.steamgifts.com/?logout")
                     .userAgent(Constants.JSOUP_USER_AGENT)
                     .timeout(Constants.JSOUP_TIMEOUT)
                     .cookie("PHPSESSID", sessionId)

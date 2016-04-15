@@ -26,7 +26,7 @@ public class UpdateGiveawayFilterTask<FragmentType extends Fragment> extends Aja
         // We only use the normal ajax.php if we remove a game
         // ... like seriously?
         if (HIDE.equals(what))
-            setUrl("http://www.steamgifts.com");
+            setUrl("https://www.steamgifts.com");
 
 
         this.internalGameId = internalGameId;

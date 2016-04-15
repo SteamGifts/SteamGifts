@@ -2,7 +2,7 @@
 
 ## Request
 
-    POST http://www.steamgifts.com/ajax.php
+    POST https://www.steamgifts.com/ajax.php
 
     do: entry_insert
     code: abcde # giveaway id
@@ -20,7 +20,7 @@
 
 ## Request
 
-    POST http://www.steamgifts.com/ajax.php
+    POST https://www.steamgifts.com/ajax.php
 
     do: entry_delete
     code: abcde # giveaway id
@@ -38,7 +38,7 @@
 
 ## Request
 
-    POST http://www.steamgifts.com/giveaway/giveawayId/gameName
+    POST https://www.steamgifts.com/giveaway/giveawayId/gameName
 
     do: comment_new
     xsrf_token: 12456789abcdef
@@ -52,7 +52,7 @@
 
 # Removing a comment
 
-    POST http://www.steamgifts.com/ajax.php
+    POST https://www.steamgifts.com/ajax.php
 
     xsrf_token: 123456789abcdef
     do: comment_delete # comment_undelete to undelete

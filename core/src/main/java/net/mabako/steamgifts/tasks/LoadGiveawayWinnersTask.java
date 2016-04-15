@@ -39,7 +39,7 @@ public class LoadGiveawayWinnersTask extends AsyncTask<Void, Void, List<Winner>>
         try {
             // Fetch the Giveaway page
 
-            Connection jsoup = Jsoup.connect("http://www.steamgifts.com/giveaway/" + path + "/winners/search")
+            Connection jsoup = Jsoup.connect("https://www.steamgifts.com/giveaway/" + path + "/winners/search")
                     .userAgent(Constants.JSOUP_USER_AGENT)
                     .timeout(Constants.JSOUP_TIMEOUT);
             jsoup.data("page", Integer.toString(page));

@@ -40,7 +40,7 @@ public class LoadWhitelistBlacklistTask extends AsyncTask<Void, Void, List<Basic
     protected List<BasicUser> doInBackground(Void... params) {
         try {
             // Fetch the Giveaway page
-            String url = "http://www.steamgifts.com/account/manage/" + what.name().toLowerCase(Locale.ENGLISH) + "/search";
+            String url = "https://www.steamgifts.com/account/manage/" + what.name().toLowerCase(Locale.ENGLISH) + "/search";
             Log.d(TAG, "Fetching URL " + url);
 
             Connection jsoup = Jsoup.connect(url)

@@ -90,7 +90,7 @@ public class LoadDiscussionDetailsTask extends AsyncTask<Void, Void, DiscussionE
     }
 
     private Connection.Response connect() throws IOException {
-        String url = "http://www.steamgifts.com/discussion/" + discussionId + "/search?page=" + page;
+        String url = "https://www.steamgifts.com/discussion/" + discussionId + "/search?page=" + page;
         Log.v(TAG, "Fetching discussion details for " + url);
         Connection connection = Jsoup.connect(url)
                 .userAgent(Constants.JSOUP_USER_AGENT)

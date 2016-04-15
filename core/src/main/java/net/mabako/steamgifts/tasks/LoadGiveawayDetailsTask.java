@@ -40,7 +40,7 @@ public class LoadGiveawayDetailsTask extends AsyncTask<Void, Void, GiveawayExtra
 
     @Override
     protected GiveawayExtras doInBackground(Void... params) {
-        String url = "http://www.steamgifts.com/giveaway/" + giveawayId + "/search?page=" + page;
+        String url = "https://www.steamgifts.com/giveaway/" + giveawayId + "/search?page=" + page;
         Log.d(TAG, "Fetching giveaway details for " + url);
 
         try {
