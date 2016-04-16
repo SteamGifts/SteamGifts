@@ -1,2 +1,2 @@
-versionName=1.2.3
-versionCode=1002503
+versionName=1.2.4
+versionCode=1002504
