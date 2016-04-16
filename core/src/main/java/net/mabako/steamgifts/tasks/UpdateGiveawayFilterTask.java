@@ -1,7 +1,6 @@
 package net.mabako.steamgifts.tasks;
 
 import android.support.v4.app.Fragment;
-import android.util.Log;
 
 import net.mabako.steamgifts.fragments.GiveawayListFragment;
 import net.mabako.steamgifts.fragments.HiddenGamesFragment;
