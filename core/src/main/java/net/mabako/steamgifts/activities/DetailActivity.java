@@ -25,8 +25,6 @@ import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
 import net.mabako.steamgifts.fragments.GiveawayGroupListFragment;
 import net.mabako.steamgifts.fragments.GiveawayWinnerListFragment;
 import net.mabako.steamgifts.fragments.HiddenGamesFragment;
-import net.mabako.steamgifts.fragments.SavedDiscussionsFragment;
-import net.mabako.steamgifts.fragments.SavedGiveawaysFragment;
 import net.mabako.steamgifts.fragments.UserDetailFragment;
 import net.mabako.steamgifts.fragments.WhitelistBlacklistFragment;
 import net.mabako.steamgifts.fragments.profile.CreatedListFragment;
@@ -34,6 +32,7 @@ import net.mabako.steamgifts.fragments.profile.EnteredListFragment;
 import net.mabako.steamgifts.fragments.profile.MessageListFragment;
 import net.mabako.steamgifts.fragments.profile.WonListFragment;
 import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
+import net.mabako.steamgifts.receivers.AbstractNotificationCheckReceiver;
 import net.mabako.steamgifts.receivers.CheckForNewMessages;
 
 import java.io.Serializable;
@@ -42,7 +41,6 @@ import java.util.UUID;
 public class DetailActivity extends CommonActivity {
     public static final String ARG_NOTIFICATIONS = "notifications";
     public static final String ARG_HIDDEN_GAMES = "view-hidden-games";
-    public static final String ARG_SAVED_ELEMENTS = "saved-elements";
     public static final String ARG_GIVEAWAY_DETAILS = "giveaway-details";
 
     /**
@@ -117,19 +115,26 @@ public class DetailActivity extends CommonActivity {
             return;
         }
 
-        if (getIntent().hasExtra(ARG_NOTIFICATIONS)) {
+        serializable = getIntent().getSerializableExtra(ARG_NOTIFICATIONS);
+        if (serializable != null) {
             setContentView(R.layout.activity_paged_fragments);
             if (savedInstanceState == null) {
                 loadPagedFragments(new MessageListFragment(), new WonListFragment(), new EnteredListFragment(), new CreatedListFragment());
 
-                // Depending on what notifications are currently shown, bring the relevant tab up first.
-                SteamGiftsUserData u = SteamGiftsUserData.getCurrent(this);
-                if (u.getWonNotification() > 0)
+                if (serializable == AbstractNotificationCheckReceiver.NotificationId.NO_TYPE) {
+                    // Depending on what notifications are currently shown, bring the relevant tab up first.
+                    SteamGiftsUserData u = SteamGiftsUserData.getCurrent(this);
+                    if (u.getWonNotification() > 0)
+                        pager.setCurrentItem(1);
+                    else if (u.getMessageNotification() > 0)
+                        pager.setCurrentItem(0);
+                    else if (u.getCreatedNotification() > 0)
+                        pager.setCurrentItem(3);
+                } else if (serializable == AbstractNotificationCheckReceiver.NotificationId.WON) {
                     pager.setCurrentItem(1);
-                else if (u.getMessageNotification() > 0)
+                } else if (serializable == AbstractNotificationCheckReceiver.NotificationId.MESSAGES) {
                     pager.setCurrentItem(0);
-                else if (u.getCreatedNotification() > 0)
-                    pager.setCurrentItem(3);
+                }
             }
 
             setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
@@ -144,20 +149,6 @@ public class DetailActivity extends CommonActivity {
             setContentView(R.layout.activity_one_fragment);
             if (savedInstanceState == null)
                 loadFragment(HiddenGamesFragment.newInstance(null));
-            return;
-        }
-
-        if (getIntent().hasExtra(ARG_SAVED_ELEMENTS)) {
-            setContentView(R.layout.activity_paged_fragments);
-            if (savedInstanceState == null)
-                loadPagedFragments(new SavedGiveawaysFragment(), new SavedDiscussionsFragment());
-
-
-            setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-            ActionBar actionBar = getSupportActionBar();
-            if (actionBar != null)
-                actionBar.setTitle(R.string.saved_elements_title);
-
             return;
         }
 

@@ -15,6 +15,7 @@ import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import net.mabako.steamgifts.activities.UrlHandlingActivity;
 import net.mabako.steamgifts.core.R;
@@ -22,6 +23,13 @@ import net.mabako.steamgifts.core.R;
 import java.util.regex.Pattern;
 
 public final class StringUtils {
+    private static final String TAG = StringUtils.class.getSimpleName();
+
+    /**
+     * Base path to resolve relative URLs.
+     */
+    private static final Uri BASE_URI = Uri.parse("https://www.steamgifts.com");
+
     private static final Pattern
             tdPattern = Pattern.compile("</td>([\\s\\r\\n]+)<td"),
             thPattern = Pattern.compile("</th>([\\s\\r\\n]+)<th");
@@ -73,7 +81,7 @@ public final class StringUtils {
      * @param charSequence
      * @return
      */
-    private static CharSequence addProperLinks(final Context context, CharSequence charSequence) {
+    private static CharSequence addProperLinks(@NonNull final Context context, CharSequence charSequence) {
         if (TextUtils.isEmpty(charSequence))
             return charSequence;
 
@@ -85,17 +93,34 @@ public final class StringUtils {
             int flags = stringBuilder.getSpanFlags(span);
 
             final String url = span.getURL();
-            if (url.startsWith("http://") || url.startsWith("https://")) {
+            Uri uri = Uri.parse(span.getURL());
+
+            // We only have a relative URL, relative to the base site.
+            // This would ignore you if you'd reference ../somewhere or alike with the path not starting with /.
+            if (uri.isRelative() && url.startsWith("/")) {
+                uri = Uri.withAppendedPath(BASE_URI, url);
+                Log.v(TAG, "Resolved relative URL " + url + " to " + uri);
+            }
+
+            if (uri.isAbsolute() && ("https".equals(uri.getScheme()) || "http".equals(uri.getScheme()))) {
                 // Custom Span for clicking
+                final Uri clickableUri = uri;
                 stringBuilder.setSpan(new ClickableSpan() {
                     @Override
                     public void onClick(View widget) {
                         // Do we have anything in the app we can open with that url?
-                        UrlHandlingActivity.getIntentForUri(context, Uri.parse(url), true).start((Activity) context);
+                        UrlHandlingActivity.getIntentForUri(context, clickableUri, true).start((Activity) context);
                     }
                 }, start, end, flags);
-                stringBuilder.removeSpan(span);
+            } else {
+                stringBuilder.setSpan(new ClickableSpan() {
+                    @Override
+                    public void onClick(View widget) {
+                        Toast.makeText(context, "Unable to open link " + url + ".", Toast.LENGTH_LONG).show();
+                    }
+                }, start, end, flags);
             }
+            stringBuilder.removeSpan(span);
         }
 
         return stringBuilder;

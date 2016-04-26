@@ -7,12 +7,15 @@ buildscript {
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.12.0'
     }
 }
 
 plugins {
     id 'com.gladed.androidgitversion' version '0.2.7'
 }
+
+apply plugin: 'com.github.ben-manes.versions'
 
 androidGitVersion {
     prefix 'v'
@@ -25,6 +28,17 @@ ext {
 
     versionName = androidGitVersion.name().replace('-dirty', '')
     versionCode = androidGitVersion.code()
+
+
+    // Since we're essentially using stable versions after beta versions (which might use earlier, similar version codes), bump this.
+    // In comparison:
+    //    v1.2-beta.3 -> 1002003 --> 1002003
+    //    v1.2        -> 1002000 --> 1002500
+    //    v1.2.3      -> 1002003 --> 1002503
+    // This would simply not install. Henceforth, we ensure our 'stable' releases always have a higher version number.
+    if(androidGitVersion.name().indexOf("-beta.") == -1) {
+        versionCode += 500
+    }
 }
 
 allprojects {

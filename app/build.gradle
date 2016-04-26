@@ -29,13 +29,7 @@ android {
         }
         // Release pushed to non-beta testers
         vanilla {
-            // Since we're essentially using stable versions after beta versions (which might use earlier, similar version codes), bump this.
-            // In comparison:
-            //    v1.2-beta.3 -> 1002003 --> 1002003
-            //    v1.2        -> 1002000 --> 1002500
-            //    v1.2.3      -> 1002003 --> 1002503
-            // This would simply not install. Henceforth, we ensure our 'stable' releases always have a higher version number.
-            versionCode = rootProject.ext.versionCode + 500
+            null
         }
     }
 
@@ -43,9 +37,12 @@ android {
         disable 'GoogleAppIndexingWarning'
         warning 'InvalidPackage' // okio references java.nio, which is not part of android.
     }
+
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
     compile project(':core')
 }

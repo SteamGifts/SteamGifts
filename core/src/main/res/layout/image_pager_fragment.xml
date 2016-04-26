@@ -42,17 +42,25 @@
 
         </LinearLayout>
 
-        <Button
+        <ImageButton
+            android:id="@+id/share"
+            style="@style/MediumButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="#00000000"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:src="@drawable/ic_share_variant" />
+
+        <ImageButton
             android:id="@+id/close"
             style="@style/MediumButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:text="{faw-times}"
-            android:textColor="#ffffffff"
-            android:textSize="18sp"
-            tools:text="x" />
+            android:background="#00000000"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:src="@drawable/ic_close" />
     </LinearLayout>
 
     <View

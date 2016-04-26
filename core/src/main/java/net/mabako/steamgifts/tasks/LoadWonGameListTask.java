@@ -1,22 +1,20 @@
-package net.mabako.steamgifts.fragments.profile;
+package net.mabako.steamgifts.tasks;
 
+import android.content.Context;
 import android.net.Uri;
 
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.data.Game;
-import net.mabako.steamgifts.fragments.ListFragment;
-import net.mabako.steamgifts.tasks.LoadGameListTask;
-import net.mabako.steamgifts.tasks.Utils;
+import net.mabako.steamgifts.data.Giveaway;
+import net.mabako.steamgifts.fragments.interfaces.ILoadItemsListener;
 
 import org.jsoup.nodes.Element;
 
 import java.util.List;
 
-public class LoadEnteredGameListTask extends LoadGameListTask {
-    public static final int ENTRIES_PER_PAGE = 50;
-
-    public LoadEnteredGameListTask(ListFragment listFragment, int page) {
-        super(listFragment, listFragment.getContext(), "giveaways/entered", page, null);
+public class LoadWonGameListTask extends LoadGameListTask {
+    public LoadWonGameListTask(ILoadItemsListener listener, Context context, int page) {
+        super(listener, context, "giveaways/won", page, null);
     }
 
     @Override
@@ -28,7 +26,7 @@ public class LoadEnteredGameListTask extends LoadGameListTask {
         String giveawayLink = linkUri.getPathSegments().get(1);
         String giveawayName = linkUri.getPathSegments().get(2);
 
-        ProfileGiveaway giveaway = new ProfileGiveaway(giveawayLink);
+        Giveaway giveaway = new Giveaway(giveawayLink);
         giveaway.setName(giveawayName);
         giveaway.setTitle(link.text());
 
@@ -43,14 +41,13 @@ public class LoadEnteredGameListTask extends LoadGameListTask {
         }
 
         giveaway.setPoints(-1);
-        giveaway.setEntries(Integer.parseInt(element.select(".table__column--width-small").first().text().replace(",", "")));
+        giveaway.setEntries(-1);
+        Element end = firstColumn.select("span").first();
+        giveaway.setEndTime(end.attr("title"), end.text());
 
-        Element end = firstColumn.select("p > span").first();
-        if (end != null)
-            giveaway.setEndTime(end.attr("title"), end.text());
-
-        giveaway.setEntered(giveaway.isOpen());
-        giveaway.setDeleted(!element.select(".table__column__deleted").isEmpty());
+        // Has any feedback option been picked yet?
+        // If so, this would be == 1, 0 hidden items implies both feedback options are currently available to be picked.
+        giveaway.setEntered(element.select(".table__gift-feedback-awaiting-reply.is-hidden").size() == 0);
 
         return giveaway;
     }

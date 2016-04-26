@@ -1,18 +1,11 @@
 package net.mabako.steamgifts.receivers;
 
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.v4.app.NotificationCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
@@ -32,30 +25,29 @@ import net.mabako.steamgifts.tasks.LoadMessagesTask;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CheckForNewMessages extends BroadcastReceiver {
-    private static final String DEFAULT_PREF_NOTIFICATIONS_ENABLED = "preference_notifications";
+/**
+ * Check for new messages at <a href="https://www.steamgifts.com/messages">steamgifts.com/messages</a>
+ * and display a notification if any exists.
+ */
+public class CheckForNewMessages extends AbstractNotificationCheckReceiver {
+    private static NotificationId NOTIFICATION_ID = NotificationId.MESSAGES;
 
-    private static final String PREFS_NOTIFICATIONS_SERVICE = "notification-service";
-    private static final String PREF_KEY_LAST_SHOWN_NOTIFICATION = "last-shown-notification";
-    private static final String PREF_KEY_LAST_DISMISSED_NOTIFICATION = "last-dismissed-notification";
+    private static final String PREF_KEY_LAST_SHOWN_NOTIFICATION = "last-shown-message";
+    private static final String PREF_KEY_LAST_DISMISSED_NOTIFICATION = "last-dismissed-message";
 
     private static final String ACTION_DELETE = "delete";
     private static final String EXTRA_COMMENT_ID = "comment-id";
-
-    private static final int NOTIFICATION_ID = 1234;
-
-    /**
-     * Number of Comments we display at most.
-     */
-    private static final int MAX_DISPLAYED_COMMENTS = 5;
 
     private static final String TAG = CheckForNewMessages.class.getSimpleName();
 
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
-        if (action == null || "".equals(action)) {
-            new Check(context).run();
+        if (TextUtils.isEmpty(action)) {
+            Log.v(TAG, "Checking for new messages...");
+            if (shouldRunNetworkTask(TAG, context)) {
+                new LoadMessagesTask(new Check(context), context, 1).execute();
+            }
         } else if (ACTION_DELETE.equals(action)) {
             // If we explicitly dismiss this notification, we want to stop this message from re-appearing ever.
             String lastDismissedId = intent.getStringExtra(EXTRA_COMMENT_ID);
@@ -83,31 +75,6 @@ public class CheckForNewMessages extends BroadcastReceiver {
             this.context = context;
         }
 
-        private void run() {
-            Log.v(TAG, "Checking for new messages...");
-
-            boolean notificationsEnabled = PreferenceManager.getDefaultSharedPreferences(context).getBoolean(DEFAULT_PREF_NOTIFICATIONS_ENABLED, true);
-            if (!notificationsEnabled) {
-                Log.v(TAG, "Notifications disabled");
-                return;
-            }
-
-            SteamGiftsUserData userData = SteamGiftsUserData.getCurrent(context);
-            if (!userData.isLoggedIn()) {
-                Log.v(TAG, "Not checking for messages, no session info available");
-                return;
-            }
-
-            ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo activeNetworkInfo = cm.getActiveNetworkInfo();
-            if (activeNetworkInfo == null || !activeNetworkInfo.isConnected() || activeNetworkInfo.getType() != ConnectivityManager.TYPE_WIFI) {
-                Log.v(TAG, "Not checking for messages due to network info: " + activeNetworkInfo);
-                return;
-            }
-
-            new LoadMessagesTask(this, context, 1).execute();
-        }
-
         /**
          * Callback for {@link LoadMessagesTask}
          */
@@ -118,10 +85,15 @@ public class CheckForNewMessages extends BroadcastReceiver {
                 return;
             }
 
+            if (SteamGiftsUserData.getCurrent(context).getWonNotification() > 0) {
+                // Do we have any won giveaways? If so, let's check if there's any new among them.
+                context.sendBroadcast(new Intent(context, CheckForWonGiveaways.class));
+            }
+
             SharedPreferences sharedPreferences = context.getSharedPreferences(PREFS_NOTIFICATIONS_SERVICE, Context.MODE_PRIVATE);
             String lastDismissedId = sharedPreferences.getString(PREF_KEY_LAST_DISMISSED_NOTIFICATION, "meow");
 
-            List<Comment> mostRecentComments = new ArrayList<>(MAX_DISPLAYED_COMMENTS);
+            List<Comment> mostRecentComments = new ArrayList<>(MAX_DISPLAYED_NOTIFICATIONS);
             for (IEndlessAdaptable adaptable : items) {
                 if (adaptable instanceof Comment) {
                     Comment comment = (Comment) adaptable;
@@ -134,7 +106,7 @@ public class CheckForNewMessages extends BroadcastReceiver {
                         break;
 
                     mostRecentComments.add(comment);
-                    if (mostRecentComments.size() == MAX_DISPLAYED_COMMENTS)
+                    if (mostRecentComments.size() == MAX_DISPLAYED_NOTIFICATIONS)
                         break;
                 }
             }
@@ -157,60 +129,40 @@ public class CheckForNewMessages extends BroadcastReceiver {
                     Log.d(TAG, "Most recent comment has the same comment id as the last comment");
                     return;
                 }
-                this.lastCommentId = mostRecentComments.get(0).getPermalinkId();
+                this.lastCommentId = firstComment.getPermalinkId();
 
                 // Save the last comment id
                 sharedPreferences.edit().putString(PREF_KEY_LAST_SHOWN_NOTIFICATION, firstComment.getPermalinkId()).apply();
 
                 // Do we show a single (expanded) content or a bunch of comments?
                 if (mostRecentComments.size() == 1) {
-                    showSingleCommentNotification(context, mostRecentComments.get(0));
+                    showNotification(context, NOTIFICATION_ID, R.drawable.sgwhite, String.format(context.getString(R.string.notification_user_replied_to_you), firstComment.getAuthor()), formatComment(firstComment, false), getViewMessageIntent(firstComment), getDeleteIntent());
                 } else {
-                    showMultipleCommentNotifications(context, mostRecentComments);
+                    List<CharSequence> texts = new ArrayList<>(mostRecentComments.size());
+                    for (Comment comment : mostRecentComments)
+                        texts.add(formatComment(comment, true));
+
+                    showNotification(context, NOTIFICATION_ID, R.drawable.sgwhite, String.format(context.getString(R.string.notification_new_messages), SteamGiftsUserData.getCurrent(context).getMessageNotification()), texts, getViewMessagesIntent(), getDeleteIntent());
                 }
+
+                Log.d(TAG, "Shown " + mostRecentComments.size() + " messages as notification");
             }
         }
 
-        private void showSingleCommentNotification(Context context, Comment comment) {
-            Notification notification = new NotificationCompat.Builder(context)
-                    .setSmallIcon(R.drawable.sgwhite)
-                    .setPriority(NotificationCompat.PRIORITY_LOW)
-                    .setCategory(NotificationCompat.CATEGORY_SOCIAL)
-                    .setContentTitle(String.format(context.getString(R.string.notification_user_replied_to_you), comment.getAuthor()))
-                    .setContentText(formatString(comment, false))
-                    .setStyle(new NotificationCompat.BigTextStyle().bigText(formatString(comment, false))) /* 4.1+ */
-                    .setContentIntent(getViewMessageIntent(comment))
-                    .setDeleteIntent(getDeleteIntent())
-                    .setAutoCancel(true)
-                    .build();
-
-            showNotification(notification);
-        }
-
-        private void showMultipleCommentNotifications(Context context, List<Comment> comments) {
-            NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
-            for (Comment comment : comments)
-                inboxStyle.addLine(formatString(comment, true));
-
-            Notification notification = new NotificationCompat.Builder(context)
-                    .setSmallIcon(R.drawable.sgwhite)
-                    .setPriority(NotificationCompat.PRIORITY_LOW)
-                    .setCategory(NotificationCompat.CATEGORY_SOCIAL)
-                    .setContentTitle(String.format(context.getString(R.string.notification_new_messages), SteamGiftsUserData.getCurrent(context).getMessageNotification()))
-                    .setContentText(formatString(comments.get(0), true))
-                    .setStyle(inboxStyle) /* 4.1+ */
-                    .setNumber(SteamGiftsUserData.getCurrent(context).getMessageNotification())
-                    .setContentIntent(getViewMessagesIntent())
-                    .setDeleteIntent(getDeleteIntent())
-                    .setAutoCancel(true)
-                    .build();
-
-            showNotification(notification);
-        }
-
+        /**
+         * Returns the comment's content, and, optionally, the author's name
+         *
+         * @param comment     comment to display the content of
+         * @param includeName whether or not to include the author's name
+         * @return text to display in the notification
+         */
         @NonNull
-        private CharSequence formatString(Comment comment, boolean includeName) {
+        private CharSequence formatComment(Comment comment, boolean includeName) {
             String content = StringUtils.fromHtml(context, comment.getContent()).toString();
+            if (TextUtils.isEmpty(content) && comment.getAttachedImages() != null && comment.getAttachedImages().size() > 0) {
+                content = context.getString(R.string.notification_has_attached_image);
+            }
+
             if (includeName && comment.getAuthor() != null) {
                 SpannableString sb = new SpannableString(String.format("%s  %s", comment.getAuthor(), content));
                 sb.setSpan(new StyleSpan(Typeface.BOLD), 0, comment.getAuthor().length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -220,10 +172,11 @@ public class CheckForNewMessages extends BroadcastReceiver {
             }
         }
 
-        private void showNotification(Notification notification) {
-            ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(NOTIFICATION_ID, notification);
-        }
-
+        /**
+         * Return an intent for dismissing all messages, i.e. not showing them in future anymore.
+         *
+         * @return intent for dismissing all messages.
+         */
         private PendingIntent getDeleteIntent() {
             if (TextUtils.isEmpty(lastCommentId))
                 Log.w(TAG, "Calling getDeleteIntent without a comment id");
@@ -235,13 +188,24 @@ public class CheckForNewMessages extends BroadcastReceiver {
             return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         }
 
+        /**
+         * Return an intent for viewing all messages.
+         *
+         * @return intent for viewing all messages
+         */
         private PendingIntent getViewMessagesIntent() {
             Intent intent = new Intent(context, DetailActivity.class);
-            intent.putExtra(DetailActivity.ARG_NOTIFICATIONS, true);
+            intent.putExtra(DetailActivity.ARG_NOTIFICATIONS, NOTIFICATION_ID);
 
             return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         }
 
+        /**
+         * Return an intent for viewing a single message.
+         *
+         * @param comment the comment to view
+         * @return intent for viewing a single message
+         */
         private PendingIntent getViewMessageIntent(Comment comment) {
             Intent intent = UrlHandlingActivity.getPermalinkUri(context, comment);
             intent.putExtra(DetailActivity.ARG_MARK_CONTEXT_READ, true);

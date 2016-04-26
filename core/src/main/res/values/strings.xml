@@ -8,10 +8,12 @@
     <string name="navigation_giveaways_all">All</string>
     <string name="navigation_giveaways_group">Group</string>
     <string name="navigation_giveaways_wishlist">Wishlist</string>
+    <string name="navigation_giveaways_recommended">Recommended</string>
     <string name="navigation_giveaways_new">New</string>
     <string name="navigation_giveaways_all_title">All Giveaways</string>
     <string name="navigation_giveaways_group_title">Group Giveaways</string>
     <string name="navigation_giveaways_wishlist_title">Wishlist Giveaways</string>
+    <string name="navigation_giveaways_recommended_title">Recommended Giveaways</string>
     <string name="navigation_giveaways_new_title">New Giveaways</string>
 
     <!-- Navigation for Discussions -->
@@ -196,6 +198,7 @@
     <string name="filter_entries">Entries</string>
     <string name="filter_level">Level</string>
     <string name="filter_points">Points</string>
+    <string name="filter_copies">Copies</string>
     <string name="filter_entered_checkbox">Hide entered Giveaways</string>
     <string name="filter_whitelist_or_group_checkbox">Show group and whitelist giveaways regardless of level</string>
     <string name="filter_entries_per_copy">Show entries per copy (instead of total entries)</string>
@@ -240,7 +243,11 @@
     <string name="notifications_title">Notifications</string>
     <string name="notification_user_replied_to_you">%s replied to you</string>
     <string name="notification_new_messages">%d new messages</string>
+    <string name="notification_won_game">You won %s</string>
+    <string name="notification_won_games">You won %d games</string>
+    <string name="notification_has_attached_image">Image</string>
 
     <!-- unsorted -->
     <string name="could_not_load_image">Could not load image.</string>
+    <string name="share_image">Share Image</string>
 </resources>

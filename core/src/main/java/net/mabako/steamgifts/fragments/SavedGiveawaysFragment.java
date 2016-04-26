@@ -26,6 +26,7 @@ import net.mabako.steamgifts.fragments.profile.LoadEnteredGameListTask;
 import net.mabako.steamgifts.fragments.profile.ProfileGiveaway;
 import net.mabako.steamgifts.fragments.util.GiveawayListFragmentStack;
 import net.mabako.steamgifts.persistentdata.SavedGiveaways;
+import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
 import net.mabako.steamgifts.tasks.EnterLeaveGiveawayTask;
 
 import java.io.Serializable;
@@ -35,7 +36,6 @@ import java.util.List;
 /**
  * Show a list of saved giveaways.
  */
-// TODO implements IHasEnterableGiveaways?
 public class SavedGiveawaysFragment extends ListFragment<SavedGiveawaysFragment.SavedGiveawaysAdapter> implements IActivityTitle, IHasEnterableGiveaways {
     private static final String TAG = SavedGiveawaysFragment.class.getSimpleName();
 
@@ -112,6 +112,9 @@ public class SavedGiveawaysFragment extends ListFragment<SavedGiveawaysFragment.
                 savedGiveaways.remove(enteredGiveaway.getGiveawayId());
                 adapter.removeGiveaway(enteredGiveaway.getGiveawayId());
             }
+
+            if (getActivity() != null)
+                getActivity().invalidateOptionsMenu();
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -146,8 +149,10 @@ public class SavedGiveawaysFragment extends ListFragment<SavedGiveawaysFragment.
         if (enteredGameListTask != null)
             enteredGameListTask.cancel(true);
 
-        enteredGameListTask = new LoadEnteredGameListTask(this, 1);
-        enteredGameListTask.execute();
+        if (SteamGiftsUserData.getCurrent(getContext()).isLoggedIn()) {
+            enteredGameListTask = new LoadEnteredGameListTask(this, 1);
+            enteredGameListTask.execute();
+        }
     }
 
     @Override
@@ -208,6 +213,11 @@ public class SavedGiveawaysFragment extends ListFragment<SavedGiveawaysFragment.
 
     @Override
     public void requestEnterLeave(String giveawayId, String enterOrDelete, String xsrfToken) {
+        if (!SteamGiftsUserData.getCurrent(getContext()).isLoggedIn()) {
+            Log.w(TAG, "Could not request enter/leave giveaway, since we're not logged in");
+            return;
+        }
+
         if (enterLeaveTask != null)
             enterLeaveTask.cancel(true);
 
@@ -220,8 +230,14 @@ public class SavedGiveawaysFragment extends ListFragment<SavedGiveawaysFragment.
         if (success == Boolean.TRUE) {
             Giveaway giveaway = adapter.findItem(giveawayId);
             if (giveaway != null) {
+                boolean currentlyEnteredAny = adapter.getEnteredItemCount() > 0;
+
                 giveaway.setEntered(GiveawayDetailFragment.ENTRY_INSERT.equals(what));
                 adapter.notifyItemChanged(giveaway);
+
+                boolean nowEnteredAny = adapter.getEnteredItemCount() > 0;
+                if (currentlyEnteredAny != nowEnteredAny && getActivity() != null)
+                    getActivity().supportInvalidateOptionsMenu();
             }
         } else {
             Log.e(TAG, "Probably an error catching the result...");

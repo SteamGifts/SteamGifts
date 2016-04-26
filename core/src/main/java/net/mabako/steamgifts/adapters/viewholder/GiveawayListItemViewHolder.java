@@ -158,7 +158,7 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         // Are we logged in & do we have a token to submit with our "form"?
-        if (SteamGiftsUserData.getCurrent(null).isLoggedIn() && fragment != null && (adapter.getXsrfToken() != null || savedGiveaways != null)) {
+        if (fragment != null && (adapter.getXsrfToken() != null || savedGiveaways != null)) {
 
             // Which giveaway is this even for?
             final Giveaway giveaway = (Giveaway) adapter.getItem(getAdapterPosition());
@@ -168,11 +168,12 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
                 return;
 
             boolean xsrfEvents = adapter.getXsrfToken() != null && giveaway.isOpen();
+            boolean loggedIn = SteamGiftsUserData.getCurrent(null).isLoggedIn();
 
             // Header
             menu.setHeaderTitle(giveaway.getTitle());
 
-            if (xsrfEvents && fragment instanceof IHasEnterableGiveaways) {
+            if (loggedIn && xsrfEvents && fragment instanceof IHasEnterableGiveaways) {
                 // Text for Entering or Leaving the giveaway
                 String enterText = activity.getString(R.string.enter_giveaway);
                 String leaveText = activity.getString(R.string.leave_giveaway);
@@ -201,7 +202,7 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
             }
 
             // Hide a game... forever
-            if (xsrfEvents && giveaway.getInternalGameId() > 0 && fragment instanceof GiveawayListFragment) {
+            if (loggedIn && xsrfEvents && giveaway.getInternalGameId() > 0 && fragment instanceof GiveawayListFragment) {
                 menu.add(Menu.NONE, 3, Menu.NONE, R.string.hide_game).setOnMenuItemClickListener(this);
             }
         } else {

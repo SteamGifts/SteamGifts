@@ -19,7 +19,7 @@ public class FilterData implements Serializable {
 
     private static FilterData current = null;
 
-    private int minEntries = -1, maxEntries = -1, minPoints = -1, maxPoints = -1, minLevel = -1, maxLevel = -1;
+    private int minEntries = -1, maxEntries = -1, minPoints = -1, maxPoints = -1, minLevel = -1, maxLevel = -1, minCopies = -1, maxCopies = -1;
     private boolean hideEntered, restrictLevelOnlyOnPublicGiveaways, entriesPerCopy, regionRestrictedOnly;
 
     public static synchronized FilterData getCurrent(Context context) {
@@ -55,6 +55,10 @@ public class FilterData implements Serializable {
         return maxPoints;
     }
 
+    public int getMaxCopies() {
+        return maxCopies;
+    }
+
     public int getMinEntries() {
         return minEntries;
     }
@@ -65,6 +69,10 @@ public class FilterData implements Serializable {
 
     public int getMinPoints() {
         return minPoints;
+    }
+
+    public int getMinCopies() {
+        return minCopies;
     }
 
     public void setMaxEntries(int maxEntries) {
@@ -79,6 +87,10 @@ public class FilterData implements Serializable {
         this.maxPoints = maxPoints;
     }
 
+    public void setMaxCopies(int maxCopies) {
+        this.maxCopies = maxCopies;
+    }
+
     public void setMinEntries(int minEntries) {
         this.minEntries = minEntries;
     }
@@ -89,6 +101,10 @@ public class FilterData implements Serializable {
 
     public void setMinPoints(int minPoints) {
         this.minPoints = minPoints;
+    }
+
+    public void setMinCopies(int minCopies) {
+        this.minCopies = minCopies;
     }
 
     public boolean isHideEntered() {
@@ -124,6 +140,6 @@ public class FilterData implements Serializable {
     }
 
     public boolean isAnyActive() {
-        return minEntries > -1 || maxEntries > -1 || minPoints > -1 || maxPoints > -1 || minLevel > -1 || maxLevel > -1 || hideEntered || regionRestrictedOnly;
+        return minEntries > -1 || maxEntries > -1 || minPoints > -1 || maxPoints > -1 || minLevel > -1 || maxLevel > -1 || minCopies > -1 || maxCopies > -1 || hideEntered || regionRestrictedOnly;
     }
 }

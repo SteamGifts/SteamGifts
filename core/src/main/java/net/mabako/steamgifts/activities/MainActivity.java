@@ -11,6 +11,7 @@ import net.mabako.steamgifts.ApplicationTemplate;
 import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.fragments.DiscussionListFragment;
 import net.mabako.steamgifts.fragments.GiveawayListFragment;
+import net.mabako.steamgifts.fragments.SavedFragment;
 import net.mabako.steamgifts.fragments.SavedGiveawaysFragment;
 import net.mabako.steamgifts.fragments.interfaces.IActivityTitle;
 import net.mabako.steamgifts.intro.IntroActivity;
@@ -130,8 +131,8 @@ public class MainActivity extends CommonActivity implements IPointUpdateNotifica
 
                         if (navbar != null)
                             navbar.setSelection(((GiveawayListFragment) fragment).getType().getNavbarResource());
-                    } else if (fragment instanceof SavedGiveawaysFragment) {
-                        loadFragment(new SavedGiveawaysFragment());
+                    } else if (fragment instanceof SavedFragment) {
+                        loadFragment(new SavedFragment());
                     }
                 }
                 break;

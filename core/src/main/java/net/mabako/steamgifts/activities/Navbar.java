@@ -38,6 +38,7 @@ import net.mabako.steamgifts.fragments.SearchableListFragment;
 import net.mabako.steamgifts.fragments.UserDetailFragment;
 import net.mabako.steamgifts.intro.IntroActivity;
 import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
+import net.mabako.steamgifts.receivers.AbstractNotificationCheckReceiver;
 
 public class Navbar {
     private final CommonActivity activity;
@@ -97,7 +98,7 @@ public class Navbar {
             public void onClick(View v) {
                 if (SteamGiftsUserData.getCurrent(activity).isLoggedIn()) {
                     Intent intent = new Intent(activity, DetailActivity.class);
-                    intent.putExtra(DetailActivity.ARG_NOTIFICATIONS, true);
+                    intent.putExtra(DetailActivity.ARG_NOTIFICATIONS, AbstractNotificationCheckReceiver.NotificationId.NO_TYPE);
                     activity.startActivity(intent);
                 }
             }
@@ -275,7 +276,8 @@ public class Navbar {
         if (account.isLoggedIn()) {
             drawer.addItems(
                     new PrimaryDrawerItem().withName(R.string.navigation_giveaways_group).withIdentifier(R.string.navigation_giveaways_group).withIcon(FontAwesome.Icon.faw_users),
-                    new PrimaryDrawerItem().withName(R.string.navigation_giveaways_wishlist).withIdentifier(R.string.navigation_giveaways_wishlist).withIcon(FontAwesome.Icon.faw_heart));
+                    new PrimaryDrawerItem().withName(R.string.navigation_giveaways_wishlist).withIdentifier(R.string.navigation_giveaways_wishlist).withIcon(FontAwesome.Icon.faw_heart),
+                    new PrimaryDrawerItem().withName(R.string.navigation_giveaways_recommended).withIdentifier(R.string.navigation_giveaways_recommended).withIcon(FontAwesome.Icon.faw_thumbs_up));
         }
         drawer.addItems(new PrimaryDrawerItem().withName(R.string.navigation_giveaways_new).withIdentifier(R.string.navigation_giveaways_new).withIcon(FontAwesome.Icon.faw_refresh));
     }

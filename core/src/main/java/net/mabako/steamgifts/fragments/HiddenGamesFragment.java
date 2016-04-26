@@ -64,7 +64,7 @@ public class HiddenGamesFragment extends SearchableListFragment<HiddenGamesAdapt
 
     @Override
     protected AsyncTask<Void, Void, ?> getFetchItemsTask(int page) {
-        return new LoadGameListTask(this, "account/settings/giveaways/filters", page, getSearchQuery()) {
+        return new LoadGameListTask(this, getContext(), "account/settings/giveaways/filters", page, getSearchQuery()) {
             @Override
             protected Game load(Element element) {
                 Game game = new Game();
