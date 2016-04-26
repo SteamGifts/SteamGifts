@@ -61,6 +61,7 @@ public class LoadGiveawayListTask extends AsyncTask<Void, Void, List<Giveaway>> 
                 addFilterParameter(jsoup, "level_min", filterData.getMinLevel());
                 addFilterParameter(jsoup, "level_max", filterData.getMaxLevel());
             }
+            addFilterParameter(jsoup, "region_restricted", filterData.isRegionRestrictedOnly());
 
             if (type != GiveawayListFragment.Type.ALL)
                 jsoup.data("type", type.name().toLowerCase(Locale.ENGLISH));
@@ -97,5 +98,10 @@ public class LoadGiveawayListTask extends AsyncTask<Void, Void, List<Giveaway>> 
     private void addFilterParameter(Connection jsoup, String parameterName, int value) {
         if (value >= 0)
             jsoup.data(parameterName, String.valueOf(value));
+    }
+
+    private void addFilterParameter(Connection jsoup, String parameterName, boolean value) {
+        if (value)
+            jsoup.data(parameterName, "true");
     }
 }
