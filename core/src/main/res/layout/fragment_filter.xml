@@ -140,6 +140,41 @@
         app:layout_columnWeight="1"
         app:layout_rowWeight="1" />
 
+    <!-- Points -->
+    <TextView
+        style="@style/NormalText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:text="@string/filter_copies"
+        app:layout_columnWeight="0"
+        app:layout_gravity="end"
+        app:layout_rowWeight="1" />
+
+    <EditText
+        android:id="@+id/filter_copies_min"
+        style="@style/NormalText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:hint="@string/filter_min"
+        android:imeOptions="actionNext"
+        android:inputType="numberSigned"
+        app:layout_columnWeight="1"
+        app:layout_rowWeight="1" />
+
+    <EditText
+        android:id="@+id/filter_copies_max"
+        style="@style/NormalText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:hint="@string/filter_max"
+        android:imeOptions="actionNone"
+        android:inputType="numberSigned"
+        app:layout_columnWeight="1"
+        app:layout_rowWeight="1" />
+
     <!-- Entered -->
     <CheckBox
         android:id="@+id/filter_entered"

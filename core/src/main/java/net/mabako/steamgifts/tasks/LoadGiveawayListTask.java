@@ -62,6 +62,8 @@ public class LoadGiveawayListTask extends AsyncTask<Void, Void, List<Giveaway>> 
                 addFilterParameter(jsoup, "level_max", filterData.getMaxLevel());
             }
             addFilterParameter(jsoup, "region_restricted", filterData.isRegionRestrictedOnly());
+            addFilterParameter(jsoup, "copy_min", filterData.getMinCopies());
+            addFilterParameter(jsoup, "copy_max", filterData.getMaxCopies());
 
             if (type != GiveawayListFragment.Type.ALL)
                 jsoup.data("type", type.name().toLowerCase(Locale.ENGLISH));
