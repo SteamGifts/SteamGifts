@@ -64,7 +64,7 @@ public class BaseActivity extends AppCompatActivity {
 
     private boolean setTheme() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean nightMode = prefs.getBoolean("preference_theme_nightmode", false);
+        boolean nightMode = prefs.getBoolean("preference_theme_nightmode", true);
         if (nightMode != this.nightMode) {
             this.nightMode = nightMode;
             setTheme(nightMode ? R.style.AppTheme_Dark : R.style.AppTheme_Light);
