@@ -35,6 +35,7 @@ import net.mabako.steamgifts.fragments.DiscussionListFragment;
 import net.mabako.steamgifts.fragments.GiveawayListFragment;
 import net.mabako.steamgifts.fragments.SavedFragment;
 import net.mabako.steamgifts.fragments.SearchableListFragment;
+import net.mabako.steamgifts.fragments.TradeListFragment;
 import net.mabako.steamgifts.fragments.UserDetailFragment;
 import net.mabako.steamgifts.intro.IntroActivity;
 import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
@@ -154,6 +155,17 @@ public class Navbar {
                                 }
                             }
 
+                            for (TradeListFragment.Type type : TradeListFragment.Type.values()) {
+                                if (type.getNavbarResource() == identifier) {
+                                    activity.loadFragment(TradeListFragment.newInstance(type, null));
+                                    ActionBar actionBar = activity.getSupportActionBar();
+                                    if (actionBar != null)
+                                        actionBar.setSubtitle(null);
+
+                                    break;
+                                }
+                            }
+
 
                             return false;
                         }
@@ -251,8 +263,15 @@ public class Navbar {
         if (!account.isLoggedIn())
             drawer.addItem(new PrimaryDrawerItem().withName(R.string.login).withIdentifier(R.string.login).withSelectable(false).withIcon(FontAwesome.Icon.faw_sign_in));
 
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
+        String mode = sharedPreferences.getString("preference_sidebar_discussion_list", "full");
+
         addGiveawayItems(account);
-        addDiscussionItems(account);
+
+        if ("compact".equals(mode))
+            drawer.addItem(new DividerDrawerItem());
+        addDiscussionItems(account, mode);
+        addTradeItems(account, mode);
 
         drawer.addItems(new DividerDrawerItem());
         drawer.addItem(new PrimaryDrawerItem().withName(R.string.navigation_saved_elements).withIdentifier(R.string.navigation_saved_elements).withIcon(FontAwesome.Icon.faw_star));
@@ -265,8 +284,6 @@ public class Navbar {
      * Add all Navbar icons related to giveaways.
      */
     private void addGiveawayItems(SteamGiftsUserData account) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
-
         // All different giveaway views
         drawer.addItems(
                 new SectionDrawerItem().withName(R.string.navigation_giveaways).withDivider(!account.isLoggedIn()),
@@ -285,10 +302,7 @@ public class Navbar {
     /**
      * Add all discussion-related items.
      */
-    private void addDiscussionItems(SteamGiftsUserData account) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
-
-        String mode = sharedPreferences.getString("preference_sidebar_discussion_list", "full");
+    private void addDiscussionItems(SteamGiftsUserData account, String mode) {
         if ("full".equals(mode)) {
             // Full mode: Show all different categories in the navbar
             drawer.addItem(new SectionDrawerItem().withName(R.string.navigation_discussions).withDivider(true));
@@ -302,8 +316,24 @@ public class Navbar {
         } else if ("compact".equals(mode)) {
             // Compact mode: we only add a single item called 'Discussions' that links to all discussions,
             // and there's a menu item in the 'discussions' list to switch between different categories.
-            drawer.addItems(new DividerDrawerItem());
             drawer.addItem(new PrimaryDrawerItem().withName(R.string.navigation_discussions).withIdentifier(DiscussionListFragment.Type.ALL.getNavbarResource()).withIcon(DiscussionListFragment.Type.ALL.getIcon()));
+        }
+    }
+
+    /**
+     * Add all trade-related items.
+     */
+    private void addTradeItems(SteamGiftsUserData account, String mode) {
+        if ("full".equals(mode)) {
+            drawer.addItem(new SectionDrawerItem().withName(R.string.navigation_trades).withDivider(true));
+            for (TradeListFragment.Type type : TradeListFragment.Type.values()) {
+                if (type == TradeListFragment.Type.CREATED && !account.isLoggedIn())
+                    continue;
+
+                drawer.addItem(new PrimaryDrawerItem().withName(type.getNavbarResource()).withIdentifier(type.getNavbarResource()).withIcon(type.getIcon()));
+            }
+        } else if ("compact".equals(mode)) {
+            drawer.addItem(new PrimaryDrawerItem().withName(R.string.navigation_trades).withIdentifier(TradeListFragment.Type.ALL.getNavbarResource()).withIcon(TradeListFragment.Type.ALL.getIcon()));
         }
     }
 

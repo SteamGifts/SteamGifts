@@ -37,8 +37,15 @@
     <string name="navigation_discussions_puzzles">Puzzles</string>
     <string name="navigation_discussions_puzzles_title">Puzzles</string>
     <string name="navigation_discussions_created">Created</string>
-    <string name="navigation_discussions_created_title">Created</string>
+    <string name="navigation_discussions_created_title">Created Discussions</string>
     <string name="navigation_discussions_type">Category</string>
+
+    <!-- Navigation for Trades -->
+    <string name="navigation_trades">Trades</string>
+    <string name="navigation_trades_all">All</string>
+    <string name="navigation_trades_all_title">All Trades</string>
+    <string name="navigation_trades_created">Created</string>
+    <string name="navigation_trades_created_title">Created Trades</string>
 
     <!-- Drawer items -->
     <string name="drawer_open">Open navigation drawer</string>
