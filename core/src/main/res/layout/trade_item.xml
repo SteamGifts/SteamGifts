@@ -31,19 +31,19 @@
             android:paddingLeft="4dp">
 
             <TextView
-                android:id="@+id/discussion_title"
+                android:id="@+id/trade_title"
                 style="@style/NormalText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:text="Discussion Title" />
+                android:singleLine="false"
+                android:text="Trade Title" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/discussion_author"
+                    android:id="@+id/trade_author"
                     style="@style/SmallText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -52,10 +52,36 @@
                     android:text="User" />
 
                 <TextView
-                    android:id="@+id/discussion_time"
+                    android:id="@+id/trade_score_positive"
                     style="@style/SmallText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:text="+0"
+                    android:textColor="?attr/colorTradeScorePositive" />
+
+                <TextView
+                    style="@style/SmallText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:text="/" />
+
+                <TextView
+                    android:id="@+id/trade_score_negative"
+                    style="@style/SmallText.Trades.Badges.NoNegative"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:text="-0"
+                    android:textColor="?attr/colorTradeScoreNegative" />
+
+                <TextView
+                    android:id="@+id/trade_time"
+                    style="@style/SmallText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="8dp"
                     android:singleLine="true"
                     android:text="Time" />
             </LinearLayout>

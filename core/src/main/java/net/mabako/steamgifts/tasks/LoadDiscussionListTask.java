@@ -89,7 +89,6 @@ public class LoadDiscussionListTask extends AsyncTask<Void, Void, List<Discussio
                 discussion.setCreator(p.select("a").last().text());
 
                 // The creator's avatar
-                String avatar = null;
                 Element avatarNode = element.select(".global__image-inner-wrap").first();
                 if (avatarNode != null)
                     discussion.setCreatorAvatar(Utils.extractAvatar(avatarNode.attr("style")));

@@ -7,4 +7,7 @@
     <attr name="colorLightSeparatorBackground" format="color" />
     <attr name="colorLighterSeparatorBackground" format="color" />
     <attr name="lightTextColor" format="color" />
+
+    <attr name="colorTradeScorePositive" format="color"/>
+    <attr name="colorTradeScoreNegative" format="color"/>
 </resources>

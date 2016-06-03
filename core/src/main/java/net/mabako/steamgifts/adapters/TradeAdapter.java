@@ -5,6 +5,9 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import net.mabako.steamgifts.adapters.viewholder.TradeListItemViewHolder;
+import net.mabako.steamgifts.data.Trade;
+
 import java.util.List;
 
 public class TradeAdapter extends EndlessAdapter {
@@ -29,12 +32,18 @@ public class TradeAdapter extends EndlessAdapter {
     protected RecyclerView.ViewHolder onCreateActualViewHolder(View view, int viewType) {
         if (context == null)
             throw new IllegalStateException("Got no context");
-        return null;
+
+        return new TradeListItemViewHolder(view, context, this);
     }
 
     @Override
-    protected void onBindActualViewHolder(RecyclerView.ViewHolder holder, int position) {
+    protected void onBindActualViewHolder(RecyclerView.ViewHolder h, int position) {
+        if (h instanceof TradeListItemViewHolder) {
+            TradeListItemViewHolder holder = (TradeListItemViewHolder) h;
+            Trade trade = (Trade) getItem(position);
 
+            holder.setFrom(trade);
+        }
     }
 
     @Override

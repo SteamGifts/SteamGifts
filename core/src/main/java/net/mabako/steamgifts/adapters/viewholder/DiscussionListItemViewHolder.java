@@ -20,7 +20,7 @@ import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 public class DiscussionListItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     private final View itemContainer;
-    private final TextView discussionName;
+    private final TextView discussionTitle;
     private final TextView discussionAuthor;
     private final ImageView discussionAuthorAvatar;
     private final TextView discussionTime;
@@ -34,7 +34,7 @@ public class DiscussionListItemViewHolder extends RecyclerView.ViewHolder implem
         this.activity = activity;
 
         itemContainer = itemView.findViewById(R.id.list_item);
-        discussionName = (TextView) itemView.findViewById(R.id.discussion_name);
+        discussionTitle = (TextView) itemView.findViewById(R.id.discussion_title);
         discussionAuthor = (TextView) itemView.findViewById(R.id.discussion_author);
         discussionAuthorAvatar = (ImageView) itemView.findViewById(R.id.author_avatar);
         discussionTime = (TextView) itemView.findViewById(R.id.discussion_time);
@@ -48,7 +48,7 @@ public class DiscussionListItemViewHolder extends RecyclerView.ViewHolder implem
             text.append("{faw-align-left} ");
         text.append(discussion.getTitle());
 
-        discussionName.setText(text);
+        discussionTitle.setText(text);
         discussionAuthor.setText(discussion.getCreator());
         discussionTime.setText(discussion.getRelativeCreatedTime(activity));
 
