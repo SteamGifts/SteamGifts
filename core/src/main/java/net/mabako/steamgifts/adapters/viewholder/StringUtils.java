@@ -49,7 +49,7 @@ public final class StringUtils {
 
         if (useCustomViewHandler) {
             try {
-                CharSequence cs = Html.fromHtml(source, imageGetter, new CustomHtmlTagHandler());
+                CharSequence cs = Html.fromHtml(source, imageGetter, new CustomHtmlTagHandler(context));
                 cs = trim(cs, 0, cs.length());
                 return addProperLinks(context, cs);
             } catch (Exception e) {

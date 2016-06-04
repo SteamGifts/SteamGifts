@@ -135,8 +135,13 @@ public class LoadTradeDetailsTask extends AsyncTask<Void, Void, TradeExtras> {
 
         // Load the description
         Element description = document.select(".comment__display-state .markdown").first();
-        if (description != null) // This will be null if no description is given.
+        if (description != null) {
+            // This will be null if no description is given.
+            description.select("blockquote").tagName("custom_quote");
+            description.select("div.want").tagName("trade_want");
+            description.select("div.have").tagName("trade_have");
             extras.setDescription(Utils.loadAttachedImages(extras, description));
+        }
 
         // Can we send a comment?
         Element xsrf = document.select(".comment--submit form input[name=xsrf_token]").first();

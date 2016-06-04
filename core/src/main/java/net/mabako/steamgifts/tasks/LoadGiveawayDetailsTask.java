@@ -130,8 +130,11 @@ public class LoadGiveawayDetailsTask extends AsyncTask<Void, Void, GiveawayExtra
 
         // Load the description
         Element description = document.select(".page__description__display-state .markdown").first();
-        if (description != null) // This will be null if no description is given.
+        if (description != null) {
+            // This will be null if no description is given.
+            description.select("blockquote").tagName("custom_quote");
             extras.setDescription(Utils.loadAttachedImages(extras, description));
+        }
 
         // Load the xsrf token regardless of whether or not you can enter.
         Element xsrfToken = document.select("input[name=xsrf_token]").first();

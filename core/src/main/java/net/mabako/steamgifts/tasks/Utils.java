@@ -102,6 +102,7 @@ public final class Utils {
 
 
         Element desc = element.select(".comment__description").first();
+        desc.select("blockquote").tagName("custom_quote");
         String content = loadAttachedImages(comment, desc);
         comment.setContent(content);
 
