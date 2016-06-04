@@ -14,10 +14,12 @@ import android.util.Log;
 import net.mabako.sgtools.SGToolsDetailFragment;
 import net.mabako.steamgifts.data.BasicDiscussion;
 import net.mabako.steamgifts.data.BasicGiveaway;
+import net.mabako.steamgifts.data.BasicTrade;
 import net.mabako.steamgifts.data.Comment;
 import net.mabako.steamgifts.fragments.DetailFragment;
 import net.mabako.steamgifts.fragments.DiscussionDetailFragment;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
+import net.mabako.steamgifts.fragments.TradeDetailFragment;
 import net.mabako.steamgifts.fragments.UserDetailFragment;
 
 import java.util.List;
@@ -62,6 +64,14 @@ public class UrlHandlingActivity extends CommonActivity {
                     if (discussionId.length() == 5) {
                         Intent intent = new Intent(context, DetailActivity.class);
                         intent.putExtra(DiscussionDetailFragment.ARG_DISCUSSION, new BasicDiscussion(discussionId));
+                        intent.putExtra(DetailFragment.ARG_COMMENT_CONTEXT, DetailFragment.CommentContextInfo.fromUri(uri));
+                        return intent;
+                    }
+                } else if ("trade".equals(pathSegments.get(0))) {
+                    String tradeId = pathSegments.get(1);
+                    if (tradeId.length() == 5) {
+                        Intent intent = new Intent(context, DetailActivity.class);
+                        intent.putExtra(TradeDetailFragment.ARG_TRADE, new BasicTrade(tradeId));
                         intent.putExtra(DetailFragment.ARG_COMMENT_CONTEXT, DetailFragment.CommentContextInfo.fromUri(uri));
                         return intent;
                     }

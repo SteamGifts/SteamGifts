@@ -69,7 +69,7 @@
 
                 <TextView
                     android:id="@+id/trade_score_negative"
-                    style="@style/SmallText.Trades.Badges.NoNegative"
+                    style="@style/SmallText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:singleLine="true"

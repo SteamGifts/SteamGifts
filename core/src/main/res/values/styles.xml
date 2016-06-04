@@ -82,14 +82,6 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="SmallText.Trades.Badges.NoNegative" parent="SmallText">
-        <item name="android:textColor">?attr/colorTradeScoreNegative</item>
-    </style>
-
-    <style name="SmallText.Trades.Badges.Negative" parent="SmallText">
-        <item name="android:textColor">@color/md_white_1000</item>
-    </style>
-
     <!-- Use rather rectangular image in the account header. -->
     <style name="BezelImageView">
         <item name="biv_maskDrawable">@drawable/material_drawer_square_mask</item>

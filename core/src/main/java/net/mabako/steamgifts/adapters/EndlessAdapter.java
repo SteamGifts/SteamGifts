@@ -326,7 +326,7 @@ public abstract class EndlessAdapter extends RecyclerView.Adapter<RecyclerView.V
 
             RecyclerView.ViewHolder holder = onCreateActualViewHolder(view, viewType);
             if (holder == null)
-                throw new IllegalStateException("Got no giveaway holder for " + viewType);
+                throw new IllegalStateException("Got no view holder for " + viewType);
             return holder;
         }
     }

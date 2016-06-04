@@ -14,10 +14,6 @@ public class GiveawayDetailsCard implements IEndlessAdaptable, Serializable {
     private Giveaway giveaway;
     private GiveawayExtras extras;
 
-    public GiveawayDetailsCard() {
-
-    }
-
     @Override
     public int getLayout() {
         return VIEW_LAYOUT;

@@ -11,15 +11,18 @@ import net.mabako.steamgifts.adapters.viewholder.DiscussionCardViewHolder;
 import net.mabako.steamgifts.adapters.viewholder.GiveawayCardViewHolder;
 import net.mabako.steamgifts.adapters.viewholder.PollAnswerViewHolder;
 import net.mabako.steamgifts.adapters.viewholder.PollHeaderViewHolder;
+import net.mabako.steamgifts.adapters.viewholder.TradeCardViewHolder;
 import net.mabako.steamgifts.data.Comment;
 import net.mabako.steamgifts.data.Poll;
 import net.mabako.steamgifts.fragments.DiscussionDetailFragment;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
 import net.mabako.steamgifts.fragments.ListFragment;
+import net.mabako.steamgifts.fragments.TradeDetailFragment;
 import net.mabako.steamgifts.fragments.interfaces.ICommentableFragment;
 import net.mabako.steamgifts.fragments.interfaces.IHasPoll;
 import net.mabako.steamgifts.fragments.util.DiscussionDetailsCard;
 import net.mabako.steamgifts.fragments.util.GiveawayDetailsCard;
+import net.mabako.steamgifts.fragments.util.TradeDetailsCard;
 
 import java.util.List;
 
@@ -59,6 +62,8 @@ public class CommentAdapter extends EndlessAdapter {
             return new GiveawayCardViewHolder(view, (GiveawayDetailFragment) fragment);
         } else if (viewType == DiscussionDetailsCard.VIEW_LAYOUT) {
             return new DiscussionCardViewHolder(view, (DiscussionDetailFragment) fragment, fragment.getContext());
+        } else if (viewType == TradeDetailsCard.VIEW_LAYOUT) {
+            return new TradeCardViewHolder(view, (TradeDetailFragment) fragment, fragment.getContext());
 
         } else if (viewType == CommentContextViewHolder.VIEW_LAYOUT) {
             return new CommentContextViewHolder(view, fragment.getActivity());
@@ -90,6 +95,11 @@ public class CommentAdapter extends EndlessAdapter {
         } else if (h instanceof DiscussionCardViewHolder) {
             DiscussionCardViewHolder holder = (DiscussionCardViewHolder) h;
             DiscussionDetailsCard card = (DiscussionDetailsCard) getItem(position);
+
+            holder.setFrom(card);
+        } else if (h instanceof TradeCardViewHolder) {
+            TradeCardViewHolder holder = (TradeCardViewHolder) h;
+            TradeDetailsCard card = (TradeDetailsCard) getItem(position);
 
             holder.setFrom(card);
         } else if (h instanceof CommentContextViewHolder) {

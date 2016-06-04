@@ -17,6 +17,7 @@ import net.mabako.sgtools.SGToolsDetailFragment;
 import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.BasicDiscussion;
 import net.mabako.steamgifts.data.BasicGiveaway;
+import net.mabako.steamgifts.data.BasicTrade;
 import net.mabako.steamgifts.data.Comment;
 import net.mabako.steamgifts.fragments.DetailFragment;
 import net.mabako.steamgifts.fragments.DiscussionDetailFragment;
@@ -25,6 +26,7 @@ import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
 import net.mabako.steamgifts.fragments.GiveawayGroupListFragment;
 import net.mabako.steamgifts.fragments.GiveawayWinnerListFragment;
 import net.mabako.steamgifts.fragments.HiddenGamesFragment;
+import net.mabako.steamgifts.fragments.TradeDetailFragment;
 import net.mabako.steamgifts.fragments.UserDetailFragment;
 import net.mabako.steamgifts.fragments.WhitelistBlacklistFragment;
 import net.mabako.steamgifts.fragments.profile.CreatedListFragment;
@@ -88,6 +90,14 @@ public class DetailActivity extends CommonActivity {
             setContentView(R.layout.activity_one_fragment);
             if (savedInstanceState == null)
                 loadFragment(DiscussionDetailFragment.newInstance((BasicDiscussion) serializable, commentContext));
+            return;
+        }
+
+        serializable = getIntent().getSerializableExtra(TradeDetailFragment.ARG_TRADE);
+        if (serializable != null) {
+            setContentView(R.layout.activity_one_fragment);
+            if (savedInstanceState == null)
+                loadFragment(TradeDetailFragment.newInstance((BasicTrade) serializable, commentContext));
             return;
         }
 

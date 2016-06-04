@@ -7,10 +7,9 @@ import android.util.Log;
 import android.widget.Toast;
 
 import net.mabako.Constants;
-import net.mabako.steamgifts.data.Discussion;
-import net.mabako.steamgifts.data.DiscussionExtras;
-import net.mabako.steamgifts.data.Poll;
-import net.mabako.steamgifts.fragments.DiscussionDetailFragment;
+import net.mabako.steamgifts.data.Trade;
+import net.mabako.steamgifts.data.TradeExtras;
+import net.mabako.steamgifts.fragments.TradeDetailFragment;
 import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
 
 import org.jsoup.Connection;
@@ -21,27 +20,26 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 
-public class LoadDiscussionDetailsTask extends AsyncTask<Void, Void, DiscussionExtras> {
-    private static final String TAG = LoadDiscussionDetailsTask.class.getSimpleName();
+public class LoadTradeDetailsTask extends AsyncTask<Void, Void, TradeExtras> {
+    private static final String TAG = LoadTradeDetailsTask.class.getSimpleName();
 
-    private final DiscussionDetailFragment fragment;
-    private String discussionId;
+    private final TradeDetailFragment fragment;
+    private String tradeId;
     private int page;
     private final boolean loadDetails;
 
-    private Discussion loadedDetails = null;
+    private Trade loadedDetails = null;
     private boolean lastPage = false;
 
-    public LoadDiscussionDetailsTask(DiscussionDetailFragment fragment, String discussionId, int page, boolean loadDetails) {
+    public LoadTradeDetailsTask(TradeDetailFragment fragment, String tradeId, int page, boolean loadDetails) {
         this.fragment = fragment;
-        this.discussionId = discussionId;
+        this.tradeId = tradeId;
         this.page = page;
         this.loadDetails = loadDetails;
-
     }
 
     @Override
-    protected DiscussionExtras doInBackground(Void... params) {
+    protected TradeExtras doInBackground(Void... params) {
         try {
             Connection.Response response = connect();
             if (response.statusCode() == 200) {
@@ -53,7 +51,7 @@ public class LoadDiscussionDetailsTask extends AsyncTask<Void, Void, DiscussionE
                 // are we expecting to be on this page? this can be most easily figured out if we check for the last path segment to be "search"
                 if (!"search".equals(uri.getLastPathSegment())) {
                     // Let's just try again.
-                    discussionId = uri.getPathSegments().get(1) + "/" + uri.getPathSegments().get(2);
+                    tradeId = uri.getPathSegments().get(1) + "/" + uri.getPathSegments().get(2);
                     response = connect();
                 }
 
@@ -63,9 +61,9 @@ public class LoadDiscussionDetailsTask extends AsyncTask<Void, Void, DiscussionE
                 // Update user details
                 SteamGiftsUserData.extract(fragment.getContext(), document);
 
-                DiscussionExtras extras = loadExtras(document);
+                TradeExtras extras = loadExtras(document);
                 if (loadDetails) {
-                    loadedDetails = loadDiscussion(document, uri);
+                    loadedDetails = loadTrade(document, uri);
                 }
 
                 // Do we have a page?
@@ -90,8 +88,8 @@ public class LoadDiscussionDetailsTask extends AsyncTask<Void, Void, DiscussionE
     }
 
     private Connection.Response connect() throws IOException {
-        String url = "https://www.steamgifts.com/discussion/" + discussionId + "/search?page=" + page;
-        Log.v(TAG, "Fetching discussion details for " + url);
+        String url = "https://www.steamgifts.com/trade/" + tradeId + "/search?page=" + page;
+        Log.v(TAG, "Fetching trade details for " + url);
         Connection connection = Jsoup.connect(url)
                 .userAgent(Constants.JSOUP_USER_AGENT)
                 .timeout(Constants.JSOUP_TIMEOUT)
@@ -103,19 +101,21 @@ public class LoadDiscussionDetailsTask extends AsyncTask<Void, Void, DiscussionE
         return connection.execute();
     }
 
-    private Discussion loadDiscussion(Document document, Uri linkUri) {
+    private Trade loadTrade(Document document, Uri linkUri) {
         Element element = document.select(".comments").first();
 
         // Basic information
-        String discussionLink = linkUri.getPathSegments().get(1);
-        String discussionName = linkUri.getPathSegments().get(2);
+        String tradeLink = linkUri.getPathSegments().get(1);
+        String tradeName = linkUri.getPathSegments().get(2);
 
-        Discussion discussion = new Discussion(discussionLink);
-        discussion.setName(discussionName);
-        discussion.setTitle(Utils.getPageTitle(document));
+        Trade trade = new Trade(tradeLink);
+        trade.setName(tradeName);
+        trade.setTitle(Utils.getPageTitle(document));
 
-        discussion.setCreator(element.select(".comment__username a").first().text());
-        discussion.setCreatedTime(element.select(".comment__actions > div span").first().attr("title"));
+        trade.setCreator(element.select(".comment__username a").first().text());
+        trade.setCreatedTime(element.select(".comment__actions > div span").first().attr("title"));
+        trade.setCreatorScorePositive(Integer.parseInt(element.select(".trade-feedback--positive").first().text().replace(",", "")));
+        trade.setCreatorScoreNegative(-Integer.parseInt(element.select(".trade-feedback--negative").first().text().replace(",", "")));
 
         Element headerButton = document.select(".page__heading__button").first();
         if (headerButton != null) {
@@ -123,15 +123,15 @@ public class LoadDiscussionDetailsTask extends AsyncTask<Void, Void, DiscussionE
             headerButton.select(".page__heading__relative-dropdown").html("");
 
             // Is this button saying 'Closed'?
-            discussion.setLocked("Closed".equals(headerButton.text().trim()));
+            trade.setLocked("Closed".equals(headerButton.text().trim()));
         }
 
-        return discussion;
+        return trade;
     }
 
     @NonNull
-    private DiscussionExtras loadExtras(Document document) {
-        DiscussionExtras extras = new DiscussionExtras();
+    private TradeExtras loadExtras(Document document) {
+        TradeExtras extras = new TradeExtras();
 
         // Load the description
         Element description = document.select(".comment__display-state .markdown").first();
@@ -152,62 +152,20 @@ public class LoadDiscussionDetailsTask extends AsyncTask<Void, Void, DiscussionE
                 Utils.loadComments(rootCommentNode, extras, 0, fragment.getAdapter().isViewInReverse());
         }
 
-        // Do we have a poll?
-        Element pollElement = document.select(".poll").first();
-        if (pollElement != null) {
-            try {
-                extras.setPoll(loadPoll(pollElement));
-            } catch (Exception e) {
-                Log.w(TAG, "unable to load poll", e);
-            }
-        }
-
         return extras;
     }
 
-    private Poll loadPoll(Element pollElement) {
-        Poll poll = new Poll();
-
-        // Question and Description are actually both within the same element, which makes it a tad confusing.
-        // Fetch the question and description
-        Elements pollHeader = pollElement.select(".table__heading .table__column--width-fill p");
-
-        // Set the description only, and remove that from the question element
-        poll.setDescription(pollHeader.select("span.poll__description").text());
-        pollHeader.select("span.poll__description").html("");
-
-        // the remaining text is the question.
-        poll.setQuestion(pollHeader.text());
-
-        poll.setClosed(pollElement.select("form").isEmpty());
-
-        Elements answerElements = pollElement.select(".table__rows div[data-id]");
-        for (Element thisAnswer : answerElements) {
-            Poll.Answer answer = new Poll.Answer();
-
-            answer.setId(Integer.valueOf(thisAnswer.attr("data-id")));
-            answer.setVoteCount(Integer.valueOf(thisAnswer.attr("data-votes")));
-            answer.setText(thisAnswer.select(".table__column__heading").text());
-
-            poll.addAnswer(answer, thisAnswer.hasClass("is-selected"));
-        }
-
-        Log.d(TAG, poll.toString());
-
-        return poll;
-    }
-
     @Override
-    protected void onPostExecute(DiscussionExtras discussionExtras) {
-        super.onPostExecute(discussionExtras);
+    protected void onPostExecute(TradeExtras tradeExtras) {
+        super.onPostExecute(tradeExtras);
 
-        if (discussionExtras != null || !loadDetails) {
+        if (tradeExtras != null || !loadDetails) {
             if (loadDetails)
-                fragment.onPostDiscussionLoaded(loadedDetails);
+                fragment.onPostTradeLoaded(loadedDetails);
 
-            fragment.addItems(discussionExtras, page, lastPage);
+            fragment.addItems(tradeExtras, page, lastPage);
         } else {
-            Toast.makeText(fragment.getContext(), "Discussion does not exist or could not be loaded", Toast.LENGTH_LONG).show();
+            Toast.makeText(fragment.getContext(), "Trade does not exist or could not be loaded", Toast.LENGTH_LONG).show();
             fragment.getActivity().finish();
         }
     }
