@@ -149,7 +149,7 @@ public class LoadDiscussionDetailsTask extends AsyncTask<Void, Void, DiscussionE
         if (commentsNode.size() > 1) {
             Element rootCommentNode = commentsNode.last();
             if (rootCommentNode != null)
-                Utils.loadComments(rootCommentNode, extras, 0, fragment.getAdapter().isViewInReverse());
+                Utils.loadComments(rootCommentNode, extras, 0, fragment.getAdapter().isViewInReverse(), false);
         }
 
         // Do we have a poll?

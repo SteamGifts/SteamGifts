@@ -149,7 +149,7 @@ public class LoadTradeDetailsTask extends AsyncTask<Void, Void, TradeExtras> {
         if (commentsNode.size() > 1) {
             Element rootCommentNode = commentsNode.last();
             if (rootCommentNode != null)
-                Utils.loadComments(rootCommentNode, extras, 0, fragment.getAdapter().isViewInReverse());
+                Utils.loadComments(rootCommentNode, extras, 0, fragment.getAdapter().isViewInReverse(), true);
         }
 
         return extras;
