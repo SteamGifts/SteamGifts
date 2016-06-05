@@ -81,8 +81,8 @@ public class LoadTradesListTask extends AsyncTask<Void, Void, List<Trade>> {
                 Element p = element.select(".table__column--width-fill p").first();
                 trade.setCreatedTime(p.select("span").first().attr("title"));
                 trade.setCreator(p.select("a").first().text());
-                trade.setCreatorScorePositive(Integer.parseInt(p.select(".trade-feedback--positive").first().text().replace(",", "")));
-                trade.setCreatorScoreNegative(-Integer.parseInt(p.select(".trade-feedback--negative").first().text().replace(",", "")));
+                trade.setCreatorScorePositive(Utils.parseInt(p.select(".trade-feedback--positive").first().text()));
+                trade.setCreatorScoreNegative(-Utils.parseInt(p.select(".trade-feedback--negative").first().text()));
 
                 // The creator's avatar
                 Element avatarNode = element.select(".global__image-inner-wrap").first();

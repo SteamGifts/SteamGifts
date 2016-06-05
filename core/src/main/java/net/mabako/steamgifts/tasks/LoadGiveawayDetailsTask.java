@@ -7,6 +7,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import net.mabako.Constants;
+import net.mabako.steamgifts.data.Comment;
 import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.data.GiveawayExtras;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
@@ -103,7 +104,7 @@ public class LoadGiveawayDetailsTask extends AsyncTask<Void, Void, GiveawayExtra
         // Entries, would usually have comment count too... but we don't display that anywhere.
         Element sidebarElement = document.select("a.sidebar__navigation__item__link[href$=/entries] .sidebar__navigation__item__count").first();
         try {
-            giveaway.setEntries(sidebarElement == null ? -1 : Integer.parseInt(sidebarElement.text().replace(",", "")));
+            giveaway.setEntries(sidebarElement == null ? -1 : Utils.parseInt(sidebarElement.text()));
         } catch (NumberFormatException e) {
             if (sidebarElement != null)
                 Log.w(TAG, "Unable to parse entry count: " + sidebarElement.text());
@@ -156,7 +157,7 @@ public class LoadGiveawayDetailsTask extends AsyncTask<Void, Void, GiveawayExtra
         // Winners, if any
         Element sidebarElement = document.select("a.sidebar__navigation__item__link[href$=/winners] .sidebar__navigation__item__count").first();
         try {
-            extras.setWinners(sidebarElement == null ? null : Integer.parseInt(sidebarElement.text().replace(",", "")));
+            extras.setWinners(sidebarElement == null ? null : Utils.parseInt(sidebarElement.text()));
         } catch (NumberFormatException e) {
             if (sidebarElement != null)
                 Log.w(TAG, "Unable to parse entry count: " + sidebarElement.text());
@@ -167,7 +168,7 @@ public class LoadGiveawayDetailsTask extends AsyncTask<Void, Void, GiveawayExtra
         // Load comments
         Element rootCommentNode = document.select(".comments").first();
         if (rootCommentNode != null)
-            Utils.loadComments(rootCommentNode, extras);
+            Utils.loadComments(rootCommentNode, extras, Comment.Type.COMMENT);
         return extras;
     }
 

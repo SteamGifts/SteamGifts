@@ -6,6 +6,7 @@ import android.util.Log;
 
 import net.mabako.Constants;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
+import net.mabako.steamgifts.data.Comment;
 import net.mabako.steamgifts.data.MessageHeader;
 import net.mabako.steamgifts.fragments.interfaces.ILoadItemsListener;
 import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
@@ -71,7 +72,7 @@ public class LoadMessagesTask extends AsyncTask<Void, Void, List<IEndlessAdaptab
 
                 Element commentElement = element.nextElementSibling();
                 if (commentElement != null)
-                    Utils.loadComments(commentElement, message);
+                    Utils.loadComments(commentElement, message, Comment.Type.COMMENT);
 
                 // add the message & all associated comments.
                 list.add(message);

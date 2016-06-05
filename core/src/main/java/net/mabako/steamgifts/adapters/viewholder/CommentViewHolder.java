@@ -102,30 +102,32 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
         commentImage.setOnClickListener(viewProfileListener);
         commentAuthor.setOnClickListener(viewProfileListener);
 
-        writeCommentListener = comment.getId() == 0 ? null : new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fragment.requestComment(comment);
-            }
-        };
+        if (fragment.canPostOrModifyComments()) {
+            writeCommentListener = comment.getId() == 0 ? null : new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    fragment.requestComment(comment);
+                }
+            };
 
-        // We assume that, if we have an editable state, we can edit the comment. Should we check for username here?
-        editCommentListener = comment.getEditableContent() == null || comment.getId() == 0 || (!(fragment instanceof DetailFragment)) ? null : new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((DetailFragment) fragment).requestCommentEdit(comment);
-            }
-        };
+            // We assume that, if we have an editable state, we can edit the comment. Should we check for username here?
+            editCommentListener = comment.getEditableContent() == null || comment.getId() == 0 || (!(fragment instanceof DetailFragment)) ? null : new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((DetailFragment) fragment).requestCommentEdit(comment);
+                }
+            };
 
-        deleted = comment.isDeleted();
-        deleteCommentListener = comment.getId() == 0 || !comment.isDeletable() ? null : new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fragment.deleteComment(comment);
-            }
-        };
+            deleted = comment.isDeleted();
+            deleteCommentListener = comment.getId() == 0 || !comment.isDeletable() ? null : new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    fragment.deleteComment(comment);
+                }
+            };
+        }
 
-        if(comment instanceof TradeComment && !comment.isDeleted()) {
+        if (comment instanceof TradeComment && !comment.isDeleted()) {
             tradeScoreDivider.setVisibility(View.VISIBLE);
             tradeScorePositive.setVisibility(View.VISIBLE);
             tradeScoreNegative.setVisibility(View.VISIBLE);

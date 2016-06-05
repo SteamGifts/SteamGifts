@@ -1,5 +1,6 @@
 package net.mabako.steamgifts.fragments;
 
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -29,15 +30,20 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import net.mabako.steamgifts.activities.DetailActivity;
 import net.mabako.steamgifts.activities.UrlHandlingActivity;
+import net.mabako.steamgifts.adapters.CommentAdapter;
 import net.mabako.steamgifts.adapters.GiveawayAdapter;
 import net.mabako.steamgifts.adapters.IEndlessAdaptable;
 import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.BasicUser;
+import net.mabako.steamgifts.data.Comment;
 import net.mabako.steamgifts.data.User;
+import net.mabako.steamgifts.fragments.interfaces.ICommentableFragment;
 import net.mabako.steamgifts.fragments.interfaces.IHasWhitelistAndBlacklist;
 import net.mabako.steamgifts.fragments.interfaces.IUserNotifications;
 import net.mabako.steamgifts.tasks.LoadUserDetailsTask;
+import net.mabako.steamgifts.tasks.LoadUserTradeFeedbackTask;
 import net.mabako.steamgifts.tasks.UpdateWhitelistBlacklistTask;
 
 import java.io.Serializable;
@@ -108,13 +114,19 @@ public class UserDetailFragment extends Fragment implements IUserNotifications, 
             toolbar.setTitle(getNonConfusingUsername());
 
         UserGiveawayListFragment fragmentSent = UserGiveawayListFragment.newInstance(user, "");
-        fragmentSent.setiUserNotification(UserDetailFragment.this);
+        fragmentSent.setiUserNotification(this);
 
         UserGiveawayListFragment fragmentWon = UserGiveawayListFragment.newInstance(user, "/giveaways/won");
-        fragmentWon.setiUserNotification(UserDetailFragment.this);
+        fragmentWon.setiUserNotification(this);
+
+        UserTradeFeedbackListFragment fragmentPositiveFeedback = UserTradeFeedbackListFragment.newInstance(user, "/feedback/positive");
+        fragmentPositiveFeedback.setiUserNotification(this);
+
+        UserTradeFeedbackListFragment fragmentNegativeFeedback = UserTradeFeedbackListFragment.newInstance(user, "/feedback/negative");
+        fragmentNegativeFeedback.setiUserNotification(this);
 
         viewPager = (ViewPager) layout.findViewById(R.id.viewPager);
-        viewPagerAdapter = new CustomPagerAdapter((AppCompatActivity) getActivity(), viewPager, fragmentSent, fragmentWon);
+        viewPagerAdapter = new CustomPagerAdapter((AppCompatActivity) getActivity(), viewPager, fragmentSent, fragmentWon, fragmentPositiveFeedback, fragmentNegativeFeedback);
         viewPager.setAdapter(viewPagerAdapter);
 
         tabLayout = (TabLayout) layout.findViewById(R.id.tabLayout);
@@ -264,6 +276,7 @@ public class UserDetailFragment extends Fragment implements IUserNotifications, 
         updateWhitelistBlacklistButtons();
     }
 
+    @SuppressWarnings("ResourceAsColor")
     private void updateWhitelistBlacklistButtons() {
         int attrs[] = new int[]{android.R.attr.textColorPrimary};
         TypedArray ta = getContext().getTheme().obtainStyledAttributes(attrs);
@@ -285,6 +298,10 @@ public class UserDetailFragment extends Fragment implements IUserNotifications, 
                         return String.format(getString(R.string.user_giveaways_created_count), user.getCreated(), user.getCreatedAmount());
                     case 1:
                         return String.format(getString(R.string.user_giveaway_won_count), user.getWon(), user.getWonAmount());
+                    case 2:
+                        return String.format(getString(R.string.user_trade_feedback_positive_count), user.getPositiveFeedback());
+                    case 3:
+                        return String.format(getString(R.string.user_trade_feedback_negative_count), user.getNegativeFeedback());
                 }
             } else {
                 switch (position) {
@@ -292,6 +309,10 @@ public class UserDetailFragment extends Fragment implements IUserNotifications, 
                         return getString(R.string.user_giveaways_created);
                     case 1:
                         return getString(R.string.user_giveaway_won);
+                    case 2:
+                        return getString(R.string.user_trade_feedback_positive);
+                    case 3:
+                        return getString(R.string.user_trade_feedback_negative);
                 }
             }
             return null;
@@ -381,6 +402,103 @@ public class UserDetailFragment extends Fragment implements IUserNotifications, 
                 iUserNotification.onUserUpdated(user);
             else
                 Log.d(TAG, "no iUserUpdateNotification");
+        }
+    }
+
+    public static class UserTradeFeedbackListFragment extends ListFragment<CommentAdapter> implements IUserNotifications, ICommentableFragment {
+        private static final String SAVED_PATH = "path";
+
+        private User user;
+        private String path;
+        private IUserNotifications iUserNotification;
+
+        public static UserTradeFeedbackListFragment newInstance(User user, String path) {
+            UserTradeFeedbackListFragment fragment = new UserTradeFeedbackListFragment();
+
+            Bundle args = new Bundle();
+            args.putSerializable(SAVED_USER, user);
+            args.putString(SAVED_PATH, path);
+            fragment.setArguments(args);
+
+            return fragment;
+        }
+
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            if (savedInstanceState == null) {
+                user = (User) getArguments().getSerializable(SAVED_USER);
+                path = getArguments().getString(SAVED_PATH);
+            } else {
+                user = (User) savedInstanceState.getSerializable(SAVED_USER);
+                path = savedInstanceState.getString(SAVED_PATH);
+            }
+
+            super.onCreate(savedInstanceState);
+            adapter.setFragmentValues(this);
+        }
+
+        @NonNull
+        @Override
+        protected CommentAdapter createAdapter() {
+            return new CommentAdapter();
+        }
+
+        @Override
+        protected AsyncTask<Void, Void, ?> getFetchItemsTask(int page) {
+            return new LoadUserTradeFeedbackTask(this, user.getName() + path, page, user);
+        }
+
+        @Override
+        public void addItems(List<? extends IEndlessAdaptable> items, boolean clearExistingItems) {
+            if (clearExistingItems && items == null && !user.isLoaded()) {
+                Toast.makeText(getContext(), "User does not exist.", Toast.LENGTH_SHORT).show();
+                getActivity().finish();
+            } else {
+                super.addItems(items, clearExistingItems);
+            }
+        }
+
+        @Override
+        public void addItems(List<? extends IEndlessAdaptable> items, boolean clearExistingItems, String xsrfToken) {
+            super.addItems(items, clearExistingItems, xsrfToken);
+            if (iUserNotification != null && iUserNotification instanceof UserDetailFragment)
+                ((UserDetailFragment) iUserNotification).xsrfToken = xsrfToken;
+        }
+
+        @Override
+        protected Serializable getType() {
+            throw new UnsupportedOperationException();
+        }
+
+        public void setiUserNotification(IUserNotifications iUserNotification) {
+            this.iUserNotification = iUserNotification;
+        }
+
+        @Override
+        public void onUserUpdated(User user) {
+            iUserNotification.onUserUpdated(user);
+        }
+
+        @Override
+        public void showProfile(String user) {
+            Intent intent = new Intent(getActivity(), DetailActivity.class);
+            intent.putExtra(UserDetailFragment.ARG_USER, user);
+            getActivity().startActivity(intent);
+        }
+
+        @Override
+        public void requestComment(Comment parentComment) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void deleteComment(Comment comment) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public boolean canPostOrModifyComments() {
+            return false;
         }
     }
 }

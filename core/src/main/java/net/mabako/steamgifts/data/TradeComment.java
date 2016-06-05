@@ -5,8 +5,8 @@ public class TradeComment extends Comment {
 
     private int tradeScorePositive, tradeScoreNegative;
 
-    public TradeComment(long id, String author, int depth, String avatar, boolean isOp) {
-        super(id, author, depth, avatar, isOp);
+    public TradeComment(long id, String author, int depth, String avatar, boolean isOp, Type type) {
+        super(id, author, depth, avatar, isOp, type);
     }
 
     public int getTradeScorePositive() {

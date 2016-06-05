@@ -4,7 +4,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import net.mabako.Constants;
-import net.mabako.steamgifts.data.Giveaway;
+import net.mabako.steamgifts.data.Comment;
+import net.mabako.steamgifts.data.ICommentHolder;
 import net.mabako.steamgifts.data.User;
 import net.mabako.steamgifts.fragments.UserDetailFragment;
 import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
@@ -13,28 +14,33 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class LoadUserDetailsTask extends AsyncTask<Void, Void, List<Giveaway>> {
-    private static final String TAG = LoadUserDetailsTask.class.getSimpleName();
+/**
+ * Created by mabako on 05.06.2016.
+ */
+public class LoadUserTradeFeedbackTask extends AsyncTask<Void, Void, List<Comment>> {
+    private static final String TAG = "LoadUserTradeFeedbackTa";
 
-    private final UserDetailFragment.UserGiveawayListFragment fragment;
+    private final UserDetailFragment.UserTradeFeedbackListFragment fragment;
     private final String path;
     private final int page;
     private final User user;
+
     private String foundXsrfToken;
 
-    public LoadUserDetailsTask(UserDetailFragment.UserGiveawayListFragment fragment, String path, int page, User user) {
+    public LoadUserTradeFeedbackTask(UserDetailFragment.UserTradeFeedbackListFragment fragment, String path, int page, User user) {
         this.fragment = fragment;
         this.path = path;
         this.page = page;
         this.user = user;
     }
 
+
     @Override
-    protected List<Giveaway> doInBackground(Void... params) {
+    protected List<Comment> doInBackground(Void... params) {
         Log.d(TAG, "Fetching giveaways for user " + path + " on page " + page);
 
         try {
@@ -51,14 +57,32 @@ public class LoadUserDetailsTask extends AsyncTask<Void, Void, List<Giveaway>> {
             Document document = response.parse();
 
             if (response.statusCode() == 200) {
-
                 SteamGiftsUserData.extract(fragment.getContext(), document);
 
                 if (!user.isLoaded())
                     foundXsrfToken = Utils.loadUserProfile(user, document);
 
-                // Parse all rows of giveaways
-                return Utils.loadGiveawaysFromList(document);
+
+                Element rootCommentNode = document.select(".comments").first();
+                if (rootCommentNode != null) {
+                    // Parse all rows of giveaways
+                    ICommentHolder holder = new ICommentHolder() {
+                        private List<Comment> list = new ArrayList<>();
+
+                        @Override
+                        public List<Comment> getComments() {
+                            return list;
+                        }
+
+                        @Override
+                        public void addComment(Comment comment) {
+                            list.add(comment);
+                        }
+                    };
+                    Utils.loadComments(rootCommentNode, holder, 0, false, true, Comment.Type.TRADE_FEEDBACK);
+                    return holder.getComments();
+                } else
+                    return new ArrayList<>();
             } else {
                 return null;
             }
@@ -69,7 +93,7 @@ public class LoadUserDetailsTask extends AsyncTask<Void, Void, List<Giveaway>> {
     }
 
     @Override
-    protected void onPostExecute(List<Giveaway> result) {
+    protected void onPostExecute(List<Comment> result) {
         super.onPostExecute(result);
 
         if (!user.isLoaded() && result != null) {

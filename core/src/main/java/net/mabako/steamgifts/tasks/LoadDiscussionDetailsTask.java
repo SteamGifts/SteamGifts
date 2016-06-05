@@ -7,6 +7,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import net.mabako.Constants;
+import net.mabako.steamgifts.data.Comment;
 import net.mabako.steamgifts.data.Discussion;
 import net.mabako.steamgifts.data.DiscussionExtras;
 import net.mabako.steamgifts.data.Poll;
@@ -152,7 +153,7 @@ public class LoadDiscussionDetailsTask extends AsyncTask<Void, Void, DiscussionE
         if (commentsNode.size() > 1) {
             Element rootCommentNode = commentsNode.last();
             if (rootCommentNode != null)
-                Utils.loadComments(rootCommentNode, extras, 0, fragment.getAdapter().isViewInReverse(), false);
+                Utils.loadComments(rootCommentNode, extras, 0, fragment.getAdapter().isViewInReverse(), false, Comment.Type.COMMENT);
         }
 
         // Do we have a poll?

@@ -7,6 +7,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import net.mabako.Constants;
+import net.mabako.steamgifts.data.Comment;
 import net.mabako.steamgifts.data.Trade;
 import net.mabako.steamgifts.data.TradeExtras;
 import net.mabako.steamgifts.fragments.TradeDetailFragment;
@@ -114,8 +115,8 @@ public class LoadTradeDetailsTask extends AsyncTask<Void, Void, TradeExtras> {
 
         trade.setCreator(element.select(".comment__username a").first().text());
         trade.setCreatedTime(element.select(".comment__actions > div span").first().attr("title"));
-        trade.setCreatorScorePositive(Integer.parseInt(element.select(".trade-feedback--positive").first().text().replace(",", "")));
-        trade.setCreatorScoreNegative(-Integer.parseInt(element.select(".trade-feedback--negative").first().text().replace(",", "")));
+        trade.setCreatorScorePositive(Utils.parseInt(element.select(".trade-feedback--positive").first().text()));
+        trade.setCreatorScoreNegative(-Utils.parseInt(element.select(".trade-feedback--negative").first().text()));
 
         Element headerButton = document.select(".page__heading__button").first();
         if (headerButton != null) {
@@ -154,7 +155,7 @@ public class LoadTradeDetailsTask extends AsyncTask<Void, Void, TradeExtras> {
         if (commentsNode.size() > 1) {
             Element rootCommentNode = commentsNode.last();
             if (rootCommentNode != null)
-                Utils.loadComments(rootCommentNode, extras, 0, fragment.getAdapter().isViewInReverse(), true);
+                Utils.loadComments(rootCommentNode, extras, 0, fragment.getAdapter().isViewInReverse(), true, Comment.Type.COMMENT);
         }
 
         return extras;

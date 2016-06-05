@@ -43,7 +43,7 @@ public class LoadEnteredGameListTask extends LoadGameListTask {
         }
 
         giveaway.setPoints(-1);
-        giveaway.setEntries(Integer.parseInt(element.select(".table__column--width-small").first().text().replace(",", "")));
+        giveaway.setEntries(Utils.parseInt(element.select(".table__column--width-small").first().text()));
 
         Element end = firstColumn.select("p > span").first();
         if (end != null)

@@ -8,7 +8,7 @@ public class User extends BasicUser implements Serializable {
     private static final long serialVersionUID = -313348528668961481L;
     private String url, role;
 
-    private int level, created, won, comments;
+    private int level, created, won, comments, positiveFeedback, negativeFeedback;
     private String createdAmount, wonAmount;
 
     private boolean loaded = false, whitelisted, blacklisted;
@@ -85,10 +85,6 @@ public class User extends BasicUser implements Serializable {
         this.loaded = loaded;
     }
 
-    public String getRole() {
-        return role;
-    }
-
     public boolean isWhitelisted() {
         return whitelisted;
     }
@@ -103,6 +99,26 @@ public class User extends BasicUser implements Serializable {
 
     public void setBlacklisted(boolean blacklisted) {
         this.blacklisted = blacklisted;
+    }
+
+    public int getPositiveFeedback() {
+        return positiveFeedback;
+    }
+
+    public void setPositiveFeedback(int positiveFeedback) {
+        this.positiveFeedback = positiveFeedback;
+    }
+
+    public int getNegativeFeedback() {
+        return negativeFeedback;
+    }
+
+    public void setNegativeFeedback(int negativeFeedback) {
+        this.negativeFeedback = negativeFeedback;
+    }
+
+    public String getRole() {
+        return role;
     }
 
     /**

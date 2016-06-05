@@ -50,7 +50,7 @@
     <!-- Drawer items -->
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
-    <string name="drawer_profile_info">Level %1$d - %2$dP</string>
+    <string name="drawer_profile_info">Level %1$d \u2022 %2$dP</string>
     <string name="navigation_sync">Sync</string>
 
     <!-- Login/Logout/bye -->
@@ -133,6 +133,12 @@
     <string name="user_giveaway_won">Won</string>
     <string name="user_giveaways_created_count">%1$d sent\n%2$s</string>
     <string name="user_giveaway_won_count">%1$d won\n%2$s</string>
+
+    <string name="user_trade_feedback_positive_count">Trades\n+%1$d</string>
+    <string name="user_trade_feedback_negative_count">Trades\n-%1$d</string>
+    <string name="user_trade_feedback_positive">Trades\n+</string>
+    <string name="user_trade_feedback_negative">Trades\n-</string>
+
     <string name="private_giveaway">This giveaway is private.</string>
     <string name="view_profile">View Profile</string>
 
