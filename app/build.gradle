@@ -37,10 +37,6 @@ android {
         disable 'GoogleAppIndexingWarning'
         warning 'InvalidPackage' // okio references java.nio, which is not part of android.
     }
-
-    dexOptions {
-        javaMaxHeapSize "4g"
-    }
 }
 
 dependencies {
