@@ -27,6 +27,7 @@ import com.squareup.picasso.Picasso;
 
 import net.mabako.steam.store.StoreAppFragment;
 import net.mabako.steam.store.StoreSubFragment;
+import net.mabako.steamgifts.ApplicationTemplate;
 import net.mabako.steamgifts.activities.CommonActivity;
 import net.mabako.steamgifts.activities.DetailActivity;
 import net.mabako.steamgifts.activities.MainActivity;
@@ -237,7 +238,7 @@ public class GiveawayDetailFragment extends DetailFragment implements IHasEntera
 
         updateTitle();
         final CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) getActivity().findViewById(R.id.toolbar_layout);
-        if (appBarLayout != null) {
+        if (appBarLayout != null && ((ApplicationTemplate) getActivity().getApplication()).allowGameImages()) {
             ImageView toolbarImage = (ImageView) getActivity().findViewById(R.id.toolbar_image);
             if (toolbarImage != null) {
                 Picasso.with(getContext()).load("http://cdn.akamai.steamstatic.com/steam/" + giveaway.getType().name().toLowerCase(Locale.ENGLISH) + "s/" + giveaway.getGameId() + "/header.jpg").into(toolbarImage, new Callback() {

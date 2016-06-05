@@ -14,6 +14,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import net.mabako.sgtools.SGToolsDetailFragment;
+import net.mabako.steamgifts.ApplicationTemplate;
 import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.BasicDiscussion;
 import net.mabako.steamgifts.data.BasicGiveaway;
@@ -80,7 +81,7 @@ public class DetailActivity extends CommonActivity {
         Serializable serializable = getIntent().getSerializableExtra(GiveawayDetailFragment.ARG_GIVEAWAY);
         if (serializable != null) {
             String pref = PreferenceManager.getDefaultSharedPreferences(this).getString("preference_giveaway_load_images", "details;list");
-            setContentView(pref.contains("details") ? R.layout.activity_giveaway_detail : R.layout.activity_paged_fragments_no_tabs);
+            setContentView(pref.contains("details") && ((ApplicationTemplate) getApplication()).allowGameImages() ? R.layout.activity_giveaway_detail : R.layout.activity_paged_fragments_no_tabs);
             loadPagedFragments(GiveawayDetailFragment.newInstance((BasicGiveaway) serializable, commentContext));
             return;
         }

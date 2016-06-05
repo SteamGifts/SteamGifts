@@ -17,6 +17,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import net.mabako.sgtools.SGToolsLoginActivity;
+import net.mabako.steamgifts.ApplicationTemplate;
 import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.fragments.WhitelistBlacklistFragment;
 import net.mabako.steamgifts.persistentdata.SGToolsUserData;
@@ -122,6 +123,11 @@ public class SettingsActivity extends BaseActivity {
                 // TODO if we're not the default app, maybe offer a selection to set this the default at least?
                 Preference chromeTabsInfo = findPreference("tools_preference_default_app");
                 ((PreferenceCategory) findPreference("preferences_other")).removePreference(chromeTabsInfo);
+            }
+
+            if (!((ApplicationTemplate) getActivity().getApplication()).allowGameImages()) {
+                Preference images = findPreference("preference_giveaway_load_images");
+                ((PreferenceCategory) findPreference("preferences_giveaways")).removePreference(images);
             }
         }
 

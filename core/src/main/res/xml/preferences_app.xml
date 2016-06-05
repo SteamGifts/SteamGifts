@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="@string/preference_theme_header">
+    <PreferenceCategory
+        android:key="preferences_theme"
+        android:title="@string/preference_theme_header">
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="preference_theme_nightmode"
@@ -8,7 +10,9 @@
             android:title="@string/preference_theme_nightmode" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/preferences_giveaways">
+    <PreferenceCategory
+        android:key="preferences_giveaways"
+        android:title="@string/preferences_giveaways">
         <ListPreference
             android:defaultValue="details;list"
             android:entries="@array/preference_giveaway_load_images_entries"
@@ -25,7 +29,9 @@
             android:title="@string/preference_giveaway_show_pinned" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/preferences_discussions">
+    <PreferenceCategory
+        android:key="preferences_discussions"
+        android:title="@string/preferences_discussions">
         <ListPreference
             android:defaultValue="full"
             android:entries="@array/preference_sidebar_discussion_list_entries"
