@@ -86,16 +86,16 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
 
         StringBuilder sb = new StringBuilder();
         if (giveaway.getCopies() > 1)
-            sb.append(activity.getResources().getQuantityString(R.plurals.copies, giveaway.getCopies(), giveaway.getCopies())).append(" | ");
+            sb.append(activity.getResources().getQuantityString(R.plurals.copies, giveaway.getCopies(), giveaway.getCopies())).append(" \u2022 ");
 
         if (giveaway.getPoints() >= 0)
-            sb.append(giveaway.getPoints()).append("P | ");
+            sb.append(giveaway.getPoints()).append("P \u2022 ");
 
         if (giveaway.getLevel() > 0)
-            sb.append("L").append(giveaway.getLevel()).append(" | ");
+            sb.append("L").append(giveaway.getLevel()).append(" \u2022 ");
 
         if (giveaway.getEntries() >= 0)
-            sb.append(activity.getResources().getQuantityString(R.plurals.entries, giveaway.getEntries(), giveaway.getEntries())).append(" | ");
+            sb.append(activity.getResources().getQuantityString(R.plurals.entries, giveaway.getEntries(), giveaway.getEntries())).append(" \u2022 ");
 
         giveawayDetails.setText(sb.length() > 3 ? sb.substring(0, sb.length() - 3) : sb.toString());
 
