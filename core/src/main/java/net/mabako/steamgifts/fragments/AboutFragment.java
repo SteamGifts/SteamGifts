@@ -71,15 +71,20 @@ public class AboutFragment extends Fragment {
             }
         });
 
-        layout.findViewById(R.id.donate_via_paypal).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Y6WJZY2VJHC6G"));
+        View paypalDonations = layout.findViewById(R.id.donate_via_paypal);
+        if (((ApplicationTemplate) getActivity().getApplication()).allowPaypalDonations()) {
+            paypalDonations.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Y6WJZY2VJHC6G"));
 
-                startActivity(intent);
-            }
-        });
+                    startActivity(intent);
+                }
+            });
+        } else {
+            paypalDonations.setVisibility(View.GONE);
+        }
 
         return layout;
     }
