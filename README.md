@@ -9,6 +9,15 @@ Donate via Bitcoin: `1NQBKppWPZiE5PshLxqfFW4pgsnAv9irEu`
 
 An app to browse SteamGifts giveaways on your phone. Not tested on tablets as of yet.
 
+# How to Install
+## Stable Version
+[All stable APKs for sg for SteamGifts are built and made available through f-droid.](https://f-droid.org/repository/browse/?fdid=net.mabako.steamgifts)
+
+## Beta Versions
+APK files for the beta versions are available from either the f-droid beta repository found at
+[steamgifts.github.io/fdroid/repo/](https://steamgifts.github.io/fdroid/repo/?fingerprint=C416F157C1AADEBE62E533C3EDBBB202CA8F7126FF0A3927E60C1CDE962C818D),
+while individual APK files can be found on the [GitHub Releases Page](https://github.com/SteamGifts/SteamGifts/releases).
+
 # Features
 ## Giveaways
 - Browse and search through all, group, wishlist and new giveaways
