@@ -49,10 +49,11 @@ public class LoadUserTradeFeedbackTask extends AsyncTask<Void, Void, List<Commen
                     .userAgent(Constants.JSOUP_USER_AGENT)
                     .timeout(Constants.JSOUP_TIMEOUT);
             connection.data("page", Integer.toString(page));
-            if (SteamGiftsUserData.getCurrent(fragment.getContext()).isLoggedIn())
+            if (SteamGiftsUserData.getCurrent(fragment.getContext()).isLoggedIn()) {
                 connection.cookie("PHPSESSID", SteamGiftsUserData.getCurrent(fragment.getContext()).getSessionId());
+                connection.followRedirects(false);
+            }
 
-            connection.followRedirects(false);
             Connection.Response response = connection.execute();
             Document document = response.parse();
 
@@ -84,6 +85,7 @@ public class LoadUserTradeFeedbackTask extends AsyncTask<Void, Void, List<Commen
                 } else
                     return new ArrayList<>();
             } else {
+                Log.w(TAG, "Got status code " + response.statusCode());
                 return null;
             }
         } catch (Exception e) {
