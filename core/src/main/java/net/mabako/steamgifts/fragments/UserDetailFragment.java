@@ -437,6 +437,13 @@ public class UserDetailFragment extends Fragment implements IUserNotifications, 
             adapter.setFragmentValues(this);
         }
 
+        @Override
+        public void onSaveInstanceState(Bundle outState) {
+            super.onSaveInstanceState(outState);
+            outState.putSerializable(SAVED_USER, user);
+            outState.putString(SAVED_PATH, path);
+        }
+
         @NonNull
         @Override
         protected CommentAdapter createAdapter() {
