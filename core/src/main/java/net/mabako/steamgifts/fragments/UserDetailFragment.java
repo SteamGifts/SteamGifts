@@ -367,6 +367,7 @@ public class UserDetailFragment extends Fragment implements IUserNotifications, 
         @Override
         public void addItems(List<? extends IEndlessAdaptable> items, boolean clearExistingItems) {
             if (clearExistingItems && items == null && !user.isLoaded()) {
+                Log.w(TAG + "/Giveaways", "User does not exist?");
                 Toast.makeText(getContext(), "User does not exist.", Toast.LENGTH_SHORT).show();
                 getActivity().finish();
             } else {
@@ -458,6 +459,7 @@ public class UserDetailFragment extends Fragment implements IUserNotifications, 
         @Override
         public void addItems(List<? extends IEndlessAdaptable> items, boolean clearExistingItems) {
             if (clearExistingItems && items == null && !user.isLoaded()) {
+                Log.w(TAG + "/Trades", "User does not exist?");
                 Toast.makeText(getContext(), "User does not exist.", Toast.LENGTH_SHORT).show();
                 getActivity().finish();
             } else {
