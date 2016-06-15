@@ -43,7 +43,7 @@ public class DiscussionCardViewHolder extends RecyclerView.ViewHolder {
         description.setMovementMethod(LinkMovementMethod.getInstance());
         separator = v.findViewById(R.id.separator);
         actionSeparator = v.findViewById(R.id.action_separator);
-        title = (TextView) v.findViewById(R.id.discussion_name);
+        title = (TextView) v.findViewById(R.id.discussion_title);
 
         commentDiscussion = (Button) v.findViewById(R.id.comment);
     }

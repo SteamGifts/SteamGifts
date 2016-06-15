@@ -7,6 +7,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import net.mabako.Constants;
+import net.mabako.steamgifts.data.Comment;
 import net.mabako.steamgifts.data.Discussion;
 import net.mabako.steamgifts.data.DiscussionExtras;
 import net.mabako.steamgifts.data.Poll;
@@ -28,6 +29,7 @@ public class LoadDiscussionDetailsTask extends AsyncTask<Void, Void, DiscussionE
     private String discussionId;
     private int page;
     private final boolean loadDetails;
+
     private Discussion loadedDetails = null;
     private boolean lastPage = false;
 
@@ -41,7 +43,6 @@ public class LoadDiscussionDetailsTask extends AsyncTask<Void, Void, DiscussionE
 
     @Override
     protected DiscussionExtras doInBackground(Void... params) {
-
         try {
             Connection.Response response = connect();
             if (response.statusCode() == 200) {
@@ -135,8 +136,11 @@ public class LoadDiscussionDetailsTask extends AsyncTask<Void, Void, DiscussionE
 
         // Load the description
         Element description = document.select(".comment__display-state .markdown").first();
-        if (description != null) // This will be null if no description is given.
+        if (description != null) {
+            // This will be null if no description is given.
+            description.select("blockquote").tagName("custom_quote");
             extras.setDescription(Utils.loadAttachedImages(extras, description));
+        }
 
         // Can we send a comment?
         Element xsrf = document.select(".comment--submit form input[name=xsrf_token]").first();
@@ -149,7 +153,7 @@ public class LoadDiscussionDetailsTask extends AsyncTask<Void, Void, DiscussionE
         if (commentsNode.size() > 1) {
             Element rootCommentNode = commentsNode.last();
             if (rootCommentNode != null)
-                Utils.loadComments(rootCommentNode, extras, 0, fragment.getAdapter().isViewInReverse());
+                Utils.loadComments(rootCommentNode, extras, 0, fragment.getAdapter().isViewInReverse(), false, Comment.Type.COMMENT);
         }
 
         // Do we have a poll?

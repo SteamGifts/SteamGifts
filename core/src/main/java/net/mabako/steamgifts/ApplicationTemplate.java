@@ -48,4 +48,25 @@ public abstract class ApplicationTemplate extends Application {
      * Current version flavor.
      */
     public abstract String getFlavor();
+
+    /**
+     * Whether or not game images may be shown.
+     * <p/>
+     * Since game images for giveaways by necessity contain "copyrighted images of video games",
+     * these will be hidden on Google Play builds.
+     *
+     * @return true if game images should be shown
+     */
+    public boolean allowGameImages() {
+        return true;
+    }
+
+    /**
+     * Whether or not a paypal donation link is shown in the "About" section.
+     *
+     * @return true if paypal donation link should be shown
+     */
+    public boolean allowPaypalDonations() {
+        return true;
+    }
 }

@@ -208,6 +208,11 @@ public abstract class DetailFragment extends ListFragment<CommentAdapter> implem
             throw new IllegalStateException("got no path for the comment, not commenting...");
     }
 
+    @Override
+    public boolean canPostOrModifyComments() {
+        return true;
+    }
+
     /**
      * A way to extend {@link #requestComment(Comment)} in adding additional parameters
      *

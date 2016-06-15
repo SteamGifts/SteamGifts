@@ -12,8 +12,6 @@ import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import java.util.List;
 
@@ -43,10 +41,11 @@ public class LoadUserDetailsTask extends AsyncTask<Void, Void, List<Giveaway>> {
                     .userAgent(Constants.JSOUP_USER_AGENT)
                     .timeout(Constants.JSOUP_TIMEOUT);
             connection.data("page", Integer.toString(page));
-            if (SteamGiftsUserData.getCurrent(fragment.getContext()).isLoggedIn())
+            if (SteamGiftsUserData.getCurrent(fragment.getContext()).isLoggedIn()) {
                 connection.cookie("PHPSESSID", SteamGiftsUserData.getCurrent(fragment.getContext()).getSessionId());
+                connection.followRedirects(false);
+            }
 
-            connection.followRedirects(false);
             Connection.Response response = connection.execute();
             Document document = response.parse();
 
@@ -55,11 +54,12 @@ public class LoadUserDetailsTask extends AsyncTask<Void, Void, List<Giveaway>> {
                 SteamGiftsUserData.extract(fragment.getContext(), document);
 
                 if (!user.isLoaded())
-                    loadUser(document);
+                    foundXsrfToken = Utils.loadUserProfile(user, document);
 
                 // Parse all rows of giveaways
                 return Utils.loadGiveawaysFromList(document);
             } else {
+                Log.w(TAG, "Got status code " + response.statusCode());
                 return null;
             }
         } catch (Exception e) {
@@ -78,51 +78,5 @@ public class LoadUserDetailsTask extends AsyncTask<Void, Void, List<Giveaway>> {
         }
 
         fragment.addItems(result, page == 1, foundXsrfToken);
-    }
-
-    private void loadUser(Document document) {
-        // If this isn't the user we're logged in as, we'd get some user id.
-        Element idElement = document.select("input[name=child_user_id]").first();
-        if (idElement != null) {
-            user.setId(Integer.valueOf(idElement.attr("value")));
-        } else {
-            Log.v(TAG, "No child_user_id");
-        }
-
-        user.setWhitelisted(!document.select(".sidebar__shortcut__whitelist.is-selected").isEmpty());
-        user.setBlacklisted(!document.select(".sidebar__shortcut__blacklist.is-selected").isEmpty());
-
-        // Fetch the xsrf token - this, again, is only present if we're on another user's page.
-        Element xsrfToken = document.select("input[name=xsrf_token]").first();
-        if (xsrfToken != null)
-            foundXsrfToken = xsrfToken.attr("value");
-
-        user.setName(document.select(".featured__heading__medium").first().text());
-        user.setAvatar(Utils.extractAvatar(document.select(".global__image-inner-wrap").first().attr("style")));
-        user.setUrl(document.select(".sidebar a[data-tooltip=\"Visit Steam Profile\"]").first().attr("href"));
-
-        Elements columns = document.select(".featured__table__column");
-        user.setRole(columns.first().select("a[href^=/roles/").text());
-        user.setComments(parseInt(columns.first().select(".featured__table__row__right").get(3).text()));
-
-        Elements right = columns.last().select(".featured__table__row__right");
-
-        // Both won and created have <a href="...">[amount won]</a> [value of won items],
-        // so it's impossible to get the text for the amount directly.
-        Element won = right.get(1);
-        user.setWon(parseInt(won.select("a").first().text()));
-        won.select("a").html("");
-        user.setWonAmount(won.text().trim());
-
-        Element created = right.get(2);
-        user.setCreated(parseInt(created.select("a").first().text()));
-        created.select("a").html("");
-        user.setCreatedAmount(created.text().trim());
-
-        user.setLevel((int) Float.parseFloat(right.get(3).select("span").first().attr("title")));
-    }
-
-    private static int parseInt(String str) {
-        return Integer.parseInt(str.replace(",", ""));
     }
 }

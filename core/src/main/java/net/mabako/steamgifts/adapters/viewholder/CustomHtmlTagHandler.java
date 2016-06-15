@@ -1,8 +1,15 @@
 package net.mabako.steamgifts.adapters.viewholder;
 
 import android.app.Dialog;
+import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
 import android.text.Editable;
 import android.text.Html;
+import android.text.Layout;
 import android.text.Spannable;
 import android.text.Spanned;
 import android.text.style.BackgroundColorSpan;
@@ -11,6 +18,8 @@ import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.LeadingMarginSpan;
 import android.text.style.StrikethroughSpan;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
@@ -22,6 +31,8 @@ import org.xml.sax.XMLReader;
 import java.util.Stack;
 
 public class CustomHtmlTagHandler implements Html.TagHandler {
+    private final Context context;
+
     /**
      * Keeps track of lists (ol, ul). On bottom of Stack is the outermost list
      * and on top of Stack is the most nested list
@@ -38,6 +49,10 @@ public class CustomHtmlTagHandler implements Html.TagHandler {
     private static final int indent = 10;
     private static final int listItemIndent = indent * 2;
     private static final BulletSpan bullet = new BulletSpan(indent);
+
+    public CustomHtmlTagHandler(Context context) {
+        this.context = context;
+    }
 
     @Override
     public void handleTag(boolean opening, String tag, Editable output, XMLReader xmlReader) {
@@ -61,6 +76,12 @@ public class CustomHtmlTagHandler implements Html.TagHandler {
             processListItem(opening, output);
         } else if (tag.equalsIgnoreCase("span")) {
             processSpoiler(opening, output);
+        } else if (tag.equalsIgnoreCase("custom_quote")) {
+            processQuoteTag(opening, output, R.color.colorBlockquoteStripe);
+        } else if (tag.equalsIgnoreCase("trade_want")) {
+            processQuoteTag(opening, output, R.color.tradeWantItems);
+        } else if (tag.equalsIgnoreCase("trade_have")) {
+            processQuoteTag(opening, output, R.color.tradeHaveItems);
         }
     }
 
@@ -131,6 +152,23 @@ public class CustomHtmlTagHandler implements Html.TagHandler {
 
             if (where != len) {
                 output.setSpan(new StrikethroughSpan(), where, len, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+        }
+    }
+
+    private void processQuoteTag(boolean opening, Editable output, @ColorRes int colorRes) {
+        int len = output.length();
+        if (opening) {
+            output.setSpan(new CustomQuoteSpan(), len, len, Spannable.SPAN_MARK_MARK);
+        } else {
+            Object obj = getLast(output, CustomQuoteSpan.class);
+            int where = output.getSpanStart(obj);
+
+            output.removeSpan(obj);
+
+            if (where != len) {
+                @ColorInt int color = context.getResources().getColor(colorRes);
+                output.setSpan(new CustomQuoteSpan(color), where, len, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         }
     }
@@ -211,5 +249,43 @@ public class CustomHtmlTagHandler implements Html.TagHandler {
     }
 
     private static class Spoiler {
+    }
+
+    private static class CustomQuoteSpan implements LeadingMarginSpan {
+        private final int stripeWidth;
+        private final int gap;
+
+        private final int stripeColor;
+
+        public CustomQuoteSpan() {
+            this(0xffffffff);
+        }
+
+        public CustomQuoteSpan(int stripeColor) {
+            this.stripeColor = stripeColor;
+
+            DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
+            stripeWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 2, metrics);
+            gap = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 4, metrics);
+        }
+
+        @Override
+        public int getLeadingMargin(boolean first) {
+            return stripeWidth + gap;
+        }
+
+        @Override
+        public void drawLeadingMargin(Canvas c, Paint p, int x, int dir, int top, int baseline, int bottom, CharSequence text, int start, int end, boolean first, Layout layout) {
+            Paint.Style style = p.getStyle();
+            int color = p.getColor();
+
+            p.setStyle(Paint.Style.FILL);
+            p.setColor(stripeColor);
+
+            c.drawRect(x, top, x + dir * stripeWidth, bottom, p);
+
+            p.setStyle(style);
+            p.setColor(color);
+        }
     }
 }

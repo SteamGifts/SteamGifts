@@ -31,12 +31,12 @@
             android:paddingLeft="4dp">
 
             <TextView
-                android:id="@+id/discussion_name"
+                android:id="@+id/discussion_title"
                 style="@style/NormalText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
-                android:text="Discussion Name" />
+                android:text="Discussion Title" />
 
             <LinearLayout
                 android:layout_width="match_parent"

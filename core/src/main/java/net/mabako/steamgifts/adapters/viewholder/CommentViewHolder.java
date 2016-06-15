@@ -17,9 +17,12 @@ import com.squareup.picasso.Picasso;
 import net.mabako.steamgifts.activities.CommonActivity;
 import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.Comment;
+import net.mabako.steamgifts.data.TradeComment;
 import net.mabako.steamgifts.fragments.DetailFragment;
 import net.mabako.steamgifts.fragments.interfaces.ICommentableFragment;
 import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
+
+import java.util.Locale;
 
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
@@ -35,6 +38,9 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
     private final ImageView commentImage;
     private final View commentIndent;
     private final View commentMarker;
+    private final View tradeScoreDivider;
+    private final TextView tradeScorePositive;
+    private final TextView tradeScoreNegative;
 
     private final Context context;
     private View.OnClickListener writeCommentListener, editCommentListener, deleteCommentListener;
@@ -55,6 +61,10 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
         commentMarker = v.findViewById(R.id.comment_marker);
         commentIndent = v.findViewById(R.id.comment_indent);
         commentImage = (ImageView) v.findViewById(R.id.author_avatar);
+
+        tradeScoreDivider = v.findViewById(R.id.trade_divider);
+        tradeScorePositive = (TextView) v.findViewById(R.id.trade_score_positive);
+        tradeScoreNegative = (TextView) v.findViewById(R.id.trade_score_negative);
 
         v.setOnCreateContextMenuListener(this);
     }
@@ -92,28 +102,43 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
         commentImage.setOnClickListener(viewProfileListener);
         commentAuthor.setOnClickListener(viewProfileListener);
 
-        writeCommentListener = comment.getId() == 0 ? null : new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fragment.requestComment(comment);
-            }
-        };
+        if (fragment.canPostOrModifyComments()) {
+            writeCommentListener = comment.getId() == 0 ? null : new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    fragment.requestComment(comment);
+                }
+            };
 
-        // We assume that, if we have an editable state, we can edit the comment. Should we check for username here?
-        editCommentListener = comment.getEditableContent() == null || comment.getId() == 0 || (!(fragment instanceof DetailFragment)) ? null : new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((DetailFragment) fragment).requestCommentEdit(comment);
-            }
-        };
+            // We assume that, if we have an editable state, we can edit the comment. Should we check for username here?
+            editCommentListener = comment.getEditableContent() == null || comment.getId() == 0 || (!(fragment instanceof DetailFragment)) ? null : new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((DetailFragment) fragment).requestCommentEdit(comment);
+                }
+            };
 
-        deleted = comment.isDeleted();
-        deleteCommentListener = comment.getId() == 0 || !comment.isDeletable() ? null : new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fragment.deleteComment(comment);
-            }
-        };
+            deleted = comment.isDeleted();
+            deleteCommentListener = comment.getId() == 0 || !comment.isDeletable() ? null : new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    fragment.deleteComment(comment);
+                }
+            };
+        }
+
+        if (comment instanceof TradeComment && !comment.isDeleted()) {
+            tradeScoreDivider.setVisibility(View.VISIBLE);
+            tradeScorePositive.setVisibility(View.VISIBLE);
+            tradeScoreNegative.setVisibility(View.VISIBLE);
+
+            tradeScorePositive.setText(String.format(Locale.ENGLISH, "+%d", ((TradeComment) comment).getTradeScorePositive()));
+            tradeScoreNegative.setText(String.format(Locale.ENGLISH, "-%d", ((TradeComment) comment).getTradeScoreNegative()));
+        } else {
+            tradeScoreDivider.setVisibility(View.GONE);
+            tradeScorePositive.setVisibility(View.GONE);
+            tradeScoreNegative.setVisibility(View.GONE);
+        }
 
         AttachedImageUtils.setFrom(itemView, comment, (CommonActivity) (((Fragment) fragment).getActivity()));
     }

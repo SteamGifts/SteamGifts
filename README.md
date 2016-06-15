@@ -1,14 +1,20 @@
 # sg for SteamGifts
-[![Build Status](https://travis-ci.org/SteamGifts/SteamGifts.svg?branch=master)](https://travis-ci.org/SteamGifts/SteamGifts)
-
 [![Donate via PayPal](https://img.shields.io/badge/donate%20via-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Y6WJZY2VJHC6G)
-[![Donate via Flattr](https://img.shields.io/badge/donate%20via-flattr-green.svg)](https://flattr.com/submit/auto?user_id=mabako&url=https://github.com/mabako/SteamGifts-app)
 
 Donate via Bitcoin: `1NQBKppWPZiE5PshLxqfFW4pgsnAv9irEu`
 
 ---
 
 An app to browse SteamGifts giveaways on your phone. Not tested on tablets as of yet.
+
+# How to Install
+## Stable Version
+[All stable APKs for sg for SteamGifts are built and made available through f-droid.](https://f-droid.org/repository/browse/?fdid=net.mabako.steamgifts)
+
+## Beta Versions
+APK files for the beta versions are available from either the f-droid beta repository found at
+[steamgifts.github.io/fdroid/repo/](https://steamgifts.github.io/fdroid/repo/?fingerprint=C416F157C1AADEBE62E533C3EDBBB202CA8F7126FF0A3927E60C1CDE962C818D),
+while individual APK files can be found on the [GitHub Releases Page](https://github.com/SteamGifts/SteamGifts/releases).
 
 # Features
 ## Giveaways

@@ -13,6 +13,8 @@
         <item name="colorAccountHeader">@color/colorPrimary</item>
         <item name="colorHighlightBackground">@color/md_blue_100</item>
         <item name="lightTextColor">#9a9a9a</item>
+        <item name="colorTradeScorePositive">@color/md_green_600</item>
+        <item name="colorTradeScoreNegative">@color/md_red_600</item>
     </style>
 
     <style name="AppTheme.Dark" parent="MaterialDrawerTheme">
@@ -28,6 +30,8 @@
         <item name="colorAccountHeader">#000000</item>
         <item name="colorHighlightBackground">@color/md_blue_grey_700</item>
         <item name="lightTextColor">#777777</item>
+        <item name="colorTradeScorePositive">@color/md_green_600</item>
+        <item name="colorTradeScoreNegative">@color/md_red_600</item>
     </style>
 
     <style name="TransparentText" parent="@android:style/TextAppearance">

@@ -3,6 +3,7 @@ package net.mabako.steamgifts.tasks;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 
 import net.mabako.steamgifts.data.Comment;
 import net.mabako.steamgifts.data.Game;
@@ -10,6 +11,8 @@ import net.mabako.steamgifts.data.Giveaway;
 import net.mabako.steamgifts.data.ICommentHolder;
 import net.mabako.steamgifts.data.IImageHolder;
 import net.mabako.steamgifts.data.Image;
+import net.mabako.steamgifts.data.TradeComment;
+import net.mabako.steamgifts.data.User;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -20,6 +23,8 @@ import java.util.Collections;
 import java.util.List;
 
 public final class Utils {
+    private static final String TAG = Utils.class.getSimpleName();
+
     private Utils() {
     }
 
@@ -29,11 +34,11 @@ public final class Utils {
      * @param commentNode Jsoup-Node of the parent node.
      * @param parent
      */
-    public static void loadComments(Element commentNode, ICommentHolder parent) {
-        loadComments(commentNode, parent, 0, false);
+    public static void loadComments(Element commentNode, ICommentHolder parent, Comment.Type type) {
+        loadComments(commentNode, parent, 0, false, false, type);
     }
 
-    public static void loadComments(Element commentNode, ICommentHolder parent, int depth, boolean reversed) {
+    public static void loadComments(Element commentNode, ICommentHolder parent, int depth, boolean reversed, boolean includeTradeScore, Comment.Type type) {
         if (commentNode == null)
             return;
 
@@ -50,26 +55,27 @@ public final class Utils {
                 /* do nothing */
             }
 
-            Comment comment = loadComment(c.child(0), commentId, depth);
+            Comment comment = loadComment(c.child(0), commentId, depth, includeTradeScore, type);
 
             // add this
             parent.addComment(comment);
 
             // Add all children
-            loadComments(c.select(".comment__children").first(), parent, depth + 1, false);
+            loadComments(c.select(".comment__children").first(), parent, depth + 1, false, includeTradeScore, type);
         }
     }
 
     /**
      * Load a single comment
      *
-     * @param element   comment HTML element
-     * @param commentId the id of  the comment to be loaded
-     * @param depth     the depth at which to display said comment
+     * @param element           comment HTML element
+     * @param commentId         the id of  the comment to be loaded
+     * @param depth             the depth at which to display said comment
+     * @param includeTradeScore whether or not to include +/- elements of the trading score, only visible in the trades section
      * @return the new comment
      */
     @NonNull
-    public static Comment loadComment(Element element, long commentId, int depth) {
+    public static Comment loadComment(Element element, long commentId, int depth, boolean includeTradeScore, Comment.Type type) {
         // Save the content of the edit state for a bit & remove the edit state from being rendered.
         Element editState = element.select(".comment__edit-state.is-hidden textarea[name=description]").first();
         String editableContent = null;
@@ -88,15 +94,16 @@ public final class Utils {
 
         Element timeCreated = element.select(".comment__actions > div span").first();
 
-        Uri permalinkUri = Uri.parse(element.select(".comment__actions a[href^=/go/comment").first().attr("href"));
+        Uri permalinkUri = Uri.parse(element.select(".comment__actions a[href^=/go/" + type.getPath() + "]").first().attr("href"));
 
-        Comment comment = new Comment(commentId, author, depth, avatar, isOp);
+        Comment comment = includeTradeScore ? new TradeComment(commentId, author, depth, avatar, isOp, type) : new Comment(commentId, author, depth, avatar, isOp, type);
         comment.setPermalinkId(permalinkUri.getPathSegments().get(2));
         comment.setEditableContent(editableContent);
         comment.setCreatedTime(timeCreated.attr("title"));
 
 
         Element desc = element.select(".comment__description").first();
+        desc.select("blockquote").tagName("custom_quote");
         String content = loadAttachedImages(comment, desc);
         comment.setContent(content);
 
@@ -111,6 +118,16 @@ public final class Utils {
 
         // Do we have either a delete or undelete link?
         comment.setDeletable(element.select(".comment__actions__button.js__comment-delete").size() + element.select(".comment__actions__button.js__comment-undelete").size() == 1);
+
+        if (comment instanceof TradeComment && !comment.isDeleted()) {
+            try {
+                ((TradeComment) comment).setTradeScorePositive(Utils.parseInt(element.select(".trade-feedback--positive").first().text()));
+                ((TradeComment) comment).setTradeScoreNegative(-Utils.parseInt(element.select(".trade-feedback--negative").first().text()));
+            } catch (Exception e) {
+                Log.v(TAG, "Unable to parse feedback", e);
+            }
+        }
+
         return comment;
     }
 
@@ -127,7 +144,7 @@ public final class Utils {
         if (!hints.isEmpty()) {
             String copiesT = hints.first().text();
             String pointsT = hints.last().text();
-            int copies = hints.size() == 1 ? 1 : Integer.parseInt(copiesT.replace("(", "").replace(" Copies)", "").replace(",", ""));
+            int copies = hints.size() == 1 ? 1 : parseInt(copiesT.replace("(", "").replace(" Copies)", ""));
             int points = Integer.parseInt(pointsT.replace("(", "").replace("P)", ""));
 
             giveaway.setCopies(copies);
@@ -146,7 +163,6 @@ public final class Utils {
         }
 
         // Time remaining
-
         Element end = element.select("." + cssNode + "__columns > div span").first();
         giveaway.setEndTime(end.attr("title"), end.text());
         giveaway.setCreatedTime(element.select("." + cssNode + "__columns > div span").last().attr("title"));
@@ -202,7 +218,7 @@ public final class Utils {
 
             // Entries, would usually have comment count too... but we don't display that anywhere.
             Elements links = element.select(".giveaway__links a span");
-            giveaway.setEntries(Integer.parseInt(links.first().text().split(" ")[0].replace(",", "")));
+            giveaway.setEntries(parseInt(links.first().text().split(" ")[0]));
 
             giveaway.setEntered(element.hasClass("is-faded"));
 
@@ -247,5 +263,87 @@ public final class Utils {
         }
 
         return description.html();
+    }
+
+    /**
+     * Loads a user's profile, returns the XSRF token of the page.
+     *
+     * @param user     existing profile container
+     * @param document HTML input document
+     * @return XSRF-token
+     */
+    public static String loadUserProfile(User user, Document document) {
+        String foundXsrfToken = null;
+
+        // If this isn't the user we're logged in as, we'd get some user id.
+        Element idElement = document.select("input[name=child_user_id]").first();
+        if (idElement != null) {
+            user.setId(Integer.valueOf(idElement.attr("value")));
+        } else {
+            Log.v(TAG, "No child_user_id");
+        }
+
+        user.setWhitelisted(!document.select(".sidebar__shortcut__whitelist.is-selected").isEmpty());
+        user.setBlacklisted(!document.select(".sidebar__shortcut__blacklist.is-selected").isEmpty());
+
+        // Fetch the xsrf token - this, again, is only present if we're on another user's page.
+        Element xsrfToken = document.select("input[name=xsrf_token]").first();
+        if (xsrfToken != null)
+            foundXsrfToken = xsrfToken.attr("value");
+
+        user.setName(document.select(".featured__heading__medium").first().text());
+        user.setAvatar(Utils.extractAvatar(document.select(".global__image-inner-wrap").first().attr("style")));
+        user.setUrl(document.select(".sidebar a[data-tooltip=\"Visit Steam Profile\"]").first().attr("href"));
+
+        Elements columns = document.select(".featured__table__column");
+        user.setRole(columns.first().select("a[href^=/roles/").text());
+        user.setComments(parseInt(columns.first().select(".featured__table__row__right").get(3).text()));
+
+        Elements right = columns.last().select(".featured__table__row__right");
+
+        // Both won and created have <a href="...">[amount won]</a> [value of won items],
+        // so it's impossible to get the text for the amount directly.
+        Element won = right.get(1);
+        user.setWon(parseInt(won.select("a").first().text()));
+        won.select("a").html("");
+        user.setWonAmount(won.text().trim());
+
+        Element created = right.get(2);
+        user.setCreated(parseInt(created.select("a").first().text()));
+        created.select("a").html("");
+        user.setCreatedAmount(created.text().trim());
+
+        // Trade feedback
+        Element feedback = right.get(0);
+        if (feedback != null) {
+            String text = feedback.text();
+            if (text.contains(" / ")) {
+                try {
+                    String[] str = text.split(" / ");
+                    int positive = Integer.valueOf(str[0]);
+                    int negative = Integer.valueOf(str[1]) * -1;
+
+                    user.setPositiveFeedback(positive);
+                    user.setNegativeFeedback(negative);
+
+                    Log.d(TAG, "F:" + user.getPositiveFeedback() + ", " + user.getNegativeFeedback());
+                } catch (Exception e) {
+                    Log.w(TAG, "Error parsing user feedback score", e);
+                }
+            }
+        }
+
+        user.setLevel((int) Float.parseFloat(right.get(3).select("span").first().attr("title")));
+        return foundXsrfToken;
+    }
+
+    /**
+     * Returns an integer value from HTML for most display purposes.
+     *
+     * @param str text containing the value, for example "123" or "13,400"
+     * @return the parsed integer value
+     */
+    public static int parseInt(String str) {
+        return Integer.parseInt(str.replace(",", ""));
     }
 }

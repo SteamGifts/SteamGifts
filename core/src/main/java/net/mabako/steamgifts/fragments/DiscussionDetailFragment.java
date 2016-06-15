@@ -49,7 +49,7 @@ public class DiscussionDetailFragment extends DetailFragment implements IHasPoll
     private SavedDiscussions savedDiscussions;
 
     /**
-     * Content to show for the giveaway details.
+     * Content to show for the discussion details.
      */
     private BasicDiscussion discussion;
     private DiscussionDetailsCard discussionCard;

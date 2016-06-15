@@ -27,8 +27,12 @@ android {
         strawberry {
             applicationIdSuffix '.beta'
         }
-        // Release pushed to non-beta testers
+        // Release pushed on f-droid to non-beta testers
         vanilla {
+            null
+        }
+        // Release pushed on google play store
+        googleplay {
             null
         }
     }
@@ -36,10 +40,6 @@ android {
     lintOptions {
         disable 'GoogleAppIndexingWarning'
         warning 'InvalidPackage' // okio references java.nio, which is not part of android.
-    }
-
-    dexOptions {
-        javaMaxHeapSize "4g"
     }
 }
 

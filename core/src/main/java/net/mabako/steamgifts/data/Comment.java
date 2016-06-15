@@ -18,6 +18,7 @@ public class Comment implements Serializable, IEndlessAdaptable, IImageHolder {
     private static final long serialVersionUID = -7333245576601696951L;
     public static final int VIEW_LAYOUT = R.layout.comment;
 
+    private final Type type;
     private final long id;
     private final String author;
     private CustomDateTime createdTime;
@@ -32,12 +33,13 @@ public class Comment implements Serializable, IEndlessAdaptable, IImageHolder {
 
     private List<Image> attachedImages;
 
-    public Comment(long id, String author, int depth, String avatar, boolean isOp) {
+    public Comment(long id, String author, int depth, String avatar, boolean isOp, Type type) {
         this.id = id;
         this.author = author;
         this.depth = depth;
         this.avatar = avatar;
         this.op = isOp;
+        this.type = type;
     }
 
     public long getId() {
@@ -108,6 +110,10 @@ public class Comment implements Serializable, IEndlessAdaptable, IImageHolder {
         return op;
     }
 
+    public String getLink() {
+        return "go/" + type.getPath() + "/" + permalinkId;
+    }
+
     public String getPermalinkId() {
         return permalinkId;
     }
@@ -163,5 +169,20 @@ public class Comment implements Serializable, IEndlessAdaptable, IImageHolder {
     @Override
     public int getLayout() {
         return VIEW_LAYOUT;
+    }
+
+    public enum Type {
+        COMMENT("comment"),
+        TRADE_FEEDBACK("feedback");
+
+        private String path;
+
+        Type(String path) {
+            this.path = path;
+        }
+
+        public String getPath() {
+            return path;
+        }
     }
 }

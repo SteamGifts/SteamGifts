@@ -14,9 +14,11 @@ import android.util.Log;
 import android.widget.Toast;
 
 import net.mabako.sgtools.SGToolsDetailFragment;
+import net.mabako.steamgifts.ApplicationTemplate;
 import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.BasicDiscussion;
 import net.mabako.steamgifts.data.BasicGiveaway;
+import net.mabako.steamgifts.data.BasicTrade;
 import net.mabako.steamgifts.data.Comment;
 import net.mabako.steamgifts.fragments.DetailFragment;
 import net.mabako.steamgifts.fragments.DiscussionDetailFragment;
@@ -25,6 +27,7 @@ import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
 import net.mabako.steamgifts.fragments.GiveawayGroupListFragment;
 import net.mabako.steamgifts.fragments.GiveawayWinnerListFragment;
 import net.mabako.steamgifts.fragments.HiddenGamesFragment;
+import net.mabako.steamgifts.fragments.TradeDetailFragment;
 import net.mabako.steamgifts.fragments.UserDetailFragment;
 import net.mabako.steamgifts.fragments.WhitelistBlacklistFragment;
 import net.mabako.steamgifts.fragments.profile.CreatedListFragment;
@@ -78,7 +81,7 @@ public class DetailActivity extends CommonActivity {
         Serializable serializable = getIntent().getSerializableExtra(GiveawayDetailFragment.ARG_GIVEAWAY);
         if (serializable != null) {
             String pref = PreferenceManager.getDefaultSharedPreferences(this).getString("preference_giveaway_load_images", "details;list");
-            setContentView(pref.contains("details") ? R.layout.activity_giveaway_detail : R.layout.activity_paged_fragments_no_tabs);
+            setContentView(pref.contains("details") && ((ApplicationTemplate) getApplication()).allowGameImages() ? R.layout.activity_giveaway_detail : R.layout.activity_paged_fragments_no_tabs);
             loadPagedFragments(GiveawayDetailFragment.newInstance((BasicGiveaway) serializable, commentContext));
             return;
         }
@@ -88,6 +91,14 @@ public class DetailActivity extends CommonActivity {
             setContentView(R.layout.activity_one_fragment);
             if (savedInstanceState == null)
                 loadFragment(DiscussionDetailFragment.newInstance((BasicDiscussion) serializable, commentContext));
+            return;
+        }
+
+        serializable = getIntent().getSerializableExtra(TradeDetailFragment.ARG_TRADE);
+        if (serializable != null) {
+            setContentView(R.layout.activity_one_fragment);
+            if (savedInstanceState == null)
+                loadFragment(TradeDetailFragment.newInstance((BasicTrade) serializable, commentContext));
             return;
         }
 

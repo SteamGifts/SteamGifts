@@ -74,7 +74,7 @@ public class CreatedListFragment extends ListFragment<GiveawayAdapter> implement
                 Elements columns = element.select(".table__column--width-small.text-center");
 
                 giveaway.setPoints(-1);
-                giveaway.setEntries(Integer.parseInt(columns.get(1).text().replace(",", "")));
+                giveaway.setEntries(Utils.parseInt(columns.get(1).text()));
 
                 Element end = firstColumn.select("span > span").first();
                 giveaway.setEndTime(end.attr("title"), end.text());

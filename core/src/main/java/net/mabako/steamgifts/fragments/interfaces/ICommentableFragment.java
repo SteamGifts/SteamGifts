@@ -8,4 +8,6 @@ public interface ICommentableFragment {
     void requestComment(Comment parentComment);
 
     void deleteComment(Comment comment);
+
+    boolean canPostOrModifyComments();
 }
