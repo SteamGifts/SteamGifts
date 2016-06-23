@@ -14,4 +14,6 @@
     <dimen name="giveaway_list_indicator_padding">2dp</dimen>
 
     <dimen name="status_bar_height">25dp</dimen>
+
+    <dimen name="ic_clear_margin">16dp</dimen>
 </resources>

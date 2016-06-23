@@ -127,6 +127,10 @@ public class GiveawayAdapter extends EndlessAdapter {
         return removedElements;
     }
 
+    public EndlessAdapter.RemovedElement removeSwipedGiveaway(int position) {
+        return removeItem(position);
+    }
+
     @Override
     protected int addFiltered(List<IEndlessAdaptable> items) {
         if (filterItems && fragment != null) {
