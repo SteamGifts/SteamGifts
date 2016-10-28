@@ -282,6 +282,11 @@ public class GiveawayDetailFragment extends DetailFragment implements IHasEntera
     }
 
     @Override
+    public void showProfile(long steamID64) {
+        throw new UnsupportedOperationException("Fetching user details by steamID64");
+    }
+
+    @Override
     public void onCreateOptionsMenu(
             Menu menu, MenuInflater inflater) {
         if (giveaway instanceof Giveaway) {

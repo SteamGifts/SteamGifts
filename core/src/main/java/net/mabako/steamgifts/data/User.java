@@ -1,17 +1,21 @@
 package net.mabako.steamgifts.data;
 
+import android.net.Uri;
+
 import net.mabako.Constants;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class User extends BasicUser implements Serializable {
     private static final long serialVersionUID = -313348528668961481L;
-    private String url, role;
+    private String role;
+    private long steamID64;
 
     private int level, created, won, comments, positiveFeedback, negativeFeedback;
     private String createdAmount, wonAmount;
 
-    private boolean loaded = false, whitelisted, blacklisted;
+    private boolean loaded = false, feedbackLoaded = false, whitelisted, blacklisted;
 
     public User() {
 
@@ -21,12 +25,17 @@ public class User extends BasicUser implements Serializable {
         setName(name);
     }
 
-    public String getUrl() {
-        return url;
+    public long getSteamID64() {
+        return steamID64;
+    }
+
+    public void setSteamID64(long steamID64) {
+        this.steamID64 = steamID64;
     }
 
     public void setUrl(String url) {
-        this.url = url;
+        List<String> segments = Uri.parse(url).getPathSegments();
+        setSteamID64(Long.valueOf(segments.get(1)));
     }
 
     public int getLevel() {
@@ -115,6 +124,14 @@ public class User extends BasicUser implements Serializable {
 
     public void setNegativeFeedback(int negativeFeedback) {
         this.negativeFeedback = negativeFeedback;
+    }
+
+    public boolean isFeedbackLoaded() {
+        return feedbackLoaded;
+    }
+
+    public void setFeedbackLoaded(boolean feedbackLoaded) {
+        this.feedbackLoaded = feedbackLoaded;
     }
 
     public String getRole() {

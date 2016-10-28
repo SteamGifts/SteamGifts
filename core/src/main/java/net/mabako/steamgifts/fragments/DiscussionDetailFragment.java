@@ -271,6 +271,11 @@ public class DiscussionDetailFragment extends DetailFragment implements IHasPoll
         getActivity().startActivity(intent);
     }
 
+    @Override
+    public void showProfile(long steamID64) {
+        throw new UnsupportedOperationException("Fetching user details by steamID64");
+    }
+
     @NonNull
     @Override
     protected Serializable getDetailObject() {

@@ -80,6 +80,11 @@ public class MessageListFragment extends ListFragment<MessageAdapter> implements
     }
 
     @Override
+    public void showProfile(long steamID64) {
+        throw new UnsupportedOperationException("Fetching user details by steamID64");
+    }
+
+    @Override
     public void requestComment(Comment parentComment) {
         throw new UnsupportedOperationException();
     }

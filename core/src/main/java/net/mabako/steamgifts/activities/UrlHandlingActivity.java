@@ -14,12 +14,10 @@ import android.util.Log;
 import net.mabako.sgtools.SGToolsDetailFragment;
 import net.mabako.steamgifts.data.BasicDiscussion;
 import net.mabako.steamgifts.data.BasicGiveaway;
-import net.mabako.steamgifts.data.BasicTrade;
 import net.mabako.steamgifts.data.Comment;
 import net.mabako.steamgifts.fragments.DetailFragment;
 import net.mabako.steamgifts.fragments.DiscussionDetailFragment;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
-import net.mabako.steamgifts.fragments.TradeDetailFragment;
 import net.mabako.steamgifts.fragments.UserDetailFragment;
 
 import java.util.List;
@@ -67,20 +65,18 @@ public class UrlHandlingActivity extends CommonActivity {
                         intent.putExtra(DetailFragment.ARG_COMMENT_CONTEXT, DetailFragment.CommentContextInfo.fromUri(uri));
                         return intent;
                     }
-                } else if ("trade".equals(pathSegments.get(0))) {
-                    String tradeId = pathSegments.get(1);
-                    if (tradeId.length() == 5) {
-                        Intent intent = new Intent(context, DetailActivity.class);
-                        intent.putExtra(TradeDetailFragment.ARG_TRADE, new BasicTrade(tradeId));
-                        intent.putExtra(DetailFragment.ARG_COMMENT_CONTEXT, DetailFragment.CommentContextInfo.fromUri(uri));
-                        return intent;
-                    }
                 } else if ("user".equals(pathSegments.get(0))) {
                     String user = pathSegments.get(1);
-
-                    Intent intent = new Intent(context, DetailActivity.class);
-                    intent.putExtra(UserDetailFragment.ARG_USER, user);
-                    return intent;
+                    if("id".equals(user)) {
+                        // Follow a redirect from /user/id/012435
+                        Intent intent = new Intent(context, WebViewActivity.class);
+                        intent.putExtra(WebViewActivity.ARG_URL, uri.toString());
+                        return intent;
+                    } else {
+                        Intent intent = new Intent(context, DetailActivity.class);
+                        intent.putExtra(UserDetailFragment.ARG_USER, user);
+                        return intent;
+                    }
                 } else if ("go".equals(pathSegments.get(0)) && "comment".equals(pathSegments.get(1)) && pathSegments.size() == 3) {
                     Intent intent = new Intent(context, WebViewActivity.class);
                     intent.putExtra(WebViewActivity.ARG_URL, uri.toString());

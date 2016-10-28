@@ -119,10 +119,10 @@ public class UserDetailFragment extends Fragment implements IUserNotifications, 
         UserGiveawayListFragment fragmentWon = UserGiveawayListFragment.newInstance(user, "/giveaways/won");
         fragmentWon.setiUserNotification(this);
 
-        UserTradeFeedbackListFragment fragmentPositiveFeedback = UserTradeFeedbackListFragment.newInstance(user, "/feedback/positive");
+        UserTradeFeedbackListFragment fragmentPositiveFeedback = UserTradeFeedbackListFragment.newInstance(user, "positive");
         fragmentPositiveFeedback.setiUserNotification(this);
 
-        UserTradeFeedbackListFragment fragmentNegativeFeedback = UserTradeFeedbackListFragment.newInstance(user, "/feedback/negative");
+        UserTradeFeedbackListFragment fragmentNegativeFeedback = UserTradeFeedbackListFragment.newInstance(user, "negative");
         fragmentNegativeFeedback.setiUserNotification(this);
 
         viewPager = (ViewPager) layout.findViewById(R.id.viewPager);
@@ -235,10 +235,9 @@ public class UserDetailFragment extends Fragment implements IUserNotifications, 
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // TODO white- and blacklisting
         int itemId = item.getItemId();
         if (itemId == R.id.open_steam_profile) {
-            UrlHandlingActivity.getIntentForUri(getContext(), Uri.parse(user.getUrl()), true).start(getActivity());
+            UrlHandlingActivity.getIntentForUri(getContext(), Uri.parse("http://steamcommunity.com/profiles/" + user.getSteamID64()), true).start(getActivity());
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -292,35 +291,38 @@ public class UserDetailFragment extends Fragment implements IUserNotifications, 
 
         @Override
         public CharSequence getPageTitle(int position) {
-            if (user.isLoaded()) {
-                switch (position) {
-                    case 0:
+            switch (position) {
+                case 0:
+                    if (user.isLoaded()) {
                         return String.format(getString(R.string.user_giveaways_created_count), user.getCreated(), user.getCreatedAmount());
-                    case 1:
-                        return String.format(getString(R.string.user_giveaway_won_count), user.getWon(), user.getWonAmount());
-                    case 2:
-                        return String.format(getString(R.string.user_trade_feedback_positive_count), user.getPositiveFeedback());
-                    case 3:
-                        return String.format(getString(R.string.user_trade_feedback_negative_count), user.getNegativeFeedback());
-                }
-            } else {
-                switch (position) {
-                    case 0:
+                    } else {
                         return getString(R.string.user_giveaways_created);
-                    case 1:
+                    }
+                case 1:
+                    if (user.isLoaded()) {
+                        return String.format(getString(R.string.user_giveaway_won_count), user.getWon(), user.getWonAmount());
+                    } else {
                         return getString(R.string.user_giveaway_won);
-                    case 2:
+                    }
+                case 2:
+                    if (user.isFeedbackLoaded()) {
+                        return String.format(getString(R.string.user_trade_feedback_positive_count), user.getPositiveFeedback());
+                    } else {
                         return getString(R.string.user_trade_feedback_positive);
-                    case 3:
+                    }
+                case 3:
+                    if (user.isFeedbackLoaded()) {
+                        return String.format(getString(R.string.user_trade_feedback_negative_count), user.getNegativeFeedback());
+                    } else {
                         return getString(R.string.user_trade_feedback_negative);
-                }
+                    }
             }
             return null;
         }
     }
 
     public static class UserGiveawayListFragment extends ListFragment<GiveawayAdapter> implements IUserNotifications {
-        private static final String SAVED_PATH = "path";
+        private static final String SAVED_PATH = "rating";
 
         private User user;
         private String path;
@@ -407,18 +409,18 @@ public class UserDetailFragment extends Fragment implements IUserNotifications, 
     }
 
     public static class UserTradeFeedbackListFragment extends ListFragment<CommentAdapter> implements IUserNotifications, ICommentableFragment {
-        private static final String SAVED_PATH = "path";
+        private static final String SAVED_RATING = "rating";
 
         private User user;
-        private String path;
+        private String rating;
         private IUserNotifications iUserNotification;
 
-        public static UserTradeFeedbackListFragment newInstance(User user, String path) {
+        public static UserTradeFeedbackListFragment newInstance(User user, String rating) {
             UserTradeFeedbackListFragment fragment = new UserTradeFeedbackListFragment();
 
             Bundle args = new Bundle();
             args.putSerializable(SAVED_USER, user);
-            args.putString(SAVED_PATH, path);
+            args.putString(SAVED_RATING, rating);
             fragment.setArguments(args);
 
             return fragment;
@@ -428,10 +430,10 @@ public class UserDetailFragment extends Fragment implements IUserNotifications, 
         public void onCreate(Bundle savedInstanceState) {
             if (savedInstanceState == null) {
                 user = (User) getArguments().getSerializable(SAVED_USER);
-                path = getArguments().getString(SAVED_PATH);
+                rating = getArguments().getString(SAVED_RATING);
             } else {
                 user = (User) savedInstanceState.getSerializable(SAVED_USER);
-                path = savedInstanceState.getString(SAVED_PATH);
+                rating = savedInstanceState.getString(SAVED_RATING);
             }
 
             super.onCreate(savedInstanceState);
@@ -442,7 +444,7 @@ public class UserDetailFragment extends Fragment implements IUserNotifications, 
         public void onSaveInstanceState(Bundle outState) {
             super.onSaveInstanceState(outState);
             outState.putSerializable(SAVED_USER, user);
-            outState.putString(SAVED_PATH, path);
+            outState.putString(SAVED_RATING, rating);
         }
 
         @NonNull
@@ -453,7 +455,7 @@ public class UserDetailFragment extends Fragment implements IUserNotifications, 
 
         @Override
         protected AsyncTask<Void, Void, ?> getFetchItemsTask(int page) {
-            return new LoadUserTradeFeedbackTask(this, user.getName() + path, page, user);
+            return new LoadUserTradeFeedbackTask(this, user.getSteamID64(), rating, page, user);
         }
 
         @Override
@@ -490,8 +492,12 @@ public class UserDetailFragment extends Fragment implements IUserNotifications, 
 
         @Override
         public void showProfile(String user) {
-            Intent intent = new Intent(getActivity(), DetailActivity.class);
-            intent.putExtra(UserDetailFragment.ARG_USER, user);
+            throw new UnsupportedOperationException("Can't lookup user by name from trade feedback");
+        }
+
+        @Override
+        public void showProfile(long steamID64) {
+            Intent intent = UrlHandlingActivity.getIntentForUri(getContext(), Uri.parse("https://www.steamgifts.com/user/id/" + steamID64));
             getActivity().startActivity(intent);
         }
 
