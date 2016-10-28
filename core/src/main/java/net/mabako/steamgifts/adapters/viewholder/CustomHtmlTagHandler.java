@@ -156,6 +156,7 @@ public class CustomHtmlTagHandler implements Html.TagHandler {
         }
     }
 
+    @SuppressWarnings("deprecation")
     private void processQuoteTag(boolean opening, Editable output, @ColorRes int colorRes) {
         int len = output.length();
         if (opening) {
