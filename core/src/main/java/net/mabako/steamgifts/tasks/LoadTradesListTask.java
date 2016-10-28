@@ -79,7 +79,7 @@ public class LoadTradesListTask extends AsyncTask<Void, Void, List<Trade>> {
                 trade.setName(tradeName);
 
                 Element p = element.select(".table__column--width-fill p").first();
-                trade.setCreatedTime(p.select("span").first().attr("title"));
+                trade.setCreatedTime(Integer.valueOf(p.select("span").first().attr("data-timestamp")));
                 trade.setCreator(p.select("a").first().text());
                 trade.setCreatorScorePositive(Utils.parseInt(p.select(".trade-feedback--positive").first().text()));
                 trade.setCreatorScoreNegative(-Utils.parseInt(p.select(".trade-feedback--negative").first().text()));

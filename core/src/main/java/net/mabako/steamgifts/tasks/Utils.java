@@ -99,7 +99,7 @@ public final class Utils {
         Comment comment = includeTradeScore ? new TradeComment(commentId, author, depth, avatar, isOp, type) : new Comment(commentId, author, depth, avatar, isOp, type);
         comment.setPermalinkId(permalinkUri.getPathSegments().get(2));
         comment.setEditableContent(editableContent);
-        comment.setCreatedTime(timeCreated.attr("title"));
+        comment.setCreatedTime(Integer.valueOf(timeCreated.attr("data-timestamp")));
 
 
         Element desc = element.select(".comment__description").first();
@@ -164,8 +164,8 @@ public final class Utils {
 
         // Time remaining
         Element end = element.select("." + cssNode + "__columns > div span").first();
-        giveaway.setEndTime(end.attr("title"), end.text());
-        giveaway.setCreatedTime(element.select("." + cssNode + "__columns > div span").last().attr("title"));
+        giveaway.setEndTime(Integer.valueOf(end.attr("data-timestamp")), end.parent().text().trim());
+        giveaway.setCreatedTime(Integer.valueOf(element.select("." + cssNode + "__columns > div span").last().attr("data-timestamp")));
 
         // Flags
         giveaway.setWhitelist(!element.select("." + cssNode + "__column--whitelist").isEmpty());

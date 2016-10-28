@@ -1,15 +1,10 @@
 package net.mabako.steamgifts.data;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.text.format.DateUtils;
-import android.util.Log;
 
 import java.io.Serializable;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 
@@ -25,11 +20,6 @@ public class CustomDateTime implements Serializable {
     private static final long serialVersionUID = -1927137928995548949L;
 
     /**
-     * A list of dates we have to parse relatively to the current day.
-     */
-    private static final String[] relativeDates = new String[]{"Yesterday", "Today", "Tomorrow"};
-
-    /**
      * The date this current instance points to.
      */
     private final Calendar calendar;
@@ -40,37 +30,16 @@ public class CustomDateTime implements Serializable {
     private final boolean beginning;
 
     /**
-     * <p>Set the time to an absolute date. We assume either of the following formats:
-     * <ul>
-     * <li>"Today, 3:40pm"</li>
-     * <li>"Tomorrow, 3:40am"</li>
-     * <li>"January 26, 2016, 3:40am"</li>
-     * </ul>
+     * Set the time to an absolute date.
      *
-     * @param time      the time string to parse
+     * @param timestamp the unix timestamp
      * @param beginning true if this date is the date of the beginning, and not the end. Giveaways do not have an 'end date' if they're not open yet
      */
-    public CustomDateTime(@NonNull final String time, boolean beginning) {
+    public CustomDateTime(int timestamp, boolean beginning) {
         this.beginning = beginning;
-        String realTime = time;
 
-        for (int daysOffset = 0; daysOffset < relativeDates.length; ++daysOffset) {
-            if (time.startsWith(relativeDates[daysOffset] + ", ")) {
-                Calendar calendar = Calendar.getInstance();
-                calendar.add(Calendar.DAY_OF_MONTH, daysOffset - 1);
-                realTime = time.replace(relativeDates[daysOffset], new SimpleDateFormat("MMMM d, yyyy", Locale.US).format(calendar.getTime()));
-                break;
-            }
-        }
-
-        try {
-            Date date = new SimpleDateFormat("MMMM d, yyyy, h:mma", Locale.US).parse(realTime);
-            calendar = Calendar.getInstance();
-            calendar.setTime(date);
-        } catch (ParseException e) {
-            Log.w(Giveaway.class.getSimpleName(), "Unable to handle date " + time + " // " + realTime, e);
-            throw new RuntimeException(e);
-        }
+        calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(1000L * timestamp);
     }
 
     public String toString(Context context) {
@@ -99,7 +68,7 @@ public class CustomDateTime implements Serializable {
     }
 
     private String toString(long timeDiff, long realTimeDiff, String unit) {
-        String inWords = String.format("%d %s%s", timeDiff, unit, timeDiff == 1 ? "" : "s");
+        String inWords = String.format(Locale.US, "%d %s%s", timeDiff, unit, timeDiff == 1 ? "" : "s");
         if (beginning && realTimeDiff > 0)
             // Giveaway already began, but we don't really know when it does actually -end-.
             return "Began already";
