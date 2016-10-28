@@ -58,8 +58,8 @@ public class Comment implements Serializable, IEndlessAdaptable, IImageHolder {
         return createdTime != null ? createdTime.toString(context) : null;
     }
 
-    public void setCreatedTime(String time) {
-        createdTime = new CustomDateTime(time, false);
+    public void setCreatedTime(int timestamp) {
+        createdTime = new CustomDateTime(timestamp, false);
     }
 
     public String getContent() {

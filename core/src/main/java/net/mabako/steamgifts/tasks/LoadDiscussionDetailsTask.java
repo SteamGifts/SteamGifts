@@ -116,7 +116,7 @@ public class LoadDiscussionDetailsTask extends AsyncTask<Void, Void, DiscussionE
         discussion.setTitle(Utils.getPageTitle(document));
 
         discussion.setCreator(element.select(".comment__username a").first().text());
-        discussion.setCreatedTime(element.select(".comment__actions > div span").first().attr("title"));
+        discussion.setCreatedTime(Integer.valueOf(element.select(".comment__actions > div span").first().attr("data-timestamp")));
 
         Element headerButton = document.select(".page__heading__button").first();
         if (headerButton != null) {

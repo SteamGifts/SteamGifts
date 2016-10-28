@@ -114,7 +114,7 @@ public class LoadTradeDetailsTask extends AsyncTask<Void, Void, TradeExtras> {
         trade.setTitle(Utils.getPageTitle(document));
 
         trade.setCreator(element.select(".comment__username a").first().text());
-        trade.setCreatedTime(element.select(".comment__actions > div span").first().attr("title"));
+        trade.setCreatedTime(Integer.valueOf(element.select(".comment__actions > div span").first().attr("data-timestamp")));
         trade.setCreatorScorePositive(Utils.parseInt(element.select(".trade-feedback--positive").first().text()));
         trade.setCreatorScoreNegative(-Utils.parseInt(element.select(".trade-feedback--negative").first().text()));
 

@@ -188,16 +188,16 @@ public class Giveaway extends BasicGiveaway implements IEndlessAdaptable {
         return endTime != null ? endTime.getCalendar() : null;
     }
 
-    public void setEndTime(@NonNull String endTime, @NonNull String relativeEndTime) {
-        this.endTime = new CustomDateTime(endTime, relativeEndTime.startsWith("Begins in "));
+    public void setEndTime(int endTimestamp, @NonNull String relativeEndTime) {
+        this.endTime = new CustomDateTime(endTimestamp, relativeEndTime.startsWith("Begins in "));
     }
 
     public Calendar getCreatedTime() {
         return createdTime != null ? createdTime.getCalendar() : null;
     }
 
-    public void setCreatedTime(@NonNull String createdTime) {
-        this.createdTime = new CustomDateTime(createdTime, false);
+    public void setCreatedTime(int createdTimestamp) {
+        this.createdTime = new CustomDateTime(createdTimestamp, false);
     }
 
     @Override
