@@ -79,10 +79,6 @@
                 <data android:pathPattern="/discussion/....." />
                 <data android:pathPattern="/discussion/...../.*" />
 
-                <!-- individual trades -->
-                <data android:path="/trade/....." />
-                <data android:path="/trade/...../.*" />
-
                 <!-- users -->
                 <data android:pathPattern="/user/.*" />
 

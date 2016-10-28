@@ -95,14 +95,17 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
         View.OnClickListener viewProfileListener = comment.isDeleted() ? null : new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fragment.showProfile(comment.getAuthor());
+                if(comment instanceof TradeComment)
+                    fragment.showProfile(((TradeComment) comment).getSteamID64());
+                else
+                    fragment.showProfile(comment.getAuthor());
             }
         };
 
         commentImage.setOnClickListener(viewProfileListener);
         commentAuthor.setOnClickListener(viewProfileListener);
 
-        if (fragment.canPostOrModifyComments()) {
+        if (fragment.canPostOrModifyComments() && !(comment instanceof TradeComment)) {
             writeCommentListener = comment.getId() == 0 ? null : new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

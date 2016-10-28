@@ -5,7 +5,6 @@ import android.util.Log;
 
 import net.mabako.steamgifts.data.Comment;
 import net.mabako.steamgifts.fragments.DetailFragment;
-import net.mabako.steamgifts.fragments.TradeDetailFragment;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,7 +42,7 @@ public class DeleteCommentTask extends AjaxTask<DetailFragment> {
 
                 boolean success = "success".equals(root.getString("type"));
                 if (success) {
-                    Comment comment = Utils.loadComment(Jsoup.parse(root.getString("comment")), commentId, depth, getFragment() instanceof TradeDetailFragment, Comment.Type.COMMENT);
+                    Comment comment = Utils.loadComment(Jsoup.parse(root.getString("comment")), commentId, depth, false, Comment.Type.COMMENT);
                     getFragment().onCommentDeleted(comment);
                 } else {
                     Log.w(TAG, "Could not " + getWhat() + " comment " + commentId + "?");

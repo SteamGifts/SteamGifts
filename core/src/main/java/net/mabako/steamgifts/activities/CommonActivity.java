@@ -17,10 +17,8 @@ import com.mikepenz.iconics.context.IconicsContextWrapper;
 import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.BasicDiscussion;
 import net.mabako.steamgifts.data.BasicGiveaway;
-import net.mabako.steamgifts.data.BasicTrade;
 import net.mabako.steamgifts.fragments.DiscussionDetailFragment;
 import net.mabako.steamgifts.fragments.GiveawayDetailFragment;
-import net.mabako.steamgifts.fragments.TradeDetailFragment;
 import net.mabako.steamgifts.fragments.UserDetailFragment;
 import net.mabako.steamgifts.fragments.interfaces.IActivityTitle;
 import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
@@ -125,7 +123,7 @@ public class CommonActivity extends BaseActivity {
     public boolean onKeyLongPress(int keyCode, KeyEvent event) {
         // TODO allow this to be changed to normal overflow menus in the settings.
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            final CharSequence[] strings = new CharSequence[]{getString(R.string.go_to_giveaway), getString(R.string.go_to_discussion), getString(R.string.go_to_user), getString(R.string.go_to_trade)};
+            final CharSequence[] strings = new CharSequence[]{getString(R.string.go_to_giveaway), getString(R.string.go_to_discussion), getString(R.string.go_to_user)};
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.go_to);
@@ -167,9 +165,6 @@ public class CommonActivity extends BaseActivity {
                                         break;
                                     case 2:
                                         intent.putExtra(UserDetailFragment.ARG_USER, target);
-                                        break;
-                                    case 3:
-                                        intent.putExtra(TradeDetailFragment.ARG_TRADE, new BasicTrade(target));
                                         break;
                                 }
                                 startActivity(intent);

@@ -76,25 +76,28 @@ public final class Utils {
      */
     @NonNull
     public static Comment loadComment(Element element, long commentId, int depth, boolean includeTradeScore, Comment.Type type) {
+        // TODO Since we're not passing any session information to Steam Trades, we can't edit. This is NOT feature complete for both trading & normal use
+
         // Save the content of the edit state for a bit & remove the edit state from being rendered.
-        Element editState = element.select(".comment__edit-state.is-hidden textarea[name=description]").first();
+        Element editState = type == Comment.Type.COMMENT ? element.select(".comment__edit-state.is-hidden textarea[name=description]").first() : null;
         String editableContent = null;
         if (editState != null)
             editableContent = editState.text();
         element.select(".comment__edit-state").html("");
 
-        Element authorNode = element.select(".comment__username").first();
+        Element authorNode = element.select(type == Comment.Type.COMMENT ? ".comment__username" : ".author_name").first();
         String author = authorNode.text();
         boolean isOp = authorNode.hasClass("comment__username--op");
 
         String avatar = null;
-        Element avatarNode = element.select(".global__image-inner-wrap").first();
+        Element avatarNode = element.select(type == Comment.Type.COMMENT ? ".global__image-inner-wrap" : ".author_avatar").first();
         if (avatarNode != null)
             avatar = extractAvatar(avatarNode.attr("style"));
 
-        Element timeCreated = element.select(".comment__actions > div span").first();
+        Element timeCreated = element.select(type == Comment.Type.COMMENT ? ".comment__actions > div span" : ".action_list > span > span").first();
 
-        Uri permalinkUri = Uri.parse(element.select(".comment__actions a[href^=/go/" + type.getPath() + "]").first().attr("href"));
+        String actions = type == Comment.Type.COMMENT ? ".comment__actions" : ".action_list";
+        Uri permalinkUri = Uri.parse(element.select(actions + " a[href^=/go/]").first().attr("href"));
 
         Comment comment = includeTradeScore ? new TradeComment(commentId, author, depth, avatar, isOp, type) : new Comment(commentId, author, depth, avatar, isOp, type);
         comment.setPermalinkId(permalinkUri.getPathSegments().get(2));
@@ -102,27 +105,29 @@ public final class Utils {
         comment.setCreatedTime(Integer.valueOf(timeCreated.attr("data-timestamp")));
 
 
-        Element desc = element.select(".comment__description").first();
+        Element desc = element.select(type == Comment.Type.COMMENT ? ".comment__description" : ".review_description").first();
         desc.select("blockquote").tagName("custom_quote");
         String content = loadAttachedImages(comment, desc);
         comment.setContent(content);
 
         // check if the comment is deleted
-        comment.setDeleted(element.select(".comment__summary").first().select(".comment__delete-state").size() == 1);
+        if (type == Comment.Type.COMMENT) {
+            comment.setDeleted(element.select(".comment__summary").first().select(".comment__delete-state").size() == 1);
+            comment.setHighlighted(element.select(".comment__parent > .comment__envelope").size() != 0);
 
-        comment.setHighlighted(element.select(".comment__parent > .comment__envelope").size() != 0);
+            Element roleName = element.select(".comment__role-name").first();
+            if (roleName != null)
+                comment.setAuthorRole(roleName.text().replace("(", "").replace(")", ""));
 
-        Element roleName = element.select(".comment__role-name").first();
-        if (roleName != null)
-            comment.setAuthorRole(roleName.text().replace("(", "").replace(")", ""));
-
-        // Do we have either a delete or undelete link?
-        comment.setDeletable(element.select(".comment__actions__button.js__comment-delete").size() + element.select(".comment__actions__button.js__comment-undelete").size() == 1);
+            // Do we have either a delete or undelete link?
+            comment.setDeletable(element.select(".comment__actions__button.js__comment-delete").size() + element.select(".comment__actions__button.js__comment-undelete").size() == 1);
+        }
 
         if (comment instanceof TradeComment && !comment.isDeleted()) {
             try {
-                ((TradeComment) comment).setTradeScorePositive(Utils.parseInt(element.select(".trade-feedback--positive").first().text()));
-                ((TradeComment) comment).setTradeScoreNegative(-Utils.parseInt(element.select(".trade-feedback--negative").first().text()));
+                ((TradeComment) comment).setTradeScorePositive(Utils.parseInt(element.select(".is_positive").first().text()));
+                ((TradeComment) comment).setTradeScoreNegative(-Utils.parseInt(element.select(".is_negative").first().text()));
+                ((TradeComment) comment).setSteamID64(Long.valueOf(Uri.parse(element.select(".author_name").attr("href")).getPathSegments().get(1)));
             } catch (Exception e) {
                 Log.v(TAG, "Unable to parse feedback", e);
             }
@@ -312,26 +317,6 @@ public final class Utils {
         user.setCreated(parseInt(created.select("a").first().text()));
         created.select("a").html("");
         user.setCreatedAmount(created.text().trim());
-
-        // Trade feedback
-        Element feedback = right.get(0);
-        if (feedback != null) {
-            String text = feedback.text();
-            if (text.contains(" / ")) {
-                try {
-                    String[] str = text.split(" / ");
-                    int positive = Integer.valueOf(str[0]);
-                    int negative = Integer.valueOf(str[1]) * -1;
-
-                    user.setPositiveFeedback(positive);
-                    user.setNegativeFeedback(negative);
-
-                    Log.d(TAG, "F:" + user.getPositiveFeedback() + ", " + user.getNegativeFeedback());
-                } catch (Exception e) {
-                    Log.w(TAG, "Error parsing user feedback score", e);
-                }
-            }
-        }
 
         user.setLevel((int) Float.parseFloat(right.get(3).select("span").first().attr("title")));
         return foundXsrfToken;
