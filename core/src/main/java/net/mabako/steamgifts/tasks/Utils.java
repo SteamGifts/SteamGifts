@@ -228,7 +228,8 @@ public final class Utils {
             giveaway.setEntered(element.hasClass("is-faded"));
 
             // More details
-            Element icon = element.select("h2 a").last();
+            Elements icons = element.select("h2 a");
+            Element icon = icons.size() < 2 ? null : icons.get(icons.size() - 2);
             Uri uriIcon = icon == link ? null : Uri.parse(icon.attr("href"));
 
             Utils.loadGiveaway(giveaway, element, "giveaway", "giveaway__heading__thin", uriIcon);
