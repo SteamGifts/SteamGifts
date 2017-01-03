@@ -1,113 +1,98 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version='1.0' encoding='UTF-8'?>
+  <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:background="?attr/selectableItemBackground"
+  android:clickable="true"
+  android:focusable="true"
+  android:orientation="vertical"
+  android:paddingLeft="0dp"
+  android:paddingRight="0dp">
+
+  <LinearLayout android:id="@+id/list_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/selectableItemBackground"
-    android:clickable="true"
-    android:focusable="true"
-    android:orientation="vertical"
-    android:paddingLeft="0dp"
-    android:paddingRight="0dp">
+    android:orientation="horizontal">
 
-    <LinearLayout
-        android:id="@+id/list_item"
+    <ImageView android:id="@+id/giveaway_image"
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:adjustViewBounds="true"
+      android:scaleType="fitCenter"/>
+
+    <LinearLayout android:id="@+id/giveaway_container"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:orientation="vertical"
+      android:padding="4dp">
+
+      <TextView android:id="@+id/giveaway_name"
+        style="@style/NormalText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_gravity="start"
+        android:singleLine="true"
+        android:text="Name of the Game"
+        android:textAlignment="viewStart"/>
 
-        <ImageView
-            android:id="@+id/giveaway_image"
+      <RelativeLayout android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout android:id="@+id/indicator_container"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="start">
+
+          <View android:id="@+id/giveaway_list_indicator_whitelist"
+            style="@style/GiveawayIndicatorIcon"
+            android:background="@drawable/circle_indicator_whitelist"/>
+
+          <View android:id="@+id/giveaway_list_indicator_group"
+            style="@style/GiveawayIndicatorIcon"
+            android:background="@drawable/circle_indicator_group"/>
+
+          <View android:id="@+id/giveaway_list_indicator_level_positive"
+            style="@style/GiveawayIndicatorIcon"
+            android:background="@drawable/circle_indicator_level_positive"/>
+
+          <ImageView android:id="@+id/giveaway_list_indicator_level_negative"
+            style="@style/GiveawayIndicatorIcon"
+            android:background="@drawable/circle_indicator_level_negative"/>
+
+          <ImageView android:id="@+id/giveaway_list_indicator_private"
+            style="@style/GiveawayIndicatorIcon"
+            android:background="@drawable/circle_indicator_private"/>
+
+          <ImageView android:id="@+id/giveaway_list_indicator_region_restricted"
+            style="@style/GiveawayIndicatorIcon"
+            android:background="@drawable/circle_indicator_region_restricted"/>
+
+          <TextView android:id="@+id/giveaway_details"
+            style="@style/SmallText"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:adjustViewBounds="true"
-            android:scaleType="fitCenter" />
-
-        <LinearLayout
-            android:id="@+id/giveaway_container"
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/giveaway_image"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:padding="4dp">
-
-            <TextView
-                android:id="@+id/giveaway_name"
-                style="@style/NormalText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:singleLine="true"
-                android:text="Name of the Game"
-                android:textAlignment="viewStart" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-
-                <LinearLayout
-                    android:id="@+id/indicator_container"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start">
-
-                    <View
-                        android:id="@+id/giveaway_list_indicator_whitelist"
-                        style="@style/GiveawayIndicatorIcon"
-                        android:background="@drawable/circle_indicator_whitelist" />
-
-                    <View
-                        android:id="@+id/giveaway_list_indicator_group"
-                        style="@style/GiveawayIndicatorIcon"
-                        android:background="@drawable/circle_indicator_group" />
-
-                    <View
-                        android:id="@+id/giveaway_list_indicator_level_positive"
-                        style="@style/GiveawayIndicatorIcon"
-                        android:background="@drawable/circle_indicator_level_positive" />
-
-                    <ImageView
-                        android:id="@+id/giveaway_list_indicator_level_negative"
-                        style="@style/GiveawayIndicatorIcon"
-                        android:background="@drawable/circle_indicator_level_negative" />
-
-                    <ImageView
-                        android:id="@+id/giveaway_list_indicator_private"
-                        style="@style/GiveawayIndicatorIcon"
-                        android:background="@drawable/circle_indicator_private" />
-
-                    <ImageView
-                        android:id="@+id/giveaway_list_indicator_region_restricted"
-                        style="@style/GiveawayIndicatorIcon"
-                        android:background="@drawable/circle_indicator_region_restricted" />
-
-                    <TextView
-                        android:id="@+id/giveaway_details"
-                        style="@style/SmallText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:singleLine="true"
-                        android:text="Points | Entries" />
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/time"
-                    style="@style/SmallText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_gravity="end"
-                    android:singleLine="true"
-                    android:text="Time left"
-                    android:textAlignment="viewEnd" />
-            </RelativeLayout>
+            android:singleLine="true"
+            android:text="Points | Entries"/>
         </LinearLayout>
-    </LinearLayout>
 
-    <View
-        android:id="@id/separator"
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="?attr/colorLighterSeparatorBackground" />
+        <TextView android:id="@+id/time"
+          style="@style/SmallText"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentRight="true"
+          android:layout_gravity="end"
+          android:singleLine="true"
+          android:text="Time left"
+          android:textAlignment="viewEnd"/>
+      </RelativeLayout>
+      <!--Removed ObsoleteLayoutParam: layout_toRightOf-->
+    </LinearLayout>
+  </LinearLayout>
+
+  <View android:id="@id/separator"
+    android:layout_width="match_parent"
+    android:layout_height="1px"
+    android:background="?attr/colorLighterSeparatorBackground"/>
 </LinearLayout>
