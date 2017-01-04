@@ -49,7 +49,7 @@ public final class StringUtils {
 
         if (useCustomViewHandler) {
             try {
-                CharSequence cs = Html.fromHtml(source, imageGetter, new CustomHtmlTagHandler(context));
+                CharSequence cs = fromHtml(source, imageGetter, new CustomHtmlTagHandler(context));
                 cs = trim(cs, 0, cs.length());
                 return addProperLinks(context, cs);
             } catch (Exception e) {
@@ -57,9 +57,21 @@ public final class StringUtils {
             }
         }
 
-        CharSequence cs = Html.fromHtml(source, imageGetter, null);
+        CharSequence cs = fromHtml(source, imageGetter, null);
         cs = trim(cs, 0, cs.length());
         return addProperLinks(context, cs);
+    }
+
+    /**
+     * Wrapper around Html.fromHtml for deprecation.
+     */
+    @SuppressWarnings("deprecation")
+    private static CharSequence fromHtml(String source, Html.ImageGetter imageGetter, CustomHtmlTagHandler customHtmlTagHandler) {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            return Html.fromHtml(source, Html.FROM_HTML_MODE_LEGACY, imageGetter, customHtmlTagHandler);
+        } else {
+            return Html.fromHtml(source, imageGetter, customHtmlTagHandler);
+        }
     }
 
     private static CharSequence trim(CharSequence s, int start, int end) {
