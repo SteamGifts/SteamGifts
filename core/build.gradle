@@ -32,11 +32,11 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:23.1.1'
     compile 'com.android.support:customtabs:23.1.1'
     compile 'org.jsoup:jsoup:1.8.3'
-    compile('com.mikepenz:materialdrawer:4.6.1@aar') {
+    compile('com.mikepenz:materialdrawer:5.8.1@aar') {
         transitive = true
     }
-    compile 'com.mikepenz:fontawesome-typeface:4.5.0.1@aar'
-    compile 'com.mikepenz:actionitembadge:3.2.2@aar'
+    compile 'com.mikepenz:fontawesome-typeface:4.7.0.0@aar'
+    compile 'com.mikepenz:actionitembadge:3.3.1@aar'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.squareup.okhttp:okhttp:2.7.4'
     compile 'com.squareup.okio:okio:1.6.0'

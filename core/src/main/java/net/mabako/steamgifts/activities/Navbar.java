@@ -118,7 +118,7 @@ public class Navbar {
                         if (fragment instanceof SearchableListFragment)
                             ((SearchableListFragment) fragment).stopSearch();
 
-                        int identifier = drawerItem.getIdentifier();
+                        long identifier = drawerItem.getIdentifier();
                         if (identifier == R.string.login) {
                             activity.requestLogin();
 
