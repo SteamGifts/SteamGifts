@@ -2,6 +2,7 @@ package net.mabako.steamgifts.adapters.viewholder;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,6 +44,7 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
     private final TextView giveawayName;
     private final TextView giveawayTime;
     private final ImageView giveawayImage;
+    private final Button giveawayEnterButton;
 
     private final EndlessAdapter adapter;
     private final Activity activity;
@@ -59,6 +62,7 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
         giveawayDetails = (TextView) v.findViewById(R.id.giveaway_details);
         giveawayTime = (TextView) v.findViewById(R.id.time);
         giveawayImage = (ImageView) v.findViewById(R.id.giveaway_image);
+        giveawayEnterButton = (Button) v.findViewById(R.id.giveaway_enter_button);
 
         indicatorWhitelist = v.findViewById(R.id.giveaway_list_indicator_whitelist);
         indicatorGroup = v.findViewById(R.id.giveaway_list_indicator_group);
@@ -136,6 +140,35 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
         indicatorLevelNegative.setVisibility(giveaway.isLevelNegative() ? View.VISIBLE : View.GONE);
         indicatorPrivate.setVisibility(giveaway.isPrivate() ? View.VISIBLE : View.GONE);
         indicatorRegionRestricted.setVisibility(giveaway.isRegionRestricted() ? View.VISIBLE : View.GONE);
+
+        // Initialize the enter button
+        // Check if logged or the quick enter button setting is enabled
+        boolean loggedIn = SteamGiftsUserData.getCurrent(null).isLoggedIn();
+        if (!loggedIn || !PreferenceManager.getDefaultSharedPreferences(fragment.getContext()).getBoolean("preference_giveaway_show_quick_enter", false)){
+            giveawayEnterButton.setVisibility(View.GONE);
+        } else {
+            // Set the correct text based on the giveaway is already entered or not
+            if (giveaway.isEntered()) {
+                giveawayEnterButton.setText(activity.getString(R.string.leave_giveaway));
+                giveawayEnterButton.setEnabled(true);
+            } else {
+                giveawayEnterButton.setText(activity.getString(R.string.enter_giveaway));
+                //Check if the user have enough points, that the giveaway is not from him and that he have the required level
+                giveawayEnterButton.setEnabled(giveaway.getPoints() <= SteamGiftsUserData.getCurrent(null).getPoints() && giveaway.getLevel() <= SteamGiftsUserData.getCurrent(null).getLevel() && !SteamGiftsUserData.getCurrent(null).getName().equals(giveaway.getCreator()));
+            }
+
+            // Set the event
+            giveawayEnterButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    Giveaway giveaway = (Giveaway) adapter.getItem(getAdapterPosition());
+                    if (giveaway.isEntered()) {
+                        ((IHasEnterableGiveaways) fragment).requestEnterLeave(giveaway.getGiveawayId(), GiveawayDetailFragment.ENTRY_DELETE, adapter.getXsrfToken());
+                    } else {
+                        ((IHasEnterableGiveaways) fragment).requestEnterLeave(giveaway.getGiveawayId(), GiveawayDetailFragment.ENTRY_INSERT, adapter.getXsrfToken());
+                    }
+                }
+            });
+        }
     }
 
     @Override

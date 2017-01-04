@@ -200,7 +200,8 @@ public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter
                     // we want to hide entered giveaways
                     adapter.removeGiveaway(giveawayId);
                 } else {
-                    adapter.notifyItemChanged(giveaway);
+                    // We refresh the entire dataset to let the other quick enter buttons know if the user still have enough points
+                    adapter.notifyDataSetChanged();
                 }
             }
         } else {

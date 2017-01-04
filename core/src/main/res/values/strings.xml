@@ -256,4 +256,7 @@
     <!-- unsorted -->
     <string name="could_not_load_image">Could not load image.</string>
     <string name="share_image">Share Image</string>
+    <string name="preference_giveaway_quick_enter">Display quick enter button</string>
+    <string name="preference_giveaway_quick_enter_off">Quick enter button is hidden</string>
+    <string name="preference_giveaway_quick_enter_on">Quick enter button is displayed</string>
 </resources>

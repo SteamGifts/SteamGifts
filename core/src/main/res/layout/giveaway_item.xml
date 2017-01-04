@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground"
@@ -28,7 +29,8 @@
             android:layout_toRightOf="@+id/giveaway_image"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:padding="4dp">
+            android:padding="4dp"
+            android:weightSum="1">
 
             <TextView
                 android:id="@+id/giveaway_name"
@@ -42,7 +44,8 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_weight="1.88">
 
 
                 <LinearLayout
@@ -96,13 +99,27 @@
                     style="@style/SmallText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
                     android:layout_gravity="end"
                     android:singleLine="true"
                     android:text="Time left"
-                    android:textAlignment="viewEnd" />
+                    android:textAlignment="viewEnd"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginRight="0dp"
+                    android:layout_marginEnd="84dp" />
+
             </RelativeLayout>
         </LinearLayout>
+
+        <Button
+            android:text="Enter"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/giveaway_enter_button"
+            android:textAllCaps="false"
+            android:textSize="13sp" />
+
     </LinearLayout>
 
     <View
@@ -110,4 +127,5 @@
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:background="?attr/colorLighterSeparatorBackground" />
+
 </LinearLayout>
