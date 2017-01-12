@@ -144,7 +144,7 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
         // Initialize the enter button
         // Check if logged or the quick enter button setting is enabled
         boolean loggedIn = SteamGiftsUserData.getCurrent(null).isLoggedIn();
-        if (!loggedIn || !PreferenceManager.getDefaultSharedPreferences(fragment.getContext()).getBoolean("preference_giveaway_show_quick_enter", false)){
+        if (!loggedIn || !PreferenceManager.getDefaultSharedPreferences(fragment.getContext()).getBoolean("preference_giveaway_show_quick_enter", true)){
             giveawayEnterButton.setVisibility(View.GONE);
         } else {
             // Set the correct text based on the giveaway is already entered or not
@@ -154,7 +154,7 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
             } else {
                 giveawayEnterButton.setText(activity.getString(R.string.enter_giveaway));
                 //Check if the user have enough points, that the giveaway is not from him and that he have the required level
-                giveawayEnterButton.setEnabled(giveaway.getPoints() <= SteamGiftsUserData.getCurrent(null).getPoints() && giveaway.getLevel() <= SteamGiftsUserData.getCurrent(null).getLevel() && !SteamGiftsUserData.getCurrent(null).getName().equals(giveaway.getCreator()));
+                giveawayEnterButton.setEnabled(giveaway.userCanEnter());
             }
 
             // Set the event
@@ -222,7 +222,7 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
                 if (giveaway.isEntered()) {
                     menu.add(Menu.NONE, 1, Menu.NONE, leaveText).setOnMenuItemClickListener(this);
                 } else {
-                    menu.add(Menu.NONE, 2, Menu.NONE, enterText).setOnMenuItemClickListener(this).setEnabled(giveaway.getPoints() <= SteamGiftsUserData.getCurrent(null).getPoints() && giveaway.getLevel() <= SteamGiftsUserData.getCurrent(null).getLevel() && !SteamGiftsUserData.getCurrent(null).getName().equals(giveaway.getCreator()));
+                    menu.add(Menu.NONE, 2, Menu.NONE, enterText).setOnMenuItemClickListener(this).setEnabled(giveaway.userCanEnter());
                 }
             }
 
