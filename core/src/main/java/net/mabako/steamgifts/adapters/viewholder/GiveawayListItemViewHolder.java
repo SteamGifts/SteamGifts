@@ -144,16 +144,18 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
         // Initialize the enter button
         // Check if logged or the quick enter button setting is enabled
         boolean loggedIn = SteamGiftsUserData.getCurrent(null).isLoggedIn();
-        if (!loggedIn || !PreferenceManager.getDefaultSharedPreferences(fragment.getContext()).getBoolean("preference_giveaway_show_quick_enter", true)){
+        if (!loggedIn || !PreferenceManager.getDefaultSharedPreferences(fragment.getContext()).getBoolean("preference_giveaway_show_quick_enter", true)) {
             giveawayEnterButton.setVisibility(View.GONE);
         } else {
+            giveawayEnterButton.setVisibility(View.VISIBLE);
+
             // Set the correct text based on the giveaway is already entered or not
             if (giveaway.isEntered()) {
-                giveawayEnterButton.setText(activity.getString(R.string.leave_giveaway));
+                giveawayEnterButton.setText("{faw-times}");
                 giveawayEnterButton.setEnabled(true);
             } else {
-                giveawayEnterButton.setText(activity.getString(R.string.enter_giveaway));
-                //Check if the user have enough points, that the giveaway is not from him and that he have the required level
+                giveawayEnterButton.setText("{faw-sign-in}");
+                // Check if the user have enough points, that the giveaway is not from him and that he have the required level
                 giveawayEnterButton.setEnabled(giveaway.userCanEnter());
             }
 
@@ -161,11 +163,7 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
             giveawayEnterButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Giveaway giveaway = (Giveaway) adapter.getItem(getAdapterPosition());
-                    if (giveaway.isEntered()) {
-                        ((IHasEnterableGiveaways) fragment).requestEnterLeave(giveaway.getGiveawayId(), GiveawayDetailFragment.ENTRY_DELETE, adapter.getXsrfToken());
-                    } else {
-                        ((IHasEnterableGiveaways) fragment).requestEnterLeave(giveaway.getGiveawayId(), GiveawayDetailFragment.ENTRY_INSERT, adapter.getXsrfToken());
-                    }
+                    ((IHasEnterableGiveaways) fragment).requestEnterLeave(giveaway.getGiveawayId(), giveaway.isEntered() ? GiveawayDetailFragment.ENTRY_DELETE : GiveawayDetailFragment.ENTRY_INSERT, adapter.getXsrfToken());
                 }
             });
         }

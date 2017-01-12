@@ -136,7 +136,9 @@ public class Giveaway extends BasicGiveaway implements IEndlessAdaptable {
         return endTime == null || endTime.isInTheFuture();
     }
 
-    //Check if the current user can enter this giveaway
+    /**
+     * Check if the current user can enter this giveaway.
+     */
     public boolean userCanEnter() {
         SteamGiftsUserData currentUser = SteamGiftsUserData.getCurrent(null);
         Boolean canEnter = true;
