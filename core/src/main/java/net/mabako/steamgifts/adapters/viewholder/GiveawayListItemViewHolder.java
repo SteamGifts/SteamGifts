@@ -144,7 +144,7 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
         // Initialize the enter button
         // Check if logged or the quick enter button setting is enabled
         boolean loggedIn = SteamGiftsUserData.getCurrent(null).isLoggedIn();
-        if (!loggedIn || !PreferenceManager.getDefaultSharedPreferences(fragment.getContext()).getBoolean("preference_giveaway_show_quick_enter", true)) {
+        if (!loggedIn || !(fragment instanceof IHasEnterableGiveaways) || !PreferenceManager.getDefaultSharedPreferences(fragment.getContext()).getBoolean("preference_giveaway_show_quick_enter", true)) {
             giveawayEnterButton.setVisibility(View.GONE);
         } else {
             giveawayEnterButton.setVisibility(View.VISIBLE);
