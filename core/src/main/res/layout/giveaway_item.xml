@@ -29,8 +29,7 @@
             android:layout_toRightOf="@+id/giveaway_image"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:padding="4dp"
-            android:weightSum="1">
+            android:padding="4dp">
 
             <TextView
                 android:id="@+id/giveaway_name"
@@ -44,8 +43,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1.88">
+                android:layout_height="wrap_content">
 
 
                 <LinearLayout
@@ -99,26 +97,30 @@
                     style="@style/SmallText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
                     android:layout_gravity="end"
+                    android:layout_marginEnd="84dp"
+                    android:layout_marginRight="0dp"
                     android:singleLine="true"
                     android:text="Time left"
-                    android:textAlignment="viewEnd"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginRight="0dp"
-                    android:layout_marginEnd="84dp" />
+                    android:textAlignment="viewEnd" />
 
             </RelativeLayout>
         </LinearLayout>
 
         <Button
-            android:text="Enter"
-            android:layout_width="60dp"
-            android:layout_height="wrap_content"
             android:id="@+id/giveaway_enter_button"
-            android:textAllCaps="false"
-            android:textSize="13sp" />
+            style="@style/MediumButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:text="{faw-times}"
+            android:visibility="gone"
+            tools:text="x"
+            tools:visibility="visible" />
 
     </LinearLayout>
 
