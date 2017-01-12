@@ -1,7 +1,8 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/material_drawer_account_header_height_compact">
+    android:layout_height="@dimen/material_drawer_account_header_height_compact"
+    android:clickable="true">
 
     <ImageView
         android:id="@+id/material_drawer_account_header_background"
@@ -39,8 +40,11 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:layout_gravity="bottom"
             android:layout_marginBottom="@dimen/material_drawer_padding"
+            android:layout_marginEnd="0dp"
             android:layout_marginLeft="@dimen/material_drawer_vertical_padding"
+            android:layout_marginRight="0dp"
             android:layout_marginStart="@dimen/material_drawer_vertical_padding"
             android:clickable="true"
             android:elevation="2dp" />
@@ -64,13 +68,14 @@
                 android:id="@+id/material_drawer_account_header_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
                 android:fontFamily="sans-serif-medium"
                 android:lines="1"
-                android:singleLine="true"
+                android:maxLines="1"
                 android:textSize="@dimen/material_drawer_account_header_text"
                 tools:text="User" />
 
-            <TextView
+            <com.mikepenz.iconics.view.IconicsTextView
                 android:id="@+id/material_drawer_account_header_notifications"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -79,7 +84,7 @@
                 android:fontFamily="sans-serif-medium"
                 android:gravity="right"
                 android:lines="1"
-                android:singleLine="true"
+                android:maxLines="1"
                 android:textColor="@color/material_drawer_header_selection_text"
                 android:textSize="@dimen/material_drawer_account_header_text"
                 tools:text="Notifications" />
@@ -89,9 +94,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/material_drawer_account_header_name"
+                android:ellipsize="end"
                 android:fontFamily="sans-serif"
                 android:lines="1"
-                android:singleLine="true"
+                android:maxLines="1"
                 android:textSize="@dimen/material_drawer_account_header_text"
                 tools:text="Points" />
 

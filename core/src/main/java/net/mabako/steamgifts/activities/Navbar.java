@@ -20,6 +20,7 @@ import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.holder.StringHolder;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
@@ -48,7 +49,7 @@ public class Navbar {
     @NonNull
     private Drawer drawer;
 
-    private ProfileDrawerItem profile;
+    private CustomProfileDrawerItem profile;
 
     public Navbar(final CommonActivity activity) {
         this.activity = activity;
@@ -69,7 +70,7 @@ public class Navbar {
         TypedArray ta = activity.getTheme().obtainStyledAttributes(attrs);
 
         // Account?
-        accountHeader = new AccountHeaderBuilder()
+        accountHeader = new CustomAccountHeaderBuilder()
                 .withActivity(activity)
                 .withCompactStyle(true)
                 .withHeaderBackground(ta.getDrawable(0))
@@ -92,17 +93,6 @@ public class Navbar {
                     }
                 })
                 .build();
-
-        accountHeader.getView().findViewById(R.id.material_drawer_account_header_notifications).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (SteamGiftsUserData.getCurrent(activity).isLoggedIn()) {
-                    Intent intent = new Intent(activity, DetailActivity.class);
-                    intent.putExtra(DetailActivity.ARG_NOTIFICATIONS, AbstractNotificationCheckReceiver.NotificationId.NO_TYPE);
-                    activity.startActivity(intent);
-                }
-            }
-        });
 
         drawer = new DrawerBuilder()
                 .withActivity(activity)
@@ -185,7 +175,6 @@ public class Navbar {
                             // Is this still up-to-date?
                             if (!newInfo.equals(profile.getEmail().toString())) {
                                 profile.withEmail(newInfo);
-                                accountHeader.updateProfile(profile);
                             }
 
                             if (user.hasNotifications()) {
@@ -200,15 +189,14 @@ public class Navbar {
                                 if (user.getMessageNotification() > 0)
                                     sb.append(" {faw-envelope} ").append(user.getMessageNotification());
 
-                                notifications.setText(sb.toString());
-                                notifications.setVisibility(View.VISIBLE);
+                                profile.withNotifications(sb.toString());
                             } else {
-                                notifications.setText("{faw-envelope}");
-                                notifications.setVisibility(View.VISIBLE);
+                                profile.withNotifications("{faw-envelope}");
                             }
                         } else {
-                            notifications.setVisibility(View.GONE);
+                            profile.withNotifications(null);
                         }
+                        accountHeader.updateProfile(profile);
                     }
                 })
                 .build();
@@ -231,14 +219,14 @@ public class Navbar {
         // Update the account header.
         SteamGiftsUserData account = SteamGiftsUserData.getCurrent(activity);
         if (account.isLoggedIn()) {
-            profile = new ProfileDrawerItem().withName(account.getName()).withEmail("...").withIdentifier(1);
+            profile = (CustomProfileDrawerItem) new CustomProfileDrawerItem().withName(account.getName()).withEmail("...").withIdentifier(1);
 
             if (account.getImageUrl() != null && !account.getImageUrl().isEmpty())
                 profile.withIcon(account.getImageUrl());
 
             accountHeader.addProfile(profile, 0);
         } else {
-            profile = new ProfileDrawerItem().withName(activity.getString(R.string.guest)).withEmail("Not logged in").withIcon(R.drawable.default_avatar).withIdentifier(1);
+            profile = (CustomProfileDrawerItem) new CustomProfileDrawerItem().withName(activity.getString(R.string.guest)).withEmail("Not logged in").withIcon(R.drawable.default_avatar).withIdentifier(1);
             accountHeader.addProfile(profile, 0);
         }
 
@@ -308,5 +296,53 @@ public class Navbar {
 
     public void setSelection(@StringRes int resourceId) {
         drawer.setSelection(resourceId, false);
+    }
+
+    /**
+     * Make sure we initialize notification information whenever our profile display is rebuilt.
+     */
+    public class CustomAccountHeaderBuilder extends AccountHeaderBuilder {
+        @Override
+        protected void buildProfiles() {
+            super.buildProfiles();
+
+            TextView notificationText = (TextView) mAccountHeader.findViewById(R.id.material_drawer_account_header_notifications);
+            CustomProfileDrawerItem profile = (CustomProfileDrawerItem) mCurrentProfile;
+
+            if(profile != null) {
+                if (profile.notifications == null) {
+                    notificationText.setText("");
+                    notificationText.setOnClickListener(null);
+                } else {
+                    profile.notifications.applyTo(notificationText);
+                    notificationText.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (SteamGiftsUserData.getCurrent(activity).isLoggedIn()) {
+                                Intent intent = new Intent(activity, DetailActivity.class);
+                                intent.putExtra(DetailActivity.ARG_NOTIFICATIONS, AbstractNotificationCheckReceiver.NotificationId.NO_TYPE);
+                                activity.startActivity(intent);
+                            }
+                        }
+                    });
+                }
+            }
+        }
+    }
+
+    /**
+     * A custom profile that supports notifications text as an extra property.
+     */
+    public class CustomProfileDrawerItem extends ProfileDrawerItem {
+        protected StringHolder notifications;
+
+        public ProfileDrawerItem withNotifications(String notifications) {
+            this.notifications = new StringHolder(notifications);
+            return this;
+        }
+
+        public StringHolder getNotifications() {
+            return notifications;
+        }
     }
 }
