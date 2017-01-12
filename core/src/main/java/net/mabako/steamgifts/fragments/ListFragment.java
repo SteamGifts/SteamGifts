@@ -272,6 +272,10 @@ public abstract class ListFragment<AdapterType extends EndlessAdapter> extends F
 
     protected abstract Serializable getType();
 
+    public RecyclerView getListView() {
+        return listView;
+    }
+
     public boolean isCurrentFragmentTheActiveFragment() {
         if (rootView == null)
             return false;

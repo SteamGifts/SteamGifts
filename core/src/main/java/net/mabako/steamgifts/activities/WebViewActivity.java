@@ -1,9 +1,11 @@
 package net.mabako.steamgifts.activities;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.net.http.SslError;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -16,6 +18,7 @@ import android.view.View;
 import android.webkit.DownloadListener;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -155,12 +158,11 @@ public class WebViewActivity extends CommonActivity {
          * If the URL is handled by the application, we want to start that as activity instead of loading the related webview.
          *
          * @param view current webview
-         * @param url  url to load
+         * @param uri  url to load
          * @return {@code true} if this app handles the related url, {@code false} otherwise
          */
-        @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            Intent intent = UrlHandlingActivity.getIntentForUri(WebViewActivity.this, Uri.parse(url));
+        private boolean shouldOverrideUrlLoading(WebView view, Uri uri) {
+            Intent intent = UrlHandlingActivity.getIntentForUri(WebViewActivity.this, uri);
             if (intent != null) {
                 // Should we mark the next context read?
                 if (getIntent().hasExtra(DetailActivity.ARG_MARK_CONTEXT_READ))
@@ -171,6 +173,18 @@ public class WebViewActivity extends CommonActivity {
                 return true;
             }
             return false;
+        }
+
+        @TargetApi(Build.VERSION_CODES.N)
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+            return shouldOverrideUrlLoading(view, request.getUrl());
+        }
+
+        @SuppressWarnings("deprecation")
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            return shouldOverrideUrlLoading(view, Uri.parse(url));
         }
     }
 

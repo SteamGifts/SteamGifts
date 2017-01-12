@@ -131,6 +131,6 @@
         layout="@layout/image_link_holder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_toRightOf="@+id/comment" />
+        android:layout_gravity="bottom">
+    </include>
 </LinearLayout>

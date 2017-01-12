@@ -1,6 +1,10 @@
 package net.mabako.steamgifts.fragments;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -9,11 +13,16 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.mikepenz.actionitembadge.library.ActionItemBadge;
 import com.mikepenz.actionitembadge.library.utils.BadgeStyle;
@@ -34,6 +43,7 @@ import net.mabako.steamgifts.tasks.LoadGiveawayListTask;
 import net.mabako.steamgifts.tasks.UpdateGiveawayFilterTask;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -112,6 +122,15 @@ public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter
     }
 
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+
+        setupSwiping();
+
+        return view;
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
 
@@ -181,7 +200,8 @@ public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter
                     // we want to hide entered giveaways
                     adapter.removeGiveaway(giveawayId);
                 } else {
-                    adapter.notifyItemChanged(giveaway);
+                    // We refresh the entire dataset to let the other quick enter buttons know if the user still have enough points
+                    adapter.notifyDataSetChanged();
                 }
             }
         } else {
@@ -203,7 +223,13 @@ public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter
             GiveawayListFragmentStack.onHideGame(internalGameId);
         } else {
             List<EndlessAdapter.RemovedElement> removedGiveaways = adapter.removeHiddenGame(internalGameId);
-            lastRemovedGame = new LastRemovedGame(removedGiveaways, internalGameId);
+
+            // If we've swiped a game, and are now hiding all others, we want to undo removing all of them.
+            if (lastRemovedGame != null && lastRemovedGame.wasSwiped && lastRemovedGame.internalGameId == internalGameId) {
+                lastRemovedGame.addAtBottom(removedGiveaways);
+            } else {
+                lastRemovedGame = new LastRemovedGame(removedGiveaways, internalGameId);
+            }
         }
 
         if (gameTitle != null) {
@@ -223,7 +249,11 @@ public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter
             GiveawayListFragmentStack.onShowGame(internalGameId);
         } else if (lastRemovedGame != null) {
             if (lastRemovedGame.internalGameId == internalGameId) {
-                adapter.restore(lastRemovedGame.removedGiveaways);
+                List<List<EndlessAdapter.RemovedElement>> removedGiveaways = lastRemovedGame.removedGiveaways;
+                for (int i = removedGiveaways.size() - 1; i >= 0; --i) {
+                    adapter.restore(removedGiveaways.get(i));
+                }
+
                 lastRemovedGame = null;
             } else {
                 Log.w(TAG, "onShowGame(" + internalGameId + ") expected " + lastRemovedGame.internalGameId + ", not restoring game(s)");
@@ -280,6 +310,13 @@ public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter
     }
 
     /**
+     * Swipe an item to the left to hide a game.
+     */
+    private void setupSwiping() {
+        new ItemTouchHelper(new GiveawaySwipeHelper()).attachToRecyclerView(getListView());
+    }
+
+    /**
      * Different types of Giveaway lists.
      */
     public enum Type {
@@ -328,12 +365,89 @@ public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter
     private static class LastRemovedGame implements Serializable {
         private static final long serialVersionUID = -7112241651196581480L;
 
-        private final List<EndlessAdapter.RemovedElement> removedGiveaways;
+        private List<List<EndlessAdapter.RemovedElement>> removedGiveaways = new ArrayList<>();
         private final int internalGameId;
+        private boolean wasSwiped;
+
+        private LastRemovedGame(EndlessAdapter.RemovedElement removedGiveaway, int internalGameId) {
+            List<EndlessAdapter.RemovedElement> list = new ArrayList<>();
+            list.add(removedGiveaway);
+            removedGiveaways.add(list);
+
+            this.internalGameId = internalGameId;
+            wasSwiped = true;
+        }
 
         private LastRemovedGame(List<EndlessAdapter.RemovedElement> removedGiveaways, int internalGameId) {
-            this.removedGiveaways = removedGiveaways;
+            this.removedGiveaways.add(removedGiveaways);
             this.internalGameId = internalGameId;
+
+            wasSwiped = false;
+        }
+
+        /**
+         * Make sure the added removed giveaways are inserted at the correct position.
+         *
+         * @param removingGiveaways newly removed giveaways
+         */
+        public void addAtBottom(List<EndlessAdapter.RemovedElement> removingGiveaways) {
+            removedGiveaways.add(removingGiveaways);
+            wasSwiped = false;
+        }
+    }
+
+    private class GiveawaySwipeHelper extends ItemTouchHelper.SimpleCallback {
+
+        private final Drawable xMark;
+        private final int xMarkMargin;
+
+        public GiveawaySwipeHelper() {
+            super(0, ItemTouchHelper.LEFT);
+
+            xMark = ContextCompat.getDrawable(getActivity(), R.drawable.ic_eye_off);
+            xMark.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+            xMarkMargin = (int) getResources().getDimension(R.dimen.ic_clear_margin);
+        }
+
+        @Override
+        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+            if (direction == ItemTouchHelper.LEFT) {
+                int position = viewHolder.getAdapterPosition();
+                Giveaway giveaway = (Giveaway) adapter.getItem(position);
+
+                if (giveaway != null && giveaway.getInternalGameId() > 0) {
+                    EndlessAdapter.RemovedElement removedGiveaway = adapter.removeSwipedGiveaway(position);
+                    lastRemovedGame = new LastRemovedGame(removedGiveaway, giveaway.getInternalGameId());
+                    requestHideGame(giveaway.getInternalGameId(), giveaway.getTitle());
+                }
+            }
+        }
+
+        @Override
+        public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+            View itemView = viewHolder.itemView;
+
+            if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE && dX < 0) {
+                // draw x mark
+                int itemHeight = itemView.getBottom() - itemView.getTop();
+                int intrinsicWidth = xMark.getIntrinsicWidth();
+                int intrinsicHeight = xMark.getIntrinsicWidth();
+
+                int xMarkLeft = itemView.getRight() - xMarkMargin - intrinsicWidth;
+                int xMarkRight = itemView.getRight() - xMarkMargin;
+                int xMarkTop = itemView.getTop() + (itemHeight - intrinsicHeight) / 2;
+                int xMarkBottom = xMarkTop + intrinsicHeight;
+                xMark.setBounds(xMarkLeft, xMarkTop, xMarkRight, xMarkBottom);
+
+                xMark.draw(c);
+            }
+
+            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         }
     }
 }
