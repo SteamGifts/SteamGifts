@@ -1,2 +1,2 @@
-versionName=1.4.2
-versionCode=1004502
+versionName=1.5
+versionCode=1005500
