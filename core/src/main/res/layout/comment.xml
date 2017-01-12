@@ -1,123 +1,136 @@
-<?xml version='1.0' encoding='UTF-8'?>
-  <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:tools="http://schemas.android.com/tools"
-  android:layout_width="match_parent"
-  android:layout_height="wrap_content"
-  android:paddingBottom="4dp"
-  android:paddingTop="4dp">
-  <!-- show depth of the parent -->
-
-  <View android:id="@+id/comment_indent"
-    android:layout_width="12dp"
-    android:layout_height="match_parent"/>
-  <!-- colored marker -->
-
-  <View android:id="@+id/comment_marker"
-    android:layout_width="12dp"
-    android:layout_height="match_parent"
-    android:visibility="gone"/>
-
-  <android.support.v4.widget.Space android:layout_width="8dp"
-    android:layout_height="wrap_content"/>
-
-  <ImageView android:id="@+id/author_avatar"
-    android:layout_width="30dp"
-    android:layout_height="30dp"
-    android:layout_marginBottom="6dp"
-    android:layout_marginLeft="8dp"
-    android:layout_marginTop="6dp"
-    android:elevation="2dp"/>
-
-  <android.support.v4.widget.Space android:layout_width="4dp"
-    android:layout_height="wrap_content"/>
-
-  <RelativeLayout android:layout_width="0dp"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_weight="1">
+    android:paddingBottom="4dp"
+    android:paddingTop="4dp">
 
-    <com.wefika.flowlayout.FlowLayout android:id="@+id/comment_header"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:paddingBottom="@dimen/card_margin_small">
+    <!-- show depth of the parent -->
+    <View
+        android:id="@+id/comment_indent"
+        android:layout_width="12dp"
+        android:layout_height="match_parent" />
 
-      <TextView android:id="@+id/user"
-        style="@style/SmallText.NormalUser"
+    <!-- colored marker -->
+    <View
+        android:id="@+id/comment_marker"
+        android:layout_width="12dp"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+    <android.support.v4.widget.Space
+        android:layout_width="8dp"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/author_avatar"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginBottom="6dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="6dp"
+        android:elevation="2dp" />
+
+    <android.support.v4.widget.Space
+        android:layout_width="4dp"
+        android:layout_height="wrap_content" />
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+        <com.wefika.flowlayout.FlowLayout
+            android:id="@+id/comment_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/card_margin_small">
+
+            <TextView
+                android:id="@+id/user"
+                style="@style/SmallText.NormalUser"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="-4dp"
+                android:layout_marginTop="@dimen/card_margin_small"
+                android:paddingBottom="4dp"
+                android:paddingLeft="@dimen/card_margin_small"
+                android:paddingRight="@dimen/card_margin_small"
+                android:text="@string/placeholder_comment_author" />
+
+            <TextView
+                android:id="@+id/trade_score_positive"
+                style="@style/SmallText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/card_margin_small"
+                android:paddingTop="@dimen/card_margin_small"
+                android:singleLine="true"
+                android:text="+0"
+                android:textColor="?attr/colorTradeScorePositive"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/trade_divider"
+                style="@style/SmallText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/card_margin_small"
+                android:singleLine="true"
+                android:text="/"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/trade_score_negative"
+                style="@style/SmallText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="@dimen/card_margin_small"
+                android:paddingTop="@dimen/card_margin_small"
+                android:singleLine="true"
+                android:text="-0"
+                android:textColor="?attr/colorTradeScoreNegative"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/role"
+                style="@style/SmallText.Light"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/card_margin_small"
+                android:paddingRight="@dimen/card_margin_small"
+                android:paddingTop="@dimen/card_margin_small"
+                android:visibility="gone"
+                tools:text="Role"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/time"
+                style="@style/SmallText.Light"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/card_margin_small"
+                android:paddingRight="@dimen/card_margin_small"
+                android:paddingTop="@dimen/card_margin_small"
+                android:text="@string/placeholder_comment_time" />
+        </com.wefika.flowlayout.FlowLayout>
+
+        <TextView
+            android:id="@+id/content"
+            style="@style/MediumText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/comment_header"
+            android:paddingBottom="4dp"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:text="@string/placeholder_comment_text" />
+    </RelativeLayout>
+
+    <include
+        layout="@layout/image_link_holder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="-4dp"
-        android:layout_marginTop="@dimen/card_margin_small"
-        android:paddingBottom="4dp"
-        android:paddingLeft="@dimen/card_margin_small"
-        android:paddingRight="@dimen/card_margin_small"
-        android:text="@string/placeholder_comment_author"/>
-
-      <TextView android:id="@+id/trade_score_positive"
-        style="@style/SmallText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/card_margin_small"
-        android:paddingTop="@dimen/card_margin_small"
-        android:singleLine="true"
-        android:text="+0"
-        android:textColor="?attr/colorTradeScorePositive"
-        android:visibility="gone"/>
-
-      <TextView android:id="@+id/trade_divider"
-        style="@style/SmallText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/card_margin_small"
-        android:singleLine="true"
-        android:text="/"
-        android:visibility="gone"/>
-
-      <TextView android:id="@+id/trade_score_negative"
-        style="@style/SmallText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingRight="@dimen/card_margin_small"
-        android:paddingTop="@dimen/card_margin_small"
-        android:singleLine="true"
-        android:text="-0"
-        android:textColor="?attr/colorTradeScoreNegative"
-        android:visibility="gone"/>
-
-      <TextView android:id="@+id/role"
-        style="@style/SmallText.Light"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/card_margin_small"
-        android:paddingRight="@dimen/card_margin_small"
-        android:paddingTop="@dimen/card_margin_small"
-        android:visibility="gone"
-        tools:text="Role"
-        tools:visibility="visible"/>
-
-      <TextView android:id="@+id/time"
-        style="@style/SmallText.Light"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/card_margin_small"
-        android:paddingRight="@dimen/card_margin_small"
-        android:paddingTop="@dimen/card_margin_small"
-        android:text="@string/placeholder_comment_time"/>
-    </com.wefika.flowlayout.FlowLayout>
-
-    <TextView android:id="@+id/content"
-      style="@style/MediumText"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_below="@id/comment_header"
-      android:paddingBottom="4dp"
-      android:paddingLeft="4dp"
-      android:paddingRight="4dp"
-      android:text="@string/placeholder_comment_text"/>
-  </RelativeLayout>
-
-  <include layout="@layout/image_link_holder"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="bottom">
-    <!--Removed ObsoleteLayoutParam: layout_toRightOf-->
-  </include>
+        android:layout_gravity="bottom">
+    </include>
 </LinearLayout>
