@@ -27,6 +27,11 @@
             android:summaryOff="@string/preference_giveaway_show_pinned_off"
             android:summaryOn="@string/preference_giveaway_show_pinned_on"
             android:title="@string/preference_giveaway_show_pinned" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="preference_giveaway_show_quick_enter"
+            android:title="@string/preference_giveaway_quick_enter" />
     </PreferenceCategory>
 
     <PreferenceCategory

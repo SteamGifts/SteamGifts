@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground"
@@ -96,13 +97,31 @@
                     style="@style/SmallText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
                     android:layout_gravity="end"
+                    android:layout_marginEnd="84dp"
+                    android:layout_marginRight="0dp"
                     android:singleLine="true"
                     android:text="Time left"
                     android:textAlignment="viewEnd" />
+
             </RelativeLayout>
         </LinearLayout>
+
+        <Button
+            android:id="@+id/giveaway_enter_button"
+            style="@style/MediumButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:text="{faw-times}"
+            android:visibility="gone"
+            tools:text="x"
+            tools:visibility="visible" />
+
     </LinearLayout>
 
     <View
