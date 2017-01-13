@@ -1,199 +1,204 @@
-<android.support.v7.widget.GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingLeft="8dp"
-    android:paddingRight="8dp"
-    app:alignmentMode="alignBounds"
-    app:columnCount="3"
-    app:useDefaultMargins="true">
+    android:layout_height="match_parent">
 
-    <!-- Level -->
-    <TextView
-        style="@style/NormalText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:text="@string/filter_level"
-        app:layout_columnWeight="0"
-        app:layout_gravity="end"
-        app:layout_rowWeight="1" />
-
-    <EditText
-        android:id="@+id/filter_level_min"
-        style="@style/NormalText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:hint="@string/filter_min"
-        android:imeOptions="actionNext"
-        android:inputType="numberSigned"
-        android:maxLength="2"
-        app:layout_columnWeight="1"
-        app:layout_rowWeight="1" />
-
-    <EditText
-        android:id="@+id/filter_level_max"
-        style="@style/NormalText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:hint="@string/filter_max"
-        android:imeOptions="actionNext"
-        android:inputType="numberSigned"
-        android:maxLength="2"
-        app:layout_columnWeight="1"
-        app:layout_rowWeight="1" />
-
-    <CheckBox
-        android:id="@+id/filter_whitelist_or_group"
-        style="@style/NormalText"
+    <android.support.v7.widget.GridLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/filter_whitelist_or_group_checkbox"
-        app:layout_columnSpan="3"
-        app:layout_gravity="center_vertical"
-        app:layout_rowWeight="1" />
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        app:alignmentMode="alignBounds"
+        app:columnCount="3"
+        app:useDefaultMargins="true">
+
+        <!-- Level -->
+        <TextView
+            style="@style/NormalText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="@string/filter_level"
+            app:layout_columnWeight="0"
+            app:layout_gravity="end"
+            app:layout_rowWeight="1" />
+
+        <EditText
+            android:id="@+id/filter_level_min"
+            style="@style/NormalText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:hint="@string/filter_min"
+            android:imeOptions="actionNext"
+            android:inputType="numberSigned"
+            android:maxLength="2"
+            app:layout_columnWeight="1"
+            app:layout_rowWeight="1" />
+
+        <EditText
+            android:id="@+id/filter_level_max"
+            style="@style/NormalText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:hint="@string/filter_max"
+            android:imeOptions="actionNext"
+            android:inputType="numberSigned"
+            android:maxLength="2"
+            app:layout_columnWeight="1"
+            app:layout_rowWeight="1" />
+
+        <CheckBox
+            android:id="@+id/filter_whitelist_or_group"
+            style="@style/NormalText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/filter_whitelist_or_group_checkbox"
+            app:layout_columnSpan="3"
+            app:layout_gravity="center_vertical"
+            app:layout_rowWeight="1" />
 
 
-    <!-- Entries -->
-    <TextView
-        style="@style/NormalText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:text="@string/filter_entries"
-        app:layout_columnWeight="0"
-        app:layout_gravity="end"
-        app:layout_rowWeight="1" />
+        <!-- Entries -->
+        <TextView
+            style="@style/NormalText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="@string/filter_entries"
+            app:layout_columnWeight="0"
+            app:layout_gravity="end"
+            app:layout_rowWeight="1" />
 
-    <EditText
-        android:id="@+id/filter_entries_min"
-        style="@style/NormalText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:hint="@string/filter_min"
-        android:imeOptions="actionNext"
-        android:inputType="numberSigned"
-        android:maxLength="5"
-        app:layout_columnWeight="1"
-        app:layout_rowWeight="1" />
+        <EditText
+            android:id="@+id/filter_entries_min"
+            style="@style/NormalText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:hint="@string/filter_min"
+            android:imeOptions="actionNext"
+            android:inputType="numberSigned"
+            android:maxLength="5"
+            app:layout_columnWeight="1"
+            app:layout_rowWeight="1" />
 
-    <EditText
-        android:id="@+id/filter_entries_max"
-        style="@style/NormalText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:hint="@string/filter_max"
-        android:imeOptions="actionNext"
-        android:inputType="numberSigned"
-        android:maxLength="5"
-        app:layout_columnWeight="1"
-        app:layout_rowWeight="1" />
+        <EditText
+            android:id="@+id/filter_entries_max"
+            style="@style/NormalText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:hint="@string/filter_max"
+            android:imeOptions="actionNext"
+            android:inputType="numberSigned"
+            android:maxLength="5"
+            app:layout_columnWeight="1"
+            app:layout_rowWeight="1" />
 
-    <CheckBox
-        android:id="@+id/filter_entries_per_copy"
-        style="@style/NormalText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/filter_entries_per_copy"
-        app:layout_columnSpan="3"
-        app:layout_gravity="center_vertical"
-        app:layout_rowWeight="1" />
+        <CheckBox
+            android:id="@+id/filter_entries_per_copy"
+            style="@style/NormalText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/filter_entries_per_copy"
+            app:layout_columnSpan="3"
+            app:layout_gravity="center_vertical"
+            app:layout_rowWeight="1" />
 
-    <!-- Points -->
-    <TextView
-        style="@style/NormalText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:text="@string/filter_points"
-        app:layout_columnWeight="0"
-        app:layout_gravity="end"
-        app:layout_rowWeight="1" />
+        <!-- Points -->
+        <TextView
+            style="@style/NormalText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="@string/filter_points"
+            app:layout_columnWeight="0"
+            app:layout_gravity="end"
+            app:layout_rowWeight="1" />
 
-    <EditText
-        android:id="@+id/filter_points_min"
-        style="@style/NormalText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:hint="@string/filter_min"
-        android:imeOptions="actionNext"
-        android:inputType="numberSigned"
-        android:maxLength="3"
-        app:layout_columnWeight="1"
-        app:layout_rowWeight="1" />
+        <EditText
+            android:id="@+id/filter_points_min"
+            style="@style/NormalText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:hint="@string/filter_min"
+            android:imeOptions="actionNext"
+            android:inputType="numberSigned"
+            android:maxLength="3"
+            app:layout_columnWeight="1"
+            app:layout_rowWeight="1" />
 
-    <EditText
-        android:id="@+id/filter_points_max"
-        style="@style/NormalText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:hint="@string/filter_max"
-        android:imeOptions="actionNone"
-        android:inputType="numberSigned"
-        android:maxLength="3"
-        app:layout_columnWeight="1"
-        app:layout_rowWeight="1" />
+        <EditText
+            android:id="@+id/filter_points_max"
+            style="@style/NormalText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:hint="@string/filter_max"
+            android:imeOptions="actionNone"
+            android:inputType="numberSigned"
+            android:maxLength="3"
+            app:layout_columnWeight="1"
+            app:layout_rowWeight="1" />
 
-    <!-- Points -->
-    <TextView
-        style="@style/NormalText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:text="@string/filter_copies"
-        app:layout_columnWeight="0"
-        app:layout_gravity="end"
-        app:layout_rowWeight="1" />
+        <!-- Points -->
+        <TextView
+            style="@style/NormalText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="@string/filter_copies"
+            app:layout_columnWeight="0"
+            app:layout_gravity="end"
+            app:layout_rowWeight="1" />
 
-    <EditText
-        android:id="@+id/filter_copies_min"
-        style="@style/NormalText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:hint="@string/filter_min"
-        android:imeOptions="actionNext"
-        android:inputType="numberSigned"
-        app:layout_columnWeight="1"
-        app:layout_rowWeight="1" />
+        <EditText
+            android:id="@+id/filter_copies_min"
+            style="@style/NormalText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:hint="@string/filter_min"
+            android:imeOptions="actionNext"
+            android:inputType="numberSigned"
+            app:layout_columnWeight="1"
+            app:layout_rowWeight="1" />
 
-    <EditText
-        android:id="@+id/filter_copies_max"
-        style="@style/NormalText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:hint="@string/filter_max"
-        android:imeOptions="actionNone"
-        android:inputType="numberSigned"
-        app:layout_columnWeight="1"
-        app:layout_rowWeight="1" />
+        <EditText
+            android:id="@+id/filter_copies_max"
+            style="@style/NormalText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:hint="@string/filter_max"
+            android:imeOptions="actionNone"
+            android:inputType="numberSigned"
+            app:layout_columnWeight="1"
+            app:layout_rowWeight="1" />
 
-    <!-- Entered -->
-    <CheckBox
-        android:id="@+id/filter_entered"
-        style="@style/NormalText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/filter_entered_checkbox"
-        app:layout_columnSpan="3"
-        app:layout_gravity="center_vertical"
-        app:layout_rowWeight="1" />
+        <!-- Entered -->
+        <CheckBox
+            android:id="@+id/filter_entered"
+            style="@style/NormalText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/filter_entered_checkbox"
+            app:layout_columnSpan="3"
+            app:layout_gravity="center_vertical"
+            app:layout_rowWeight="1" />
 
-    <!-- region restricted only -->
-    <CheckBox
-        android:id="@+id/filter_region_restricted"
-        style="@style/NormalText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/filter_region_restricted_checkbox"
-        app:layout_columnSpan="3"
-        app:layout_gravity="center_vertical"
-        app:layout_rowWeight="1" />
-</android.support.v7.widget.GridLayout>
+        <!-- region restricted only -->
+        <CheckBox
+            android:id="@+id/filter_region_restricted"
+            style="@style/NormalText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/filter_region_restricted_checkbox"
+            app:layout_columnSpan="3"
+            app:layout_gravity="center_vertical"
+            app:layout_rowWeight="1" />
+    </android.support.v7.widget.GridLayout>
+</ScrollView>
