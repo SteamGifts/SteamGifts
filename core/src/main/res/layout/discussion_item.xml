@@ -30,7 +30,7 @@
             android:orientation="vertical"
             android:paddingLeft="4dp">
 
-            <TextView
+            <com.mikepenz.iconics.view.IconicsTextView
                 android:id="@+id/discussion_title"
                 style="@style/NormalText"
                 android:layout_width="match_parent"
