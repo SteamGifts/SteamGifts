@@ -1,2 +1,2 @@
-versionName=1.5.1
-versionCode=1005501
+versionName=1.5.2
+versionCode=1005502
