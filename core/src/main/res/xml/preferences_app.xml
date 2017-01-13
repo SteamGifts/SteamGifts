@@ -32,6 +32,11 @@
             android:defaultValue="true"
             android:key="preference_giveaway_show_quick_enter"
             android:title="@string/preference_giveaway_quick_enter" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="preference_giveaway_swipe_to_hide"
+            android:title="@string/preference_giveaway_swipe_to_hide" />
     </PreferenceCategory>
 
     <PreferenceCategory

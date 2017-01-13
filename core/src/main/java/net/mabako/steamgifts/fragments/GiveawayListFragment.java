@@ -125,7 +125,9 @@ public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
-        setupSwiping();
+        if (PreferenceManager.getDefaultSharedPreferences(getContext()).getBoolean("preference_giveaway_swipe_to_hide", true)) {
+            setupSwiping();
+        }
 
         return view;
     }

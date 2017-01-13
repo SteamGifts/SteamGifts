@@ -156,6 +156,7 @@
     <string name="preference_giveaway_show_pinned_on">Always showing at the top</string>
     <string name="preference_giveaway_show_pinned_off">Not highlighted in a special way</string>
     <string name="preference_giveaway_quick_enter">Quick Enter button</string>
+    <string name="preference_giveaway_swipe_to_hide">Swipe giveaway to hide game</string>
 
     <string name="preferences_discussions">Discussions</string>
     <string name="preference_sidebar_discussion_list">Navigation Items</string>
