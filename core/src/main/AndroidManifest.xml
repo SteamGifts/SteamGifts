@@ -93,6 +93,7 @@
         <!-- Settings -->
         <activity
             android:name="net.mabako.steamgifts.activities.SettingsActivity"
+            android:configChanges="orientation|screenSize"
             android:label="@string/preferences"
             android:parentActivityName="net.mabako.steamgifts.activities.MainActivity">
             <meta-data
