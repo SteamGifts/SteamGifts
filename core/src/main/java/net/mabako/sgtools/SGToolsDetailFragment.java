@@ -37,7 +37,7 @@ import java.util.UUID;
 public class SGToolsDetailFragment extends Fragment implements View.OnClickListener {
     public static final String ARG_UUID = "uuid";
     private static final String SAVED_UUID = "uuid";
-    private static final String SAVED_GIVEAWAY = "uuid";
+    private static final String SAVED_GIVEAWAY = "giveaway";
 
     private UUID uuid;
     private Giveaway giveaway;
