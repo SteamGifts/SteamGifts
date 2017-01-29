@@ -38,6 +38,7 @@ import net.mabako.steamgifts.fragments.interfaces.IHasHideableGiveaways;
 import net.mabako.steamgifts.fragments.util.GiveawayListFragmentStack;
 import net.mabako.steamgifts.persistentdata.FilterData;
 import net.mabako.steamgifts.persistentdata.SavedGiveaways;
+import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
 import net.mabako.steamgifts.tasks.EnterLeaveGiveawayTask;
 import net.mabako.steamgifts.tasks.LoadGiveawayListTask;
 import net.mabako.steamgifts.tasks.UpdateGiveawayFilterTask;
@@ -125,7 +126,7 @@ public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
-        if (PreferenceManager.getDefaultSharedPreferences(getContext()).getBoolean("preference_giveaway_swipe_to_hide", true)) {
+        if (PreferenceManager.getDefaultSharedPreferences(getContext()).getBoolean("preference_giveaway_swipe_to_hide", true) && SteamGiftsUserData.getCurrent(getContext()).isLoggedIn()) {
             setupSwiping();
         }
 
@@ -450,6 +451,14 @@ public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter
             }
 
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+        }
+
+        @Override
+        public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
+            super.onSelectedChanged(viewHolder, actionState);
+
+            boolean isSwiping = actionState == ItemTouchHelper.ACTION_STATE_SWIPE;
+            swipeContainer.setEnabled(!isSwiping);
         }
     }
 }
