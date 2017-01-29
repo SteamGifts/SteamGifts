@@ -460,5 +460,16 @@ public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter
             boolean isSwiping = actionState == ItemTouchHelper.ACTION_STATE_SWIPE;
             swipeContainer.setEnabled(!isSwiping);
         }
+
+        @Override
+        public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+            int position = viewHolder.getAdapterPosition();
+            Giveaway giveaway = (Giveaway) adapter.getItem(position);
+
+            if(giveaway == null || giveaway.getInternalGameId() == 0)
+                return 0;
+
+            return super.getSwipeDirs(recyclerView, viewHolder);
+        }
     }
 }
