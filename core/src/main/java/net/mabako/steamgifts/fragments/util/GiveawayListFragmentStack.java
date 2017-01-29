@@ -22,13 +22,13 @@ public final class GiveawayListFragmentStack {
         fragments.remove(fragment);
     }
 
-    public static void onHideGame(int internalGameId) {
+    public static void onHideGame(long internalGameId) {
         for (Fragment fragment : fragments)
             if (fragment instanceof IHasHideableGiveaways)
                 ((IHasHideableGiveaways) fragment).onHideGame(internalGameId, false, null);
     }
 
-    public static void onShowGame(int internalGameId) {
+    public static void onShowGame(long internalGameId) {
         for (Fragment fragment : fragments)
             if (fragment instanceof GiveawayListFragment)
                 ((GiveawayListFragment) fragment).onShowGame(internalGameId, false);

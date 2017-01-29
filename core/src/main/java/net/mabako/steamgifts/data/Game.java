@@ -17,7 +17,7 @@ public class Game implements Serializable, IEndlessAdaptable {
     /**
      * Id used (exclusively?) for filtering games.
      */
-    private int internalGameId;
+    private long internalGameId;
 
     public Game() {
         this(Type.APP, NO_APP_ID);
@@ -57,17 +57,17 @@ public class Game implements Serializable, IEndlessAdaptable {
         this.gameId = gameId;
     }
 
-    public int getInternalGameId() {
+    public long getInternalGameId() {
         return internalGameId;
     }
 
-    public void setInternalGameId(int internalGameId) {
+    public void setInternalGameId(long internalGameId) {
         this.internalGameId = internalGameId;
     }
 
     @Override
     public int hashCode() {
-        return internalGameId;
+        return (int) internalGameId;
     }
 
     @Override

@@ -352,7 +352,7 @@ public class GiveawayDetailFragment extends DetailFragment implements IHasEntera
      * @param title
      */
     @Override
-    public void onHideGame(int internalGameId, boolean propagate, String title) {
+    public void onHideGame(long internalGameId, boolean propagate, String title) {
         activity.finish();
 
         if (propagate)

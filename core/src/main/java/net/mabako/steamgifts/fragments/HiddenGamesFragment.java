@@ -69,7 +69,7 @@ public class HiddenGamesFragment extends SearchableListFragment<HiddenGamesAdapt
             protected Game load(Element element) {
                 Game game = new Game();
                 game.setName(element.select(".table__column__heading").text());
-                game.setInternalGameId(Integer.parseInt(element.select("input[name=game_id]").first().attr("value")));
+                game.setInternalGameId(Long.parseLong(element.select("input[name=game_id]").first().attr("value")));
 
                 Element link = element.select(".table__column--width-fill .table__column__secondary-link").first();
                 if (link != null) {
@@ -94,11 +94,11 @@ public class HiddenGamesFragment extends SearchableListFragment<HiddenGamesAdapt
         return newInstance(query);
     }
 
-    public void requestShowGame(int internalGameId, String title) {
+    public void requestShowGame(long internalGameId, String title) {
         new UpdateGiveawayFilterTask<>(this, adapter.getXsrfToken(), UpdateGiveawayFilterTask.UNHIDE, internalGameId, title).execute();
     }
 
-    public void onShowGame(int internalGameId) {
+    public void onShowGame(long internalGameId) {
         lastRemovedGame = adapter.removeShownGame(internalGameId);
 
         if (lastRemovedGame != null) {
@@ -114,7 +114,7 @@ public class HiddenGamesFragment extends SearchableListFragment<HiddenGamesAdapt
     }
 
     @Override
-    public void onHideGame(int internalGameId, boolean propagate, String gameTitle) {
+    public void onHideGame(long internalGameId, boolean propagate, String gameTitle) {
         if (lastRemovedGame != null && lastRemovedGame.getElement() instanceof Game && ((Game) lastRemovedGame.getElement()).getInternalGameId() == internalGameId) {
             adapter.restore(lastRemovedGame);
             lastRemovedGame = null;

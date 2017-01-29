@@ -108,7 +108,7 @@ public class GiveawayAdapter extends EndlessAdapter {
         }
     }
 
-    public List<RemovedElement> removeHiddenGame(int internalGameId) {
+    public List<RemovedElement> removeHiddenGame(long internalGameId) {
         if (internalGameId == Game.NO_APP_ID)
             throw new IllegalStateException();
 

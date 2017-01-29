@@ -184,7 +184,7 @@ public final class Utils {
 
         // Internal ID for blacklisting
         try {
-            giveaway.setInternalGameId(Integer.parseInt(element.parent().attr("data-game-id")));
+            giveaway.setInternalGameId(Long.parseLong(element.parent().attr("data-game-id")));
         } catch (NumberFormatException e) {
             // no game ID for us to allow hiding the game.
         }

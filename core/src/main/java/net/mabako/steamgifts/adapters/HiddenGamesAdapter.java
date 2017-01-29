@@ -51,7 +51,7 @@ public class HiddenGamesAdapter extends EndlessAdapter {
         return items.size() == ITEMS_PER_PAGE;
     }
 
-    public RemovedElement removeShownGame(int internalGameId) {
+    public RemovedElement removeShownGame(long internalGameId) {
         if (internalGameId == Game.NO_APP_ID)
             throw new IllegalStateException();
 

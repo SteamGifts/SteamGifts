@@ -17,10 +17,10 @@ public class UpdateGiveawayFilterTask<FragmentType extends Fragment> extends Aja
      */
     public static final String UNHIDE = "remove_filter";
 
-    private final int internalGameId;
+    private final long internalGameId;
     private final String gameTitle;
 
-    public UpdateGiveawayFilterTask(FragmentType fragment, String xsrfToken, String what, int internalGameId, String gameTitle) {
+    public UpdateGiveawayFilterTask(FragmentType fragment, String xsrfToken, String what, long internalGameId, String gameTitle) {
         super(fragment, fragment.getContext(), xsrfToken, what);
 
         this.internalGameId = internalGameId;

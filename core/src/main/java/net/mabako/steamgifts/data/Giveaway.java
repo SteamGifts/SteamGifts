@@ -57,7 +57,7 @@ public class Giveaway extends BasicGiveaway implements IEndlessAdaptable {
     /**
      * Id used (exclusively?) for filtering games.
      */
-    private int internalGameId;
+    private long internalGameId;
 
     public Giveaway() {
         super(null);
@@ -230,11 +230,11 @@ public class Giveaway extends BasicGiveaway implements IEndlessAdaptable {
         return "[GA " + getGiveawayId() + ", " + getGameId() + "]";
     }
 
-    public int getInternalGameId() {
+    public long getInternalGameId() {
         return internalGameId;
     }
 
-    public void setInternalGameId(int internalGameId) {
+    public void setInternalGameId(long internalGameId) {
         this.internalGameId = internalGameId;
     }
 
