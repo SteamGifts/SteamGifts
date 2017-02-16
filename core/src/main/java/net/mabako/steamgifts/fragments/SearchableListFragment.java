@@ -121,9 +121,6 @@ public abstract class SearchableListFragment<AdapterType extends EndlessAdapter>
         AppCompatActivity activity = ((AppCompatActivity) getActivity());
         FragmentManager fragmentManager = activity.getSupportFragmentManager();
 
-        if (searchQuery != null)
-            stopSearch();
-
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.fragment_container, newSearchingInstance(query), CommonActivity.FRAGMENT_TAG);
         transaction.addToBackStack(TAG);
