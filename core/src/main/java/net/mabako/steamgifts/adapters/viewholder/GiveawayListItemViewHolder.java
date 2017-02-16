@@ -163,7 +163,11 @@ public class GiveawayListItemViewHolder extends RecyclerView.ViewHolder implemen
             giveawayEnterButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Giveaway giveaway = (Giveaway) adapter.getItem(getAdapterPosition());
-                    ((IHasEnterableGiveaways) fragment).requestEnterLeave(giveaway.getGiveawayId(), giveaway.isEntered() ? GiveawayDetailFragment.ENTRY_DELETE : GiveawayDetailFragment.ENTRY_INSERT, adapter.getXsrfToken());
+
+                    // When clicking this too quickly after another, you can essentially click on a giveaway that is null.
+                    // There's probably no need to show a notification or anything, since there is visual feedback for whether or not you entered a giveaway.
+                    if (giveaway != null)
+                        ((IHasEnterableGiveaways) fragment).requestEnterLeave(giveaway.getGiveawayId(), giveaway.isEntered() ? GiveawayDetailFragment.ENTRY_DELETE : GiveawayDetailFragment.ENTRY_INSERT, adapter.getXsrfToken());
                 }
             });
         }
