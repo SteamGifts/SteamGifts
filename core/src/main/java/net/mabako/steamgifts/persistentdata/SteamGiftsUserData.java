@@ -100,6 +100,10 @@ public class SteamGiftsUserData {
             current.setCreatedNotification(getInt(notifications.select("a[href=/giveaways/created]").first().text()));
             current.setWonNotification(getInt(notifications.select("a[href=/giveaways/won]").first().text()));
             current.setMessageNotification(getInt(notifications.select("a[href=/messages]").first().text()));
+        } else if (link.startsWith("/?login") && current.isLoggedIn()) {
+            current = new SteamGiftsUserData();
+            if (context != null)
+                current.save(context);
         }
     }
 
