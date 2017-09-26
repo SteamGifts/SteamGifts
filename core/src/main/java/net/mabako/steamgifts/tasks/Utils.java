@@ -14,6 +14,8 @@ import net.mabako.steamgifts.data.Image;
 import net.mabako.steamgifts.data.TradeComment;
 import net.mabako.steamgifts.data.User;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -319,7 +321,18 @@ public final class Utils {
         created.select("a").html("");
         user.setCreatedAmount(created.text().trim());
 
-        user.setLevel((int) Float.parseFloat(right.get(3).select("span").first().attr("title")));
+        // Fetch user level from the JSON-ish tooltip
+        try
+        {
+            Log.d(TAG, right.get(3).select("span").first().attr("data-ui-tooltip"));
+            JSONObject levelObj = new JSONObject(right.get(3).select("span").first().attr("data-ui-tooltip").replace("&quot;", "\""));
+            user.setLevel((int) levelObj.getJSONArray("rows").getJSONObject(0).getJSONArray("columns").getJSONObject(1).getDouble("name"));
+        }
+        catch (JSONException e)
+        {
+            Log.e(TAG, "Unable to fetch user level", e);
+            user.setLevel(0);
+        }
         return foundXsrfToken;
     }
 
