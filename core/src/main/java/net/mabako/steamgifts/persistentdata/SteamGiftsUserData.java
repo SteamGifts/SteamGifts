@@ -89,7 +89,7 @@ public class SteamGiftsUserData {
 
             // points
             Element accountContainer = navbar.select("a[href=/account]").first();
-            current.setPoints(Integer.parseInt(accountContainer.select(".nav__points").text()));
+            current.setPoints(Utils.parseInt(accountContainer.select(".nav__points").text()));
 
             // Level
             float level = Float.parseFloat(accountContainer.select("span").last().attr("title"));
@@ -111,7 +111,7 @@ public class SteamGiftsUserData {
         text = text.trim();
         if (TextUtils.isEmpty(text))
             return 0;
-        return Integer.parseInt(text.replace("+", ""));
+        return Utils.parseInt(text.replace("+", ""));
     }
 
     public static void clear() {
