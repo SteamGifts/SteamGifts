@@ -25,14 +25,4 @@ public class Application extends ApplicationTemplate {
     public boolean allowGameImages() {
         return false;
     }
-
-    /**
-     * Paypal donations aren't approved by Google, usually.
-     *
-     * @return false
-     */
-    @Override
-    public boolean allowPaypalDonations() {
-        return false;
-    }
 }

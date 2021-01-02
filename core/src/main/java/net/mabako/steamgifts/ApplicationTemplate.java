@@ -60,13 +60,4 @@ public abstract class ApplicationTemplate extends Application {
     public boolean allowGameImages() {
         return true;
     }
-
-    /**
-     * Whether or not a paypal donation link is shown in the "About" section.
-     *
-     * @return true if paypal donation link should be shown
-     */
-    public boolean allowPaypalDonations() {
-        return true;
-    }
 }

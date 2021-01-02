@@ -46,7 +46,7 @@ public class AboutFragment extends Fragment {
         layout.findViewById(R.id.mail).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = "lizacarvelli+steamgifts+" + BuildConfig.VERSION_CODE + "@gmail.com";
+                String email = "lizacarvelli+steamgifts@gmail.com";
 
                 Intent intent = new Intent(Intent.ACTION_SENDTO);
                 intent.setType("text/plain");
@@ -70,21 +70,6 @@ public class AboutFragment extends Fragment {
                 startActivity(intent);
             }
         });
-
-        View paypalDonations = layout.findViewById(R.id.donate_via_paypal);
-        if (((ApplicationTemplate) getActivity().getApplication()).allowPaypalDonations()) {
-            paypalDonations.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setData(Uri.parse("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Y6WJZY2VJHC6G"));
-
-                    startActivity(intent);
-                }
-            });
-        } else {
-            paypalDonations.setVisibility(View.GONE);
-        }
 
         return layout;
     }

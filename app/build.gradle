@@ -2,7 +2,6 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
         applicationId 'net.mabako.steamgifts'
@@ -18,22 +17,22 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    flavorDimensions 'iceCream'
+
     productFlavors {
         // ** This is the build flavor you want to pick for running the app locally. **
         chocolate {
-            null
+            dimension 'iceCream'
         }
         // Release for the beta channel
         strawberry {
+            dimension 'iceCream'
             applicationIdSuffix '.beta'
         }
         // Release pushed on f-droid to non-beta testers
         vanilla {
-            null
-        }
-        // Release pushed on google play store
-        googleplay {
-            null
+            dimension 'iceCream'
         }
     }
 
@@ -44,5 +43,5 @@ android {
 }
 
 dependencies {
-    compile project(':core')
+    implementation project(':core')
 }

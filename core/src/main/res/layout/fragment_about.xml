@@ -79,14 +79,6 @@
                     android:text="@string/about_mail" />
 
                 <Button
-                    android:id="@+id/donate_via_paypal"
-                    style="@style/MediumButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:text="@string/about_donate_via_paypal" />
-
-                <Button
                     android:id="@+id/source"
                     style="@style/MediumButton"
                     android:layout_width="wrap_content"
