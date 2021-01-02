@@ -11,7 +11,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import net.mabako.sgtools.SGToolsDetailFragment;
 import net.mabako.steamgifts.data.BasicDiscussion;
 import net.mabako.steamgifts.data.BasicGiveaway;
 import net.mabako.steamgifts.data.Comment;
@@ -81,21 +80,6 @@ public class UrlHandlingActivity extends CommonActivity {
                     Intent intent = new Intent(context, WebViewActivity.class);
                     intent.putExtra(WebViewActivity.ARG_URL, uri.toString());
                     return intent;
-                }
-            }
-        } else if ("www.sgtools.info".equals(uri.getHost()) || "sgtools.info".equals(uri.getHost())) {
-            if (pathSegments.size() >= 2) {
-                if ("giveaways".equals(pathSegments.get(0))) {
-                    try {
-                        UUID uuid = UUID.fromString(pathSegments.get(1));
-
-                        Intent intent = new Intent(context, DetailActivity.class);
-                        intent.putExtra(SGToolsDetailFragment.ARG_UUID, uuid);
-                        return intent;
-
-                    } catch (IllegalArgumentException e) {
-                        return null;
-                    }
                 }
             }
         } else {

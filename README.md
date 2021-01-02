@@ -28,7 +28,6 @@ while individual APK files can be found on the [GitHub Releases Page](https://gi
 ## Misc
 - Night Mode (Settings)
 - Sync Account (manually via Settings, opens automatically if you're trying to enter a giveaway while Sync is required)
-- SGTools.info integration
 - and some more...
 
 # Build Info

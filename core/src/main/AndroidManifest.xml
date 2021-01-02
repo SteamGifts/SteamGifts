@@ -101,12 +101,6 @@
                 android:value="net.mabako.steamgifts.activities.MainActivity" />
         </activity>
 
-        <!-- sgtools.info -->
-        <activity
-            android:name="net.mabako.sgtools.SGToolsLoginActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme.Dark" />
-
         <!-- intro -->
         <activity
             android:name="net.mabako.steamgifts.intro.IntroActivity"

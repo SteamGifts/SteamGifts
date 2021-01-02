@@ -34,15 +34,6 @@ public class AboutFragment extends Fragment {
             }
         });
 
-        layout.findViewById(R.id.forum_thread).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), DetailActivity.class);
-                intent.putExtra(DiscussionDetailFragment.ARG_DISCUSSION, new BasicDiscussion("Zpeq5"));
-                getActivity().startActivity(intent);
-            }
-        });
-
         layout.findViewById(R.id.mail).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -16,11 +16,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.Toast;
 
-import net.mabako.sgtools.SGToolsLoginActivity;
 import net.mabako.steamgifts.ApplicationTemplate;
 import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.fragments.WhitelistBlacklistFragment;
-import net.mabako.steamgifts.persistentdata.SGToolsUserData;
 import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
 
 public class SettingsActivity extends BaseActivity {
@@ -76,27 +74,6 @@ public class SettingsActivity extends BaseActivity {
                     public boolean onPreferenceClick(Preference preference) {
                         getActivity().setResult(CommonActivity.RESPONSE_LOGOUT);
                         getActivity().finish();
-                        return true;
-                    }
-                });
-            }
-
-            if (SGToolsUserData.getCurrent().isLoggedIn()) {
-                addPreferencesFromResource(R.xml.preferences_sgtools);
-
-                final PreferenceCategory category = (PreferenceCategory) findPreference("preferences_sgtools_header");
-
-                findPreference("preference_sgtools_logout").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                    @Override
-                    public boolean onPreferenceClick(Preference preference) {
-                        SharedPreferences.Editor spEditor = getActivity().getSharedPreferences(SGToolsLoginActivity.PREF_ACCOUNT, MODE_PRIVATE).edit();
-                        spEditor.remove(SGToolsLoginActivity.PREF_KEY_SESSION_ID);
-                        spEditor.apply();
-
-                        SGToolsUserData.clear();
-                        Toast.makeText(getActivity(), R.string.preference_sgtools_logged_out, Toast.LENGTH_SHORT).show();
-
-                        getPreferenceScreen().removePreference(category);
                         return true;
                     }
                 });

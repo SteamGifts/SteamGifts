@@ -55,7 +55,6 @@
     <!-- About dialog -->
     <string name="app_name_long">sg for SteamGifts</string>
     <string name="about_made_with_love">made with {faw-heart} by kt</string>
-    <string name="about_forum_thread">Discuss on SteamGifts.com</string>
     <string name="about_mail">Contact via Mail</string>
     <string name="about_source_code">Source Code</string>
 
@@ -139,10 +138,6 @@
     <string name="user_tab_created">Created</string>
     <string name="mark_read">Mark as Read</string>
 
-    <!-- sgtools.info -->
-    <string name="sgtools_loading">Loading SGTools</string>
-    <string name="sgtools_check">Check Requirements</string>
-
     <!-- Settings -->
     <string name="preferences">Settings</string>
     <string name="preference_theme_header">Theme</string>
@@ -170,10 +165,6 @@
     <string name="preference_sg_blacklist">Blacklisted Users</string>
     <string name="preference_sg_hidden_games">Hidden Games</string>
     <string name="preference_sg_hidden_games_sub">Un-hide games from your account</string>
-
-    <string name="preferences_sgtools_header">sgtools.info Account</string>
-    <string name="preference_sgtools_logout">Logout</string>
-    <string name="preference_sgtools_logged_out">Cleared sgtools.info data</string>
 
     <string name="preferences_other">Other</string>
     <string name="preference_browser">Open Links in</string>

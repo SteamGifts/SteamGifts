@@ -29,10 +29,8 @@ public class CommonActivity extends BaseActivity {
 
     public static final int REQUEST_LOGIN = 3;
     public static final int REQUEST_LOGIN_PASSIVE = 4;
-    public static final int REQUEST_LOGIN_SGTOOLS = 5;
 
     public static final int RESPONSE_LOGIN_SUCCESSFUL = 6;
-    public static final int RESPONSE_LOGIN_SGTOOLS_SUCCESSFUL = 7;
 
     public static final int REQUEST_SYNC = 8;
     public static final int RESPONSE_SYNC_SUCCESSFUL = 9;

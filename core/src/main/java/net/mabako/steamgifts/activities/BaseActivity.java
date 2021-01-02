@@ -11,9 +11,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-import net.mabako.sgtools.SGToolsLoginActivity;
 import net.mabako.steamgifts.core.R;
-import net.mabako.steamgifts.persistentdata.SGToolsUserData;
 import net.mabako.steamgifts.persistentdata.SteamGiftsUserData;
 
 public class BaseActivity extends AppCompatActivity {
@@ -25,14 +23,6 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         setTheme();
         super.onCreate(savedInstanceState);
-
-        // sgtools.info preferences
-        SharedPreferences sp = getSharedPreferences(SGToolsLoginActivity.PREF_ACCOUNT, Activity.MODE_PRIVATE);
-        if (sp.contains(SGToolsLoginActivity.PREF_KEY_SESSION_ID)) {
-            SGToolsUserData.getCurrent().setSessionId(sp.getString(SGToolsLoginActivity.PREF_KEY_SESSION_ID, null));
-        } else {
-            SGToolsUserData.clear();
-        }
     }
 
     @Override

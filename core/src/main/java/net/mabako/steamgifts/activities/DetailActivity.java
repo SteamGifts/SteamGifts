@@ -13,7 +13,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.Toast;
 
-import net.mabako.sgtools.SGToolsDetailFragment;
 import net.mabako.steamgifts.ApplicationTemplate;
 import net.mabako.steamgifts.core.R;
 import net.mabako.steamgifts.data.BasicDiscussion;
@@ -105,14 +104,6 @@ public class DetailActivity extends CommonActivity {
             setContentView(R.layout.activity_one_fragment);
             if (savedInstanceState == null)
                 loadFragment(WhitelistBlacklistFragment.newInstance((WhitelistBlacklistFragment.What) serializable, null));
-            return;
-        }
-
-        serializable = getIntent().getSerializableExtra(SGToolsDetailFragment.ARG_UUID);
-        if (serializable != null) {
-            setContentView(R.layout.activity_detail_expanding_toolbar);
-            if (savedInstanceState == null)
-                loadFragment(SGToolsDetailFragment.newInstance((UUID) serializable));
             return;
         }
 
@@ -228,17 +219,6 @@ public class DetailActivity extends CommonActivity {
 
             setResult(0, newData);
             finish();
-        }
-
-        if (requestCode == REQUEST_LOGIN_SGTOOLS && getCurrentFragment() instanceof SGToolsDetailFragment) {
-            if (resultCode == RESPONSE_LOGIN_SGTOOLS_SUCCESSFUL) {
-                // reload, basically.
-                Serializable serializable = getIntent().getSerializableExtra(SGToolsDetailFragment.ARG_UUID);
-                loadFragment(SGToolsDetailFragment.newInstance((UUID) serializable));
-            } else {
-                Toast.makeText(this, "Could not log in to sgtools.info", Toast.LENGTH_LONG).show();
-                finish();
-            }
         }
 
         if (requestCode == REQUEST_SYNC && getCurrentFragment() instanceof GiveawayDetailFragment) {
