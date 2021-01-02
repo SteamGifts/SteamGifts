@@ -1,7 +1,4 @@
 # sg for SteamGifts
-[![Donate via PayPal](https://img.shields.io/badge/donate%20via-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Y6WJZY2VJHC6G)
-
-Donate via Bitcoin: `1NQBKppWPZiE5PshLxqfFW4pgsnAv9irEu`
 
 ---
 
