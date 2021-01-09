@@ -6,7 +6,7 @@ android {
     defaultConfig {
         applicationId 'net.mabako.steamgifts'
         minSdkVersion 15
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName
         project.ext.set('archivesBaseName', 'SteamGifts')
