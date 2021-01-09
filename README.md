@@ -1,7 +1,5 @@
 # sg for SteamGifts
 
----
-
 An app to browse SteamGifts giveaways on your phone.
 
 # Features
