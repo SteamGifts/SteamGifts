@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="app_name">sg beta</string>
-    <string name="beta_dialog_title">SteamGifts - Beta</string>
-    <string name="beta_text"><![CDATA[
-        <p>You are using a beta version of SteamGifts for Android.</p>
-        <p>This version may contain crashes and features not in the non-beta version.</p>]]></string>
-    <string name="beta_contine">Continue</string>
-</resources>

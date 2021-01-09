@@ -25,12 +25,8 @@ android {
         chocolate {
             dimension 'iceCream'
         }
-        // Release for the beta channel
-        strawberry {
-            dimension 'iceCream'
-            applicationIdSuffix '.beta'
-        }
-        // Release pushed on f-droid to non-beta testers
+
+        // actual release
         vanilla {
             dimension 'iceCream'
         }

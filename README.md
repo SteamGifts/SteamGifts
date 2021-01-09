@@ -24,5 +24,4 @@ An app to browse SteamGifts giveaways on your phone.
 # Build Info
 ## Flavors
 - vanilla (stable releases)
-- strawberry (beta releases)
 - chocolate (local releases, essentially beta with some features disabled)
