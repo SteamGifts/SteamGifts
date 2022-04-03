@@ -67,8 +67,11 @@ public class LoadGiveawayListTask extends AsyncTask<Void, Void, List<Giveaway>> 
             addFilterParameter(jsoup, "point_min", filterData.getMinPoints());
             addFilterParameter(jsoup, "point_max", filterData.getMaxPoints());
 
-            if (type != GiveawayListFragment.Type.ALL)
+            if (type == GiveawayListFragment.Type.DLC) {
+                jsoup.data("dlc", "true");
+            } else if (type != GiveawayListFragment.Type.ALL) {
                 jsoup.data("type", type.name().toLowerCase(Locale.ENGLISH));
+            }
 
             if (SteamGiftsUserData.getCurrent(fragment.getContext()).isLoggedIn())
                 jsoup.cookie("PHPSESSID", SteamGiftsUserData.getCurrent(fragment.getContext()).getSessionId());

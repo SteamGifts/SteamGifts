@@ -344,6 +344,11 @@ public class GiveawayListFragment extends SearchableListFragment<GiveawayAdapter
         RECOMMENDED(R.string.navigation_giveaways_recommended, R.string.navigation_giveaways_recommended_title),
 
         /**
+         * DLC Giveaways.
+         */
+        DLC(R.string.navigation_giveaways_dlc, R.string.navigation_giveaways_dlc_title),
+
+        /**
          * New giveaways.
          */
         NEW(R.string.navigation_giveaways_new, R.string.navigation_giveaways_new_title);
